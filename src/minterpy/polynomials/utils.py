@@ -3,6 +3,7 @@ set of utility functions to be used in polynomials submodule
 """
 import itertools
 import numpy as np
+from scipy.special import eval_chebyt
 from minterpy.global_settings import FLOAT_DTYPE
 
 def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarray,
@@ -110,3 +111,32 @@ def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarr
         results[point_nr] = np.dot(coefficients, monomial_vals)
 
     return results
+
+
+def evaluate_chebyshev_monomials(x, exponents):
+    """Evaluate chebyshev monomials at all input points.
+
+         m = spatial dimension
+         N = number of coefficients
+         k = number of evaluation points
+
+        Parameters
+        ----------
+        x: (k, m) the k points to evaluate on with dimensionality m.
+        exponents: (m, N) a multi index "alpha" for every Chebyshev polynomial
+            corresponding to the exponents of this "monomial"
+
+        Returns
+        -------
+        (k,N) the value of each Chebyshev basis monomial evaluated at each point.
+    """
+
+    num_points = x.shape[0]
+    num_coeffs = exponents.shape[0]
+
+    ## Compute monomial evaluations
+    monomials_eval = np.zeros((num_points, num_coeffs))
+    for i in range(num_coeffs):
+        monomials_eval[:, i] = np.prod(eval_chebyt(exponents[i], x), axis=1)
+
+    return monomials_eval

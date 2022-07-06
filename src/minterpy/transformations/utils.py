@@ -17,6 +17,8 @@ from minterpy.schemes.barycentric.precomp import (
 from minterpy.schemes.matrix_operator import MatrixOperator
 from minterpy.utils import eval_newt_polys_on
 
+from minterpy.polynomials.utils import evaluate_chebyshev_monomials
+
 # NOTE: avoid looping over a numpy array! e.g. for j in np.arange(num_monomials):
 # see: # https://stackoverflow.com/questions/10698858/built-in-range-or-numpy-arange-which-is-more-efficient
 
@@ -206,3 +208,26 @@ def _build_canonical_to_lagrange_operator(
     newton_to_lagrange = _build_newton_to_lagrange_operator(transformation)
     canonical_to_newton = _build_canonical_to_newton_operator(transformation)
     return newton_to_lagrange @ canonical_to_newton
+
+
+def _build_chebyshev_to_lagrange_operator( transformation: TransformationABC ) -> OperatorABC:
+    """computes the Chebyshev to Lagrange transformation by evaluating on unisolvent nodes
+
+    """
+
+    grid = transformation.grid
+    chebyshev_to_lagrange = evaluate_chebyshev_monomials(grid.unisolvent_nodes, grid.multi_index.exponents)
+    transformation_operator = MatrixOperator(transformation, chebyshev_to_lagrange)
+    return transformation_operator
+
+
+def _build_lagrange_to_chebyshev_operator( transformation: TransformationABC ) -> OperatorABC:
+    """computes the Lagrange to Chebyshev transformation by evaluating on unisolvent nodes
+
+    """
+
+    grid = transformation.grid
+    chebyshev_to_lagrange = evaluate_chebyshev_monomials(grid.unisolvent_nodes, grid.multi_index.exponents)
+    lagrange_to_chebyshev = np.linalg.inv(chebyshev_to_lagrange)
+    transformation_operator = MatrixOperator(transformation, lagrange_to_chebyshev)
+    return transformation_operator
