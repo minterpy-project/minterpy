@@ -131,12 +131,7 @@ def evaluate_chebyshev_monomials(x, exponents):
         (k,N) the value of each Chebyshev basis monomial evaluated at each point.
     """
 
-    num_points = x.shape[0]
-    num_coeffs = exponents.shape[0]
-
     ## Compute monomial evaluations
-    monomials_eval = np.zeros((num_points, num_coeffs))
-    for i in range(num_coeffs):
-        monomials_eval[:, i] = np.prod(eval_chebyt(exponents[i], x), axis=1)
+    monomials_eval = np.prod(eval_chebyt(exponents[None, :, :], x[:, None, :]), axis=-1)
 
     return monomials_eval
