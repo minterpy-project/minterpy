@@ -21,7 +21,13 @@ from conftest import (
 )
 from numpy.testing import assert_, assert_almost_equal
 
-from minterpy import CanonicalPolynomial, MultiIndexSet
+from minterpy import (
+    CanonicalPolynomial,
+    CanonicalToLagrange,
+    CanonicalToNewton,
+    Grid,
+    MultiIndexSet,
+)
 
 # tests with a single polynomial
 
@@ -40,10 +46,19 @@ def test_eval(MultiIndices, NrPoints):
     poly = CanonicalPolynomial(MultiIndices, coeffs)
     pts = build_rnd_points(NrPoints, MultiIndices.spatial_dimension)
     res = poly(pts)
-    groundtruth = np.dot(
-        np.prod(np.power(pts[:, None, :], MultiIndices.exponents[None, :, :]), axis=-1),
-        coeffs,
-    )
+
+    # navie impementation of canonical eval
+    # related to issue #32
+    groundtruth = np.zeros(NrPoints)
+    for k,pt in enumerate(pts):
+        single_groundtruth = 0.0
+        for i,exponents in enumerate(MultiIndices.exponents):
+            term = 1.0
+            for j, expo in enumerate(exponents):
+                term *= pt[j]**expo
+            single_groundtruth+=coeffs[i]*term
+        groundtruth[k] = single_groundtruth
+
     assert_almost_equal(res, groundtruth)
 
 
@@ -51,12 +66,12 @@ def test_eval(MultiIndices, NrPoints):
 # todo:: find out if there are some more sophisticated tests for that
 exps1 = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 args1 = np.lexsort(exps1.T, axis=-1)
-mi1 = MultiIndexSet(exps1[args1])
+mi1 = MultiIndexSet(exps1[args1], lp_degree=1.0)
 coeffs1 = np.array([1, 2, 3, 4])
 
 exps2 = np.array([[0, 0, 0], [2, 0, 0], [1, 1, 0], [0, 2, 0], [0, 0, 2]])
 args2 = np.lexsort(exps2.T, axis=-1)
-mi2 = MultiIndexSet(exps2[args2])
+mi2 = MultiIndexSet(exps2[args2], lp_degree=1.0)
 coeffs2 = np.array([1, 2, 3, 4, 5])
 
 polys = [
@@ -99,7 +114,7 @@ def test_add_different_poly(P1, P2):
                 [0, 0, 2],
             ]
         )
-    groundtruth_multi_index = MultiIndexSet(groundtruth_multi_index_exponents)
+    groundtruth_multi_index = MultiIndexSet(groundtruth_multi_index_exponents, lp_degree=1.0)
     groundtruth = P1.__class__(groundtruth_multi_index, groundtruth_coeffs)
     assert_polynomial_almost_equal(res, groundtruth)
 
@@ -122,7 +137,7 @@ def test_sub_different_poly():
             [0, 0, 2],
         ]
     )
-    groundtruth_multi_index = MultiIndexSet(groundtruth_multi_index_exponents)
+    groundtruth_multi_index = MultiIndexSet(groundtruth_multi_index_exponents, lp_degree=1.0)
     groundtruth = polys[0].__class__(groundtruth_multi_index, groundtruth_coeffs)
     assert_polynomial_almost_equal(res, groundtruth)
 
@@ -139,7 +154,7 @@ def test_partial_diff():
     assert exponents.shape == (5, 3)
     assert coeffs.shape == (5,)
 
-    mi = MultiIndexSet(exponents)
+    mi = MultiIndexSet(exponents, lp_degree=1.0)
     can_poly = CanonicalPolynomial(mi, coeffs)
 
     groundtruth_coeffs_dx = np.array([0.0, 0.0, 0.0, 0.0, 0.0])
@@ -159,7 +174,6 @@ def test_partial_diff():
     assert np.allclose(coeffs_dz, groundtruth_coeffs_dz)
 
 
-
 def test_diff():
 
     # ATTENTION: the exponent vectors of all derivatives have to be included already!
@@ -172,7 +186,7 @@ def test_diff():
     assert exponents.shape == (5, 3)
     assert coeffs.shape == (5,)
 
-    mi = MultiIndexSet(exponents)
+    mi = MultiIndexSet(exponents, lp_degree=1.0)
     can_poly = CanonicalPolynomial(mi, coeffs)
 
     # Testing zeroth order derivatives
@@ -195,3 +209,199 @@ def test_diff():
     can_poly_dyz2 = can_poly.diff([0,1,2])
     coeffs_dyz2 = can_poly_dyz2.coeffs
     assert np.allclose(coeffs_dyz2, groundtruth_coeffs_dyz2)
+
+
+def test_partial_diff_multiple_poly():
+
+    # ATTENTION: the exponent vectors of all derivatives have to be included already!
+    exponents = np.array([[0, 0, 0],
+                          [0, 1, 0],
+                          [0, 0, 1],
+                          [0, 1, 1],
+                          [0, 0, 2]])
+    coeffs = np.array([[3.0, 3.0, 3.0, 3.0, 3.0],
+                       [5.0, 4.0, 3.0, 2.0, 1.0]]).T
+
+    assert exponents.shape == (5, 3)
+    assert coeffs.shape == (5,2)
+
+    mi = MultiIndexSet(exponents, lp_degree=1.0)
+    can_poly = CanonicalPolynomial(mi, coeffs)
+
+    groundtruth_coeffs_dx = np.array([[0.0, 0.0, 0.0, 0.0, 0.0],
+                                      [0.0, 0.0, 0.0, 0.0, 0.0]]).T
+    groundtruth_coeffs_dy = np.array([[3.0, 0.0, 3.0, 0.0, 0.0],
+                                      [4.0, 0.0, 2.0, 0.0, 0.0]]).T
+    groundtruth_coeffs_dz = np.array([[3.0, 3.0, 6.0, 0.0, 0.0],
+                                      [3.0, 2.0, 2.0, 0.0, 0.0]]).T
+
+    can_poly_dx = can_poly.partial_diff(0)
+    coeffs_dx = can_poly_dx.coeffs
+    assert np.allclose(coeffs_dx, groundtruth_coeffs_dx)
+
+    can_poly_dy = can_poly.partial_diff(1)
+    coeffs_dy = can_poly_dy.coeffs
+    assert np.allclose(coeffs_dy, groundtruth_coeffs_dy)
+
+    can_poly_dz = can_poly.partial_diff(2)
+    coeffs_dz = can_poly_dz.coeffs
+    assert np.allclose(coeffs_dz, groundtruth_coeffs_dz)
+
+
+def test_integrate_over_bounds_invalid_shape(
+    SpatialDimension, PolyDegree, LpDegree
+):
+    """Test polynomial integration with bounds of invalid shape."""
+    # Create a Canonical polynomial
+    mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+    can_coeffs = np.random.rand(len(mi))
+    can_poly = CanonicalPolynomial(mi, can_coeffs)
+
+    # Create bounds (outside the canonical domain of [-1, 1]^M)
+    bounds = np.random.rand(SpatialDimension + 3, 2)
+    bounds[:, 0] *= -1
+
+    with pytest.raises(ValueError):
+        can_poly.integrate_over(bounds)
+
+
+def test_integrate_over_bounds_invalid_domain(
+    SpatialDimension, PolyDegree, LpDegree
+):
+    """Test polynomial integration with bounds of invalid domain."""
+    # Create a Canonical polynomial
+    mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+    can_coeffs = np.random.rand(len(mi))
+    can_poly = CanonicalPolynomial(mi, can_coeffs)
+
+    # Create bounds (outside the canonical domain of [-1, 1]^M)
+    bounds = 2 * np.ones((SpatialDimension, 2))
+    bounds[:, 0] *= -1
+
+    with pytest.raises(ValueError):
+        can_poly.integrate_over(bounds)
+
+
+def test_integrate_over_bounds_equal(
+    SpatialDimension, PolyDegree, LpDegree
+):
+    """Test polynomial integration with equal bounds (should be zero)."""
+    # Create a Canonical polynomial
+    mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+    can_coeffs = np.random.rand(len(mi))
+    can_poly = CanonicalPolynomial(mi, can_coeffs)
+
+    # Create bounds (one of them has lb == ub)
+    bounds = np.random.rand(SpatialDimension, 2)
+    bounds[:, 0] *= -1
+    idx = np.random.choice(SpatialDimension)
+    bounds[idx, 0] = bounds[idx, 1]
+
+    # Compute the integral
+    ref = 0.0
+    value = can_poly.integrate_over(bounds)
+
+    # Assertion
+    assert np.isclose(ref, value)
+
+
+def test_integrate_over_bounds_flipped(
+    SpatialDimension, PolyDegree, LpDegree
+):
+    """Test polynomial integration with flipped bounds."""
+    # Create a Canonical polynomial
+    mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+    can_coeffs = np.random.rand(len(mi))
+    can_poly = CanonicalPolynomial(mi, can_coeffs)
+
+    # Compute the integral
+    value_1 = can_poly.integrate_over()
+
+    # Flip bounds
+    bounds = np.ones((SpatialDimension, 2))
+    bounds[:, 0] *= -1
+    bounds[:, [0, 1]] = bounds[:, [1, 0]]
+
+    # Compute the integral with flipped bounds
+    value_2 = can_poly.integrate_over(bounds)
+
+    if np.mod(SpatialDimension, 2) == 1:
+        # Odd spatial dimension flips the sign
+        assert np.isclose(value_1, -1 * value_2)
+    else:
+        assert np.isclose(value_1, value_2)
+
+
+def test_integrate_over(
+    SpatialDimension, PolyDegree, LpDegree
+):
+    """Test polynomial integration in different basis (sanity check)."""
+    # Create a Canonical polynomial
+    mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+    can_coeffs = np.random.rand(len(mi))
+    can_poly = CanonicalPolynomial(mi, can_coeffs)
+
+    # Transform to other polynomial bases
+    nwt_poly = CanonicalToNewton(can_poly)()
+    lag_poly = CanonicalToLagrange(can_poly)()
+
+    # Compute the integral
+    # NOTE: Canonical integration won't work in high degree
+    value_can = can_poly.integrate_over()
+    value_nwt = nwt_poly.integrate_over()
+    value_lag = lag_poly.integrate_over()
+
+    # Assertions
+    assert np.isclose(value_can, value_nwt)
+    assert np.isclose(value_can, value_lag)
+
+    # Create bounds
+    bounds = np.random.rand(SpatialDimension, 2)
+    bounds[:, 0] *= -1
+
+    # Compute the integral with bounds
+    value_can = can_poly.integrate_over(bounds)
+    value_nwt = nwt_poly.integrate_over(bounds)
+    value_lag = lag_poly.integrate_over(bounds)
+
+    # Assertions
+    assert np.isclose(value_can, value_nwt)
+    assert np.isclose(value_can, value_lag)
+
+
+def test_integrate_over_multiple_polynomials(
+    SpatialDimension, PolyDegree, LpDegree
+):
+    """Test polynomial integration in different basis (sanity check)."""
+    # Create a set of Canonical polynomials
+    num_polys = 6
+    mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+    can_coeffs = np.random.rand(len(mi), num_polys)
+    can_poly = CanonicalPolynomial(mi, can_coeffs)
+
+    # Transform to other polynomial bases
+    nwt_poly = CanonicalToNewton(can_poly)()
+    lag_poly = CanonicalToLagrange(can_poly)()
+
+    # Compute the integral
+    # NOTE: Canonical integration won't work in high degree
+    value_can = can_poly.integrate_over()
+    value_nwt = nwt_poly.integrate_over()
+    value_lag = lag_poly.integrate_over()
+
+    # Assertions
+    assert np.allclose(value_can, value_nwt)
+    assert np.allclose(value_can, value_lag)
+
+    # Create bounds
+    bounds = np.random.rand(SpatialDimension, 2)
+    bounds[:, 0] *= -1
+
+    # Compute the integral with bounds
+    value_can = can_poly.integrate_over(bounds)
+    value_nwt = nwt_poly.integrate_over(bounds)
+    value_lag = lag_poly.integrate_over(bounds)
+
+    # Assertions
+    assert np.allclose(value_can, value_nwt)
+    assert np.allclose(value_can, value_lag)

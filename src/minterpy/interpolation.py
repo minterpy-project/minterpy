@@ -9,11 +9,11 @@ It contains:
 from typing import Callable, Optional
 
 import attr
-import numpy as np
 
 from .core import Grid, MultiIndexSet
 from .dds import dds
 from .polynomials import NewtonPolynomial
+from .global_settings import DEFAULT_LP_DEG
 
 __all__ = ["Interpolator", "Interpolant", "interpolate"]
 
@@ -72,7 +72,8 @@ class Interpolator:
         """
         try:
             fct_values = fct(self.grid.unisolvent_nodes)
-            interpol_coeffs = np.squeeze(dds(fct_values, self.grid.tree))
+            # NOTE: Don't use np.squeeze as DDS results may be of shape (1,1)
+            interpol_coeffs = dds(fct_values, self.grid.tree).reshape(-1)
         except Exception as e:
             raise InterpolationError(e) from e
 
@@ -157,7 +158,7 @@ class Interpolant:
         return self.__interpolation_poly(pts)
 
 
-def interpolate(fct, spatial_dimension, poly_degree, lp_degree=None):
+def interpolate(fct, spatial_dimension, poly_degree, lp_degree=DEFAULT_LP_DEG):
     """Interpolate a given function.
 
     Return an interpolant, which represents the given function on the domain :math:`[-1, 1]^d`, where :math:`d` is the dimension of the domain space.

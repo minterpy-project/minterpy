@@ -15,6 +15,9 @@ from minterpy import MultiIndexSet, NewtonPolynomial
 # Global seed
 SEED = 12345678
 
+# Global settings
+MIN_POLY_DEG = 0
+MAX_POLY_DEG = 25
 
 # asserts that a call runs as expected
 def assert_call(fct, *args, **kwargs):
@@ -150,7 +153,7 @@ def assert_interpolator_almost_equal(interpolator1, interpolator2):
 # assert if interpolants are equal
 def assert_interpolant_equal(interpolant1, interpolant2):
     try:
-        assert_(isinstance(interpolator1, type(interpolator2)))
+        assert_(isinstance(interpolant1, type(interpolant2)))
         assert_function_object_code_equal(interpolant1.fct, interpolant2.fct)
         assert_interpolator_equal(interpolant1.interpolator, interpolant2.interpolator)
     except AssertionError as a:
@@ -184,8 +187,8 @@ def SpatialDimension(request):
 
 
 # fixture for polynomial degree
-
-polynomial_degree = [1, 4]
+# NOTE: Include test for poly_degree 0 (Issue #27)
+polynomial_degree = [0, 1, 4]
 
 
 @pytest.fixture(params=polynomial_degree)
@@ -231,6 +234,97 @@ def NrPoints(request):
     return request.param
 
 
+# Fixture for the number
+nr_polynomials = [1, 10]
+
+
+@pytest.fixture(params=nr_polynomials)
+def NrPolynomials(request):
+    return request.param
+
+
+# Fixture for the number
+batch_sizes = [1, 100, 1000]
+
+
+@pytest.fixture(params=batch_sizes)
+def BatchSizes(request):
+    return request.param
+
+
+# Fixture for pair
+@pytest.fixture(
+    params=[
+        "equal",
+        "dimensions",
+        "poly-degrees",
+        "lp-degrees",
+        "empty",
+        "all",
+    ]
+)
+def param_diff(request):
+    return request.param
+
+
+@pytest.fixture
+def mi_pair(SpatialDimension, PolyDegree, LpDegree, param_diff):
+    """Create a pair of MultiIndexSets with different parameters."""
+    if param_diff == "equal":
+        # A pair with equal parameter values
+        m = SpatialDimension
+        n = PolyDegree
+        p = LpDegree
+        mi_1 = MultiIndexSet.from_degree(m, n, p)
+        mi_2 = MultiIndexSet.from_degree(m, n, p)
+    elif param_diff == "dimensions":
+        # A pair with different spatial dimensions.
+        m_1 = SpatialDimension
+        m_2 = SpatialDimension + 1
+        n = PolyDegree
+        p = LpDegree
+        mi_1 = MultiIndexSet.from_degree(m_1, n, p)
+        mi_2 = MultiIndexSet.from_degree(m_2, n, p)
+    elif param_diff == "poly-degrees":
+        # A pair with different polynomial degrees.
+        m = SpatialDimension
+        n_1 = PolyDegree
+        n_2 = PolyDegree + np.random.randint(low=1, high=3)
+        p = LpDegree
+        mi_1 = MultiIndexSet.from_degree(m, n_1, p)
+        mi_2 = MultiIndexSet.from_degree(m, n_2, p)
+    elif param_diff == "lp-degrees":
+        # A pair with different lp-degrees.
+        m = SpatialDimension
+        d = PolyDegree
+        lp_degrees = [0.5, 1.0, 2.0, 3.0, np.inf]
+        p_1, p_2 = np.random.choice(lp_degrees, size=2, replace=False)
+        mi_1 = MultiIndexSet.from_degree(m, d, p_1)
+        mi_2 = MultiIndexSet.from_degree(m, d, p_2)
+    elif param_diff == "all":
+        # A pair with all three parameters differ
+        m_1 = np.random.randint(low=1, high=5)
+        m_2 = np.random.randint(low=1, high=5)
+        d_1 = np.random.randint(low=1, high=5)
+        d_2 = np.random.randint(low=1, high=5)
+        lp_degrees = [0.5, 1.0, 2.0, 3.0, np.inf]
+        p_1, p_2 = np.random.choice(lp_degrees, 2)
+        mi_1 = MultiIndexSet.from_degree(m_1, d_1, p_1)
+        mi_2 = MultiIndexSet.from_degree(m_2, d_2, p_2)
+    elif param_diff == "empty":
+        # A pair with one of them is empty
+        m_1 = np.random.randint(low=1, high=5)
+        m_2 = np.random.randint(low=1, high=5)
+        d_1 = np.random.randint(low=1, high=5)
+        lp_degrees = [0.5, 1.0, 2.0, 3.0, np.inf]
+        p_1, p_2 = np.random.choice(lp_degrees, 2)
+        mi_1 = MultiIndexSet.from_degree(m_1, d_1, p_1)
+        mi_2 = MultiIndexSet(np.empty((0, m_2)), p_2)
+    else:
+        return ValueError(f"'param-diff' = {param_diff} is not recognized!")
+
+    return mi_1, mi_2
+
 # some random builder
 
 
@@ -247,10 +341,11 @@ def build_rnd_exponents(dim, n, seed=None):
     Exponents are generated within the intervall ``[MIN_POLY_DEG,MAX_POLY_DEG]``
 
     """
-    if seed is None:
-        seed = SEED
-    np.random.seed(seed)
-    return np.random.randint(MIN_POLY_DEG, MAX_POLY_DEG, (n, dim))
+    rng = np.random.default_rng(seed)
+
+    exponents = rng.integers(MIN_POLY_DEG, MAX_POLY_DEG, (n, dim), dtype=int)
+
+    return exponents
 
 
 def build_rnd_coeffs(mi, nr_poly=None, seed=None):
@@ -312,7 +407,7 @@ def build_rnd_points(nr_points, spatial_dimension, nr_poly=None, seed=None):
 
 
 def build_random_newton_polynom(
-    dim: int, deg: int, lp: int, seed=None
+    dim: int, deg: int, lp: int,  n_poly=1, seed=None
 ) -> NewtonPolynomial:
     """Build a random Newton polynomial.
 
@@ -333,5 +428,22 @@ def build_random_newton_polynom(
     if seed is None:
         seed = SEED
 
-    rnd_coeffs = np.random.uniform(-1, 1, size=len(mi))
+    np.random.seed(seed)
+
+    if n_poly == 1:
+        rnd_coeffs = np.random.uniform(-1, 1, size=len(mi))
+    else:
+        rnd_coeffs = np.random.uniform(-1, 1, size=(len(mi), n_poly))
+
     return NewtonPolynomial(mi, rnd_coeffs)
+
+
+def build_random_multi_index():
+    """Build random complete multi-index set."""
+    m = np.random.randint(1, 5)
+    n = np.random.randint(1, 5)
+    p = np.random.choice([1.0, 2.0, np.inf])
+
+    mi = MultiIndexSet.from_degree(m, n, p)
+
+    return mi

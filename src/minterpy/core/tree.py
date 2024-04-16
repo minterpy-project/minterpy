@@ -26,19 +26,6 @@ __all__ = ["MultiIndexTree"]
 
 class MultiIndexTree:
     """Base class for MultiIndexTree
-
-    Attributes
-    ----------
-    multi_index : MultiIndex
-
-    grid : Grid
-
-    split_positions : List
-
-    subtree_sizes : List
-
-    problem_sizes : List
-
     """
 
     #  TODO prevent dynamic attribute assignment (-> safe memory)
@@ -46,11 +33,12 @@ class MultiIndexTree:
 
     def __init__(self, grid: Grid):
         multi_index = grid.multi_index
-        if not multi_index.is_complete:
+        if not multi_index.is_downward_closed:
             raise ValueError(
-                "trying to use the divided difference scheme (multi index tree) "
-                "with incomplete multi indices, "
-                "but DDS only works for complete multi indices (without 'holes')."
+                "trying to use the divided difference scheme "
+                "(multi-index tree) with non-downward-closed multi-indices, "
+                "but DDS only works for downward-closed multi-indices "
+                "(without 'holes')."
             )
 
         self.grid = grid

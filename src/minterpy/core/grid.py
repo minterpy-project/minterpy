@@ -11,7 +11,11 @@ from minterpy.utils import gen_chebychev_2nd_order_leja_ordered
 
 from .multi_index import MultiIndexSet
 from .tree import MultiIndexTree
-from .verification import check_domain_fit, check_shape, check_type_n_values
+from .verification import (
+    check_dimensionality,
+    check_domain_fit,
+    check_type_n_values,
+)
 
 __all__ = ["Grid"]
 
@@ -47,16 +51,6 @@ class Grid:
         - insert a small introduction to the purpose of :class:`Grid` here.
         - refactor the exposed attributes (each needs at least a getter)
         - naming issues for ``generating_points`` and ``generating_values``
-
-    Attributes
-    ----------
-    unisolvent_nodes
-    spatial_dimension
-    generating_values
-    tree
-    multi_index : The :class:`MultiIndexSet` instance this :class:`Grid` is based on.
-    generating_points : The (multivariate) points the grid is based on.
-
     """
 
     # TODO make all attributes read only!
@@ -73,6 +67,8 @@ class Grid:
             raise TypeError(
                 f"the indices must be given as {MultiIndexSet} class instance"
             )
+        if len(multi_index) == 0:
+            raise ValueError("MultiIndexSet must not be empty!")
         # NOTE: the multi indices of a grid must be NOT be 'lexicographically complete in order to form a basis!
         # HOWEVER: building a MultiIndexTree requires complete indices
         self.multi_index: MultiIndexSet = multi_index
@@ -90,7 +86,7 @@ class Grid:
         )
 
         check_type_n_values(generating_points)
-        check_shape(generating_points, dimensionality=2)
+        check_dimensionality(generating_points, dimensionality=2)
         check_domain_fit(generating_points)
         self.generating_points: ARRAY = generating_points
         # TODO check if values and points fit together
@@ -250,6 +246,8 @@ class Grid:
         :rtype: Grid
         """
         multi_indices_old = self.multi_index
+        # TODO: Following MR !69, the MultiIndexSet will always be a new
+        # instance, revise this for consistency.
         if multi_indices_new is multi_indices_old:
             return self
         # construct new:
@@ -269,7 +267,7 @@ class Grid:
 
 
         """
-        multi_indices_new = self.multi_index.make_complete()
+        multi_indices_new = self.multi_index.make_complete(inplace=False)
         return self._new_instance_if_necessary(multi_indices_new)
 
     def add_points(self, exponents: ARRAY) -> "Grid":

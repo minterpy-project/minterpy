@@ -6,7 +6,7 @@ This ensures that all polynomials work with the same interface, so futher featur
 """
 import abc
 from copy import deepcopy
-from typing import Any, Optional, Union
+from typing import Any, List, Optional, Union
 
 import numpy as np
 
@@ -14,8 +14,13 @@ from minterpy.global_settings import ARRAY
 
 from ..grid import Grid
 from ..multi_index import MultiIndexSet
-from ..utils import _expand_dim, find_match_between
-from ..verification import check_shape, check_type_n_values, verify_domain
+from ..utils import expand_dim, find_match_between
+from ..verification import (
+    check_dimensionality,
+    check_shape,
+    check_type_n_values,
+    verify_domain,
+)
 
 __all__ = ["MultivariatePolynomialABC", "MultivariatePolynomialSingleABC"]
 
@@ -24,14 +29,6 @@ class MultivariatePolynomialABC(abc.ABC):
     """the most general abstract base class for multivariate polynomials.
 
     Every data type which needs to behave like abstract polynomial(s) should subclass this class and implement all the abstract methods.
-
-    Attributes
-    ----------
-    coeffs
-    nr_active_monomials
-    spatial_dimension
-    unisolvent_nodes
-
     """
 
     @property
@@ -130,8 +127,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     ----------
     multi_index : MultiIndexSet
         The multi-indices of the multivariate polynomial.
-    coeffs : np.ndarray
-
     internal_domain : array_like
         The domain the polynomial is defined on (basically the domain of the unisolvent nodes).
         Either one-dimensional domain (min,max), a stack of domains for each
@@ -213,6 +208,14 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         return Grid(multi_index)
 
+    @staticmethod
+    @abc.abstractmethod
+    def _integrate_over(
+        poly: "MultivariatePolynomialABC", bounds: Optional[np.ndarray]
+    ) -> np.ndarray:
+        """Abstract definite integration method."""
+        pass
+
     def __init__(
         self,
         multi_index: Union[MultiIndexSet, ARRAY],
@@ -223,11 +226,13 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     ):
 
         if multi_index.__class__ is MultiIndexSet:
+            if len(multi_index) == 0:
+                raise ValueError("MultiIndexSet must not be empty!")
             self.multi_index = multi_index
         else:
             # TODO should passing multi indices as ndarray be supported?
             check_type_n_values(multi_index)  # expected ARRAY
-            check_shape(multi_index, dimensionality=2)
+            check_dimensionality(multi_index, dimensionality=2)
             self.multi_index = MultiIndexSet(multi_index)
 
         nr_monomials, spatial_dimension = self.multi_index.exponents.shape
@@ -235,14 +240,14 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         if internal_domain is not None:
             check_type_n_values(internal_domain)
-            check_shape(internal_domain, (spatial_dimension, 2))
+            check_shape(internal_domain, shape=(spatial_dimension, 2))
         self.internal_domain = self.generate_internal_domain(
             internal_domain, self.multi_index.spatial_dimension
         )
 
         if user_domain is not None:  # TODO not better "external domain"?!
             check_type_n_values(user_domain)
-            check_shape(user_domain, (spatial_dimension, 2))
+            check_shape(user_domain, shape=(spatial_dimension, 2))
         self.user_domain = self.generate_user_domain(
             user_domain, self.multi_index.spatial_dimension
         )
@@ -254,7 +259,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         if type(grid) is not Grid:
             raise ValueError(f"unexpected type {type(grid)} of the input grid")
 
-        if not grid.multi_index.is_super_index_set_of(self.multi_index):
+        if not grid.multi_index.is_superset(self.multi_index):
             raise ValueError(
                 "the multi indices of a polynomial must be a subset of the indices of the grid in use"
             )
@@ -671,7 +676,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         else:
             # also the active monomials change
             prev_indices = self.multi_index
-            if not prev_indices.is_sub_index_set_of(new_indices):
+            if not prev_indices.is_subset(new_indices):
                 raise ValueError(
                     "an index set of a polynomial can only be expanded, "
                     "but the old indices contain multi indices not present in the new indices."
@@ -748,23 +753,22 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         :param dim: Number of additional dimensions.
         :type dim: int
         """
-        expand_dim = dim - self.multi_index.spatial_dimension
+        diff_dim = dim - self.multi_index.spatial_dimension
 
-        self.multi_index.expand_dim(
-            dim
-        )  # breaks if dim<spacial_dimension, i.e. expand_dim<0
+        # If dim<spatial_dimension, i.e. expand_dim<0, exception is raised
+        self.multi_index = self.multi_index.expand_dim(dim)
 
         grid = self.grid
-        new_gen_pts = _expand_dim(grid.generating_points, dim)
-        new_gen_vals = _expand_dim(grid.generating_values.reshape(-1, 1), dim)
+        new_gen_pts = expand_dim(grid.generating_points, dim)
+        new_gen_vals = expand_dim(grid.generating_values.reshape(-1, 1), dim)
 
         self.grid = Grid(self.multi_index, new_gen_pts, new_gen_vals)
 
-        extra_internal_domain = verify_domain(extra_internal_domain, expand_dim)
+        extra_internal_domain = verify_domain(extra_internal_domain, diff_dim)
         self.internal_domain = np.concatenate(
             (self.internal_domain, extra_internal_domain)
         )
-        extra_user_domain = verify_domain(extra_user_domain, expand_dim)
+        extra_user_domain = verify_domain(extra_user_domain, diff_dim)
         self.user_domain = np.concatenate((self.user_domain, extra_user_domain))
 
     def partial_diff(self, dim: int, order: int = 1) -> "MultivariatePolynomialSingleABC":
@@ -824,3 +828,69 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
                              f"expected <{self.spatial_dimension}> corresponding to each spatial dimension")
 
         return self._diff(self, order)
+
+    def integrate_over(
+        self, bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
+    ) -> Union[float, np.ndarray]:
+        """Compute the definite integral of the polynomial over the bounds.
+
+        Parameters
+        ----------
+        bounds : Union[List[List[float]], np.ndarray], optional
+            The bounds of the integral, an ``(M, 2)`` array where ``M``
+            is the number of spatial dimensions. Each row corresponds to
+            the bounds in a given dimension.
+            If not given, then the canonical bounds [-1, 1]^M will be used
+            instead.
+
+        Returns
+        -------
+        Union[:py:class:`float`, :class:`numpy:numpy.ndarray`]
+            The integral value of the polynomial over the given bounds.
+            If only one polynomial is available, the return value is of
+            a :py:class:`float` type.
+
+        Raises
+        ------
+        ValueError
+            If the bounds either of inconsistent shape or not in the [-1, 1]^M
+            domain.
+
+        TODO
+        ----
+        - The default fixed domain [-1, 1]^M may in the future be relaxed.
+          In that case, the domain check below along with the concrete
+          implementations for the poly. classes must be updated.
+        """
+        num_dim = self.spatial_dimension
+        if bounds is None:
+            # The canonical bounds are [-1, 1]^M
+            bounds = np.ones((num_dim, 2))
+            bounds[:, 0] *= -1
+
+        if isinstance(bounds, list):
+            bounds = np.atleast_2d(bounds)
+
+        # --- Bounds verification
+        # Shape
+        if bounds.shape != (num_dim, 2):
+            raise ValueError(
+                "The bounds shape is inconsistent! "
+                f"Given {bounds.shape}, expected {(num_dim, 2)}."
+            )
+        # Domain fit, i.e., in [-1, 1]^M
+        if np.any(bounds < -1) or np.any(bounds > 1):
+            raise ValueError("Bounds are outside [-1, 1]^M domain!")
+
+        # --- Compute the integrals
+        # If the lower and upper bounds are equal, immediately return 0
+        if np.any(np.isclose(bounds[:, 0], bounds[:, 1])):
+            return 0.0
+
+        value = self._integrate_over(self, bounds)
+
+        try:
+            # One-element array (one set of coefficients), just return the item
+            return value.item()
+        except ValueError:
+            return value

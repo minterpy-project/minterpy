@@ -13,6 +13,7 @@ from minterpy.global_settings import (
     I_1D,
     I_2D,
     INT,
+    FLOAT_DTYPE,
     NOT_FOUND,
 )
 
@@ -58,36 +59,15 @@ def can_eval_mult(x_multiple, coeffs, exponents, result_placeholder):
 # NOTE: the most "fine grained" functions must be defined first
 # in order for Numba to properly infer the function types
 
-
-@njit(FLOAT(F_1D, F_1D), cache=True)  # O(N)
-def single_eval(coefficients, monomial_vals):
-    """Evaluation of one polynomial at a single point given the coefficients and monomial evaluations.
-
-    - ``N`` number of monomials
-
-    :param coefficients: numpy array of polynomial coefficients. The shape has to be ``N``.
-    :param monomial_vals: numpy array of evaluated monomial values at the point. The shape has to be ``N``.
-    :return: the value of polynomial evaluated at the point
-
-    Notes
-    -----
-    The value of a polynomial in Newton form is the sum over all coefficients multiplied with the value of the
-    corresponding Newton basis polynomial.
-    """
-
-    assert len(coefficients) == len(monomial_vals)
-    return np.sum(coefficients * monomial_vals)
-
-
 @njit(void(F_1D, I_2D, F_2D, I_1D, F_2D, F_1D), cache=True)  # O(Nm)
-def eval_newton_polynomials(
-    x,
+def eval_newton_monomials_single(
+    x_single,
     exponents,
     generating_points,
     max_exponents,
-    prod_placeholder,
-    monomial_vals_placeholder,
-):
+    products_placeholder,
+    monomials_placeholder,
+) -> None:
     """Precomputes the value of all given Newton basis polynomials at a point.
 
     Core of the fast polynomial evaluation algorithm.
@@ -95,18 +75,20 @@ def eval_newton_polynomials(
     - ``N`` number of monomials
     - ``n`` maximum exponent in each dimension
 
-    :param x: coordinates of the point. The shape has to be ``m``.
+    :param x_single: coordinates of the point. The shape has to be ``m``.
     :param exponents: numpy array with exponents for the polynomial. The shape has to be ``(N x m)``.
     :param generating_points: generating points used to generate the grid. The shape is ``(n x m)``.
     :param max_exponents: array with maximum exponent in each dimension. The shape has to be ``m``.
-    :param prod_placeholder: a numpy array for storing the (chained) products.
-    :param monomial_vals_placeholder: a numpy array of length N for storing the values of all Newton basis polynomials.
+    :param products_placeholder: a numpy array for storing the (chained) products.
+    :param monomials_placeholder: a numpy array of length N for storing the values of all Newton basis polynomials.
 
     Notes
     -----
-    Precompute all the (chained) products required during newton evaluation. Complexity is ``O(mN)``.
-    This precomputation is coefficient agnostic.
-    Results are only stored in the placeholder arrays. Nothing is returned.
+    - This is a Numba-accelerated function.
+    - The function precompute all the (chained) products required during Newton evaluation for a single query point
+      with complexity of ``O(mN)``.
+    - The (pre-)computation of Newton monomials is coefficient agnostic.
+    - Results are stored in the placeholder arrays. The function returns None.
     """
 
     # NOTE: the maximal exponent might be different in every dimension,
@@ -115,10 +97,11 @@ def eval_newton_polynomials(
     #    by just adding one empty row in front. ATTENTION: these values must not be accessed!
     #    -> the exponents of each monomial ("alpha") then match the indices of the required products
 
-    m = len(x)
+    # Create the products matrix
+    m = exponents.shape[1]
     for i in range(m):
         max_exp_in_dim = max_exponents[i]
-        x_i = x[i]
+        x_i = x_single[i]
         prod = 1.0
         for j in range(max_exp_in_dim):  # O(n)
             # TODO there are n+1 1D grid values, the last one will never be used!?
@@ -126,7 +109,7 @@ def eval_newton_polynomials(
             prod *= x_i - p_ij
             # NOTE: shift index by one
             exponent = j + 1  # NOTE: otherwise the result type is float
-            prod_placeholder[exponent, i] = prod
+            products_placeholder[exponent, i] = prod
 
     # evaluate all Newton polynomials. O(Nm)
     N = exponents.shape[0]
@@ -139,36 +122,39 @@ def eval_newton_polynomials(
             # NOTE: an exponent of 0 should not cause a multiplication
             # (inefficient, numerical instabilities)
             if exp > 0:
-                newt_mon_val *= prod_placeholder[exp, i]
-        monomial_vals_placeholder[j] = newt_mon_val
-    # NOTE: results have been stored in the numpy arrays. no need to return anything.
+                newt_mon_val *= products_placeholder[exp, i]
+        monomials_placeholder[j] = newt_mon_val
+    #NOTE: results have been stored in the numpy arrays. no need to return anything.
 
 
-# @njit(void(F_2D, I_2D, F_2D, I_1D, F_2D, F_2D, B_TYPE), cache=True)
-def eval_all_newt_polys(
-    x,
-    exponents,
-    generating_points,
-    max_exponents,
-    prod_placeholder,
-    matrix_placeholder,
-    triangular=False,
-):
-    """Evaluates all Newton basis polynomials (monomials) on all given points.
+@njit(void(F_2D, I_2D, F_2D, I_1D, F_2D, F_2D, B_TYPE), cache=True)
+def eval_newton_monomials_multiple(
+    xx: np.ndarray,
+    exponents: np.ndarray,
+    generating_points: np.ndarray,
+    max_exponents: np.ndarray,
+    products_placeholder: np.ndarray,
+    monomials_placeholder: np.ndarray,
+    triangular: bool
+) -> None:
+    """Evaluate the Newton monomials at multiple query points.
 
-    - ``m`` spatial dimension
-    - ``k`` number of points
-    - ``N`` number of monomials
-    - ``p`` number of polynomials
-    - ``n`` maximum exponent in each dimension
+    The following notations are used below:
 
-    :param x: numpy array with coordinates of points where polynomial is to be evaluated.
+    - :math:`m`: the spatial dimension of the polynomial
+    - :math:`p`: the (maximum) degree of the polynomial in any dimension
+    - :math:`n`: the number of elements in the multi-index set (i.e., monomials)
+    - :math:`\mathrm{nr_{points}}`: the number of query (evaluation) points
+    - :math:`\mathrm{nr_polynomials}`: the number of polynomials with different
+      coefficient sets of the same multi-index set
+
+    :param xx: numpy array with coordinates of points where polynomial is to be evaluated.
               The shape has to be ``(k x m)``.
     :param exponents: numpy array with exponents for the polynomial. The shape has to be ``(N x m)``.
     :param generating_points: generating points used to generate the grid. The shape is ``(n x m)``.
     :param max_exponents: array with maximum exponent in each dimension. The shape has to be ``m``.
-    :param prod_placeholder: a numpy array for storing the (chained) products.
-    :param matrix_placeholder: placeholder numpy array where the results of evaluation are stored.
+    :param products_placeholder: a numpy array for storing the (chained) products.
+    :param monomials_placeholder: placeholder numpy array where the results of evaluation are stored.
                                The shape has to be ``(k x p)``.
     :param triangular: whether the output will be of lower triangular form or not.
                        -> will skip the evaluation of some values
@@ -176,86 +162,53 @@ def eval_all_newt_polys(
 
     Notes
     -----
-    ``exponents`` are allowed to be incomplete! Results are stored in the placeholder arrays. Nothing is returned.
-
+    - This is a Numba-accelerated function.
+    - The memory footprint for evaluating the Newton monomials iteratively
+       with a single query point at a time is smaller than evaluating all
+       the Newton monomials on all query points.
+       However, when multiplied with multiple coefficient sets,
+       this approach will be faster.
+    - Results are stored in the placeholder arrays. The function returns None.
     """
-    nr_points, dimensionality = x.shape
-    active_exponents = exponents  # all per default
-    for point_nr in range(nr_points):  # evaluate on all given points points
-        x_single = x[point_nr, :]
-        monomial_vals_placeholder = matrix_placeholder[point_nr]  # row of the matrix
-        if triangular:
-            # only evaluate some polynomials to create a triangular output array
-            nr_active_polys = point_nr + 1
-            # IMPORTANT: initialised empty. set all others to 0!
-            monomial_vals_placeholder[nr_active_polys:] = 0.0
-            monomial_vals_placeholder = monomial_vals_placeholder[:nr_active_polys]
-            active_exponents = exponents[:nr_active_polys, :]
 
-        eval_newton_polynomials(
+    n_points = xx.shape[0]
+
+    # By default, all exponents are "active" unless xx are unisolvent nodes
+    active_exponents = exponents
+    # Iterate each query points and evaluate the Newton monomials
+    for idx in range(n_points):
+
+        x_single = xx[idx, :]
+
+        # Get the row view of the monomials placeholder;
+        # this would be the evaluation results of a single query point
+        monomials_placeholder_single = monomials_placeholder[idx]
+
+        if triangular:
+            # TODO: Refactor this, this is triangular because the monomials
+            #       are evaluated at the unisolvent nodes, otherwise it won't
+            #       be and the results would be misleading.
+            # When evaluated on unisolvent nodes, some values will be a priori 0
+            n_active_polys = idx + 1
+            # Only some exponents are active
+            active_exponents = exponents[:n_active_polys, :]
+            # IMPORTANT: initialised empty. set all others to 0!
+            monomials_placeholder_single[n_active_polys:] = 0.0
+            # Only modify the non-zero entries
+            monomials_placeholder_single = \
+                monomials_placeholder_single[:n_active_polys]
+
+        # Evaluate the Newton monomials on a single query point
+        # NOTE: Due to "view" access,
+        # the whole 'monomials_placeholder' will be modified
+        eval_newton_monomials_single(
             x_single,
             active_exponents,
             generating_points,
             max_exponents,
-            prod_placeholder,
-            monomial_vals_placeholder,
+            products_placeholder,
+            monomials_placeholder_single
         )
-
-
-@njit(void(F_2D, F_2D, I_2D, F_2D, I_1D, F_2D, F_1D, F_2D), cache=True)
-def evaluate_multiple(
-    x,
-    coefficients,
-    exponents,
-    generating_points,
-    max_exponents,
-    prod_placeholder,
-    monomial_vals_placeholder,
-    results_placeholder,
-):
-    """Newton polynomial evaluation on several points.
-
-    - ``m`` spatial dimension
-    - ``k`` number of points
-    - ``N`` number of monomials
-    - ``p`` number of polynomials
-    - ``n`` maximum exponent in each dimension
-
-    :param x: numpy array with coordinates of points where polynomial is to be evaluated.
-              The shape has to be ``(k x m)``.
-    :param exponents: numpy array with exponents for the polynomial. The shape has to be ``(N x m)``.
-    :param generating_points: generating points used to generate the grid. The shape is ``(n x m)``.
-    :param max_exponents: array with maximum exponent in each dimension. The shape has to be ``m``.
-    :param prod_placeholder: a numpy array for storing the (chained) products.
-    :param monomial_vals_placeholder: a numpy array of length N for storing the values of all Newton basis polynomials.
-    :param results_placeholder: placeholder numpy array where the results of evaluation are stored.
-                                The shape has to be ``(k x p)``.
-
-    Notes
-    -----
-    Results are stored in the placeholder arrays. Nothing is returned.
-
-    """
-    nr_points = x.shape[0]
-    nr_polynomials = coefficients.shape[1]
-    for point_nr in range(nr_points):
-        x_single = x[point_nr, :]
-        # NOTE: with a fixed single point x to evaluate the polynomial on,
-        # the values of the Newton polynomials become fixed (coefficient agnostic)
-        # -> precompute all intermediary results (=compute the value of all Newton polynomials)
-        eval_newton_polynomials(
-            x_single,
-            exponents,
-            generating_points,
-            max_exponents,
-            prod_placeholder,
-            monomial_vals_placeholder,
-        )
-        for poly_nr in range(nr_polynomials):
-            coeffs_single = coefficients[:, poly_nr]
-            results_placeholder[point_nr, poly_nr] = single_eval(
-                coeffs_single, monomial_vals_placeholder
-            )
 
 
 @njit(void(F_2D, F_2D, I_2D), cache=True)
@@ -278,106 +231,233 @@ def compute_vandermonde_n2c(V_n2c, nodes, exponents):
 
 
 @njit(b1(I_1D, I_1D), cache=True)
-def lex_smaller_or_equal(index1: np.ndarray, index2: np.ndarray) -> bool:
-    """Compares whether multi-index 1 is lexicographically smaller than or equal to multi-index 2.
+def is_lex_smaller_or_equal(index_1: np.ndarray, index_2: np.ndarray) -> bool:
+    """Check if an index is lexicographically smaller than or equal to another.
 
-    - ``m`` spatial dimension
+    Parameters
+    ----------
+    index_1 : :class:`numpy:numpy.ndarray`
+        A given multi-index, a one-dimensional array of length ``m``.
+    index_2 : :class:`numpy:numpy.ndarray`
+        Another multi-index, a one dimensional array of length ``m``.
 
-    :param index1: a multi-index entry of shape ``m``.
-    :param index2: another multi-index entry.
-    :return: ``True`` if ``index1 <= index2`` (lexicographically), otherwise ``False``.
+    Returns
+    -------
+    bool
+        Return `True` if ``index_1 <= index_2`` lexicographically,
+        otherwise `False`.
 
+    Notes
+    -----
+    - By default, Numba disables the bound-checking for performance reason.
+      Therefore, if the two input arrays are of inconsistent shapes, no
+      exception will be raised and the results cannot be trusted.
+
+    Examples
+    --------
+    >>> my_index_1 = np.array([1, 2, 3])  # "Reference index"
+    >>> my_index_2 = np.array([1, 2, 3])  # Equal
+    >>> is_lex_smaller_or_equal(my_index_1, my_index_2)
+    True
+    >>> my_index_3 = np.array([2, 4, 5])  # Larger
+    >>> is_lex_smaller_or_equal(my_index_1, my_index_3)
+    True
+    >>> my_index_4 = np.array([0, 3, 2])  # Smaller
+    >>> is_lex_smaller_or_equal(my_index_1, my_index_4)
+    False
     """
-    spatial_dimension = len(index1)
-    for m in range(spatial_dimension - 1, -1, -1):  # from last to first dimension
-        if index1[m] > index2[m]:
+    spatial_dimension = len(index_1)
+    # lexicographic: Iterate backward from the highest dimension
+    for m in range(spatial_dimension - 1, -1, -1):
+        if index_1[m] > index_2[m]:
+            # index_1 is lexicographically larger
             return False
-        if index1[m] < index2[m]:
+
+        if index_1[m] < index_2[m]:
+            # index_1 is Lexicographically smaller
             return True
-    return True  # all equal
+
+    # index_1 is lexicographically equal
+    return True
 
 
 @njit(B_TYPE(I_2D), cache=True)
-def have_lexicographical_ordering(indices: np.ndarray) -> bool:
-    """Checks if an array of indices is ordered lexicographically
+def is_lex_sorted(indices: np.ndarray) -> bool:
+    """Check if an array of multi-indices is lexicographically sorted.
 
-    - ``m`` spatial dimension
-    - ``N`` number of monomials
+    Parameters
+    ----------
+    indices : :class:`numpy:numpy.ndarray`
+        Array of multi-indices, a two-dimensional non-negative integer array
+        of shape ``(N, m)``, where ``N`` is the number of multi-indices
+        and ``m`` is the number of spatial dimensions.
 
-    :param indices: array of multi-indices with shape ``(N x m)``.
-    :return: ``True`` if indices are lexicographically ordered, ``False`` otherwise.
+    Returns
+    -------
+    bool
+        ``True`` if the multi-indices is lexicographically sorted, and
+        ``False`` otherwise
 
+    Notes
+    -----
+    - If there are any duplicate entries (between rows),
+      an array of multi-indices does not have a lexicographical ordering.
+
+    Examples
+    --------
+    >>> my_indices = np.array([[0, 2, 0]])  # single entry
+    >>> is_lex_sorted(my_indices)
+    True
+    >>> my_indices = np.array([[0, 0], [1, 0], [0, 2]])  # already sorted
+    >>> is_lex_sorted(my_indices)
+    True
+    >>> my_indices = np.array([[1, 0], [0, 0], [0, 2]])  # unsorted
+    >>> is_lex_sorted(my_indices)
+    False
+    >>> my_indices = np.array([[0, 0], [2, 0], [2, 0]])  # duplicate entries
+    >>> is_lex_sorted(my_indices)
+    False
     """
-    nr_exponents, spatial_dimension = indices.shape
-    if nr_exponents <= 1:
+    nr_indices = indices.shape[0]
+
+    # --- Single entry is always lexicographically ordered
+    if nr_indices <= 1:
         return True
-    i1 = indices[0, :]
-    for n in range(1, nr_exponents):
-        i2 = indices[n, :]
-        if lex_smaller_or_equal(i2, i1):
+
+    # --- Loop over the multi-indices and find any unsorted entry or duplicate
+    index_1 = indices[0, :]
+    for n in range(1, nr_indices):
+        index_2 = indices[n, :]
+
+        if is_lex_smaller_or_equal(index_2, index_1):
+            # Unsorted entry or duplicates
             return False
-        if np.all(i1 == i2):  # duplicates are not allowed
-            return False
-        i1 = i2
+
+        index_1 = index_2
+
     return True
 
 
 @njit(INT(I_2D, I_1D), cache=True)
-def get_match_idx(indices: np.ndarray, index: np.ndarray) -> int:
-    """Finds the position of a multi index entry within an exponent matrix.
+def search_lex_sorted(indices: np.ndarray, index: np.ndarray) -> int:
+    """Find the position of a given entry within an array of multi-indices.
 
-    - ``m`` spatial dimension
-    - ``N`` number of monomials
+    Parameters
+    ----------
+    indices : :class:`numpy:numpy.ndarray`
+        Array of lexicographically sorted multi-indices, a two-dimensional
+        non-negative integer array of shape ``(N, m)``,
+        where ``N`` is the number of multi-indices and ``m`` is the number
+        of spatial dimensions.
+    index : :class:`numpy:numpy.ndarray`
+        Multi-index entry to check in ``indices``. The element is represented
+        by a one-dimensional array of length ``m``, where ``m`` is the number
+        of spatial dimensions.
 
-    :param indices: array of multi indices with shape ``(N x m)``.
-    :param index: one multi index entry with shape ``m``.
-    :return: if ``index`` is present in ``indices``, the position (array index) where it is found is returned,
-             otherwise a global constant ``NOT_FOUND`` is returned.
+    Returns
+    -------
+    int
+        If ``index`` is present in ``indices``, its position in ``indices``
+        is returned (the row number). Otherwise, a global constant
+        ``NOT_FOUND`` is returned instead.
 
     Notes
     -----
-    Exploits the lexicographical order of the indices to abort early -> not testing all indices.
-    Time complexity: O(mN).
+    - ``indices`` must be lexicographically sorted.
+    - This function is a binary search implementation that exploits
+      a lexicographically sorted array of multi-indices.
+      The time complexity of the implementation is :math:`O(m\log{N})`.
+    - By Minterpy convention, duplicate entries are not allowed in
+      a lexicographically sorted multi-indices. However, having duplicate
+      entries won't stop the search. In that case, the search returns
+      the position of the first match but cannot guarantee which one is that
+      from the duplicates.
 
+    Examples
+    --------
+    >>> my_indices = np.array([
+    ... [0, 0, 0],  # 0
+    ... [1, 0, 0],  # 1
+    ... [2, 0, 0],  # 2
+    ... [0, 0, 1],  # 3
+    ... ])
+    >>> my_index_1 = np.array([2, 0, 0])  # is present in my_indices
+    >>> search_lex_sorted(my_indices, my_index_1)
+    2
+    >>> my_index_2 = np.array([0, 1, 0])  # is not present in my_indices
+    >>> search_lex_sorted(my_indices, my_index_2)
+    -1
     """
-    nr_exponents, spatial_dimension = indices.shape
-    if nr_exponents == 0:
+    nr_indices = indices.shape[0]
+    if nr_indices == 0:
+        # Zero-length multi-indices has no entry
         return NOT_FOUND
-    m = len(index)
-    if m != spatial_dimension:
-        raise ValueError("dimensions do not match.")
+
+    # Initialize the search
     out = NOT_FOUND
-    for i in range(nr_exponents):  # O(N)
-        contained_index = indices[i, :]
-        if lex_smaller_or_equal(index, contained_index):  # O(m)
-            # i is now pointing to the (smallest) index which is lexicographically smaller or equal
-            # the two indices are equal iff the contained index is also smaller or equal than the query index
-            # NOTE: testing for equality directly is faster, but only in the case of equality (<- rare!)
-            #   most of the times the index won't be smaller and the check can be performed with fewer comparisons
-            is_equal = lex_smaller_or_equal(contained_index, index)
-            if is_equal:  # found the position of the index
-                out = i
-            break  # stop looking (an even bigger index cannot be equal)
+    low = 0
+    high = nr_indices - 1
+
+    # Start the binary search
+    while low <= high:
+
+        mid = (high + low) // 2
+
+        if is_lex_smaller_or_equal(indices[mid], index):
+            # NOTE: Equality must be checked here because the function
+            #       `is_lex_smaller_or_equal()` cannot check just for smaller.
+            if is_lex_smaller_or_equal(index, indices[mid]):
+                return mid
+
+            low = mid + 1
+
+        else:
+            high = mid - 1
+
     return out
 
 
 @njit(B_TYPE(I_2D, I_1D), cache=True)
-def index_is_contained(indices: np.ndarray, index: np.ndarray) -> bool:
-    """Checks if a multi index entry is present in a set of indices.
+def is_index_contained(indices: np.ndarray, index: np.ndarray) -> bool:
+    """Check if a multi-index entry is present in a set of multi-indices.
 
-    - ``m`` spatial dimension
-    - ``N`` number of monomials
+    Parameters
+    ----------
+    indices : :class:`numpy:numpy.ndarray`
+        Array of lexicographically sorted multi-indices, a two-dimensional
+        non-negative integer array of shape ``(N, m)``,
+        where ``N`` is the number of multi-indices and ``m`` is the number
+        of spatial dimensions.
+    index : :class:`numpy:numpy.ndarray`
+        Multi-index entry to check in the set. The element is represented
+        by a one-dimensional array of length ``m``,
+        where ``m`` is the number of spatial dimensions.
 
-    :param indices: array of multi indices with shape ``(N x m)``.
-    :param index: one multi index entry with shape ``m``.
-    :return: ``True`` if the ``index`` is present in ``indices``, ``False`` otherwise.
+    Returns
+    -------
+    bool
+        ``True`` if the entry ``index`` is contained in the set ``indices``
+        and ``False`` otherwise.
 
     Notes
     -----
-    Exploits the lexicographical order of the indices to abort early -> not testing all indices.
+    - The implementation is based on the binary search and therefore
+      ``indices`` must be lexicographically sorted.
 
+    Examples
+    --------
+    >>> my_indices = np.array([
+    ... [0, 0, 0],  # 0
+    ... [1, 0, 0],  # 1
+    ... [2, 0, 0],  # 2
+    ... [0, 0, 1],  # 3
+    ... ])
+    >>> is_index_contained(my_indices, np.array([1, 0, 0]))  # is present
+    True
+    >>> is_index_contained(my_indices, np.array([0, 1, 2]))  # is not present
+    False
     """
-    return get_match_idx(indices, index) != NOT_FOUND
+    return search_lex_sorted(indices, index) != NOT_FOUND
 
 
 @njit(B_TYPE(I_2D, I_2D), cache=True)
@@ -406,7 +486,7 @@ def all_indices_are_contained(subset_indices: np.ndarray, indices: np.ndarray) -
     for i in range(nr_exp_subset):
         candidate_index = subset_indices[i, :]
         indices2search = indices[match_idx + 1 :, :]  # start from the next one
-        match_idx = get_match_idx(indices2search, candidate_index)
+        match_idx = search_lex_sorted(indices2search, candidate_index)
         if match_idx == NOT_FOUND:
             return False
     return True
@@ -429,8 +509,13 @@ def fill_match_positions(larger_idx_set, smaller_idx_set, positions):
         while 1:
             search_pos += 1
             idx2 = larger_idx_set[search_pos, :]
-            if lex_smaller_or_equal(idx1, idx2) and lex_smaller_or_equal(idx2, idx1):
+            if is_lex_smaller_or_equal(idx1, idx2) and is_lex_smaller_or_equal(idx2, idx1):
                 # NOTE: testing for equality directly is faster, but only in the case of equality (<- rare!)
                 #   most of the times the index won't be smaller and the check can be performed with fewer comparisons
                 positions[i] = search_pos
                 break
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
