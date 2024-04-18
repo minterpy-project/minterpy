@@ -3,14 +3,45 @@ This is the conftest module of minterpy.
 
 Within a pytest run, this module is loaded first. That means here all global fixutes shall be defined.
 """
-
 import inspect
 
 import numpy as np
 import pytest
 from numpy.testing import assert_, assert_almost_equal, assert_equal
 
-from minterpy import MultiIndexSet, NewtonPolynomial
+from minterpy import (
+    MultiIndexSet,
+    LagrangePolynomial,
+    NewtonPolynomial,
+    CanonicalPolynomial,
+    ChebyshevPolynomial,
+    LagrangeToNewton,
+    LagrangeToCanonical,
+    NewtonToLagrange,
+    NewtonToCanonical,
+    CanonicalToLagrange,
+    CanonicalToNewton,
+)
+from minterpy.core.ABC.transformation_abstract import TransformationABC
+from minterpy.core.utils import get_exponent_matrix
+
+# Supported polynomial classes
+POLY_CLASSES = [
+    LagrangePolynomial,
+    NewtonPolynomial,
+    CanonicalPolynomial,
+    ChebyshevPolynomial,
+]
+
+# Supported polynomial transformation classes
+TRANSFORMATION_CLASSES = [
+    LagrangeToNewton,
+    NewtonToLagrange,
+    LagrangeToCanonical,
+    CanonicalToLagrange,
+    NewtonToCanonical,
+    CanonicalToNewton,
+]
 
 # Global seed
 SEED = 12345678
@@ -198,10 +229,10 @@ def PolyDegree(request):
 
 # fixture for lp degree
 
-lp_degree = [0.5, 1, 2, np.inf]
+lp_degrees = [0.5, 1, 2, np.inf]
 
 
-@pytest.fixture(params=lp_degree)
+@pytest.fixture(params=lp_degrees)
 def LpDegree(request):
     return request.param
 
@@ -234,12 +265,9 @@ def NrPoints(request):
     return request.param
 
 
-# Fixture for the number
-nr_polynomials = [1, 10]
-
-
-@pytest.fixture(params=nr_polynomials)
-def NrPolynomials(request):
+@pytest.fixture(params=[2, 5, 10])
+def num_polynomials(request):
+    """Fixture for the number of polynomials."""
     return request.param
 
 
@@ -251,6 +279,21 @@ batch_sizes = [1, 100, 1000]
 def BatchSizes(request):
     return request.param
 
+
+@pytest.fixture(params=POLY_CLASSES)
+def polynomial_class(request):
+    """Fixture for the supported polynomial classes."""
+    return request.param
+
+
+@pytest.fixture(params=TRANSFORMATION_CLASSES)
+def transformation_class(request) -> TransformationABC:
+    """Fixture for the supported polynomial transformation classes."""
+    return request.param
+
+
+origin_type = polynomial_class
+target_type = polynomial_class
 
 # Fixture for pair
 @pytest.fixture(
@@ -445,5 +488,29 @@ def build_random_multi_index():
     p = np.random.choice([1.0, 2.0, np.inf])
 
     mi = MultiIndexSet.from_degree(m, n, p)
+
+    return mi
+
+
+def create_non_downward_closed_multi_index(
+    spatial_dimension: int,
+    poly_degree: int,
+    lp_degree: float,
+) -> MultiIndexSet:
+    """Create a non-downward-closed multi-index set."""
+    if poly_degree == 0:
+        # NOTE: Skip the test as degree 0 contains only one element
+        pytest.skip()
+    exponents = get_exponent_matrix(spatial_dimension, poly_degree, lp_degree)
+    if poly_degree > 0:
+        # NOTE: Only applies for poly_degree > 0 (== 0 has only 1 element)
+        # Without the lexicographically smallest element
+        exponents = np.delete(exponents, 0, axis=0)
+    if poly_degree > 1:
+        # NOTE: Only applies for poly_degree > 1 (== 1 has at least 2 elements)
+        # Without the 2nd lexicographically smallest element
+        exponents = np.delete(exponents, 1, axis=0)
+
+    mi = MultiIndexSet(exponents, lp_degree)
 
     return mi

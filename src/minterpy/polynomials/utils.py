@@ -4,14 +4,27 @@ set of utility functions to be used in polynomials submodule
 import itertools
 import numpy as np
 
-from scipy.special import eval_chebyt
 from scipy.special import roots_legendre
-from typing import Callable
+from typing import Any, Callable, Optional
 
 from minterpy.core.tree import MultiIndexTree
 from minterpy.dds import dds
 from minterpy.global_settings import FLOAT_DTYPE
 from minterpy.utils import rectify_eval_input, eval_newton_monomials
+
+
+def dummy(*args, **kwargs) -> None:
+    """A placeholder function to indicate a feature that is not supported.
+
+    .. warning::
+      This feature is not implemented yet!
+
+    Raises
+    ------
+    NotImplementedError
+        Any time this function or method is called.
+    """
+    raise NotImplementedError("This feature is not yet implemented!")
 
 
 def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarray,
@@ -122,30 +135,6 @@ def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarr
         results[point_nr] = np.sum(monomial_vals[:,None] * coefficients, axis=0)
 
     return results
-
-
-def evaluate_chebyshev_monomials(x, exponents):
-    """Evaluate chebyshev monomials at all input points.
-
-         m = spatial dimension
-         N = number of coefficients
-         k = number of evaluation points
-
-        Parameters
-        ----------
-        x: (k, m) the k points to evaluate on with dimensionality m.
-        exponents: (m, N) a multi index "alpha" for every Chebyshev polynomial
-            corresponding to the exponents of this "monomial"
-
-        Returns
-        -------
-        (k,N) the value of each Chebyshev basis monomial evaluated at each point.
-    """
-
-    ## Compute monomial evaluations
-    monomials_eval = np.prod(eval_chebyt(exponents[None, :, :], x[:, None, :]), axis=-1)
-
-    return monomials_eval
 
 
 def integrate_monomials_newton(

@@ -1,5 +1,5 @@
 #######################
-Identity transformation
+Identity Transformation
 #######################
 
 .. currentmodule:: minterpy.transformations.identity

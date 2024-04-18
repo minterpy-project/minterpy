@@ -20,6 +20,11 @@ from .lagrange import *  # noqa
 
 __all__ += lagrange.__all__
 
+from . import chebyshev  # noqa
+from .chebyshev import *  # noqa
+
+__all__ += chebyshev.__all__
+
 from . import identity  # noqa
 from .identity import *  # noqa
 

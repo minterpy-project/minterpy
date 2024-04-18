@@ -6,32 +6,29 @@ The subclassing is not tested here, see tesing module `test_polynomial.py`
 import numpy as np
 import pytest
 from conftest import (
-    SEED,
-    LpDegree,
-    MultiIndices,
-    NrPoints,
-    NrPolynomials,
-    NrSimilarPolynomials,
-    PolyDegree,
-    SpatialDimension,
-    BatchSizes,
     assert_polynomial_almost_equal,
     build_rnd_coeffs,
     build_rnd_points,
     build_random_newton_polynom,
 )
 from numpy.testing import assert_, assert_almost_equal
+
 from minterpy.global_settings import INT_DTYPE
 from minterpy.utils import eval_newton_polynomials
 from minterpy import Grid
 
-from minterpy import NewtonPolynomial, NewtonToCanonical, CanonicalToNewton, NewtonToLagrange
+from minterpy import (
+    NewtonPolynomial,
+    NewtonToCanonical,
+    CanonicalToNewton,
+    NewtonToLagrange,
+)
 
 
-def test_eval(MultiIndices, NrPoints, NrPolynomials):
+def test_eval(MultiIndices, NrPoints, num_polynomials):
     """Test the evaluation of Newton polynomials."""
 
-    coeffs = build_rnd_coeffs(MultiIndices, NrPolynomials)
+    coeffs = build_rnd_coeffs(MultiIndices, num_polynomials)
     poly = NewtonPolynomial(MultiIndices, coeffs)
     pts = build_rnd_points(NrPoints, MultiIndices.spatial_dimension)
 
@@ -44,14 +41,14 @@ def test_eval(MultiIndices, NrPoints, NrPolynomials):
     assert_almost_equal(res, groundtruth)
 
 
-def test_eval_batch(MultiIndices, NrPolynomials, BatchSizes):
+def test_eval_batch(MultiIndices, num_polynomials, BatchSizes):
     """Test the evaluation on Newton polynomials in batches of query points."""
 
     #TODO: This is a temporary test as the 'batch_size' parameter is not
     #      opened in the higher-level interface, i.e., 'newton_poly(xx)'
 
     # Create a random coefficient values
-    newton_coeffs = build_rnd_coeffs(MultiIndices, NrPolynomials)
+    newton_coeffs = build_rnd_coeffs(MultiIndices, num_polynomials)
     grid = Grid(MultiIndices)
     generating_points = grid.generating_points
     exponents = MultiIndices.exponents
@@ -88,8 +85,8 @@ def test_partial_diff(SpatialDimension, PolyDegree, LpDegree):
 
         assert_polynomial_almost_equal(newt_can_diff_poly, newt_diff_poly)
 
-def test_diff(SpatialDimension, PolyDegree, LpDegree, NrPolynomials):
-    newton_poly = build_random_newton_polynom(SpatialDimension, PolyDegree, LpDegree, NrPolynomials)
+def test_diff(SpatialDimension, PolyDegree, LpDegree, num_polynomials):
+    newton_poly = build_random_newton_polynom(SpatialDimension, PolyDegree, LpDegree, num_polynomials)
 
     # A derivative of order zero along all dimensions should be equivalent to the same polynomial
     zero_order_diff_newt = newton_poly.diff(np.zeros(SpatialDimension, dtype=INT_DTYPE))

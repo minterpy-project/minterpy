@@ -1,5 +1,5 @@
 #################
-From Newton basis
+From Newton Basis
 #################
 
 .. currentmodule:: minterpy.transformations.newton
@@ -28,4 +28,16 @@ From Newton basis
    .. rubric:: Properties
 
    .. classautosummary:: minterpy.transformations.newton.NewtonToLagrange
+      :properties:
+
+.. autoclass:: NewtonToChebyshev
+   :members:
+   :show-inheritance:
+   :private-members:
+   :inherited-members:
+   :special-members:
+
+   .. rubric:: Properties
+
+   .. classautosummary:: minterpy.transformations.newton.NewtonToChebyshev
       :properties:

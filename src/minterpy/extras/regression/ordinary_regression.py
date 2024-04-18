@@ -10,16 +10,20 @@ import numpy as np
 import scipy
 from typing import Optional, Type, Union, Tuple, Callable
 
-from minterpy.transformations import LagrangeToNewton
-from minterpy.utils import eval_newton_monomials, eval_newton_polynomials
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
+from minterpy.core.multi_index import MultiIndexSet
+from minterpy.core.grid import Grid
 from minterpy.polynomials import (
     LagrangePolynomial,
     NewtonPolynomial,
     CanonicalPolynomial,
+    ChebyshevPolynomial,
 )
-from minterpy.core.multi_index import MultiIndexSet
-from minterpy.core.grid import Grid
+from minterpy.transformations import LagrangeToNewton
+from minterpy.utils import eval_newton_monomials, eval_newton_polynomials
+from minterpy.polynomials.chebyshev_polynomial import (
+    evaluate_chebyshev_monomials,
+)
 
 from .regression_abc import RegressionABC
 
@@ -191,7 +195,7 @@ class OrdinaryRegression(RegressionABC):
     @property
     def origin_poly(
         self
-    ) -> Union[LagrangePolynomial, NewtonPolynomial, CanonicalPolynomial]:
+    ) -> MultivariatePolynomialSingleABC:
         """Polynomial basis on which the regression is carried out."""
         return self._origin_poly
 
@@ -203,7 +207,7 @@ class OrdinaryRegression(RegressionABC):
     @property
     def eval_poly(
         self
-    ) -> Union[NewtonPolynomial, CanonicalPolynomial]:
+    ) -> Union[NewtonPolynomial, CanonicalPolynomial, ChebyshevPolynomial]:
         """Polynomial basis use for the prediction.
 
         Notes
@@ -421,6 +425,7 @@ class OrdinaryRegression(RegressionABC):
 
         print(output)
 
+
 def compute_regression_matrix(
     basis_poly: MultivariatePolynomialSingleABC, xx: np.ndarray
 ) -> np.ndarray:
@@ -470,6 +475,9 @@ def compute_regression_matrix(
         regression_matrix = np.prod(
             np.power(xx[:, None, :], exponents[None, :, :]), axis=-1
         )
+
+    elif isinstance(basis_poly, ChebyshevPolynomial):
+        regression_matrix = evaluate_chebyshev_monomials(xx, exponents)
 
     else:
         raise TypeError(f"Polynomial {type(basis_poly)} is not supported!")

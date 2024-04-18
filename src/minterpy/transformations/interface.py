@@ -1,5 +1,5 @@
 """
-Module providing high-level helper functions for polynomial basis transformations.
+This module provides high-level helper functions for basis transformations.
 """
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ __all__ = ["get_transformation", "get_transformation_class"]
 
 @no_type_check
 def get_transformation_class(
-    origin_type: MultivariatePolynomialSingleABC,
+    origin_type: type[MultivariatePolynomialSingleABC],
     target_type: type[MultivariatePolynomialSingleABC],
 ) -> type[TransformationABC]:
     """Finds the Transformation class to go from origin_type to target_type
@@ -41,9 +41,9 @@ def get_transformation_class(
 
 @no_type_check
 def get_transformation(
-    origin_polynomial: type[MultivariatePolynomialSingleABC],
+    origin_polynomial: MultivariatePolynomialSingleABC,
     target_type: type[MultivariatePolynomialSingleABC],
-) -> type[TransformationABC]:
+) -> TransformationABC:
     """Finds the Transformation class that can transform the basis of the origin_polynomial to the desired target_type.
 
     :param origin_polynomial: an instance of the origin polynomial
