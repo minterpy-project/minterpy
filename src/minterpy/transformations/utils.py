@@ -2,9 +2,12 @@
 Utility functions for computing matrices for transformation between canonical, lagrange, and newton basis.
 
 .. todo::
+   - Consider if simplifying the names makes any sense
    - make sure that the transformations are tested
    - find solution for the case that the multi-indices are separated
      from the grid indices
+   - Consider if making separate modules for some relevant functions
+     makes any sense
 """
 import numpy as np
 
@@ -27,9 +30,6 @@ from minterpy.polynomials.chebyshev_polynomial import (
 
 # NOTE: avoid looping over a numpy array! e.g. for j in np.arange(num_monomials):
 # see: # https://stackoverflow.com/questions/10698858/built-in-range-or-numpy-arange-which-is-more-efficient
-
-
-# todo simplify names
 
 
 def invert_triangular(triangular_matrix: np.ndarray) -> np.ndarray:
@@ -132,25 +132,24 @@ def _build_n2c_array(transformation: TransformationABC) -> ARRAY:
     return invert_triangular(_build_c2n_array(transformation))
 
 
-# TODO own module?
-
 # --- From LagrangePolynomial
 @no_type_check
 def build_lagrange_to_newton_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """Construct the Lagrange to Newton transformation operator.
+    """Construct the Lagrange-to-Newton transformation operator.
 
     Parameters
     ----------
     transformation : TransformationABC
-        The Transformation instance with information about the origin
-        polynomial (Lagrange polynomial) and the target type (Newton).
+        The transformer instance with information about the origin polynomial
+        (an instance of LagrangePolynomial) and
+        the target type (NewtonPolynomial).
 
     Returns
     -------
     OperatorABC
-        The Lagrange to Newton transformation operator.
+        The Lagrange-to-Newton transformation operator.
 
     Notes
     -----
@@ -173,7 +172,7 @@ def build_lagrange_to_newton_operator(
 def build_lagrange_to_canonical_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """Construct the Lagrange to Canonical transformation operator.
+    """Construct the Lagrange-to-Canonical transformation operator.
 
     The transformation is the chain: Lagrange-to-Newton then
     Newton-to-Canonical.
@@ -181,13 +180,14 @@ def build_lagrange_to_canonical_operator(
     Parameters
     ----------
     transformation : TransformationABC
-        The Transformation instance with information about the origin
-        polynomial (Lagrange polynomial) and the target type (canonical).
+        The transformer instance with information about the origin polynomial
+        (an instance of LagrangePolynomial) and
+        the target type (CanonicalPolynomial).
 
     Returns
     -------
     OperatorABC
-        The Lagrange to canonical transformation operator.
+        The Lagrange-to-Canonical transformation operator.
 
     Notes
     -----
@@ -203,18 +203,19 @@ def build_lagrange_to_canonical_operator(
 def build_lagrange_to_chebyshev_operator(
     transformation: TransformationABC
 ) -> OperatorABC:
-    """Compute the Lagrange to Chebyshev transformation.
+    """Compute the Lagrange-to-Chebyshev transformation.
 
     Parameters
     ----------
     transformation : TransformationABC
         The transformer instance with information about the origin polynomial
-        (Lagrange polynomial) and target type (ChebyshevPolynomial).
+        (an instance of LagrangePolynomial) and
+        the target type (ChebyshevPolynomial).
 
     Returns
     -------
     OperatorABC
-        The Lagrange to Chebyshev transformation operator.
+        The Lagrange-to-Chebyshev transformation operator.
 
     Notes
     -----
@@ -253,18 +254,19 @@ def build_lagrange_to_chebyshev_operator(
 def build_newton_to_lagrange_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """Construct the Newton to Lagrange transformation operator.
+    """Construct the Newton-to-Lagrange transformation operator.
 
     Parameters
     ----------
     transformation : TransformationABC
-        The Transformation instance with information about the origin
-        polynomial (Newton polynomial) and the target type (Lagrange).
+        The transformer instance with information about the origin polynomial
+        (an instance of NewtonPolynomial) and
+        the target type (LagrangePolynomial).
 
     Returns
     -------
     OperatorABC
-        The Newton to Lagrange transformation operator.
+        The Newton-to-Lagrange transformation operator.
 
     Notes
     -----
@@ -286,18 +288,19 @@ def build_newton_to_lagrange_operator(
 def build_newton_to_canonical_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """Construct the canonical to Newton transformation operator.
+    """Construct the Newton-to-Canonical transformation operator.
 
     Parameters
     ----------
     transformation : TransformationABC
         The transformer instance with information about the origin polynomial
-        (Newton polynomial) and target type (canonical).
+        (an instance of NewtonPolynomial) and
+        the target type (CanonicalPolynomial).
 
     Returns
     -------
     OperatorABC
-        The Newton to canonical transformation operator.
+        The Newton-to-Canonical transformation operator.
     """
     nwt2can_matrix = _build_n2c_array(transformation)
     nwt2can_operator = MatrixOperator(transformation, nwt2can_matrix)
@@ -308,7 +311,7 @@ def build_newton_to_canonical_operator(
 def build_newton_to_chebyshev_operator(
     transformation: TransformationABC
 ) -> OperatorABC:
-    """Construct the Newton to Chebyshev transformation operator.
+    """Construct the Newton-to-Chebyshev transformation operator.
 
     The transformation is the chain: Newton-to-Lagrange then
     Lagrange-to-Chebyshev.
@@ -317,12 +320,13 @@ def build_newton_to_chebyshev_operator(
     ----------
     transformation : TransformationABC
         The transformer instance with information about the origin polynomial
-        (Newton polynomial) and target type (Chebyshev).
+        (an instance of NewtonPolynomial) and
+        the target type (ChebyshevPolynomial).
 
     Returns
     -------
     OperatorABC
-        The Newton to Chebyshev transformation operator.
+        The Newton-to-Chebyshev transformation operator.
     """
     nwt2lag_operator = build_newton_to_lagrange_operator(transformation)
     lag2cheb_operator = build_lagrange_to_chebyshev_operator(transformation)
@@ -334,18 +338,19 @@ def build_newton_to_chebyshev_operator(
 def build_canonical_to_newton_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """Construct the canonical to Newton transformation operator.
+    """Construct the Canonical-to-Newton transformation operator.
 
     Parameters
     ----------
     transformation : TransformationABC
         The transformer instance with information about the origin polynomial
-        (canonical polynomial) and target type (Newton).
+        (an instance of CanonicalPolynomial) and
+        the target type (NewtonPolynomial).
 
     Returns
     -------
     OperatorABC
-        The canonical to Newton transformation operator.
+        The Canonical-to-Newton transformation operator.
     """
     can2nwt_matrix = _build_c2n_array(transformation)
     can2nwt_operator = MatrixOperator(transformation, can2nwt_matrix)
@@ -356,7 +361,7 @@ def build_canonical_to_newton_operator(
 def build_canonical_to_lagrange_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """Construct the canonical to Lagrange transformation operator.
+    """Construct the Canonical-to-Lagrange transformation operator.
 
     The transformation is the chain: Canonical-to-Newton then
     Newton-to-Lagrange.
@@ -365,12 +370,13 @@ def build_canonical_to_lagrange_operator(
     ----------
     transformation : TransformationABC
         The transformer instance with information about the origin polynomial
-        (canonical polynomial) and target type (Lagrange).
+        (an instance of CanonicalPolynomial) and
+        the target type (LagrangePolynomial).
 
     Returns
     -------
     OperatorABC
-        The canonical to Lagrange transformation operator.
+        The Canonical-to-Lagrange transformation operator.
     """
     nwt2lag_operator = build_newton_to_lagrange_operator(transformation)
     can2nwt_operator = build_canonical_to_newton_operator(transformation)
@@ -381,7 +387,7 @@ def build_canonical_to_lagrange_operator(
 def build_canonical_to_chebyshev_operator(
     transformation: TransformationABC
 ) -> OperatorABC:
-    """Construct the canonical to Chebyshev transformation operator.
+    """Construct the Canonical-to-Chebyshev transformation operator.
 
     The transformation is the chain: Canonical-to-Newton then
     Newton-to-Lagrange then Lagrange-to-Chebyshev.
@@ -392,12 +398,13 @@ def build_canonical_to_chebyshev_operator(
     ----------
     transformation : TransformationABC
         The transformer instance with information about the origin polynomial
-        (canonical polynomial) and target type (Chebyshev).
+        (an instance of CanonicalPolynomial) and
+        the target type (ChebyshevPolynomial).
 
     Returns
     -------
     OperatorABC
-        The canonical to Chebyshev transformation operator.
+        The canonical-to-Chebyshev transformation operator.
     """
     can2lag_operator = build_canonical_to_lagrange_operator(transformation)
     lag2cheb_operator = build_lagrange_to_chebyshev_operator(transformation)
@@ -415,12 +422,13 @@ def build_chebyshev_to_lagrange_operator(
     ----------
     transformation : TransformationABC
         The transformer instance with information about the origin polynomial
-        (Chebyshev polynomial) and target type (Lagrange).
+        (an instance of ChebyshevPolynomial) and
+        the target type (LagrangePolynomial).
 
     Returns
     -------
     OperatorABC
-        The Chebyshev to Lagrange transformation operator.
+        The Chebyshev-to-Lagrange transformation operator.
 
     Notes
     -----
@@ -439,7 +447,6 @@ def build_chebyshev_to_lagrange_operator(
         unisolvent_nodes = transformation.grid.unisolvent_nodes
         exponents = transformation.grid.multi_index.exponents
 
-
     # Compute the Chebyshev monomials at the unisolvent nodes
     chebyshev_monomials = evaluate_chebyshev_monomials(
         unisolvent_nodes,
@@ -455,7 +462,7 @@ def build_chebyshev_to_lagrange_operator(
 def build_chebyshev_to_newton_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """Construct the Chebyshev to Newton transformation operator.
+    """Construct the Chebyshev-to-Newton transformation operator.
 
     The transformation is the chain: Chebyshev-to-Lagrange then
     Lagrange-to-Newton.
@@ -464,12 +471,13 @@ def build_chebyshev_to_newton_operator(
     ----------
     transformation : TransformationABC
         The transformer instance with information about the origin polynomial
-        (Chebyshev polynomial) and target type (Newton).
+        (an instance of ChebyshevPolynomial) and
+        the target type (NewtonPolynomial).
 
     Returns
     -------
     OperatorABC
-        The Chebyshev to Newton transformation operator.
+        The Chebyshev-to-Newton transformation operator.
     """
     cheb2lag_operator = build_chebyshev_to_lagrange_operator(transformation)
     lag2nwt_operator = build_lagrange_to_newton_operator(transformation)
@@ -480,7 +488,7 @@ def build_chebyshev_to_newton_operator(
 def build_chebyshev_to_canonical_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """Construct the Chebyshev to canonical transformation operator.
+    """Construct the Chebyshev-to-Canonical transformation operator.
 
     The transformation is the chain: Chebyshev-to-Lagrange then
     Lagrange-to-Newton then Newton-to-Canonical.
@@ -491,12 +499,13 @@ def build_chebyshev_to_canonical_operator(
     ----------
     transformation : TransformationABC
         The transformer instance with information about the origin polynomial
-        (Chebyshev polynomial) and target type (Newton).
+        (an instance of ChebyshevPolynomial) and
+        the target type (NewtonPolynomial).
 
     Returns
     -------
     OperatorABC
-        The Chebyshev to Newton transformation operator.
+        The Chebyshev-to-Newton transformation operator.
     """
     cheb2lag_operator = build_chebyshev_to_lagrange_operator(transformation)
     lag2can_operator = build_lagrange_to_canonical_operator(transformation)
