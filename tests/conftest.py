@@ -62,6 +62,7 @@ SEED = 12345678
 MIN_POLY_DEG = 0
 MAX_POLY_DEG = 25
 
+
 # asserts that a call runs as expected
 def assert_call(fct, *args, **kwargs):
     try:

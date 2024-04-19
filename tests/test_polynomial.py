@@ -161,4 +161,6 @@ class TestEvaluation:
                 poly(xx_test)
         else:
             yy_test = poly(xx_test)
-            np.all(yy_test == yy_test[:, 0])  # due to identical coefficients
+            for i in range(num_polynomials):
+                # Due to identical coefficients, results are identical
+                np.all(yy_test[:, i] == yy_test[:, 0])

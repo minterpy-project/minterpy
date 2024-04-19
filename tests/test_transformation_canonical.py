@@ -2,7 +2,7 @@
 Testing module for the transformation of canonical polynomials.
 
 This module contains tests that are specific to the canonical polynomials;
-common functionalities and behavior of transformation instances
+common functionalities and behaviors of transformation instances
 and the corresponding operators are tested in a separate module.
 
 Notes
@@ -109,7 +109,7 @@ class TestNonDownwardClosed:
             CanonicalToLagrange(can_poly)()
 
     def test_to_newton(self, SpatialDimension, PolyDegree, LpDegree):
-        """Test the transformation to the canonical basis."""
+        """Test the transformation to the Newton basis."""
         # Create a non-downward-closed multi-index set
         mi = create_non_downward_closed_multi_index(
             SpatialDimension,

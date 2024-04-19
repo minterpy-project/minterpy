@@ -96,8 +96,8 @@ class TestNonDownwardClosed:
     -----
     - Transformation of polynomials having a non-downward-close multi-index set
       is separately tested because Minterpy may use different methods
-      for the transformation. Furthermore, some transformation strictly
-      requires that the polynomials having a downward-close multi-index set.
+      for the transformation. Furthermore, certain transformations strictly
+      require that the polynomials having a downward-close multi-index set.
     """
     def test_to_newton(self, SpatialDimension, PolyDegree, LpDegree):
         """Test the transformation to the Newton basis.

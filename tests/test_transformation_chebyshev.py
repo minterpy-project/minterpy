@@ -1,5 +1,5 @@
 """
-Testing module for the transformation of Chebyshev polynomials.
+Testing module for the transformation of Chebyshev polys. of the first kind.
 
 This module contains tests that are specific to the Chebyshev polynomials;
 common functionalities and behavior of transformation instances

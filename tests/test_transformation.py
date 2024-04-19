@@ -183,7 +183,8 @@ class TestTransformation:
         bwd_transformer = get_transformation(target_poly, origin_type)
         origin_poly_recovered = bwd_transformer()
 
-        # Assertion
+        # Assertions
+        assert isinstance(target_poly, target_type)
         assert_polynomial_almost_equal(origin_poly, origin_poly_recovered)
 
 
