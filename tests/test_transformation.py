@@ -13,25 +13,10 @@ from conftest import (
 from minterpy import MultiIndexSet
 from minterpy.core.ABC import OperatorABC, TransformationABC
 from minterpy.transformations import (
-    CanonicalToLagrange,
-    CanonicalToNewton,
     Identity,
-    LagrangeToCanonical,
-    LagrangeToNewton,
-    NewtonToCanonical,
-    NewtonToLagrange,
     get_transformation,
     get_transformation_class,
 )
-
-transform_classes = [
-    LagrangeToNewton,
-    NewtonToLagrange,
-    LagrangeToCanonical,
-    CanonicalToLagrange,
-    NewtonToCanonical,
-    CanonicalToNewton,
-]
 
 
 class TestInitialization:

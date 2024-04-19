@@ -17,10 +17,16 @@ from minterpy import (
     ChebyshevPolynomial,
     LagrangeToNewton,
     LagrangeToCanonical,
+    LagrangeToChebyshev,
     NewtonToLagrange,
     NewtonToCanonical,
+    NewtonToChebyshev,
     CanonicalToLagrange,
     CanonicalToNewton,
+    CanonicalToChebyshev,
+    ChebyshevToLagrange,
+    ChebyshevToNewton,
+    ChebyshevToCanonical,
 )
 from minterpy.core.ABC.transformation_abstract import TransformationABC
 from minterpy.core.utils import get_exponent_matrix
@@ -36,11 +42,17 @@ POLY_CLASSES = [
 # Supported polynomial transformation classes
 TRANSFORMATION_CLASSES = [
     LagrangeToNewton,
-    NewtonToLagrange,
     LagrangeToCanonical,
-    CanonicalToLagrange,
+    LagrangeToChebyshev,
+    NewtonToLagrange,
     NewtonToCanonical,
+    NewtonToChebyshev,
+    CanonicalToLagrange,
     CanonicalToNewton,
+    CanonicalToChebyshev,
+    ChebyshevToLagrange,
+    ChebyshevToNewton,
+    ChebyshevToCanonical,
 ]
 
 # Global seed
