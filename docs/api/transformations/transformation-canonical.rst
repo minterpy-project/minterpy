@@ -1,10 +1,22 @@
 ####################
-From Canonical basis
+From Canonical Basis
 ####################
 
 .. currentmodule:: minterpy.transformations.canonical
 
 .. automodule:: minterpy.transformations.canonical
+
+.. autoclass:: CanonicalToLagrange
+   :members:
+   :show-inheritance:
+   :private-members:
+   :inherited-members:
+   :special-members:
+
+   .. rubric:: Properties
+
+   .. classautosummary:: minterpy.transformations.canonical.CanonicalToLagrange
+      :properties:
 
 .. autoclass:: CanonicalToNewton
    :members:
@@ -18,7 +30,7 @@ From Canonical basis
    .. classautosummary:: minterpy.transformations.canonical.CanonicalToNewton
       :properties:
 
-.. autoclass:: CanonicalToLagrange
+.. autoclass:: CanonicalToChebyshev
    :members:
    :show-inheritance:
    :private-members:
@@ -27,5 +39,5 @@ From Canonical basis
 
    .. rubric:: Properties
 
-   .. classautosummary:: minterpy.transformations.canonical.CanonicalToLagrange
+   .. classautosummary:: minterpy.transformations.canonical.CanonicalToChebyshev
       :properties:

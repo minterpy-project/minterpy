@@ -20,3 +20,8 @@ from . import lagrange_polynomial  # noqa
 from .lagrange_polynomial import *  # noqa
 
 __all__ += lagrange_polynomial.__all__
+
+from . import chebyshev_polynomial  # noqa
+from .chebyshev_polynomial import * # noqa
+
+__all__ += chebyshev_polynomial.__all__

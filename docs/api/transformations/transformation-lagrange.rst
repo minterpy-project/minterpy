@@ -29,3 +29,15 @@ From Lagrange basis
 
    .. classautosummary:: minterpy.transformations.lagrange.LagrangeToCanonical
       :properties:
+
+.. autoclass:: LagrangeToChebyshev
+   :members:
+   :show-inheritance:
+   :private-members:
+   :inherited-members:
+   :special-members:
+
+   .. rubric:: Properties
+
+   .. classautosummary:: minterpy.transformations.lagrange.LagrangeToChebyshev
+      :properties:

@@ -1,19 +1,23 @@
 #################################
-Polynomial Transformation classes
+Polynomial Transformation Classes
 #################################
 
-An abstract base class is provided as the blueprint on which every implementation of a polynomial basis transformation
-class must be derived from. Concrete implementations for basis transformations between the built-in
-polynomial basis (Canonical, Lagrange, and Newton) are also provided.
+An :doc:`abstract base class </api/core/ABC/trafoABC>` is provided
+as the blueprint from which every implementation of a polynomial basis
+transformation class must be derived.
 
-For most common use cases, the high-level :doc:`interface` provides a convenient way to do basis
-transformations.
+Below are the available transformation classes between the built-in
+polynomial bases.
+
+For most common use cases, the high-level :doc:`helper functions <interface>`
+provides a convenient way to do basis transformations.
 
 .. toctree::
    :maxdepth: 2
 
-   transformationCanonical
-   transformationNewton
-   transformationLagrange
-   transformationIdentity
+   transformation-lagrange
+   transformation-newton
+   transformation-canonical
+   transformation-chebyshev
+   transformation-identity
    interface

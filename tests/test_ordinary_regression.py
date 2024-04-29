@@ -8,13 +8,13 @@ from numpy.testing import assert_
 import minterpy as mp
 from minterpy.extras.regression import OrdinaryRegression
 from minterpy.polynomials import (
-    LagrangePolynomial, NewtonPolynomial, CanonicalPolynomial
+    LagrangePolynomial,
+    NewtonPolynomial,
+    CanonicalPolynomial,
+    ChebyshevPolynomial,
 )
 
 from conftest import (
-    SpatialDimension,
-    LpDegree,
-    PolyDegree,
     assert_call,
     assert_multi_index_equal,
     assert_grid_equal,
@@ -79,7 +79,10 @@ def least_squares_solver(request):
 
 # Fixtures for least-squares solver
 origin_polys = [
-    LagrangePolynomial, NewtonPolynomial, CanonicalPolynomial
+    LagrangePolynomial,
+    NewtonPolynomial,
+    CanonicalPolynomial,
+    ChebyshevPolynomial,
 ]
 
 

@@ -10,3 +10,4 @@ As the most general case, minterpy provides an abstract base class as the bluepr
    canonical
    newton
    lagrange
+   chebyshev

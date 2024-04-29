@@ -5,12 +5,26 @@ import itertools
 import numpy as np
 
 from scipy.special import roots_legendre
-from typing import Callable
+from typing import Any, Callable, Optional
 
 from minterpy.core.tree import MultiIndexTree
 from minterpy.dds import dds
 from minterpy.global_settings import FLOAT_DTYPE
 from minterpy.utils import rectify_eval_input, eval_newton_monomials
+
+
+def dummy(*args, **kwargs) -> None:
+    """A placeholder function to indicate a feature that is not supported.
+
+    .. warning::
+      This feature is not implemented yet!
+
+    Raises
+    ------
+    NotImplementedError
+        Any time this function or method is called.
+    """
+    raise NotImplementedError("This feature is not yet implemented!")
 
 
 def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarray,
