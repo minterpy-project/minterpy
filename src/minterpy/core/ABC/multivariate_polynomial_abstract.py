@@ -77,43 +77,99 @@ class MultivariatePolynomialABC(abc.ABC):
         """
         pass
 
+    @staticmethod
     @abc.abstractmethod
-    def _eval(self, x) -> Any:  # pragma: no cover
-        """Abstract evaluation function.
-
-        Notes
-        -----
-        This is a placeholder of the ABC, which is overwritten by the concrete implementation.
-        """
-        pass
-
-    # TODO *args, **kwargs ?! or rather "point" or "x"
-    def __call__(self, x) -> Any:
-        """Evaluation of the polynomial.
-
-        This function is called, if an instance of the polynomial(s) is called: ``P(x)``
+    def _eval(self, xx: np.ndarray, **kwargs) -> np.ndarray:  # pragma: no cover
+        """Abstract method to the polynomial evaluation function.
 
         Parameters
         ----------
-        arg : np.ndarray
-            Batch array where the polynomial(s) is evaluated. The shape needs to be ``(N,d)`` or ``(N,d,n)``, where ``N`` is the number of points, ``d`` is the dimension of the space and ``n`` is the number of polynomials (if present). Actually, ``arg`` denotes list of `d`-tuples containing the components of the point in space.
+        xx : :class:`numpy:numpy.ndarray`
+            The set of query points to evaluate as a two-dimensional array
+            of shape ``(k, m)`` where ``k`` is the number of query points and
+            ``m`` is the spatial dimension of the polynomial.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying evaluation (see the concrete implementation).
 
         Returns
         -------
-        np.ndarray
-            The output array of the scalar values of the polynomials the output may be a ndarray when multiple sets of coefficients have been stored
+        :class:`numpy:numpy.ndarray`
+            The values of the polynomial evaluated at query points.
+
+            - If there is only a single polynomial (i.e., a single set of
+              coefficients), then a one-dimensional array of length ``k``
+              is returned.
+            - If there are multiple polynomials (i.e., multiple sets
+              of coefficients), then a two-dimensional array of shape
+              ``(k, np)`` is returned where ``np`` is the number of
+              coefficient sets.
 
         Notes
         -----
-        Internally the concrete implementation of the static method ``_eval`` is called.
+        - This is a placeholder of the ABC, which is overwritten
+          by the concrete implementation.
 
         See Also
         --------
-        _eval : concrete implementation of the evaluation of the polynomial(s)
+        __call__
+            The dunder method as a syntactic sugar to evaluate
+            the polynomial(s) instance on a set of query points.
         """
-        # TODO built in rescaling between user_domain and internal_domain
-        #   IDEA: use sklearn min max scaler (transform() and inverse_transform())
-        return self._eval(x)
+        pass
+
+    def __call__(self, xx: np.ndarray, **kwargs) -> np.ndarray:
+        """Evaluate the polynomial on a set of query points.
+
+        The function is called when an instance of a polynomial is called with
+        a set of query points, i.e., :math:`p(\mathbf{X})` where
+        :math:`\mathbf{X}` is a matrix of values with :math:`k` rows
+        and each row is of length :math:`m` (i.e., a point in
+        :math:`m`-dimensional space).
+
+        Parameters
+        ----------
+        xx : :class:`numpy:numpy.ndarray`
+            The set of query points to evaluate as a two-dimensional array
+            of shape ``(k, m)`` where ``k`` is the number of query points and
+            ``m`` is the spatial dimension of the polynomial.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying evaluation (see the concrete implementation).
+
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            The values of the polynomial evaluated at query points.
+
+            - If there is only a single polynomial (i.e., a single set of
+              coefficients), then a one-dimensional array of length ``k``
+              is returned.
+            - If there are multiple polynomials (i.e., multiple sets
+              of coefficients), then a two-dimensional array of shape
+              ``(k, np)`` is returned where ``np`` is the number of
+              coefficient sets.
+
+        Notes
+        -----
+        - The function calls the concrete implementation of the static method
+          ``_eval()``.
+
+        See Also
+        --------
+        _eval
+            The underlying static method to evaluate the polynomial(s) instance
+            on a set of query points.
+
+        TODO
+        ----
+        - Introduce input validation for xx as it is common across concrete
+          implementations.
+        - Possibly built-in rescaling between ``user_domain`` and
+          ``internal_domain``. An idea: use sklearn min max scaler
+          (``transform()`` and ``inverse_transform()``)
+        """
+        return self._eval(self, xx, **kwargs)
 
     # anything else any polynomial must support
     # TODO mathematical operations? abstract
@@ -210,10 +266,130 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
     @staticmethod
     @abc.abstractmethod
+    def _partial_diff(
+        poly: MultivariatePolynomialABC,
+        dim: int,
+        order: int,
+        **kwargs,
+    ) -> "MultivariatePolynomialSingleABC":
+        """Abstract method for differentiating poly. on a given dim. and order.
+
+        Parameters
+        ----------
+        poly : MultivariatePolynomialABC
+            The instance of polynomial to differentiate.
+        dim : int
+            Spatial dimension with respect to which the differentiation
+            is taken. The dimension starts at 0 (i.e., the first dimension).
+        order : int
+            Order of partial derivative.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying differentiation (see the concrete implementation).
+
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            A new polynomial instance that represents the partial derivative
+            of the original polynomial of the given order of derivative with
+            respect to the specified dimension.
+
+        Notes
+        -----
+        - The concrete implementation of this static method is called when
+          the public method ``partial_diff()`` is called on an instance.
+
+        See also
+        --------
+        partial_diff
+            The public method to differentiate the polynomial of a specified
+            order of derivative with respect to a given dimension.
+        """
+        pass
+
+    @staticmethod
+    @abc.abstractmethod
+    def _diff(
+        poly: MultivariatePolynomialABC,
+        order: np.ndarray,
+        **kwargs,
+    ) -> "MultivariatePolynomialSingleABC":
+        """Abstract method for diff. poly. on given orders w.r.t each dim.
+
+        Parameters
+        ----------
+        poly : MultivariatePolynomialABC
+            The instance of polynomial to differentiate.
+        order : :class:`numpy:numpy.ndarray`
+            A one-dimensional integer array specifying the orders of derivative
+            along each dimension. The length of the array must be ``m`` where
+            ``m`` is the spatial dimension of the polynomial.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying differentiation (see the concrete implementation).
+
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            A new polynomial instance that represents the partial derivative
+            of the original polynomial of the specified orders of derivative
+            along each dimension.
+
+        Notes
+        -----
+        - The concrete implementation of this static method is called when
+          the public method ``diff()`` is called on an instance.
+
+        See also
+        --------
+        diff
+            The public method to differentiate the polynomial instance on
+            the given orders of derivative along each dimension.
+        """
+        pass
+
+    @staticmethod
+    @abc.abstractmethod
     def _integrate_over(
-        poly: "MultivariatePolynomialABC", bounds: Optional[np.ndarray]
-    ) -> np.ndarray:
-        """Abstract definite integration method."""
+        poly: "MultivariatePolynomialABC",
+        bounds: Optional[np.ndarray],
+        **kwargs,
+    ) -> Union[float, np.ndarray]:
+        """Abstract method for definite integration.
+
+        Parameters
+        ----------
+        poly : MultivariatePolynomialABC
+            The instance of polynomial to integrate.
+        bounds : Union[List[List[float]], np.ndarray], optional
+            The bounds of the integral, an ``(m, 2)`` array where ``m``
+            is the number of spatial dimensions. Each row corresponds to
+            the bounds in a given dimension.
+            If not given, then the canonical bounds :math:`[-1, 1]^m` will
+            be used instead.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying integration (see the respective concrete
+            implementations).
+
+        Returns
+        -------
+        Union[:py:class:`float`, :class:`numpy:numpy.ndarray`]
+            The integral value of the polynomial over the given bounds.
+            If only one polynomial is available, the return value is of
+            a :py:class:`float` type.
+
+        Notes
+        -----
+        - The concrete implementation of this static method is called when
+          the public method ``integrate_over()`` is called on an instance.
+
+        See Also
+        --------
+        integrate_over
+            The public method to integrate the polynomial instance over
+            the given bounds.
+        """
         pass
 
     def __init__(
@@ -771,17 +947,44 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         extra_user_domain = verify_domain(extra_user_domain, diff_dim)
         self.user_domain = np.concatenate((self.user_domain, extra_user_domain))
 
-    def partial_diff(self, dim: int, order: int = 1) -> "MultivariatePolynomialSingleABC":
-        """Compute the polynomial that is the partial derivative along a dimension of specified order.
+    def partial_diff(
+        self,
+        dim: int,
+        order: int = 1,
+        **kwargs,
+    ) -> "MultivariatePolynomialSingleABC":
+        """Return the partial derivative poly. at the given dim. and order.
 
         Parameters
         ----------
-        dim: spatial dimension along which to take the derivative
-        order: order of partial derivative
+        dim : int
+            Spatial dimension with respect to which the differentiation
+            is taken. The dimension starts at 0 (i.e., the first dimension).
+        order : int
+            Order of partial derivative.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying differentiation (see the respective concrete
+            implementations).
 
         Returns
         -------
-        a new polynomial instance that represents the partial derivative
+        MultivariatePolynomialSingleABC
+            A new polynomial instance that represents the partial derivative
+            of the original polynomial of the specified order of derivative
+            and with respect to the specified dimension.
+
+        Notes
+        -----
+        - This method calls the concrete implementation of the abstract
+          method ``_partial_diff()`` after input validation.
+
+        See Also
+        --------
+        _partial_diff
+            The underlying static method to differentiate the polynomial
+            instance of a specified order of derivative and with respect to
+            a specified dimension.
         """
 
         # Guard rails for dim
@@ -789,8 +992,10 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             raise TypeError(f"dim <{dim}> must be an integer")
 
         if dim < 0 or dim >= self.spatial_dimension:
-            raise ValueError(f"dim <{dim}> for spatial dimension <{self.spatial_dimension}>"
-                             f" should be between 0 and {self.spatial_dimension-1}")
+            raise ValueError(
+                f"dim <{dim}> for spatial dimension <{self.spatial_dimension}>"
+                f" should be between 0 and {self.spatial_dimension-1}"
+            )
 
         # Guard rails for order
         if not np.issubdtype(type(dim), np.integer):
@@ -799,18 +1004,43 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         if order < 0:
             raise ValueError(f"order <{order}> must be a non-negative integer")
 
-        return self._partial_diff(self, dim, order)
+        return self._partial_diff(self, dim, order, **kwargs)
 
-    def diff(self, order: np.ndarray) -> "MultivariatePolynomialSingleABC":
-        """Compute the polynomial that is the partial derivative of a particular order along each dimension.
+    def diff(
+        self,
+        order: np.ndarray,
+        **kwargs,
+    ) -> "MultivariatePolynomialSingleABC":
+        """Return the partial derivative poly. of given orders along each dim.
 
         Parameters
         ----------
-        order: integer array specifying the order of derivative along each dimension
+        order : :class:`numpy:numpy.ndarray`
+            A one-dimensional integer array specifying the orders of derivative
+            along each dimension. The length of the array must be ``m`` where
+            ``m`` is the spatial dimension of the polynomial.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying differentiation (see the respective concrete
+            implementations).
 
         Returns
         -------
-        a new polynomial instance that represents the partial derivative
+        MultivariatePolynomialSingleABC
+            A new polynomial instance that represents the partial derivative
+            of the original polynomial of the specified orders of derivative
+            along each dimension.
+
+        Notes
+        -----
+        - This method calls the concrete implementation of the abstract
+          method ``_diff()`` after input validation.
+
+        See Also
+        --------
+        _diff
+            The underlying static method to differentiate the polynomial
+            of specified orders of derivative along each dimension.
         """
 
         # convert 'order' to numpy 1d array if it isn't already. This allows type checking below.
@@ -827,21 +1057,27 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             raise ValueError(f"inconsistent number of elements in 'order' <{len(order)}>,"
                              f"expected <{self.spatial_dimension}> corresponding to each spatial dimension")
 
-        return self._diff(self, order)
+        return self._diff(self, order, **kwargs)
 
     def integrate_over(
-        self, bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
+        self,
+        bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
+        **kwargs,
     ) -> Union[float, np.ndarray]:
         """Compute the definite integral of the polynomial over the bounds.
 
         Parameters
         ----------
         bounds : Union[List[List[float]], np.ndarray], optional
-            The bounds of the integral, an ``(M, 2)`` array where ``M``
+            The bounds of the integral, an ``(m, 2)`` array where ``m``
             is the number of spatial dimensions. Each row corresponds to
             the bounds in a given dimension.
-            If not given, then the canonical bounds [-1, 1]^M will be used
-            instead.
+            If not given, then the canonical bounds :math:`[-1, 1]^m` will
+            be used instead.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying integration (see the respective concrete
+            implementations).
 
         Returns
         -------
@@ -853,8 +1089,19 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         Raises
         ------
         ValueError
-            If the bounds either of inconsistent shape or not in the [-1, 1]^M
-            domain.
+            If the bounds either of inconsistent shape or not in
+            the :math:`[-1, 1]^m` domain.
+
+        Notes
+        -----
+        - This method calls the concrete implementation of the abstract
+          method ``_integrate_over()`` after input validation.
+
+        See Also
+        --------
+        _integrate_over
+            The underluing static method to integrate the polynomial instance
+            over the given bounds.
 
         TODO
         ----
@@ -887,7 +1134,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         if np.any(np.isclose(bounds[:, 0], bounds[:, 1])):
             return 0.0
 
-        value = self._integrate_over(self, bounds)
+        value = self._integrate_over(self, bounds, **kwargs)
 
         try:
             # One-element array (one set of coefficients), just return the item

@@ -371,7 +371,7 @@ class CanonicalPolynomial(MultivariatePolynomialSingleABC):
     _mul = staticmethod(dummy)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
-    _eval = canonical_eval
+    _eval = staticmethod(canonical_eval)
 
     _partial_diff = staticmethod(_canonical_partial_diff)
     _diff = staticmethod(_canonical_diff)

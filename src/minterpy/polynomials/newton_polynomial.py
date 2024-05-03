@@ -142,7 +142,7 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     _mul = staticmethod(dummy)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
-    _eval = newton_eval
+    _eval = staticmethod(newton_eval)
 
     _partial_diff = staticmethod(_newton_partial_diff)
     _diff = staticmethod(_newton_diff)
