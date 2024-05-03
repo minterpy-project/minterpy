@@ -20,7 +20,7 @@ from minterpy.polynomials.utils import integrate_monomials_lagrange
 __all__ = ["LagrangePolynomial"]
 
 
-def dummy(x: Optional[Any] = None) -> None:
+def dummy(*args, **kwargs) -> None:
     """Placeholder function.
 
     .. warning::
