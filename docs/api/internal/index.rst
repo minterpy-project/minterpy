@@ -13,3 +13,4 @@ Here, we list all the internal helper functions that minterpy makes use of.
    Transformation utility functions <trafoutils>
    Verification functions <verification>
    Numba accelerated utility functions <jit_compiled_utils>
+   Numba-Accelerated Functions <jit_compiled/index>

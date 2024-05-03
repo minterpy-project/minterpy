@@ -27,6 +27,10 @@ I_1D = INT[:]
 I_2D = INT[:, :]
 B_TYPE = numba.b1
 
+UINT32 = numba.from_dtype(np.uint32)
+UINT64 = numba.from_dtype(np.uint64)
+
+
 DEFAULT_LP_DEG = 2.0
 
 NOT_FOUND = -1  # meaning: exponent vector is not contained

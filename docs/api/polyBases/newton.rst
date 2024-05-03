@@ -4,7 +4,7 @@ Newton Polynomial Base
 
 .. currentmodule:: minterpy.polynomials.newton_polynomial
 
-.. automodule:: minterpy.polynomials.newton_polynomial
+.. :py::: minterpy.polynomials.newton_polynomial
 
 .. autoclass:: NewtonPolynomial
    :members:

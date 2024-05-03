@@ -7,6 +7,13 @@
 - Support for the Chebyshev polynomials of the first kind as a polynomial basis
   via `ChebyshevPolynomial`. Differentiation and integration of polynomials in
   this basis are not yet supported.
+- Faster differentiation of polynomials in the Newton basis due to a Numba 
+  implementation; the methods `diff()` and `partial_diff()` now support
+  a keyword argument `backend` to select the numerical routine for
+  differentiation. Supported values are: `"numpy"` (NumPy-based implementation
+  used by default in v0.2.0-alpha), `"numba"` (Numba-based implementation,
+  now the default), `"numba-par"` (CPU parallelization in the Numba-based
+  implementation; may accelerates computation for larger problems).
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several
