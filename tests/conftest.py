@@ -367,6 +367,7 @@ def mi_pair(SpatialDimension, PolyDegree, LpDegree, param_diff):
         p_1, p_2 = np.random.choice(lp_degrees, 2)
         mi_1 = MultiIndexSet.from_degree(m_1, d_1, p_1)
         mi_2 = MultiIndexSet.from_degree(m_2, d_2, p_2)
+        # mi_1, mi_2 = create_mi_pair_distinct()
     elif param_diff == "empty":
         # A pair with one of them is empty
         m_1 = np.random.randint(low=1, high=5)
@@ -378,6 +379,21 @@ def mi_pair(SpatialDimension, PolyDegree, LpDegree, param_diff):
         mi_2 = MultiIndexSet(np.empty((0, m_2)), p_2)
     else:
         return ValueError(f"'param-diff' = {param_diff} is not recognized!")
+
+    return mi_1, mi_2
+
+
+def create_mi_pair_distinct():
+    """Create a pair of distinct multi-index sets."""
+    # A pair with all three parameters differ
+    m_1 = np.random.randint(low=1, high=5)
+    m_2 = 2 * m_1
+    n_1 = np.random.randint(low=1, high=5)
+    n_2 = np.random.randint(low=1, high=5)
+    lp_degrees = [0.5, 1.0, 2.0, 3.0, np.inf]
+    p_1, p_2 = np.random.choice(lp_degrees, 2)
+    mi_1 = MultiIndexSet.from_degree(m_1, n_1, p_1)
+    mi_2 = MultiIndexSet.from_degree(m_2, n_2, p_2)
 
     return mi_1, mi_2
 
