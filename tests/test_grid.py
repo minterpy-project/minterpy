@@ -32,18 +32,7 @@ class TestEquality:
         # Assertions
         assert grd_1 is not grd_2  # Not identical instances
         assert grd_1 == grd_2  # but equal in value
-
-    def test_equality_inconsistent_type(self):
-        """Test equality check with inconsistent types."""
-        # Create a multi-index set
-        mi = MultiIndexSet.from_degree(3, 2, 2.0)
-
-        # Create a Grid instance
-        grd = Grid(mi)
-
-        # Assertion
-        with pytest.raises(TypeError):
-            print(grd == mi)
+        assert grd_2 == grd_1  # symmetric property
 
     def test_inequal_multi_index(self):
         """Test inequality of two Grid instances due to different multi-index.
@@ -58,6 +47,7 @@ class TestEquality:
         # Assertions
         assert grd_1 is not grd_2  # Not identical instances
         assert grd_1 != grd_2  # Not equal in values
+        assert grd_2 != grd_1  # symmetric property
 
     def test_inequal_gen_points(self, SpatialDimension, PolyDegree, LpDegree):
         """Test inequality of two Grid instances due to diff. gen. points."""
@@ -68,11 +58,12 @@ class TestEquality:
         # Chebyshev points
         grd_1 = Grid(mi)
         # Equidistant points
-        grd_2 = Grid.from_value_set(mi, np.linspace(-1, 1, len(mi)))
+        grd_2 = Grid.from_value_set(mi, np.linspace(-1, 1, PolyDegree+1))
 
         # Assertions
         assert grd_1 is not grd_2  # Not identical instances
         assert grd_1 != grd_2  # Not equal in values
+        assert grd_2 != grd_1  # symmetric property
 
     def test_inequality_inconsistent_type(self):
         """Test inequality check with inconsistent types."""
@@ -82,6 +73,9 @@ class TestEquality:
         # Create a Grid instance
         grd = Grid(mi)
 
-        # Assertion
-        with pytest.raises(TypeError):
-            print(grd != mi)
+        # Assertions
+        assert grd != mi
+        assert grd != "123"
+        assert grd != 1
+        assert grd != 10.0
+        assert grd != np.random.rand(len(mi), 3)

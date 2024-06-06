@@ -12,6 +12,12 @@
   only if both the underlying multi-index sets and generating points are
   equal. Note that as the generating points are of floating types, the equality
   check via `==` is exact without any tolerance specifications.
+- Exact equality check via the `==` operator has been implemented for all
+  instances of concrete polynomial classes. Two polynomials are equal in values
+  if and only if the concrete class is the same, the multi-index sets are
+  equal, the grids are equal, and the coefficient values are all equal.
+  As coefficients are of floating type, the comparison is carried out exactly
+  without any tolerance specifications.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several
