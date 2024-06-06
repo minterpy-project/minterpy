@@ -944,6 +944,7 @@ class TestEquality:
         # Assertions: not identical but equal in value
         assert mi1 is not mi2
         assert mi1 == mi2
+        assert mi1 == mi2  # Symmetric property
 
     @pytest.mark.parametrize("spatial_dimension", [0, 1, 5])
     def test_empty_set(self, spatial_dimension, LpDegree):
@@ -961,6 +962,7 @@ class TestEquality:
         # Assertions: not identical but equal in value
         assert mi_1 is not mi_2
         assert mi_1 == mi_2
+        assert mi_2 == mi_1  # Symmetric property
 
 
 class TestInequality:
@@ -976,8 +978,9 @@ class TestInequality:
         mi_1 = MultiIndexSet.from_degree(3, 2, 1)
         mi_2 = MultiIndexSet.from_degree(4, 2, np.inf)
 
-        # Assertion
+        # Assertions
         assert mi_1 != mi_2
+        assert mi_2 != mi_1  # Symmetric property
 
     def test_lp_degree(self, SpatialDimension, PolyDegree):
         """Test the inequality check between MultiIndexSets w/ diff. lp-degrees.
@@ -987,8 +990,9 @@ class TestInequality:
         mi_1 = MultiIndexSet(exp, lp_degree=1.0)
         mi_2 = MultiIndexSet(exp, lp_degree=2.0)
 
-        # Assertion
+        # Assertions
         assert mi_1 != mi_2
+        assert mi_2 != mi_1  # Symmetric property
 
     def test_exponents(self, SpatialDimension, LpDegree):
         """Test the inequality check between MultiIndexSets w/ diff. exponents.
@@ -999,12 +1003,13 @@ class TestInequality:
         exp_2 = get_exponent_matrix(SpatialDimension, 3, np.inf)
         mi_2 = MultiIndexSet(exp_2, lp_degree=np.inf)
 
-        # Assertion
+        # Assertions
         assert mi_1 != mi_2
+        assert mi_2 != mi_1  # Symmetric property
 
     @pytest.mark.parametrize("spatial_dimension", [0, 1, 5])
     def test_empty_set(self, spatial_dimension, LpDegree):
-        """Test the equality check between two instances of empty sets.
+        """Test the inequality check between two instances of empty sets.
 
         Notes
         -----
@@ -1015,8 +1020,20 @@ class TestInequality:
         mi_1 = MultiIndexSet(exponent, lp_degree=1.0)
         mi_2 = MultiIndexSet(exponent, lp_degree=2.0)
 
-        # Assertion
+        # Assertions
         assert mi_1 != mi_2
+        assert mi_2 != mi_1  # Symmetric property
+
+    def test_inconsistent_type(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test the inequality with an instance of another type."""
+        # Create a MultiIndexSet instance
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Assertions
+        assert mi != "123"
+        assert mi != 1
+        assert mi != 10
+        assert mi != np.random.rand(len(mi), SpatialDimension)
 
 
 class TestMultiplication:
