@@ -349,32 +349,19 @@ class Grid:
         Returns
         -------
         bool
-            Returns ``True`` if the two instances are equal in value,
+            ``True`` if the two instances are equal in value,
             ``False`` otherwise.
         """
         # Check for consistent type
         if not isinstance(other, Grid):
-            raise TypeError(
-                f"The compared instance must be of {self.__class__} type!"
-            )
-        # Multi-index set equality
-        self_multi_index = self.multi_index
-        other_multi_index = other.multi_index
-        multi_index_is_equal = self_multi_index == other_multi_index
+            return False
 
-        # Return early if multi-index is already inequal
-        if not multi_index_is_equal:
+        # Multi-index set equality
+        if self.multi_index != other.multi_index:
             return False
 
         # Generating points equality
-        self_gen_points = self.generating_points
-        other_gen_points = other.generating_points
-        gen_points_are_equal = np.array_equal(
-            self_gen_points,
-            other_gen_points,
-        )
+        if not np.array_equal(self.generating_points, other.generating_points):
+            return False
 
-        # Grid equality check
-        is_equal = multi_index_is_equal and gen_points_are_equal
-
-        return is_equal
+        return True
