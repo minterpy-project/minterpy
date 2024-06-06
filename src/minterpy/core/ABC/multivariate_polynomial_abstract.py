@@ -512,6 +512,46 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         return cls(p.multi_index, new_coeffs, p.internal_domain, p.user_domain, p.grid)
 
+    def __eq__(self, other: "MultivariatePolynomialSingleABC") -> bool:
+        """Compare two concrete polynomial instances for exact equality.
+
+        Two polynomial instances are equal if and only if:
+
+        - both are of the same concrete class, *and*
+        - the underlying multi-index sets are equal, *and*
+        - the underlying grid instances are equal, *and*
+        - the coefficients of the polynomials are equal.
+
+        Parameters
+        ----------
+        other : MultivariatePolynomialSingleABC
+            Another instance of concrete implementation of
+            `MultivariatePolynomialSingleABC` to compare with
+
+        Returns
+        -------
+        bool
+            ``True`` if the current instance is equal to the other instance,
+            ``False`` otherwise.
+        """
+        # The instances are of different concrete classes
+        if not isinstance(self, type(other)):
+            return False
+
+        # The underlying multi-index sets are equal
+        if self.multi_index != other.multi_index:
+            return False
+
+        # The underlying grid instances are equal
+        if self.grid != other.grid:
+            return False
+
+        # The coefficients of the polynomials are equal
+        if not np.array_equal(self.coeffs, other.coeffs):
+            return False
+
+        return True
+
     # Arithmetic operations:
 
     def __neg__(self):
