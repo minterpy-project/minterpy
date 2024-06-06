@@ -7,6 +7,11 @@
 - Support for the Chebyshev polynomials of the first kind as a polynomial basis
   via `ChebyshevPolynomial`. Differentiation and integration of polynomials in
   this basis are not yet supported.
+- Exact equality check via the `==` operator has been implemented for instances
+  of the `Grid` class. Two instances of `Grid` are equal (in values) if and
+  only if both the underlying multi-index sets and generating points are
+  equal. Note that as the generating points are of floating types, the equality
+  check via `==` is exact without any tolerance specifications.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several
