@@ -18,6 +18,9 @@
   equal, the grids are equal, and the coefficient values are all equal.
   As coefficients are of floating type, the comparison is carried out exactly
   without any tolerance specifications.
+- Polynomial-(real)scalar multiplication is now supported for polynomial
+  instances of all concrete classes. The implementation includes left-side,
+  right-side, and in-place multiplication.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several

@@ -8,9 +8,30 @@ from minterpy.core.verification import (
     verify_poly_degree,
     verify_lp_degree,
     check_dimensionality,
+    is_scalar,
     check_shape,
     check_values,
 )
+
+
+class TestCheckScalar:
+    """All tests related to scalar value checking."""
+
+    @pytest.mark.parametrize(
+        "valid_value",
+        [1, 10.0, np.array([10.0])[0], np.array([10])[0]],
+    )
+    def test_scalar(self, valid_value):
+        """Test checking a valid real scalar number."""
+        assert is_scalar(valid_value)
+
+    @pytest.mark.parametrize(
+        "invalid_value",
+        ["123", 1+5j, np.array([1, 2, 3]), [1, 2, 3]],
+    )
+    def test_scalar(self, invalid_value):
+        """Test checking a valid real scalar number."""
+        assert not is_scalar(invalid_value)
 
 
 class TestCheckValues:

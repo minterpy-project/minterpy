@@ -348,6 +348,38 @@ def check_domain_fit(points: np.ndarray):
             )
 
 
+def is_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
+    """Check if a given value is a real scalar number.
+
+    Parameters
+    ----------
+    x : Union[int, float, np.integer, np.floating]
+        The variable to be checked.
+
+    Returns
+    -------
+    bool
+        ``True`` if the variable is a scalar (an int, float, np.integer,
+        or np.floating), ``False`` otherwise.
+
+    Examples
+    --------
+    >>> is_scalar(1)  # int
+    True
+    >>> is_scalar(10.0)  # float
+    True
+    >>> is_scalar(np.array([1])[0])  # numpy.int64
+    True
+    >>> is_scalar(np.array([1]))  # numpy.ndarray
+    False
+    >>> is_scalar(np.array([123.0])[0])  # numpy.float64
+    True
+    >>> is_scalar(1+5j)  # complex
+    False
+    """
+    return isinstance(x, (int, float, np.integer, np.floating))
+
+
 def check_values(xx: Union[int, float, np.ndarray], **kwargs):
     """Verify that the input array has neither ``NaN`` nor ``inf`` values.
 
