@@ -10,13 +10,14 @@ from typing import Any, List, Optional, Union
 
 import numpy as np
 
-from minterpy.global_settings import ARRAY
+from minterpy.global_settings import ARRAY, SCALAR
 
 from ..grid import Grid
 from ..multi_index import MultiIndexSet
 from ..utils import expand_dim, find_match_between
 from ..verification import (
     check_dimensionality,
+    is_scalar,
     check_shape,
     check_type_n_values,
     verify_domain,
@@ -234,7 +235,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
     @staticmethod
     @abc.abstractmethod
-    def _mul(self, other):  # pragma: no cover
+    def _mul(self, other, **kwargs):  # pragma: no cover
         # no docstring here, since it is given in the concrete implementation
         pass
 
@@ -249,6 +250,47 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     def _pow(self, pow):  # pragma: no cover
         # no docstring here, since it is given in the concrete implementation
         pass
+
+    def _scalar_mul(
+        self,
+        other: SCALAR,
+        inplace=False,
+    ) -> Optional["MultivariatePolynomialSingleABC"]:
+        """Multiply the polynomial by a (real) scalar value.
+
+        Parameters
+        ----------
+        other : SCALAR
+            The real scalar value to multiply the polynomial by.
+        inplace : bool, optional
+            ``True`` if the multiplication should be done in-place,
+            ``False`` otherwise. The default is ``False``.
+
+        Returns
+        -------
+        Optional[MultivariatePolynomialSingleABC]
+            The multiplied polynomial if ``inplace`` is ``False`` (the
+            default), otherwise ``None`` (the instance is modified in-place).
+
+        Notes
+        -----
+        - If inplace is ``False``, a deep copy of the polynomial will be
+          created whose coefficients are multiplied by the scalar,
+          and then returned.
+        - This is a concrete implementation applicable to all concrete
+          implementations of polynomial due to the universal rule of
+          scalar-polynomial multiplication.
+        """
+        if inplace:
+            # Don't do 'self._coeffs *= other' because external coeffs
+            # will change and cause a side effect.
+            self._coeffs = self._coeffs * other
+        else:
+
+            self_copy = deepcopy(self)
+            self_copy._coeffs *= other  # inplace is safe due to deepcopy above
+
+            return self_copy
 
     @staticmethod
     def _gen_grid_default(multi_index):
@@ -630,33 +672,55 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         result = self._sub(self, other)
         return result
 
-    def __mul__(self, other):
-        """Multiplication of the polynomial(s) with another given polynomial(s).
+    def __mul__(
+        self,
+        other: Union["MultivariatePolynomialSingleABC", SCALAR]
+    ) -> "MultivariatePolynomialSingleABC":
+        """Multiply the polynomial(s) with another polynomial or a real scalar.
 
-        This function is called, if two polynomials are multiplied like ``P1 * P2``.
+        This function is called when:
 
-        :param other: the other polynomial, which is multiplied.
-        :type other:  MultivariatePolynomialSingleABC
+        - two polynomials are multiplied: ``P1 * P2``, where ``P1`` and ``P2``
+          are both instances of concrete polynomial class.
+        - a polynomial is multiplied with a real scalar number: ``P1 * a``,
+          where ``a`` is a real scalar number.
 
-        :return: The result of ``self * other``.
-        :rtype: MultivariatePolynomialSingleABC
+        Polynomials are closed under scalar multiplication, meaning that
+        the result of the multiplication is also a polynomial with the same
+        underlying multi-index set; only the coefficients are altered.
+
+        Parameters
+        ----------
+        other : Union[MultivariatePolynomialSingleABC, SCALAR]
+            The right operand, either an instance of polynomial (of the same
+            concrete class as the right operand) or a real scalar number.
+
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            The result of the multiplication, an instance of multiplied
+            polynomial.
 
         Notes
         -----
-        Internally it calles the static method ``self._mul`` from the concrete implementation.
+        - The concrete implementation of polynomial-polynomial multiplication
+          is delegated to the respective polynomial concrete class.
 
         See Also
         --------
-        _mul : concrete implementation of ``__mul__``
+        _scalar_mul
+            Concrete implementation of ``__mul__`` when the right operand
+            is a real scalar number.
         """
-        if self.__class__ != other.__class__:
-            raise NotImplementedError(
-                f"Multiplication operation not implemented for "
-                f"'{self.__class__}', '{other.__class__}'"
-            )
+        # Multiplication by a real scalar number
+        if is_scalar(other):
+            return self._scalar_mul(other, inplace=False)
 
-        result = self._mul(self, other)
-        return result
+        if isinstance(self, type(other)):
+            # Rely on the subclass concrete implementation (static method)
+            return self._mul(self, other)
+
+        return NotImplemented
 
     def __radd__(self, other):
         """Right sided addition of the polynomial(s) with another given polynomial(s).
@@ -714,34 +778,80 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         result = self._add(-other, self)
         return result
 
-    def __rmul__(self, other):
-        """Right sided multiplication of the polynomial(s) with another given polynomial(s).
+    def __rmul__(self, other: SCALAR) -> "MultivariatePolynomialSingleABC":
+        """Right sided multiplication of the polynomial(s) with a real scalar.
 
-        This function is called, if two polynomials are multiplied like ``P1*P2`` from the right side.
+        This function is called if a real scalar number is multiplied
+        with a polynomial like ``a * P`` where ``a`` and ``P`` are a scalar
+        and a polynomial instance, respectively.
 
-        :param other: The other polynomial, where this instance is multplied on.
-        :type other: MultivariatePolynomialSingleABC
+        Parameters
+        ----------
+        other : SCALAR
+            The left operand, a real scalar number.
 
-        :return: The result of ``other * self``.
-        :rtype: MultivariatePolynomialSingleABC
-
-        Notes
-        -----
-        Internally it calles the static method ``self._rmul`` from the concrete implementation.
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            The result of the multiplication, an instance of multiplied
+            polynomial.
 
         See Also
         --------
-        _rmul : concrete implementation of ``__rmul__``
-        """
-        if self.__class__ != other.__class__:
-            raise NotImplementedError(
-                f"Multiplication operation not implemented for "
-                f"'{self.__class__}', '{other.__class__}'"
-            )
+        _scalar_mul
+            Concrete implementation of ``__mul__`` when the right operand
+            is a real scalar number.
 
-        # TODO Call to the _mul method
-        # TODO Return the a new class instance with the result
-        return
+        """
+        # Multiplication by a real scalar number
+        if is_scalar(other):
+            return self._scalar_mul(other, inplace=False)
+
+        # Right-sided multiplication with other types is not explicitly
+        # supported; it will rely on the left operand '__mul__()' method
+        return NotImplemented
+
+    def __imul__(
+        self,
+        other: SCALAR,
+    ) -> "MultivariatePolynomialSingleABC":
+        """Multiply a polynomial with a real scalar in-place.
+
+        This function is called when a polynomial is multiplied with a real
+        scalar number in-place like ``P *= a`` where ``P`` ``a`` are
+        a polynomial instance and a scalar, respectively.
+
+        Parameters
+        ----------
+        other : SCALAR
+            The right operand, a real scalar number.
+
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            The result of the multiplication, an instance of multiplied
+            polynomial.
+
+        See Also
+        --------
+        _scalar_mul
+            Concrete implementation of ``__mul__`` when the right operand
+            is a real scalar number.
+
+        TODO
+        ----
+        - Add support for polynomial-polynomial multiplication in-place.
+        """
+        if is_scalar(other):
+            self._scalar_mul(other, inplace=True)
+            return self
+
+        # TODO: Currently only multiplication with scalar is supported inplace
+        if isinstance(self, type(other)):
+            raise NotImplementedError
+
+        return NotImplemented
+
 
     # copying
     def __copy__(self):

@@ -334,3 +334,210 @@ class TestEvaluation:
             for i in range(num_polynomials):
                 # Due to identical coefficients, results are identical
                 np.all(yy_test[:, i] == yy_test[:, 0])
+
+
+class TestScalarMultiplication:
+    """All tests related to the multiplication of a polynomial with scalars."""
+    def test_mul_identity(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test the left-sided multiplicative identity."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial
+        poly_1 = polynomial_class(mi, coeffs)
+
+        # Left-sided multiplication
+        poly_2 = poly_1 * 1.0
+
+        # Assertions
+        assert poly_1 is not poly_2  # The instances are not identical
+        assert poly_1 == poly_2
+        assert poly_2 == poly_1
+
+    def test_rmul_identity(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test the right-sided multiplicative identity."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial
+        poly_1 = polynomial_class(mi, coeffs)
+
+        # Left-sided multiplication
+        poly_2 = 1.0 * poly_1
+
+        # Assertions
+        assert poly_1 is not poly_2  # The instances are not identical
+        assert poly_1 == poly_2
+        assert poly_2 == poly_1
+
+    def test_imul_identity(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test the augmented multiplicative identity."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial
+        poly = polynomial_class(mi, coeffs)
+        old_id = id(poly)
+
+        # Left-sided multiplication
+        poly *= 1.0
+
+        # Assertions
+        assert old_id == id(poly)  # The instances are not identical
+        assert np.array_equal(coeffs, poly.coeffs)
+
+    def test_mul(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test the multiplication of a polynomial with scalars."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        scalar = np.random.random()
+        coeffs_1 = np.random.rand(len(mi))
+        coeffs_2 = scalar * coeffs_1
+
+        # Create two polynomials
+        poly_1 = polynomial_class(mi, coeffs_1)
+        poly_2 = poly_1 * scalar  # Left-sided multiplication
+        poly_3 = scalar * poly_1  # Right-sided multiplication
+
+        # Assertions
+        assert poly_2 is not poly_3
+        assert poly_2 == poly_3
+        assert poly_3 == poly_2
+
+    def test_imul(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test the augmented multiplication of a polynomial with scalars."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        scalar = np.random.random()
+        coeffs_1 = np.random.rand(len(mi))
+        coeffs_2 = scalar * coeffs_1
+
+        # Create two polynomials
+        poly_1 = polynomial_class(mi, coeffs_1)
+        poly_1 *= scalar
+        poly_2 = polynomial_class(mi, coeffs_2)
+
+        # Assertions
+        assert poly_1 is not poly_2
+        assert poly_1 == poly_2
+        assert poly_2 == poly_1
+
+    def test_multi_poly(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test the multiplication of multiple polynomials with scalars."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        scalar = np.random.random()
+        coeffs_1 = np.random.rand(len(mi), num_polynomials)
+        coeffs_2 = scalar * coeffs_1
+
+        # Create two polynomials
+        poly_1 = polynomial_class(mi, coeffs_1)
+        poly_1 = poly_1 * scalar
+        poly_2 = polynomial_class(mi, coeffs_2)
+
+        # Assertions
+        assert poly_1 is not poly_2
+        assert poly_1 == poly_2
+        assert poly_2 == poly_1
+
+    @pytest.mark.parametrize("invalid_value", ["123", 1+1j, [1, 2, 3]])
+    def test_invalid(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        invalid_value,
+    ):
+        """Test the invalid multiplication."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial
+        poly = polynomial_class(mi, coeffs)
+
+        # Assertion
+        with pytest.raises(TypeError):
+            print(poly * invalid_value)
+
+        with pytest.raises(TypeError):
+            print(invalid_value * poly)
+
+        with pytest.raises(TypeError):
+            poly *= invalid_value
+
+    def test_invalid_imul(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test the invalid multiplication."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial
+        poly = polynomial_class(mi, coeffs)
+
+        # Assertion
+        with pytest.raises(NotImplementedError):
+            poly *= poly
