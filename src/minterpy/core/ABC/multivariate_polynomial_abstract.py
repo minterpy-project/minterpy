@@ -596,16 +596,22 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
     # Arithmetic operations:
 
-    def __neg__(self):
-        """
-        Negation of the polynomial(s).
+    def __neg__(self) -> "MultivariatePolynomialSingleABC":
+        """Negate the polynomial(s) instance.
 
-        :return: new polynomial with negated coefficients.
-        :rtype: MultivariatePolynomialSingleABC
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            New polynomial(s) instance with negated coefficients.
+
+        Notes
+        -----
+        - The resulting polynomial is a deep copy of the original polynomial.
         """
-        return self.__class__(
-            self.multi_index, -self._coeffs, self.internal_domain, self.user_domain
-        )
+        self_copy = deepcopy(self)
+        self_copy._coeffs = -1 * self_copy._coeffs
+
+        return self_copy
 
     def __pos__(self):
         """

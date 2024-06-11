@@ -22,6 +22,11 @@
   instances of all concrete classes. The implementation includes left-side,
   right-side, and in-place multiplication.
 
+### Fixed
+
+- Negating a polynomial with a non-default Grid instance returns a polynomial
+  with the default grid.
+
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several
 new functionalities and enhances code quality and performance.

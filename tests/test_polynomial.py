@@ -541,3 +541,119 @@ class TestScalarMultiplication:
         # Assertion
         with pytest.raises(NotImplementedError):
             poly *= poly
+
+
+class TestNegation:
+    """All tests related to the negation of a polynomial instance."""
+    def test_neg(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        LpDegree,
+        PolyDegree,
+    ):
+        """Test the expected results from negating a polynomial."""
+        # Create a MultiIndexSet instance
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs)
+
+        # Negate the polynomial
+        poly_neg = -poly
+
+        # Assertions
+        assert poly_neg is not poly  # Must not be the same instance
+        assert poly_neg != -poly_neg
+        assert poly_neg.multi_index == poly.multi_index
+        assert poly_neg.grid == poly.grid
+        assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
+
+    def test_neg_multi_poly(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        LpDegree,
+        PolyDegree,
+        num_polynomials,
+    ):
+        """Test the expected results from negating multiple polynomials."""
+        # Create a MultiIndexSet instance
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi), num_polynomials)
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs)
+
+        # Negate the polynomial
+        poly_neg = -poly
+
+        # Assertions
+        assert poly_neg is not poly  # Must not be the same instance
+        assert poly_neg != -poly_neg
+        assert poly_neg.multi_index == poly.multi_index
+        assert poly_neg.grid == poly.grid
+        assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
+
+    def test_sanity_multiplication(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        LpDegree,
+        PolyDegree,
+    ):
+        """Test that negation is equivalent to multiplication with -1."""
+        # Create a MultiIndexSet instance
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs)
+
+        # Negate the polynomial
+        poly_neg_1 = -poly  # via negation
+        poly_neg_2 = -1 * poly  # via negative multiplication
+
+        # Assertions
+        assert poly_neg_1 is not poly_neg_2
+        assert poly_neg_1 == poly_neg_2
+
+    def test_different_grid(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        LpDegree,
+        PolyDegree,
+    ):
+        """Test that grid remains the same as the one used for construction."""
+        # Create a MultiIndexSet instance
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a grid of equidistant point
+        grd = Grid.from_value_set(
+            mi,
+            np.linspace(-1, 1, PolyDegree+1)[:, np.newaxis],
+        )
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs, grid=grd)
+
+        # Negate the polynomial
+        poly_neg = -poly
+
+        # Assertions
+        assert poly_neg is not poly  # Must not be the same instance
+        assert poly_neg != -poly_neg
+        assert poly_neg.multi_index == poly.multi_index
+        assert poly_neg.grid == poly.grid
+        assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
