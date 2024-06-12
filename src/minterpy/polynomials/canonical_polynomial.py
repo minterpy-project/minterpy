@@ -138,31 +138,6 @@ def _match_dims(poly1, poly2, copy=None):
     return p1, p2
 
 
-def _matching_internal_domain(poly1, poly2, tol=None):
-    """Test if two polynomial have the same internal_domain.
-
-    Works on polynomial with same spatial_dimension.
-
-    Parameters
-    ----------
-    poly1, poly2 : CanonicalPolynomial
-            Polynomials to check
-    tol : float
-            tolerance for matching floats in the domains. Default tol = 1e-16
-
-    Returns
-    -------
-    match : bool
-            True if both
-    """
-    if tol is None:
-        tol = 1e-16
-    return (
-        np.less_equal(np.abs(poly1.internal_domain - poly2.internal_domain), tol)
-        & np.less_equal(np.abs(poly1.user_domain - poly2.user_domain), tol)
-    ).all()
-
-
 def _canonical_add(poly1, poly2):
     """
     Addition of two polynomials in canonical basis.
@@ -186,7 +161,7 @@ def _canonical_add(poly1, poly2):
     """
     p1, p2 = _match_dims(poly1, poly2)
     # print(p1.internal_domain,p2.internal_domain) # here is the error!!!!
-    if _matching_internal_domain(p1, p2):
+    if p1.has_matching_domain(p2):
         res_mi_arr, res_c = _generic_canonical_add(
             p1.multi_index.exponents, p1.coeffs, p2.multi_index.exponents, p2.coeffs
         )

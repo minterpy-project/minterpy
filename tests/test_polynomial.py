@@ -438,6 +438,8 @@ class TestScalarMultiplication:
         assert poly_2 is not poly_3
         assert poly_2 == poly_3
         assert poly_3 == poly_2
+        assert np.array_equal(coeffs_2, poly_2.coeffs)
+        assert np.array_equal(coeffs_2, poly_3.coeffs)
 
     def test_imul(
         self,
@@ -657,3 +659,114 @@ class TestNegation:
         assert poly_neg.multi_index == poly.multi_index
         assert poly_neg.grid == poly.grid
         assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
+
+
+class TestHasMatchingDomain:
+    """All tests related to method to check if polynomial domains match."""
+    def test_sanity(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test if a polynomial has a matching domain with itself."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi)
+
+        # Assertion
+        assert poly.has_matching_domain(poly)
+
+    def test_same_dim(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree
+    ):
+        """Test if poly. has a matching domain with another of the same dim."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        poly_1 = polynomial_class(mi)
+        poly_2 = polynomial_class(mi)
+
+        # Assertions
+        assert poly_1.has_matching_domain(poly_2)
+        assert poly_2.has_matching_domain(poly_1)
+
+    def test_diff_dim(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree
+    ):
+        """Test if poly. has a matching domain with another of a diff. dim."""
+        # Create a MultiIndexSet
+        dim_1 = SpatialDimension
+        mi_1 = MultiIndexSet.from_degree(dim_1, PolyDegree, LpDegree)
+        dim_2 = SpatialDimension + 1
+        mi_2 = MultiIndexSet.from_degree(dim_2, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        poly_1 = polynomial_class(mi_1)
+        poly_2 = polynomial_class(mi_2)
+
+        # Assertion
+        assert poly_1.has_matching_domain(poly_2)
+        assert poly_2.has_matching_domain(poly_1)
+
+    def test_user_domain(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree
+    ):
+        """Test if poly. does not have a matching user domain."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        user_domain_1 = np.ones((SpatialDimension, 2))
+        user_domain_1[:, 0] *= -2
+        user_domain_1[:, 1] *= 2
+        poly_1 = polynomial_class(mi, user_domain=user_domain_1)
+        user_domain_2 = np.ones((SpatialDimension, 2))
+        user_domain_2[:, 0] *= -0.5
+        user_domain_2[:, 1] *= 0.5
+        poly_2 = polynomial_class(mi, user_domain=user_domain_2)
+
+        # Assertion
+        assert not poly_1.has_matching_domain(poly_2)
+        assert not poly_2.has_matching_domain(poly_1)
+
+    def test_internal_domain(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree
+    ):
+        """Test if poly. does not have a matching internal domain."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        internal_domain_1 = np.ones((SpatialDimension, 2))
+        internal_domain_1[:, 0] *= -2
+        internal_domain_1[:, 1] *= 2
+        poly_1 = polynomial_class(mi, internal_domain=internal_domain_1)
+        internal_domain_2 = np.ones((SpatialDimension, 2))
+        internal_domain_2[:, 0] *= -0.5
+        internal_domain_2[:, 1] *= 0.5
+        poly_2 = polynomial_class(mi, internal_domain=internal_domain_2)
+
+        # Assertion
+        assert not poly_1.has_matching_domain(poly_2)
+        assert not poly_2.has_matching_domain(poly_1)
