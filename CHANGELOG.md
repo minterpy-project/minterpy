@@ -21,6 +21,9 @@
 - Polynomial-(real)scalar multiplication is now supported for polynomial
   instances of all concrete classes. The implementation includes left-side,
   right-side, and in-place multiplication.
+- All polynomial instances now has the method `has_matching_domain()` method
+  to check if a given instance has matching internal and user domains with
+  another instance. The two polynomials do not have to be on the same basis.
 
 ### Fixed
 

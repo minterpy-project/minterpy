@@ -1297,3 +1297,61 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             return value.item()
         except ValueError:
             return value
+
+    # Utility public methods
+
+    def has_matching_domain(
+        self,
+        other: "MultivariatePolynomialSingleABC",
+        tol: float = 1e-16,
+    ) -> bool:
+        """
+        Check if two MultivariatePolynomialSingleABC objects have matching domains.
+
+        Parameters
+        ----------
+        other : MultivariatePolynomialSingleABC
+            The second instance of polynomial to compare.
+        tol : float, optional
+            The tolerance used to check for matching domains.
+            Default is 1e-16.
+
+        Returns
+        -------
+        bool
+            ``True`` if the two domains match, ``False`` otherwise.
+
+        Notes
+        -----
+        - The method checks both the internal and user domains.
+        - If the dimensions of the polynomials do not match, the comparison
+          is carried out up to the smallest matching dimension.
+        """
+        # Get the dimension to deal with unmatching dimension
+        dim_1 = self.spatial_dimension
+        dim_2 = other.spatial_dimension
+        dim = np.min([dim_1, dim_2])  # Check up to the smallest matching dim.
+
+        # Check matching internal domain
+        internal_domain_1 = self.internal_domain[:dim, :]
+        internal_domain_2 = other.internal_domain[:dim, :]
+        has_matching_internal_domain = np.less_equal(
+            np.abs(internal_domain_1 - internal_domain_2),
+            tol,
+        )
+
+        # Check matching user domain
+        user_domain_1 = self.user_domain[:dim, :]
+        user_domain_2 = other.user_domain[:dim, :]
+        has_matching_user_domain = np.less_equal(
+            np.abs(user_domain_1 - user_domain_2),
+            tol,
+        )
+
+        # Checking both domains
+        has_matching_domain = np.logical_and(
+            has_matching_internal_domain,
+            has_matching_user_domain,
+        )
+
+        return np.all(has_matching_domain)
