@@ -6,6 +6,7 @@ Module of the NewtonPolynomial class
 """
 import numpy as np
 
+from minterpy.core import Grid
 from minterpy.core.ABC.multivariate_polynomial_abstract import (
     MultivariatePolynomialSingleABC,
 )
@@ -29,6 +30,37 @@ def dummy():
     """
     # move dummy to util?
     raise NotImplementedError("This feature is not implemented yet.")
+
+
+def _is_constant_poly(poly: MultivariatePolynomialSingleABC) -> bool:
+    """Check if an instance polynomial is constant.
+
+    Parameters
+    ----------
+    poly : MultivariatePolynomialSingleABC
+        A given polynomial to check.
+
+    Returns
+    -------
+    bool
+        ``True`` if the polynomial is a constant polynomial,
+        ``False`` otherwise.
+
+    TODO
+    ----
+    - Refactor this as a common utility function especially when it is
+      required by other modules.
+    """
+    # Check the multi-index set
+    mi = poly.multi_index
+    has_one_element = len(mi) == 1
+    has_zero = np.zeros(mi.spatial_dimension, dtype=np.int_) in mi
+
+    # Check the coefficient values (will raise an exception if there is none
+    coeffs = poly.coeffs
+    has_one_coeff = len(coeffs) == 1
+
+    return has_one_element and has_zero and has_one_coeff
 
 
 def newton_eval(newton_poly, x):
@@ -56,6 +88,73 @@ def newton_eval(newton_poly, x):
         newton_poly.grid.generating_points,
         verify_input=DEBUG,
     )
+
+
+def _newton_mul(
+    poly_1: "NewtonPolynomial",
+    poly_2: "NewtonPolynomial",
+) -> "NewtonPolynomial":
+    """Multiply two Newton polynomials.
+
+    Parameters
+    ----------
+    poly_1 : NewtonPolynomial
+        The first (left operand) polynomial in the Newton basis to multiply.
+    poly_2 : NewtonPolynomial
+        The second (right operand) polynomial in the Newton basis to multiply.
+
+    Returns
+    -------
+    NewtonPolynomial
+        The product polynomial in the Newton basis.
+
+    Raises
+    ------
+    ValueError
+        If the resulting multi-index product is not downward-closed.
+
+    Notes
+    -----
+    - The multi-index set of the product polynomial must be downward-closed
+      because DDS is used to transform the Lagrange coefficients to the
+      Newton coefficients.
+    """
+    # MultiIndexSet operation
+    mi_1 = poly_1.multi_index
+    mi_2 = poly_2.multi_index
+    mi_prod = mi_1 * mi_2
+    if not mi_prod.is_downward_closed:
+        raise ValueError(
+            "The resulting multi-index product must be downward-closed."
+        )
+
+    # Grid operation
+    # TODO: both polynomial must have the same generating function
+    #       Otherwise the unisolvent nodes are inconsistent
+    grd_prod = Grid(mi_prod)
+
+    if _is_constant_poly(poly_1):
+        nwt_coeffs_prod = poly_1.coeffs[0] * poly_2.coeffs
+    elif _is_constant_poly(poly_2):
+        nwt_coeffs_prod = poly_2.coeffs[0] * poly_1.coeffs
+    else:
+        unisolvent_nodes = grd_prod.unisolvent_nodes
+
+        # Compute the values at the unisolvent nodes
+        dim_1 = poly_1.spatial_dimension
+        dim_2 = poly_2.spatial_dimension
+        lag_coeffs_1 = poly_1(unisolvent_nodes[:, :dim_1])
+        lag_coeffs_2 = poly_2(unisolvent_nodes[:, :dim_2])
+        lag_coeffs_prod = lag_coeffs_1 * lag_coeffs_2
+
+        # Transform the coefficients
+        # TODO: DDS returns at least 2D array even if there's only one set of
+        #       coefficients
+        nwt_coeffs_prod = dds(lag_coeffs_prod, grd_prod.tree)
+
+    nwt_poly_prod = NewtonPolynomial(mi_prod, nwt_coeffs_prod, grid=grd_prod)
+
+    return nwt_poly_prod
 
 
 def _newton_partial_diff(poly: "NewtonPolynomial", dim: int, order: int) -> "NewtonPolynomial":
@@ -139,7 +238,7 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     # Virtual Functions
     _add = staticmethod(dummy)
     _sub = staticmethod(dummy)
-    _mul = staticmethod(dummy)
+    _mul = staticmethod(_newton_mul)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
     _eval = staticmethod(newton_eval)

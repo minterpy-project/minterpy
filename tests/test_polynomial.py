@@ -770,3 +770,77 @@ class TestHasMatchingDomain:
         # Assertion
         assert not poly_1.has_matching_domain(poly_2)
         assert not poly_2.has_matching_domain(poly_1)
+
+
+class TestPolyPolyMultiplication:
+    """All tests related to the polynomial-polynomial multiplication."""
+    def test_inconsistent_num_polys(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Multiplication of polynomials with wrong coeffs. shape raises error.
+        """
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create random coefficient sets
+        coeffs_1 = np.random.rand(len(mi), num_polynomials)
+        coeffs_2 = np.random.rand(len(mi), num_polynomials+1)
+
+        # Create polynomials
+        poly_1 = polynomial_class(mi, coeffs_1)
+        poly_2 = polynomial_class(mi, coeffs_2)
+
+        # Multiplication
+        with pytest.raises(ValueError):
+            print(poly_1 * poly_2)
+
+    def test_non_matching_domain(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test that non-matching domain raises an exception."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        domain_1 = np.ones((SpatialDimension, 2))
+        domain_1[:, 0] *= -2
+        domain_1[:, 1] *= 2
+        poly_1 = polynomial_class(mi, user_domain=domain_1)
+        domain_2 = np.ones((SpatialDimension, 2))
+        domain_2[:, 0] *= -0.5
+        domain_2[:, 1] *= 0.5
+        poly_2 = polynomial_class(mi, user_domain=domain_2)
+
+        # Perform multiplication
+        with pytest.raises(ValueError):
+            print(poly_1 * poly_2)
+
+    def test_imul(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test that augmented multiplication is not yet supported."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a coefficient
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs)
+
+        # Perform multiplication
+        with pytest.raises(NotImplementedError):
+            poly *= poly

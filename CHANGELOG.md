@@ -24,6 +24,10 @@
 - All polynomial instances now has the method `has_matching_domain()` method
   to check if a given instance has matching internal and user domains with
   another instance. The two polynomials do not have to be on the same basis.
+- Polynomial-polynomial multiplication in the Newton basis is now supported.
+  The implementation includes the left-side multiplication via `__mul__()`.
+  Multiplication with a constant polynomial returns a consistent result with
+  multiplication with a scalar.
 
 ### Fixed
 
