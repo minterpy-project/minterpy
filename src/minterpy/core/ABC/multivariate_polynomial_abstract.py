@@ -723,6 +723,18 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             return self._scalar_mul(other, inplace=False)
 
         if isinstance(self, type(other)):
+            # Check if the number of coefficients remain consistent.
+            if not _has_consistent_number_of_polys(self, other):
+                raise ValueError(
+                    "Cannot multiply polynomials with inconsistent "
+                    "number of coefficient sets"
+                )
+            # Only do it if the dimension is matching and inplace
+            if not self.has_matching_domain(other):
+                raise ValueError(
+                    "Cannot multiply polynomials of different domains"
+                )
+
             # Rely on the subclass concrete implementation (static method)
             return self._mul(self, other)
 
@@ -1355,3 +1367,31 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         )
 
         return np.all(has_matching_domain)
+
+
+
+
+
+def _has_consistent_number_of_polys(
+    poly_1: "MultivariatePolynomialSingleABC",
+    poly_2: "MultivariatePolynomialSingleABC",
+) -> bool:
+    """Check if two polynomials have a consistent number of coefficient sets.
+    """
+    coeffs_1 = poly_1.coeffs
+    coeffs_2 = poly_2.coeffs
+
+    ndim_1 = coeffs_1.ndim
+    ndim_2 = coeffs_2.ndim
+
+    if (ndim_1 == 1) and (ndim_2 == 1):
+        return True
+
+    has_same_dims = coeffs_1.ndim == coeffs_2.ndim
+
+    try:
+        has_same_cols = coeffs_1.shape[1] == coeffs_2.shape[1]
+    except IndexError:
+        return False
+
+    return has_same_dims and has_same_cols
