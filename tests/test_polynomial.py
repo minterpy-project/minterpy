@@ -336,6 +336,281 @@ class TestEvaluation:
                 np.all(yy_test[:, i] == yy_test[:, 0])
 
 
+class TestNegation:
+    """All tests related to the negation of a polynomial instance."""
+    def test_neg(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        LpDegree,
+        PolyDegree,
+    ):
+        """Test the expected results from negating a polynomial."""
+        # Create a MultiIndexSet instance
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs)
+
+        # Negate the polynomial
+        poly_neg = -poly
+
+        # Assertions
+        assert poly_neg is not poly  # Must not be the same instance
+        assert poly_neg != -poly_neg
+        assert poly_neg.multi_index == poly.multi_index
+        assert poly_neg.grid == poly.grid
+        assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
+
+    def test_neg_multi_poly(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        LpDegree,
+        PolyDegree,
+        num_polynomials,
+    ):
+        """Test the expected results from negating multiple polynomials."""
+        # Create a MultiIndexSet instance
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi), num_polynomials)
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs)
+
+        # Negate the polynomial
+        poly_neg = -poly
+
+        # Assertions
+        assert poly_neg is not poly  # Must not be the same instance
+        assert poly_neg != -poly_neg
+        assert poly_neg.multi_index == poly.multi_index
+        assert poly_neg.grid == poly.grid
+        assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
+
+    def test_sanity_multiplication(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        LpDegree,
+        PolyDegree,
+    ):
+        """Test that negation is equivalent to multiplication with -1."""
+        # Create a MultiIndexSet instance
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs)
+
+        # Negate the polynomial
+        poly_neg_1 = -poly  # via negation
+        poly_neg_2 = -1 * poly  # via negative multiplication
+
+        # Assertions
+        assert poly_neg_1 is not poly_neg_2
+        assert poly_neg_1 == poly_neg_2
+
+    def test_different_grid(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        LpDegree,
+        PolyDegree,
+    ):
+        """Test that grid remains the same as the one used for construction."""
+        # Create a MultiIndexSet instance
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a grid of equidistant point
+        grd = Grid.from_value_set(
+            mi,
+            np.linspace(-1, 1, PolyDegree+1)[:, np.newaxis],
+        )
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs, grid=grd)
+
+        # Negate the polynomial
+        poly_neg = -poly
+
+        # Assertions
+        assert poly_neg is not poly  # Must not be the same instance
+        assert poly_neg != -poly_neg
+        assert poly_neg.multi_index == poly.multi_index
+        assert poly_neg.grid == poly.grid
+        assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
+
+
+class TestPos:
+    """All tests related to the unary positive operator on a polynomial."""
+    def test_single_poly(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test using the unary positive operator on a polynomial with a single
+        set of coefficients.
+        """
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs)
+
+        # Assertion
+        assert poly == (+poly)
+
+    def test_multiple_polys(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test using the unary positive operator on a polynomial with multiple
+        sets of coefficients.
+        """
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create coefficients
+        coeffs = np.random.rand(len(mi), num_polynomials)
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi, coeffs)
+
+        # Assertion
+        assert poly == (+poly)
+
+
+class TestHasMatchingDomain:
+    """All tests related to method to check if polynomial domains match."""
+    def test_sanity(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test if a polynomial has a matching domain with itself."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        poly = polynomial_class(mi)
+
+        # Assertion
+        assert poly.has_matching_domain(poly)
+
+    def test_same_dim(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree
+    ):
+        """Test if poly. has a matching domain with another of the same dim."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        poly_1 = polynomial_class(mi)
+        poly_2 = polynomial_class(mi)
+
+        # Assertions
+        assert poly_1.has_matching_domain(poly_2)
+        assert poly_2.has_matching_domain(poly_1)
+
+    def test_diff_dim(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree
+    ):
+        """Test if poly. has a matching domain with another of a diff. dim."""
+        # Create a MultiIndexSet
+        dim_1 = SpatialDimension
+        mi_1 = MultiIndexSet.from_degree(dim_1, PolyDegree, LpDegree)
+        dim_2 = SpatialDimension + 1
+        mi_2 = MultiIndexSet.from_degree(dim_2, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        poly_1 = polynomial_class(mi_1)
+        poly_2 = polynomial_class(mi_2)
+
+        # Assertion
+        assert poly_1.has_matching_domain(poly_2)
+        assert poly_2.has_matching_domain(poly_1)
+
+    def test_user_domain(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree
+    ):
+        """Test if poly. does not have a matching user domain."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        user_domain_1 = np.ones((SpatialDimension, 2))
+        user_domain_1[:, 0] *= -2
+        user_domain_1[:, 1] *= 2
+        poly_1 = polynomial_class(mi, user_domain=user_domain_1)
+        user_domain_2 = np.ones((SpatialDimension, 2))
+        user_domain_2[:, 0] *= -0.5
+        user_domain_2[:, 1] *= 0.5
+        poly_2 = polynomial_class(mi, user_domain=user_domain_2)
+
+        # Assertion
+        assert not poly_1.has_matching_domain(poly_2)
+        assert not poly_2.has_matching_domain(poly_1)
+
+    def test_internal_domain(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree
+    ):
+        """Test if poly. does not have a matching internal domain."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a polynomial instance
+        internal_domain_1 = np.ones((SpatialDimension, 2))
+        internal_domain_1[:, 0] *= -2
+        internal_domain_1[:, 1] *= 2
+        poly_1 = polynomial_class(mi, internal_domain=internal_domain_1)
+        internal_domain_2 = np.ones((SpatialDimension, 2))
+        internal_domain_2[:, 0] *= -0.5
+        internal_domain_2[:, 1] *= 0.5
+        poly_2 = polynomial_class(mi, internal_domain=internal_domain_2)
+
+        # Assertion
+        assert not poly_1.has_matching_domain(poly_2)
+        assert not poly_2.has_matching_domain(poly_1)
+
+
 class TestScalarMultiplication:
     """All tests related to the multiplication of a polynomial with scalars."""
     def test_mul_identity(
@@ -545,234 +820,7 @@ class TestScalarMultiplication:
             poly *= poly
 
 
-class TestNegation:
-    """All tests related to the negation of a polynomial instance."""
-    def test_neg(
-        self,
-        polynomial_class,
-        SpatialDimension,
-        LpDegree,
-        PolyDegree,
-    ):
-        """Test the expected results from negating a polynomial."""
-        # Create a MultiIndexSet instance
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-
-        # Create a random set of coefficients
-        coeffs = np.random.rand(len(mi))
-
-        # Create a polynomial instance
-        poly = polynomial_class(mi, coeffs)
-
-        # Negate the polynomial
-        poly_neg = -poly
-
-        # Assertions
-        assert poly_neg is not poly  # Must not be the same instance
-        assert poly_neg != -poly_neg
-        assert poly_neg.multi_index == poly.multi_index
-        assert poly_neg.grid == poly.grid
-        assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
-
-    def test_neg_multi_poly(
-        self,
-        polynomial_class,
-        SpatialDimension,
-        LpDegree,
-        PolyDegree,
-        num_polynomials,
-    ):
-        """Test the expected results from negating multiple polynomials."""
-        # Create a MultiIndexSet instance
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-
-        # Create a random set of coefficients
-        coeffs = np.random.rand(len(mi), num_polynomials)
-
-        # Create a polynomial instance
-        poly = polynomial_class(mi, coeffs)
-
-        # Negate the polynomial
-        poly_neg = -poly
-
-        # Assertions
-        assert poly_neg is not poly  # Must not be the same instance
-        assert poly_neg != -poly_neg
-        assert poly_neg.multi_index == poly.multi_index
-        assert poly_neg.grid == poly.grid
-        assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
-
-    def test_sanity_multiplication(
-        self,
-        polynomial_class,
-        SpatialDimension,
-        LpDegree,
-        PolyDegree,
-    ):
-        """Test that negation is equivalent to multiplication with -1."""
-        # Create a MultiIndexSet instance
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-
-        # Create a random set of coefficients
-        coeffs = np.random.rand(len(mi))
-
-        # Create a polynomial instance
-        poly = polynomial_class(mi, coeffs)
-
-        # Negate the polynomial
-        poly_neg_1 = -poly  # via negation
-        poly_neg_2 = -1 * poly  # via negative multiplication
-
-        # Assertions
-        assert poly_neg_1 is not poly_neg_2
-        assert poly_neg_1 == poly_neg_2
-
-    def test_different_grid(
-        self,
-        polynomial_class,
-        SpatialDimension,
-        LpDegree,
-        PolyDegree,
-    ):
-        """Test that grid remains the same as the one used for construction."""
-        # Create a MultiIndexSet instance
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-
-        # Create a random set of coefficients
-        coeffs = np.random.rand(len(mi))
-
-        # Create a grid of equidistant point
-        grd = Grid.from_value_set(
-            mi,
-            np.linspace(-1, 1, PolyDegree+1)[:, np.newaxis],
-        )
-
-        # Create a polynomial instance
-        poly = polynomial_class(mi, coeffs, grid=grd)
-
-        # Negate the polynomial
-        poly_neg = -poly
-
-        # Assertions
-        assert poly_neg is not poly  # Must not be the same instance
-        assert poly_neg != -poly_neg
-        assert poly_neg.multi_index == poly.multi_index
-        assert poly_neg.grid == poly.grid
-        assert np.all(poly_neg.coeffs == -1 * poly.coeffs)
-
-
-class TestHasMatchingDomain:
-    """All tests related to method to check if polynomial domains match."""
-    def test_sanity(
-        self,
-        polynomial_class,
-        SpatialDimension,
-        PolyDegree,
-        LpDegree,
-    ):
-        """Test if a polynomial has a matching domain with itself."""
-        # Create a MultiIndexSet
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-
-        # Create a polynomial instance
-        poly = polynomial_class(mi)
-
-        # Assertion
-        assert poly.has_matching_domain(poly)
-
-    def test_same_dim(
-        self,
-        polynomial_class,
-        SpatialDimension,
-        PolyDegree,
-        LpDegree
-    ):
-        """Test if poly. has a matching domain with another of the same dim."""
-        # Create a MultiIndexSet
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-
-        # Create a polynomial instance
-        poly_1 = polynomial_class(mi)
-        poly_2 = polynomial_class(mi)
-
-        # Assertions
-        assert poly_1.has_matching_domain(poly_2)
-        assert poly_2.has_matching_domain(poly_1)
-
-    def test_diff_dim(
-        self,
-        polynomial_class,
-        SpatialDimension,
-        PolyDegree,
-        LpDegree
-    ):
-        """Test if poly. has a matching domain with another of a diff. dim."""
-        # Create a MultiIndexSet
-        dim_1 = SpatialDimension
-        mi_1 = MultiIndexSet.from_degree(dim_1, PolyDegree, LpDegree)
-        dim_2 = SpatialDimension + 1
-        mi_2 = MultiIndexSet.from_degree(dim_2, PolyDegree, LpDegree)
-
-        # Create a polynomial instance
-        poly_1 = polynomial_class(mi_1)
-        poly_2 = polynomial_class(mi_2)
-
-        # Assertion
-        assert poly_1.has_matching_domain(poly_2)
-        assert poly_2.has_matching_domain(poly_1)
-
-    def test_user_domain(
-        self,
-        polynomial_class,
-        SpatialDimension,
-        PolyDegree,
-        LpDegree
-    ):
-        """Test if poly. does not have a matching user domain."""
-        # Create a MultiIndexSet
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-
-        # Create a polynomial instance
-        user_domain_1 = np.ones((SpatialDimension, 2))
-        user_domain_1[:, 0] *= -2
-        user_domain_1[:, 1] *= 2
-        poly_1 = polynomial_class(mi, user_domain=user_domain_1)
-        user_domain_2 = np.ones((SpatialDimension, 2))
-        user_domain_2[:, 0] *= -0.5
-        user_domain_2[:, 1] *= 0.5
-        poly_2 = polynomial_class(mi, user_domain=user_domain_2)
-
-        # Assertion
-        assert not poly_1.has_matching_domain(poly_2)
-        assert not poly_2.has_matching_domain(poly_1)
-
-    def test_internal_domain(
-        self,
-        polynomial_class,
-        SpatialDimension,
-        PolyDegree,
-        LpDegree
-    ):
-        """Test if poly. does not have a matching internal domain."""
-        # Create a MultiIndexSet
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-
-        # Create a polynomial instance
-        internal_domain_1 = np.ones((SpatialDimension, 2))
-        internal_domain_1[:, 0] *= -2
-        internal_domain_1[:, 1] *= 2
-        poly_1 = polynomial_class(mi, internal_domain=internal_domain_1)
-        internal_domain_2 = np.ones((SpatialDimension, 2))
-        internal_domain_2[:, 0] *= -0.5
-        internal_domain_2[:, 1] *= 0.5
-        poly_2 = polynomial_class(mi, internal_domain=internal_domain_2)
-
-        # Assertion
-        assert not poly_1.has_matching_domain(poly_2)
-        assert not poly_2.has_matching_domain(poly_1)
-
-
-class TestPolyPolyMultiplication:
+class TestPolyMultiplication:
     """All tests related to the polynomial-polynomial multiplication."""
     def test_inconsistent_num_polys(
         self,
@@ -810,15 +858,18 @@ class TestPolyPolyMultiplication:
         # Create a MultiIndexSet
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
 
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi))
+
         # Create a polynomial instance
         domain_1 = np.ones((SpatialDimension, 2))
         domain_1[:, 0] *= -2
         domain_1[:, 1] *= 2
-        poly_1 = polynomial_class(mi, user_domain=domain_1)
+        poly_1 = polynomial_class(mi, coeffs, user_domain=domain_1)
         domain_2 = np.ones((SpatialDimension, 2))
         domain_2[:, 0] *= -0.5
         domain_2[:, 1] *= 0.5
-        poly_2 = polynomial_class(mi, user_domain=domain_2)
+        poly_2 = polynomial_class(mi, coeffs, user_domain=domain_2)
 
         # Perform multiplication
         with pytest.raises(ValueError):
@@ -844,3 +895,191 @@ class TestPolyPolyMultiplication:
         # Perform multiplication
         with pytest.raises(NotImplementedError):
             poly *= poly
+
+
+class TestPolyAdditionSubtraction:
+    """All tests related to polynomial-polynomial addition and subtraction."""
+
+    @pytest.mark.parametrize("invalid_value", ["123", 1 + 1j, [1, 2, 3]])
+    def test_invalid_type(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        invalid_value,
+    ):
+        """Test addition/subtraction with invalid types raises an exception."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial
+        poly = polynomial_class(mi, coeffs)
+
+        # Assertion
+        with pytest.raises(TypeError):
+            print(poly - invalid_value)
+
+        with pytest.raises(TypeError):
+            print(invalid_value - poly)
+
+        with pytest.raises(TypeError):
+            print(poly + invalid_value)
+
+        with pytest.raises(TypeError):
+            print(invalid_value + poly)
+
+    def test_inconsistent_num_polys(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Adding of polynomials with wrong coeffs shape raises an exception.
+        """
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create random coefficient sets
+        coeffs_1 = np.random.rand(len(mi), num_polynomials)
+        coeffs_2 = np.random.rand(len(mi), num_polynomials+1)
+
+        # Create polynomials
+        poly_1 = polynomial_class(mi, coeffs_1)
+        poly_2 = polynomial_class(mi, coeffs_2)
+
+        # Addition
+        with pytest.raises(ValueError):
+            print(poly_1 + poly_2)
+        # Subtraction
+        with pytest.raises(ValueError):
+            print(poly_1 - poly_2)
+
+    def test_non_matching_domain(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Adding polynomials with a non-matching domain raises an exception.
+        """
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial instance
+        domain_1 = np.ones((SpatialDimension, 2))
+        domain_1[:, 0] *= -2
+        domain_1[:, 1] *= 2
+        poly_1 = polynomial_class(mi, coeffs, user_domain=domain_1)
+        domain_2 = np.ones((SpatialDimension, 2))
+        domain_2[:, 0] *= -0.5
+        domain_2[:, 1] *= 0.5
+        poly_2 = polynomial_class(mi, coeffs, user_domain=domain_2)
+
+        # Addition
+        with pytest.raises(ValueError):
+            print(poly_1 + poly_2)
+        # Subtraction
+        with pytest.raises(ValueError):
+            print(poly_1 - poly_2)
+
+
+class TestPolyAdditionSubtractionAugmented:
+    """All tests related to polynomial-polynomial augmented addition and
+    subtraction.
+    """
+
+    @pytest.mark.parametrize("invalid_value", ["123", 1 + 1j, [1, 2, 3]])
+    def test_invalid_type(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        invalid_value,
+    ):
+        """Test addition/subtraction with invalid types raises an exception."""
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Generate a random coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial
+        poly = polynomial_class(mi, coeffs)
+
+        # Assertion
+        with pytest.raises(TypeError):
+            poly -= invalid_value
+
+        with pytest.raises(TypeError):
+            poly += invalid_value
+
+    def test_inconsistent_num_polys(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Adding of polynomials with wrong coeffs shape raises an exception.
+        """
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create random coefficient sets
+        coeffs_1 = np.random.rand(len(mi), num_polynomials)
+        coeffs_2 = np.random.rand(len(mi), num_polynomials+1)
+
+        # Create polynomials
+        poly_1 = polynomial_class(mi, coeffs_1)
+        poly_2 = polynomial_class(mi, coeffs_2)
+
+        # Addition
+        with pytest.raises(ValueError):
+            poly_1 += poly_2
+        # Subtraction
+        with pytest.raises(ValueError):
+            poly_1 -= poly_2
+
+    def test_non_matching_domain(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Adding polynomials with a non-matching domain raises an exception.
+        """
+        # Create a MultiIndexSet
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create a random set of coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a polynomial instance
+        domain_1 = np.ones((SpatialDimension, 2))
+        domain_1[:, 0] *= -2
+        domain_1[:, 1] *= 2
+        poly_1 = polynomial_class(mi, coeffs, user_domain=domain_1)
+        domain_2 = np.ones((SpatialDimension, 2))
+        domain_2[:, 0] *= -0.5
+        domain_2[:, 1] *= 0.5
+        poly_2 = polynomial_class(mi, coeffs, user_domain=domain_2)
+
+        # Addition
+        with pytest.raises(ValueError):
+            poly_1 += poly_2
+        # Subtraction
+        with pytest.raises(ValueError):
+            poly_1 -= poly_2

@@ -10,6 +10,7 @@ from minterpy.core import Grid
 from minterpy.core.ABC.multivariate_polynomial_abstract import (
     MultivariatePolynomialSingleABC,
 )
+from minterpy.core.grid import Grid
 from minterpy.core.verification import verify_domain
 from minterpy.dds import dds
 from minterpy.global_settings import DEBUG
@@ -22,7 +23,7 @@ from minterpy.polynomials.utils import (
 __all__ = ["NewtonPolynomial"]
 
 
-def dummy():
+def dummy(*args):
     """Placeholder function.
 
     .. warning::
@@ -90,6 +91,67 @@ def newton_eval(newton_poly, x):
     )
 
 
+def _newton_add(
+    poly_1: "NewtonPolynomial",
+    poly_2: "NewtonPolynomial",
+) -> "NewtonPolynomial":
+    """Add a polynomial to another, both in the Newton basis.
+    """
+    # MultiIndexSet operations
+    mi_1 = poly_1.multi_index
+    mi_2 = poly_2.multi_index
+    mi_add = mi_1.union(mi_2)
+
+    # Grid operation
+    # TODO: Check if the grid here is of the same generating function
+    grd_add = Grid(mi_add)
+
+    # Create a placeholder for the summed poly. coefficients
+    if poly_1.coeffs.ndim > 1:
+        num_polys = poly_1.coeffs.shape[1]
+        shape = (len(mi_add), num_polys)
+    else:
+        shape = (len(mi_add),)
+    coeffs_sum = np.empty(shape)
+
+    # Handle constant polynomial
+    if _is_constant_poly(poly_1):
+        if mi_1.exponents[0] in mi_2:
+            coeffs_sum[:] = poly_2.coeffs[:]
+            coeffs_sum[0] += poly_1.coeffs[0]
+        else:
+            coeffs_sum[0] = poly_1.coeffs[0]
+            coeffs_sum[1:] = poly_2.coeffs[:]
+    elif _is_constant_poly(poly_2):
+        if mi_2.exponents[0] in mi_1:
+            coeffs_sum[:] = poly_1.coeffs[:]
+            coeffs_sum[0] += poly_2.coeffs[0]
+        else:
+            coeffs_sum[0] = poly_2.coeffs[0]
+            coeffs_sum[1:] = poly_1.coeffs[:]
+    else:
+        # Do a DDS for general poly-poly addition
+        if not mi_add.is_downward_closed:
+            raise ValueError(
+                "The resulting multi-index set must be downward-closed"
+            )
+
+        # Compute the Lagrange coefficients from poly-poly addition
+        unisolvent_nodes = grd_add.unisolvent_nodes
+        dim_1 = mi_1.spatial_dimension
+        dim_2 = mi_2.spatial_dimension
+        lag_coeffs_1 = poly_1(unisolvent_nodes[:, :dim_1])
+        lag_coeffs_2 = poly_2(unisolvent_nodes[:, :dim_2])
+        lag_coeffs_add = lag_coeffs_1 + lag_coeffs_2
+
+        # Create a new Newton polynomial
+        coeffs_sum = dds(lag_coeffs_add, grd_add.tree).reshape(shape)
+
+    nwt_poly_sum = NewtonPolynomial(mi_add, coeffs_sum, grid=grd_add)
+
+    return nwt_poly_sum
+
+
 def _newton_mul(
     poly_1: "NewtonPolynomial",
     poly_2: "NewtonPolynomial",
@@ -123,10 +185,6 @@ def _newton_mul(
     mi_1 = poly_1.multi_index
     mi_2 = poly_2.multi_index
     mi_prod = mi_1 * mi_2
-    if not mi_prod.is_downward_closed:
-        raise ValueError(
-            "The resulting multi-index product must be downward-closed."
-        )
 
     # Grid operation
     # TODO: both polynomial must have the same generating function
@@ -138,6 +196,11 @@ def _newton_mul(
     elif _is_constant_poly(poly_2):
         nwt_coeffs_prod = poly_2.coeffs[0] * poly_1.coeffs
     else:
+        # Do a DDS for general poly-poly multiplication
+        if not mi_prod.is_downward_closed:
+            raise ValueError(
+                "The resulting multi-index product must be downward-closed."
+            )
         unisolvent_nodes = grd_prod.unisolvent_nodes
 
         # Compute the values at the unisolvent nodes
@@ -150,7 +213,12 @@ def _newton_mul(
         # Transform the coefficients
         # TODO: DDS returns at least 2D array even if there's only one set of
         #       coefficients
-        nwt_coeffs_prod = dds(lag_coeffs_prod, grd_prod.tree)
+        if poly_1.coeffs.ndim > 1:
+            num_polys = poly_1.coeffs.shape[1]
+            shape = (len(mi_prod), num_polys)
+        else:
+            shape = (len(mi_prod),)
+        nwt_coeffs_prod = dds(lag_coeffs_prod, grd_prod.tree).reshape(shape)
 
     nwt_poly_prod = NewtonPolynomial(mi_prod, nwt_coeffs_prod, grid=grd_prod)
 
@@ -236,12 +304,13 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     """
 
     # Virtual Functions
-    _add = staticmethod(dummy)
+    _add = staticmethod(_newton_add)
     _sub = staticmethod(dummy)
     _mul = staticmethod(_newton_mul)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
     _eval = staticmethod(newton_eval)
+    _iadd = staticmethod(dummy)
 
     _partial_diff = staticmethod(_newton_partial_diff)
     _diff = staticmethod(_newton_diff)
