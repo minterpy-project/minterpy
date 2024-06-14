@@ -10,7 +10,7 @@ from itertools import product
 from math import ceil
 from typing import Iterable, no_type_check
 
-from minterpy.global_settings import DEFAULT_LP_DEG, INT_DTYPE, NOT_FOUND
+from minterpy.global_settings import DEFAULT_LP_DEG, INT_DTYPE, NOT_FOUND, B_DTYPE
 from minterpy.jit_compiled_utils import (
     fill_match_positions,
     is_index_contained,
@@ -18,6 +18,8 @@ from minterpy.jit_compiled_utils import (
     search_lex_sorted,
 )
 from minterpy.utils import cartesian_product, lp_norm, lp_sum
+
+from minterpy.jit_compiled.multi_index import cross_and_sum, unique_indices
 
 # if TYPE_CHECKING:
 #    from .tree import MultiIndexTree
@@ -952,12 +954,16 @@ def multiply_indices(
     if m_1 > m_2:
         indices_2 = expand_dim(indices_2, m_1)
 
-    # --- Take the cross product (maybe expensive for large arrays of indices)
-    prod = list(product(indices_1, indices_2))
-    # The product may be empty
-    prod = np.array([np.sum(np.array(i), axis=0) for i in prod])
+    # --- Create a cross-product and sum each pair
+    prod = cross_and_sum(indices_1, indices_2)
+    # This product may have zero element
+
     if len(prod) != 0:
-        prod = lex_sort(prod)
+        # Sort the cross-sum lexicographically
+        prod = prod[np.lexsort(prod.T)]
+        # # Take only the unique elements from the sorted array
+        unique_idx = unique_indices(prod)
+        prod = prod[unique_idx]
     else:
         prod = np.empty((0, np.max([m_1, m_2])), dtype=INT_DTYPE)
 

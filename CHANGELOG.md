@@ -44,6 +44,9 @@
 - Static abstract method `_iadd()` is now included in the
   `MultivariatePolynomialSingleABC` as a placeholder for the concrete
   implementation of augmented addition operation.
+- Instances of `MultiIndexSet` may now be multiplied with each other;
+  the result is an instance of `MultiIndexSet` whose exponents are
+  the cross-product-and-sum of the two operands exponents.
 
 ### Fixed
 
