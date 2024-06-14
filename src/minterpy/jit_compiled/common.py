@@ -13,7 +13,7 @@ from numba import njit
 from minterpy.global_settings import (
     UINT32,
     UINT64,
-    INT,
+    INT_DTYPE,
     I_1D,
     I_2D,
     F_1D,
@@ -105,15 +105,15 @@ def combinations_iter(xx: np.ndarray, r: int) -> np.ndarray:
     """
     # Safeguard
     if r == 0:
-        return np.empty(shape=(0, r), dtype=INT)
+        return np.empty(shape=(0, r), dtype=INT_DTYPE)
 
     # Allocate output array
     n = len(xx)
     num_combs = n_choose_r(n, r)
-    out = np.empty(shape=(num_combs, r), dtype=INT)
+    out = np.empty(shape=(num_combs, r), dtype=INT_DTYPE)
 
     # Initialization of the selection array
-    idx = np.empty(r, dtype=INT)
+    idx = np.empty(r, dtype=INT_DTYPE)
     for j in range(r):
         idx[j] = j
     i = r - 1  # start with the last element to change
@@ -185,7 +185,7 @@ def get_max_columnwise(xx: np.ndarray) -> np.ndarray:
     - The function is NJIT-ted with integers input/output; it can't be used
       with other types.
     """
-    out = np.empty(xx.shape[1], dtype=INT)
+    out = np.empty(xx.shape[1], dtype=INT_DTYPE)
     for j in range(xx.shape[1]):
         out[j] = np.max(xx[:, j])
 

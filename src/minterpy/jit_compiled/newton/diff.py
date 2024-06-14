@@ -6,7 +6,16 @@ import math
 import numpy as np
 from numba import njit, prange, void
 
-from minterpy.global_settings import F_2D, F_1D, I_1D, FLOAT, INT, I_2D
+from minterpy.global_settings import (
+    F_2D,
+    F_1D,
+    I_1D,
+    FLOAT,
+    FLOAT_DTYPE,
+    INT_DTYPE,
+    I_2D,
+)
+
 from minterpy.jit_compiled.common import (
     combinations_iter,
     dot,
@@ -52,7 +61,7 @@ def create_lut_difference(
     # Create an output array
     n, m = generating_points.shape
     # NOTE: Last row of the generating points is not used
-    lut = np.empty(shape=(n - 1, m), dtype=FLOAT)
+    lut = np.empty(shape=(n - 1, m), dtype=FLOAT_DTYPE)
 
     # Construct the table
     for i in range(n - 1):
@@ -246,8 +255,8 @@ def create_lut_differentiated(
             )
 
             # Create placeholders for this dimension
-            lua_k = np.zeros(max_num_combinations, dtype=FLOAT)
-            lua_prod = np.zeros(max_num_combinations, dtype=FLOAT)
+            lua_k = np.zeros(max_num_combinations, dtype=FLOAT_DTYPE)
+            lua_prod = np.zeros(max_num_combinations, dtype=FLOAT_DTYPE)
             # Initialize
             res_sum = 0.0
             for i in range(order + 1):
@@ -257,7 +266,7 @@ def create_lut_differentiated(
             products_placeholder[order + 1, j] = res_sum
 
             for k in range(order + 2, max_exponent_in_dim + 1):
-                elements = np.arange(k, dtype=INT)
+                elements = np.arange(k, dtype=INT_DTYPE)
                 combs = combinations_iter(elements, int(k - order))
 
                 # Create iterative look-up array
@@ -481,15 +490,15 @@ def eval_multiple_query(
     num_prods = np.max(max_exponents) + 1  # Maximum number of product terms
 
     # Create the output array
-    output = np.empty(shape=(num_points, num_polys), dtype=FLOAT)
+    output = np.empty(shape=(num_points, num_polys), dtype=FLOAT_DTYPE)
 
     # Loop over query points
     for i in range(num_points):
         x_i = xx[i, :]
 
         # Construct placeholders per query point
-        products_placeholder = np.ones(shape=(num_prods, m), dtype=FLOAT)
-        monomials_placeholder = np.ones(num_monomials, dtype=FLOAT)
+        products_placeholder = np.ones(shape=(num_prods, m), dtype=FLOAT_DTYPE)
+        monomials_placeholder = np.ones(num_monomials, dtype=FLOAT_DTYPE)
 
         # Compute the evaluation of monomials at a single query point
         eval_monomials_single_query(
@@ -582,7 +591,7 @@ def eval_multiple_query_par(
     num_prods = np.max(max_exponents) + 1  # Maximum number of product terms
 
     # Create the output array
-    output = np.empty(shape=(num_points, num_polys), dtype=FLOAT)
+    output = np.empty(shape=(num_points, num_polys), dtype=FLOAT_DTYPE)
 
     # Loop over query points
     for i in prange(num_points):
@@ -590,8 +599,8 @@ def eval_multiple_query_par(
 
         # Construct placeholders per query point
         # NOTE: using placeholders are faster for some problem sizes
-        products_placeholder = np.ones(shape=(num_prods, m), dtype=FLOAT)
-        monomials_placeholder = np.ones(num_monomials, dtype=FLOAT)
+        products_placeholder = np.ones(shape=(num_prods, m), dtype=FLOAT_DTYPE)
+        monomials_placeholder = np.ones(num_monomials, dtype=FLOAT_DTYPE)
 
         # Compute the evaluation of monomials at a single query point
         eval_monomials_single_query(
