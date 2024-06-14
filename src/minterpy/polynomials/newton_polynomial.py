@@ -283,9 +283,6 @@ def newton_diff(
     NewtonPolynomial.diff
         The public method to differentiate the polynomial instance of
         the given orders of derivative along each dimension.
-    NewtonPolynomial._diff
-        The underlying (lower-level) implementation (possibly, a wrapper) of
-        `NewtonPolynomial.diff`.
     NewtonPolynomial.partial_diff
         The public method to differentiate the polynomial instance of
         a specified order of derivative with respect to a given dimension.
@@ -381,9 +378,6 @@ def newton_partial_diff(
     NewtonPolynomial.partial_diff
         The public method to differentiate the polynomial instance of
         a specified order of derivative with respect to a given dimension.
-    NewtonPolynomial._partial_diff
-        The underlying (lower-level) implementation (possibly, a wrapper) of
-        `NewtonPolynomial.partial_diff`.
     NewtonPolynomial.diff
         The public method to differentiate the polynomial instance of
         the given orders of derivative along each dimension.
@@ -435,11 +429,13 @@ newton_generate_user_domain = verify_domain
 class NewtonPolynomial(MultivariatePolynomialSingleABC):
     """Concrete implementations of polynomials in the Newton basis.
 
-    For a definition of the Newton base, see
+    For a definition of the Newton basis, see
     :ref:`fundamentals/polynomial-bases:Newton polynomials`.
     """
 
-    # Virtual Functions
+    # --- Virtual Functions
+
+    # Arithmetics
     _add = staticmethod(_newton_add)
     _sub = staticmethod(dummy)
     _mul = staticmethod(_newton_mul)
@@ -448,9 +444,11 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     _iadd = staticmethod(dummy)
     _eval = staticmethod(newton_eval)
 
+    # Calculus
     _partial_diff = staticmethod(newton_partial_diff)
     _diff = staticmethod(newton_diff)
     _integrate_over = staticmethod(newton_integrate_over)
 
+    # Utility
     generate_internal_domain = staticmethod(newton_generate_internal_domain)
     generate_user_domain = staticmethod(newton_generate_user_domain)

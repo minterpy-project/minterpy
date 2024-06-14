@@ -60,6 +60,11 @@ def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarr
       from the ``itertools`` module does not work with Numba.
     - Due to multiple nested loops this implementation is very slow except
       for a small problem (small dimension and small polynomial degree).
+
+    TODO
+    ----
+    - Refactor this initial implementation of polynomial differentiation
+      in the Newton basis.
     """
 
     N, coefficients, m, nr_points, nr_polynomials, x = \

@@ -10,7 +10,15 @@ import numpy as np
 
 from numba import njit
 
-from minterpy.global_settings import UINT32, UINT64, INT, I_1D, I_2D
+from minterpy.global_settings import (
+    UINT32,
+    UINT64,
+    INT,
+    I_1D,
+    I_2D,
+    F_1D,
+    F_2D,
+)
 
 __all__ = []
 
@@ -129,6 +137,28 @@ def combinations_iter(xx: np.ndarray, r: int) -> np.ndarray:
             i += 1
 
     return out
+
+
+@njit(F_1D(F_1D, F_2D), cache=True)
+def dot(a: np.ndarray, bb: np.ndarray) -> np.ndarray:
+    """Compute vector-matrix dot product with contiguous arrays.
+
+    Parameter
+    ---------
+    a : :class:`numpy:numpy.ndarray`
+        A one-dimensional array of length ``n``.
+    bb : :class:`numpy:numpy.ndarray`
+        A two-dimensional array of shape ``(n, m)``.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        A one-dimensional array of length ``m``.
+    """
+    a = np.ascontiguousarray(a)
+    bb = np.ascontiguousarray(bb)
+
+    return np.dot(a, bb)
 
 
 @njit(I_1D(I_2D))
