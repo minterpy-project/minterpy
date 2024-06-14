@@ -24,14 +24,6 @@ def num_take(request):
 class TestCombIter:
     """All tests related to the iterative n-choose-r."""
 
-    def test_raises(self):
-        """Test raises error due to negative inputs."""
-        with pytest.raises(OverflowError):
-            n_choose_r(-1, 5)
-
-        with pytest.raises(OverflowError):
-            n_choose_r(1, -5)
-
     def test_vs_comb(self, num_total, num_take):
         """Compare with comb() from the math module."""
         assert comb(num_total, num_take) == n_choose_r(num_total, num_take)

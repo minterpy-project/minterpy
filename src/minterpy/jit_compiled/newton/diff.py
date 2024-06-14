@@ -247,6 +247,10 @@ def create_lut_differentiated(
             # NOTE: use `math.gamma(n + 1)` instead of `math.factorial(n)`
             # as the latter is not supported by Numba.
 
+            # Order of derivative == the degree of monomial
+            if order == (num_prods - 1):
+                continue  # move on to the next dimension now
+
             # Use chain rule to compute the derivative of products
             # for the higher-degree monomials
             max_num_combinations = n_choose_r(
