@@ -398,6 +398,7 @@ def eval_newton_polynomials_batch(
 
     return results_placeholder
 
+
 def make_coeffs_2d(coefficients: np.ndarray) -> np.ndarray:
     """Make coefficients array 2d.
 
