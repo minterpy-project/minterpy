@@ -16,23 +16,29 @@ DEBUG = True
 SCALAR = Union[float, int, np.integer, np.floating]
 INT_DTYPE = np.int_
 FLOAT_DTYPE = np.float_
+B_DTYPE = np.bool_
 
 DEFAULT_DOMAIN = np.array([-1, 1])
 
-# Numba types. Must match the Numpy dtypes
+# --- Numba types. Must match the Numpy dtypes
+
+# Floats
 FLOAT = numba.from_dtype(FLOAT_DTYPE)
 # F_TYPE = f8
 F_1D = FLOAT[:]
 F_2D = FLOAT[:, :]
 F_3D = FLOAT[:, :, :]
+
+# Integers
 INT = numba.from_dtype(INT_DTYPE)
 I_1D = INT[:]
 I_2D = INT[:, :]
-B_TYPE = numba.b1
-
 UINT32 = numba.from_dtype(np.uint32)
 UINT64 = numba.from_dtype(np.uint64)
 
+# Boolean
+B_TYPE = numba.b1
+B_1D = B_TYPE[:]
 
 DEFAULT_LP_DEG = 2.0
 
