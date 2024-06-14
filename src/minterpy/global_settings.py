@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Set, Tuple
+from typing import Dict, Optional, Set, Tuple, Union
 
 import numba
 import numpy as np
@@ -12,8 +12,11 @@ import numpy as np
 DEBUG = True
 # DEBUG = False
 
+# Custom typing
+SCALAR = Union[float, int, np.integer, np.floating]
 INT_DTYPE = np.int_
 FLOAT_DTYPE = np.float_
+
 DEFAULT_DOMAIN = np.array([-1, 1])
 
 # Numba types. Must match the Numpy dtypes

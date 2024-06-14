@@ -978,22 +978,35 @@ class MultiIndexSet:
     def __eq__(self, other: "MultiIndexSet") -> bool:
         """Check the equality of `MultiIndexSet` instances via ``==`` operator.
 
+        Two instances of :class:`MultiIndexSet` class is equal in value if and
+        only if both the underlying :math:`l_p`-degree values are equal
+        and the exponents are also equal.
+
         Parameters
         ----------
-        other : `MultiIndexSet`
-            The second operand of the equality check.
+        other : MultiIndexSet
+            An instance of :class:`MultiIndexSet` that is to be compared
+            with the current instance.
 
         Returns
         -------
         bool
-            ``True`` if the two instances are equal in value, i.e., have
-            the same underlying exponents and :math:`l_p`-degree value, and
-            ``False`` otherwise.
+            ``True`` if the two instances are equal in value, ``False``
+            otherwise.
         """
-        return (
-            self.lp_degree == other.lp_degree and
-            np.array_equal(self.exponents, other.exponents)
-        )
+        # Check for consistent type
+        if not isinstance(other, MultiIndexSet):
+            return False
+
+        # lp-degree equality
+        if self.lp_degree != other.lp_degree:
+            return False
+
+        # exponents equality
+        if not np.array_equal(self.exponents, other.exponents):
+            return False
+
+        return True
 
     def __mul__(self, other: "MultiIndexSet") -> "MultiIndexSet":
         """Multiply an instance of `MultiIndexSet` with another via ``*`` op.

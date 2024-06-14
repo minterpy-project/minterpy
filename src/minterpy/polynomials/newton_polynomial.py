@@ -6,9 +6,11 @@ Module of the NewtonPolynomial class
 """
 import numpy as np
 
+from minterpy.core import Grid
 from minterpy.core.ABC.multivariate_polynomial_abstract import (
     MultivariatePolynomialSingleABC,
 )
+from minterpy.core.grid import Grid
 from minterpy.core.verification import verify_domain
 from minterpy.dds import dds
 from minterpy.global_settings import DEBUG
@@ -31,6 +33,37 @@ SUPPORTED_BACKENDS = {
     "numba": eval_diff_numba,
     "numba-par": eval_diff_numba_par,
 }
+
+
+def _is_constant_poly(poly: MultivariatePolynomialSingleABC) -> bool:
+    """Check if an instance polynomial is constant.
+
+    Parameters
+    ----------
+    poly : MultivariatePolynomialSingleABC
+        A given polynomial to check.
+
+    Returns
+    -------
+    bool
+        ``True`` if the polynomial is a constant polynomial,
+        ``False`` otherwise.
+
+    TODO
+    ----
+    - Refactor this as a common utility function especially when it is
+      required by other modules.
+    """
+    # Check the multi-index set
+    mi = poly.multi_index
+    has_one_element = len(mi) == 1
+    has_zero = np.zeros(mi.spatial_dimension, dtype=np.int_) in mi
+
+    # Check the coefficient values (will raise an exception if there is none
+    coeffs = poly.coeffs
+    has_one_coeff = len(coeffs) == 1
+
+    return has_one_element and has_zero and has_one_coeff
 
 
 def newton_eval(poly: "NewtonPolynomial", xx: np.ndarray) -> np.ndarray:
@@ -64,6 +97,139 @@ def newton_eval(poly: "NewtonPolynomial", xx: np.ndarray) -> np.ndarray:
         poly.grid.generating_points,
         verify_input=DEBUG,
     )
+
+def _newton_add(
+    poly_1: "NewtonPolynomial",
+    poly_2: "NewtonPolynomial",
+) -> "NewtonPolynomial":
+    """Add a polynomial to another, both in the Newton basis.
+    """
+    # MultiIndexSet operations
+    mi_1 = poly_1.multi_index
+    mi_2 = poly_2.multi_index
+    mi_add = mi_1.union(mi_2)
+
+    # Grid operation
+    # TODO: Check if the grid here is of the same generating function
+    grd_add = Grid(mi_add)
+
+    # Create a placeholder for the summed poly. coefficients
+    if poly_1.coeffs.ndim > 1:
+        num_polys = poly_1.coeffs.shape[1]
+        shape = (len(mi_add), num_polys)
+    else:
+        shape = (len(mi_add),)
+    coeffs_sum = np.empty(shape)
+
+    # Handle constant polynomial
+    if _is_constant_poly(poly_1):
+        if mi_1.exponents[0] in mi_2:
+            coeffs_sum[:] = poly_2.coeffs[:]
+            coeffs_sum[0] += poly_1.coeffs[0]
+        else:
+            coeffs_sum[0] = poly_1.coeffs[0]
+            coeffs_sum[1:] = poly_2.coeffs[:]
+    elif _is_constant_poly(poly_2):
+        if mi_2.exponents[0] in mi_1:
+            coeffs_sum[:] = poly_1.coeffs[:]
+            coeffs_sum[0] += poly_2.coeffs[0]
+        else:
+            coeffs_sum[0] = poly_2.coeffs[0]
+            coeffs_sum[1:] = poly_1.coeffs[:]
+    else:
+        # Do a DDS for general poly-poly addition
+        if not mi_add.is_downward_closed:
+            raise ValueError(
+                "The resulting multi-index set must be downward-closed"
+            )
+
+        # Compute the Lagrange coefficients from poly-poly addition
+        unisolvent_nodes = grd_add.unisolvent_nodes
+        dim_1 = mi_1.spatial_dimension
+        dim_2 = mi_2.spatial_dimension
+        lag_coeffs_1 = poly_1(unisolvent_nodes[:, :dim_1])
+        lag_coeffs_2 = poly_2(unisolvent_nodes[:, :dim_2])
+        lag_coeffs_add = lag_coeffs_1 + lag_coeffs_2
+
+        # Create a new Newton polynomial
+        coeffs_sum = dds(lag_coeffs_add, grd_add.tree).reshape(shape)
+
+    nwt_poly_sum = NewtonPolynomial(mi_add, coeffs_sum, grid=grd_add)
+
+    return nwt_poly_sum
+
+
+def _newton_mul(
+    poly_1: "NewtonPolynomial",
+    poly_2: "NewtonPolynomial",
+) -> "NewtonPolynomial":
+    """Multiply two Newton polynomials.
+
+    Parameters
+    ----------
+    poly_1 : NewtonPolynomial
+        The first (left operand) polynomial in the Newton basis to multiply.
+    poly_2 : NewtonPolynomial
+        The second (right operand) polynomial in the Newton basis to multiply.
+
+    Returns
+    -------
+    NewtonPolynomial
+        The product polynomial in the Newton basis.
+
+    Raises
+    ------
+    ValueError
+        If the resulting multi-index product is not downward-closed.
+
+    Notes
+    -----
+    - The multi-index set of the product polynomial must be downward-closed
+      because DDS is used to transform the Lagrange coefficients to the
+      Newton coefficients.
+    """
+    # MultiIndexSet operation
+    mi_1 = poly_1.multi_index
+    mi_2 = poly_2.multi_index
+    mi_prod = mi_1 * mi_2
+
+    # Grid operation
+    # TODO: both polynomial must have the same generating function
+    #       Otherwise the unisolvent nodes are inconsistent
+    grd_prod = Grid(mi_prod)
+
+    if _is_constant_poly(poly_1):
+        nwt_coeffs_prod = poly_1.coeffs[0] * poly_2.coeffs
+    elif _is_constant_poly(poly_2):
+        nwt_coeffs_prod = poly_2.coeffs[0] * poly_1.coeffs
+    else:
+        # Do a DDS for general poly-poly multiplication
+        if not mi_prod.is_downward_closed:
+            raise ValueError(
+                "The resulting multi-index product must be downward-closed."
+            )
+        unisolvent_nodes = grd_prod.unisolvent_nodes
+
+        # Compute the values at the unisolvent nodes
+        dim_1 = poly_1.spatial_dimension
+        dim_2 = poly_2.spatial_dimension
+        lag_coeffs_1 = poly_1(unisolvent_nodes[:, :dim_1])
+        lag_coeffs_2 = poly_2(unisolvent_nodes[:, :dim_2])
+        lag_coeffs_prod = lag_coeffs_1 * lag_coeffs_2
+
+        # Transform the coefficients
+        # TODO: DDS returns at least 2D array even if there's only one set of
+        #       coefficients
+        if poly_1.coeffs.ndim > 1:
+            num_polys = poly_1.coeffs.shape[1]
+            shape = (len(mi_prod), num_polys)
+        else:
+            shape = (len(mi_prod),)
+        nwt_coeffs_prod = dds(lag_coeffs_prod, grd_prod.tree).reshape(shape)
+
+    nwt_poly_prod = NewtonPolynomial(mi_prod, nwt_coeffs_prod, grid=grd_prod)
+
+    return nwt_poly_prod
 
 
 def newton_diff(
@@ -104,7 +270,6 @@ def newton_diff(
         A new instance of `NewtonPolynomial` that represents the partial
         derivative of the original polynomial of the given order of derivative
         with respect to the specified dimension.
-
     Notes
     -----
     - The abstract class is responsible to validate ``order``; no additional
@@ -275,13 +440,14 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     """
 
     # Virtual Functions
-    _add = staticmethod(dummy)
+    _add = staticmethod(_newton_add)
     _sub = staticmethod(dummy)
-    _mul = staticmethod(dummy)
+    _mul = staticmethod(_newton_mul)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
-
+    _iadd = staticmethod(dummy)
     _eval = staticmethod(newton_eval)
+
     _partial_diff = staticmethod(newton_partial_diff)
     _diff = staticmethod(newton_diff)
     _integrate_over = staticmethod(newton_integrate_over)

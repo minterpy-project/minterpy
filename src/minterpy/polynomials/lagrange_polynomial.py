@@ -13,7 +13,6 @@ from minterpy.core.verification import verify_domain
 from minterpy.global_settings import ARRAY
 from minterpy.polynomials.canonical_polynomial import (
     _match_dims,
-    _matching_internal_domain,
 )
 from minterpy.polynomials.utils import integrate_monomials_lagrange
 
@@ -46,7 +45,7 @@ def _lagrange_add(
 
     """
     p1, p2 = _match_dims(poly1, poly2)
-    if _matching_internal_domain(p1, p2):
+    if p1.has_matching_domain(p2):
         l2n_p1 = mp.LagrangeToNewton(p1)
         newt_p1 = l2n_p1()
         l2n_p2 = mp.LagrangeToNewton(p2)
@@ -99,7 +98,7 @@ def _lagrange_sub(
     :rtype: LagrangePolynomial
     """
     p1, p2 = _match_dims(poly1, poly2)
-    if _matching_internal_domain(p1, p2):
+    if p1.has_matching_domain(p2):
         l2n_p1 = mp.LagrangeToNewton(p1)
         newt_p1 = l2n_p1()
         l2n_p2 = mp.LagrangeToNewton(p2)
@@ -152,7 +151,7 @@ def _lagrange_mul(
     :rtype: LagrangePolynomial
     """
     p1, p2 = _match_dims(poly1, poly2)
-    if _matching_internal_domain(p1, p2):
+    if p1.has_matching_domain(p2):
         l2n_p1 = mp.LagrangeToNewton(p1)
         newt_p1 = l2n_p1()
         l2n_p2 = mp.LagrangeToNewton(p2)
@@ -249,6 +248,7 @@ class LagrangePolynomial(MultivariatePolynomialSingleABC):
     _div = staticmethod(dummy)  # type: ignore
     _pow = staticmethod(dummy)  # type: ignore
     _eval = staticmethod(dummy)  # type: ignore
+    _iadd = staticmethod(dummy)
 
     _partial_diff = staticmethod(dummy)
     _diff = staticmethod(dummy)

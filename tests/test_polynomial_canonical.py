@@ -67,12 +67,12 @@ def test_eval(MultiIndices, NrPoints):
 exps1 = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 args1 = np.lexsort(exps1.T, axis=-1)
 mi1 = MultiIndexSet(exps1[args1], lp_degree=1.0)
-coeffs1 = np.array([1, 2, 3, 4])
+coeffs1 = np.array([1., 2., 3., 4.])
 
 exps2 = np.array([[0, 0, 0], [2, 0, 0], [1, 1, 0], [0, 2, 0], [0, 0, 2]])
 args2 = np.lexsort(exps2.T, axis=-1)
 mi2 = MultiIndexSet(exps2[args2], lp_degree=1.0)
-coeffs2 = np.array([1, 2, 3, 4, 5])
+coeffs2 = np.array([1., 2., 3., 4., 5.])
 
 polys = [
     CanonicalPolynomial(mi1, coeffs1[args1]),

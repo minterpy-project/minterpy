@@ -14,6 +14,41 @@
   used by default in v0.2.0-alpha), `"numba"` (Numba-based implementation,
   now the default), `"numba-par"` (CPU parallelization in the Numba-based
   implementation; may accelerates computation for larger problems).
+- Exact equality check via the `==` operator has been implemented for instances
+  of the `Grid` class. Two instances of `Grid` are equal (in values) if and
+  only if both the underlying multi-index sets and generating points are
+  equal. Note that as the generating points are of floating types, the equality
+  check via `==` is exact without any tolerance specifications.
+- Exact equality check via the `==` operator has been implemented for all
+  instances of concrete polynomial classes. Two polynomials are equal in values
+  if and only if the concrete class is the same, the multi-index sets are
+  equal, the grids are equal, and the coefficient values are all equal.
+  As coefficients are of floating type, the comparison is carried out exactly
+  without any tolerance specifications.
+- Polynomial-(real)scalar multiplication is now supported for polynomial
+  instances of all concrete classes. The implementation includes left-side,
+  right-side, and in-place multiplication.
+- All polynomial instances now has the method `has_matching_domain()` method
+  to check if a given instance has matching internal and user domains with
+  another instance. The two polynomials do not have to be on the same basis.
+- Polynomial-polynomial multiplication in the Newton basis is now supported.
+  The implementation includes the left-side multiplication via `__mul__()`.
+  Multiplication with a constant polynomial returns a consistent result with
+  multiplication with a scalar.
+- Polynomial-polynomial addition/subtraction as well as polynomial-(real)scalar
+  addition/subtraction are now supported for polynomials in the Newton basis.
+  The implementation includes the left-sided addition via `__add__()` and
+  subtraction via `__sub__()` (for both Newton polynomial and real scalar 
+  number) as well as right-sided addition via `__radd__()` and subtraction via 
+  `__rsub__()` (for real scalar numbers).
+- Static abstract method `_iadd()` is now included in the
+  `MultivariatePolynomialSingleABC` as a placeholder for the concrete
+  implementation of augmented addition operation.
+
+### Fixed
+
+- Negating a polynomial with a non-default Grid instance returns a polynomial
+  with the default grid.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several

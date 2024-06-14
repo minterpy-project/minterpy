@@ -332,3 +332,36 @@ class Grid:
             deepcopy(self.generating_points),
             deepcopy(self.generating_values),
         )
+
+    def __eq__(self, other: "Grid") -> bool:
+        """Compare two instances of Grid for exact equality in value.
+
+        Two instances of :class:`Grid` class is equal in value if and only if
+        both the underlying multi-index sets are equal and
+        the generating points are equal.
+
+        Parameters
+        ----------
+        other : Grid
+            An instance of :class:`Grid` that is to be compared with
+            the current instance.
+
+        Returns
+        -------
+        bool
+            ``True`` if the two instances are equal in value,
+            ``False`` otherwise.
+        """
+        # Check for consistent type
+        if not isinstance(other, Grid):
+            return False
+
+        # Multi-index set equality
+        if self.multi_index != other.multi_index:
+            return False
+
+        # Generating points equality
+        if not np.array_equal(self.generating_points, other.generating_points):
+            return False
+
+        return True

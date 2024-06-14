@@ -319,3 +319,735 @@ def test_integrate_over(
     # Assertions
     assert np.isclose(value_nwt, value_lag)
     assert np.isclose(value_nwt, value_can)
+
+
+class TestPolyMultiplication:
+    """All tests related to the poly.-poly. multiplication in the Newton basis.
+    """
+    def test_identity(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test multiplicative identity of polynomial multiplication.
+
+        A polynomial multiplied with a constant polynomial with coefficient
+        value of 1.0 should result in the same polynomial in value.
+        """
+        # Create a Newton polynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension, PolyDegree, LpDegree
+        )
+
+        # Create a constant identity Newton polynomial
+        exponents = np.zeros((1, SpatialDimension), dtype=np.int_)
+        mi = MultiIndexSet(exponents, LpDegree)
+        coeffs = np.array([1.0])
+        nwt_poly_constant = NewtonPolynomial(mi, coeffs)
+
+        # Multiplication
+        nwt_poly_prod_1 = nwt_poly * nwt_poly_constant
+        nwt_poly_prod_2 = nwt_poly_constant * nwt_poly
+
+        # Assertions
+        assert nwt_poly == nwt_poly_prod_1
+        assert nwt_poly == nwt_poly_prod_2
+
+    def test_identity_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test multiplicative identity with multiple sets of coefficients.
+
+        A polynomial with multiple sets of coefficients multiplied with
+        a constant polynomial with coefficient values of 1.0 should return
+        the same polynomial in value.
+        """
+        # Create a Newton polynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Create a constant identity Newton polynomial
+        exponents = np.zeros((1, SpatialDimension), dtype=np.int_)
+        mi = MultiIndexSet(exponents, LpDegree)
+        coeffs = np.ones((1, num_polynomials))
+        nwt_poly_constant = NewtonPolynomial(mi, coeffs)
+
+        # Multiplication
+        nwt_poly_prod_1 = nwt_poly * nwt_poly_constant
+        nwt_poly_prod_2 = nwt_poly_constant * nwt_poly
+
+        # Assertions
+        assert nwt_poly == nwt_poly_prod_1
+        assert nwt_poly == nwt_poly_prod_2
+
+    def test_constant_sanity(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test the multiplication with an arbitrary constant polynomial.
+
+        A polynomial multiplied with a constant polynomial should return
+        a polynomial multiplied with a scalar.
+        """
+        # Create a Newton polynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # Create a constant identity Newton polynomial
+        exponents = np.zeros((1, SpatialDimension), dtype=np.int_)
+        mi = MultiIndexSet(exponents, LpDegree)
+        coeffs = np.random.rand(1)
+        nwt_poly_constant = NewtonPolynomial(mi, coeffs)
+
+        # Multiplication
+        nwt_poly_prod_1 = nwt_poly * nwt_poly_constant
+        nwt_poly_prod_2 = nwt_poly_constant * nwt_poly
+        nwt_poly_prod_3 = nwt_poly * coeffs[0]
+
+        # Assertions
+        assert nwt_poly_prod_3 == nwt_poly_prod_1
+        assert nwt_poly_prod_3 == nwt_poly_prod_2
+
+    def test_eval(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test the evaluation results of polynomial multiplication."""
+        # Create two Newton polynomials
+        nwt_poly_1 = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+        # Increase both the spatial dimension and poly. degree so
+        # the polynomial differ
+        nwt_poly_2 = build_random_newton_polynom(
+            SpatialDimension+1,
+            PolyDegree+1,
+            LpDegree,
+        )
+
+        # Generate random test points
+        xx_test = -1 + 2 * np.random.rand(10000, SpatialDimension+1)
+
+        # Compute reference results
+        yy_1 = nwt_poly_1(xx_test[:, :SpatialDimension])
+        yy_2 = nwt_poly_2(xx_test[:, :SpatialDimension+1])
+        yy_ref = yy_1 * yy_2
+
+        # Multiply polynomial
+        nwt_poly_prod = nwt_poly_1 * nwt_poly_2
+        yy_prod = nwt_poly_prod(xx_test)
+
+        # Assertion
+        assert np.allclose(yy_ref, yy_prod)
+
+    def test_eval_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test the evaluation results of poly. multiplication with multiple
+        sets of coefficients.
+        """
+        # Create two Newton polynomials
+        nwt_poly_1 = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+        # Increase both the spatial dimension and poly. degree so
+        # the polynomial differ
+        nwt_poly_2 = build_random_newton_polynom(
+            SpatialDimension + 1,
+            PolyDegree + 1,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Generate random test points
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension+1)
+
+        # Compute reference results
+        yy_1 = nwt_poly_1(xx_test[:, :SpatialDimension])
+        yy_2 = nwt_poly_2(xx_test[:, :SpatialDimension+1])
+        yy_ref = yy_1 * yy_2
+
+        # Multiply polynomial
+        nwt_poly_prod = nwt_poly_1 * nwt_poly_2
+        yy_prod = nwt_poly_prod(xx_test)
+
+        # Assertion
+        assert np.allclose(yy_ref, yy_prod)
+
+
+class TestScalarAddition:
+    """All tests related to polynomial-scalar addition."""
+    def test_sanity(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test adding additive identity."""
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # Addition with additive identity
+        nwt_poly_sum_1 = nwt_poly + 0
+        nwt_poly_sum_2 = 0 + nwt_poly  # Commutativity holds
+
+        # Assertions
+        assert nwt_poly == nwt_poly_sum_1
+        assert nwt_poly == nwt_poly_sum_2
+
+    def test_sanity_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test adding additive identity on polynomial with multiple sets of
+        coefficients.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Addition with additive identity
+        nwt_poly_sum_1 = nwt_poly + 0
+        nwt_poly_sum_2 = 0 + nwt_poly  # Commutativity holds
+
+        # Assertions
+        assert nwt_poly == nwt_poly_sum_1
+        assert nwt_poly == nwt_poly_sum_2
+
+    def test_inplace(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test inplace scalar addition (not implemented)."""
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # In-place addition
+        with pytest.raises(NotImplementedError):
+            nwt_poly += 5
+
+    def test_eval(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test the evaluation of a polynomial summed with a scalar."""
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension)
+
+        # Compute reference results
+        yy_ref = nwt_poly(xx_test) + 5
+
+        # Summed a polynomial
+        yy_1 = (nwt_poly + 5)(xx_test)
+        yy_2 = (5 + nwt_poly)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
+
+    def test_eval_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test the evaluation of a polynomial with multiple sets of
+        coefficients summed with a scalar.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension)
+
+        # Compute reference results
+        yy_ref = nwt_poly(xx_test) + 5
+
+        # Summed a polynomial
+        yy_1 = (nwt_poly + 5)(xx_test)
+        yy_2 = (5 + nwt_poly)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
+
+
+class TestScalarSubtraction:
+    """All tests related to polynomial-scalar subtraction."""
+    def test_sanity(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test adding additive identity."""
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # Addition with additive identity
+        nwt_poly_sum_1 = nwt_poly - 0
+        nwt_poly_sum_2 = -0 + nwt_poly  # Commutativity holds
+
+        # Assertions
+        assert nwt_poly == nwt_poly_sum_1
+        assert nwt_poly == nwt_poly_sum_2
+
+    def test_sanity_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test adding additive identity on polynomial with multiple sets of
+        coefficients.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Addition with additive identity
+        nwt_poly_sum_1 = nwt_poly - 0
+        nwt_poly_sum_2 = -0 + nwt_poly  # Commutativity holds
+
+        # Assertions
+        assert nwt_poly == nwt_poly_sum_1
+        assert nwt_poly == nwt_poly_sum_2
+
+    def test_rsub_single_poly(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test right-sided subtraction of a polynomial with a single set of
+        coefficients by a scalar.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # Right-sided subtraction
+        nwt_poly_sub = 5 - nwt_poly
+
+        # Reference
+        yy_ref = -1 * nwt_poly.coeffs.copy()
+        yy_ref[0] += 5
+        nwt_poly_ref = NewtonPolynomial(
+            nwt_poly.multi_index,
+            yy_ref,
+            user_domain=nwt_poly.user_domain,
+            internal_domain=nwt_poly.internal_domain,
+            grid=nwt_poly.grid,
+        )
+
+        # Assertion
+        assert nwt_poly_ref == nwt_poly_sub
+
+    def test_rsub_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test right-sided subtraction of a polynomial with multiple sets
+        of coefficients by a scalar.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Right-sided subtraction
+        nwt_poly_sub = 5 - nwt_poly
+
+        # Reference
+        yy_ref = -1 * nwt_poly.coeffs.copy()
+        yy_ref[0] += 5
+        nwt_poly_ref = NewtonPolynomial(
+            nwt_poly.multi_index,
+            yy_ref,
+            user_domain=nwt_poly.user_domain,
+            internal_domain=nwt_poly.internal_domain,
+            grid=nwt_poly.grid,
+        )
+
+        # Assertion
+        assert nwt_poly_ref == nwt_poly_sub
+
+    def test_inplace(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test inplace scalar addition (not implemented)."""
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # In-place addition
+        with pytest.raises(NotImplementedError):
+            nwt_poly -= 5
+
+    def test_eval(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test the evaluation of a polynomial subtracted by a scalar."""
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension)
+
+        # Compute reference results
+        yy_ref = nwt_poly(xx_test) - 5
+
+        # Summed a polynomial
+        yy_1 = (nwt_poly - 5)(xx_test)
+        yy_2 = (-5 + nwt_poly)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
+
+    def test_eval_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test the evaluation of a polynomial with multiple sets of
+        coefficients subtracted by a scalar.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension)
+
+        # Compute reference results
+        yy_ref = nwt_poly(xx_test) - 5
+
+        # Summed a polynomial
+        yy_1 = (nwt_poly - 5)(xx_test)
+        yy_2 = (-5 + nwt_poly)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
+
+
+class TestPolyAddition:
+    """All tests related to polynomial-polynomial addition."""
+    def test_self(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test adding the same polynomial instance."""
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # Self addition
+        nwt_poly_sum = nwt_poly + nwt_poly
+
+        # Assertion
+        assert nwt_poly_sum == 2 * nwt_poly
+
+    def test_self_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test adding the same polynomial instance with multiple sets of
+        coefficients.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Self addition
+        nwt_poly_sum = nwt_poly + nwt_poly
+
+        # Assertion
+        assert nwt_poly_sum == 2 * nwt_poly
+
+    def test_eval(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test the evaluation of a polynomial summed with another polynomial.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly_1 = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+        # Increase both the spatial dimension and poly. degree so
+        # the polynomial differ
+        nwt_poly_2 = build_random_newton_polynom(
+            SpatialDimension + 1,
+            PolyDegree + 1,
+            LpDegree,
+        )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension+1)
+
+        # Compute reference results
+        yy_r1 = nwt_poly_1(xx_test[:, :SpatialDimension])
+        yy_r2 = nwt_poly_2(xx_test[:, :SpatialDimension+1])
+        yy_ref = yy_r1 + yy_r2
+
+        # Summed a polynomial
+        yy_1 = (nwt_poly_1 + nwt_poly_2)(xx_test)
+        yy_2 = (nwt_poly_2 + nwt_poly_1)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
+
+    def test_eval_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test the evaluation of a polynomial with multiple sets of
+        coefficients summed with another polynomial.
+        """
+        # Create instances of NewtonPolynomial
+        nwt_poly_1 = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+        # Increase both the spatial dimension and poly. degree so
+        # the polynomial differ
+        nwt_poly_2 = build_random_newton_polynom(
+            SpatialDimension+1,
+            PolyDegree+1,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension + 1)
+
+        # Compute reference results
+        yy_r1 = nwt_poly_1(xx_test[:, :SpatialDimension])
+        yy_r2 = nwt_poly_2(xx_test[:, :SpatialDimension + 1])
+        yy_ref = yy_r1 + yy_r2
+
+        # Summed a polynomial
+        yy_1 = (nwt_poly_1 + nwt_poly_2)(xx_test)
+        yy_2 = (nwt_poly_2 + nwt_poly_1)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
+
+
+class TestPolySubtraction:
+    """All tests related to polynomial-polynomial subtraction."""
+    def test_self(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test adding the same polynomial instance."""
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+
+        # Self addition
+        nwt_poly_sum = nwt_poly - nwt_poly
+
+        # Assertion
+        assert nwt_poly_sum == 0 * nwt_poly
+
+    def test_self_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test subtracting the same polynomial instance with multiple sets of
+        coefficients.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Self addition
+        nwt_poly_sum = nwt_poly - nwt_poly
+
+        # Assertion
+        assert nwt_poly_sum == 0 * nwt_poly
+
+    def test_eval(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test the evaluation of a polynomial subtracted by another
+        polynomial.
+        """
+        # Create an instance of NewtonPolynomial
+        nwt_poly_1 = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+        )
+        # Increase both the spatial dimension and poly. degree so
+        # the polynomial differ
+        nwt_poly_2 = build_random_newton_polynom(
+            SpatialDimension + 1,
+            PolyDegree + 1,
+            LpDegree,
+        )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension+1)
+
+        # Compute reference results
+        yy_r1 = nwt_poly_1(xx_test[:, :SpatialDimension])
+        yy_r2 = nwt_poly_2(xx_test[:, :SpatialDimension+1])
+        yy_ref = yy_r1 - yy_r2
+
+        # Summed a polynomial
+        yy_1 = (nwt_poly_1 - nwt_poly_2)(xx_test)
+        yy_2 = (-nwt_poly_2 + nwt_poly_1)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
+
+    def test_eval_multiple_polys(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test the evaluation of a polynomial with multiple sets of
+        coefficients subtracted by another polynomial.
+        """
+        # Create instances of NewtonPolynomial
+        nwt_poly_1 = build_random_newton_polynom(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            num_polynomials,
+        )
+        # Increase both the spatial dimension and poly. degree so
+        # the polynomial differ
+        nwt_poly_2 = build_random_newton_polynom(
+            SpatialDimension+1,
+            PolyDegree+1,
+            LpDegree,
+            num_polynomials,
+        )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension + 1)
+
+        # Compute reference results
+        yy_r1 = nwt_poly_1(xx_test[:, :SpatialDimension])
+        yy_r2 = nwt_poly_2(xx_test[:, :SpatialDimension + 1])
+        yy_ref = yy_r1 - yy_r2
+
+        # Summed a polynomial
+        yy_1 = (nwt_poly_1 - nwt_poly_2)(xx_test)
+        yy_2 = (-nwt_poly_2 + nwt_poly_1)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
+
+
+# Test evaluation
+# Test evaluation multiple polys
+# Test subtraction
+# Test right-sided addition inconsistent type
+# Test right-sided subtraction inconsistent type
+# Test right-sided subtraction
+# Test right-sided multiplication
+
+        # if is_scalar(other):
+        #     self._scalar_mul(other, inplace=True)
+        #     return self
+        #
+        # # TODO: Currently only multiplication with scalar is supported inplace
+        # if isinstance(self, type(other)):
+        #     raise NotImplementedError
+        #
+        # return NotImplemented
+
+# from __iadd__
+#  #  Only supported for polynomials of the same concrete class
+#         if self.__class__ != other.__class__:
+#             raise NotImplementedError(
+#                 f"Subtraction operation not implemented for "
+#                 f"'{self.__class__}', '{other.__class__}'"
+#             )
+#
+#         # Check if the number of coefficients remain consistent.
+#         if not _has_consistent_number_of_polys(self, other):
+#             raise ValueError(
+#                 "Cannot subtract polynomials with inconsistent "
+#                 "number of coefficient sets"
+#             )
+#
+#         # Only do it if the dimension is matching and inplace
+#         if not self.has_matching_domain(other):
+#             raise ValueError(
+#                 "Cannot subtract polynomials of different domains"
+#             )
+
+# Test __isub__
