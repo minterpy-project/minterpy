@@ -128,6 +128,7 @@ class ChebyshevPolynomial(MultivariatePolynomialSingleABC):
     _div = staticmethod(dummy)  # type: ignore
     _pow = staticmethod(dummy)  # type: ignore
     _eval = staticmethod(chebyshev_eval)
+    _iadd = staticmethod(dummy)
 
     _partial_diff = staticmethod(dummy)
     _diff = staticmethod(dummy)

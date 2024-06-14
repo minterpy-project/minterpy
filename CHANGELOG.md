@@ -28,6 +28,15 @@
   The implementation includes the left-side multiplication via `__mul__()`.
   Multiplication with a constant polynomial returns a consistent result with
   multiplication with a scalar.
+- Polynomial-polynomial addition/subtraction as well as polynomial-(real)scalar
+  addition/subtraction are now supported for polynomials in the Newton basis.
+  The implementation includes the left-sided addition via `__add__()` and
+  subtraction via `__sub__()` (for both Newton polynomial and real scalar 
+  number) as well as right-sided addition via `__radd__()` and subtraction via 
+  `__rsub__()` (for real scalar numbers).
+- Static abstract method `_iadd()` is now included in the
+  `MultivariatePolynomialSingleABC` as a placeholder for the concrete
+  implementation of augmented addition operation.
 
 ### Fixed
 
