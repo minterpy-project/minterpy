@@ -25,10 +25,10 @@ from conftest import (
 def _solve_gmres(rr: np.ndarray, yy: np.ndarray, ww: np.ndarray, **kwargs):
     """Solve a least-squares problem using a Generalized Min. Resid. solver."""
     if ww is None:
-        coeffs, _ = gmres(rr, yy, atol="legacy", **kwargs)
+        coeffs, _ = gmres(rr, yy, **kwargs)
     else:
         coeffs, _ = gmres(
-            rr.T @ ww @ rr, rr.T @ ww @ yy, atol="legacy", **kwargs
+            rr.T @ ww @ rr, rr.T @ ww @ yy, **kwargs
         )
 
     return coeffs
@@ -416,7 +416,7 @@ def test_underdetermined_system(SpatialDimension, PolyDegree, LpDegree):
     # Fit the ordinary regression model
     my_ordinary_regression.fit(xx_train, yy_train, lstsq_solver="qr")
 
-    assert my_ordinary_regression.loocv_error == (np.infty, np.infty)
+    assert my_ordinary_regression.loocv_error == (np.inf, np.inf)
 
 
 def test_single_monomial(origin_poly):

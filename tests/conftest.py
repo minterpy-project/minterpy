@@ -219,14 +219,15 @@ def assert_interpolant_almost_equal(interpolant1, interpolant2):
             f"The two instances of {interpolant1.__class__.__name__} are not almost equal:\n\n {a}"
         )
 
+# --- Elementary fixtures
 
-# fixtures for spatial dimension
 
 spatial_dimensions = [1, 3]
 
 
 @pytest.fixture(params=spatial_dimensions)
 def SpatialDimension(request):
+    """Return spatial dimension fixture."""
     return request.param
 
 
@@ -248,14 +249,6 @@ lp_degrees = [0.5, 1, 2, np.inf]
 @pytest.fixture(params=lp_degrees)
 def LpDegree(request):
     return request.param
-
-
-# fixtures for multi_indices
-
-
-@pytest.fixture()
-def MultiIndices(SpatialDimension, PolyDegree, LpDegree):
-    return MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
 
 
 # fixtures for number of similar polynomials
@@ -321,6 +314,45 @@ target_type = polynomial_class
 )
 def param_diff(request):
     return request.param
+
+
+# --- Composite fixtures
+@pytest.fixture()
+def MultiIndices(SpatialDimension, PolyDegree, LpDegree):
+    return MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+
+@pytest.fixture
+def multi_index_mnp(SpatialDimension, PolyDegree, LpDegree):
+    """Create a complete multi-index set given spatial dimension (m),
+    polynomial degree (n), and lp-degree (p).
+
+    TODO
+    ----
+    - Refactor the fixture `MultiIndices` above as the multi-index created
+      by the fixture is a specific one.
+    """
+    return MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+
+@pytest.fixture
+def rand_poly_mnp(polynomial_class, multi_index_mnp):
+    """Create a random polynomial instance of each concrete class having
+    a complete multi-index set.
+    """
+    coefficients = np.random.rand(len(multi_index_mnp))
+
+    return polynomial_class(multi_index_mnp, coefficients)
+
+
+@pytest.fixture
+def rand_polys_mnp(polynomial_class, multi_index_mnp, num_polynomials):
+    """Create a random polynomial instance of each concrete class with multiple
+    sets of coefficients having a complete multi-index set.
+    """
+    coefficients = np.random.rand(len(multi_index_mnp), num_polynomials)
+
+    return polynomial_class(multi_index_mnp, coefficients)
 
 
 @pytest.fixture
