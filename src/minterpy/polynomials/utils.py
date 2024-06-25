@@ -2,6 +2,7 @@
 set of utility functions to be used in polynomials submodule
 """
 import itertools
+import math
 import numpy as np
 
 from scipy.special import roots_legendre
@@ -109,7 +110,7 @@ def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarr
                     continue
 
                 # derivative of newt monomial 'order' will be just factorial of order
-                fact = np.math.factorial(order)
+                fact = math.factorial(order)
                 products[order, i] = fact
 
                 # for all bigger monomials, use chain rule of differentiation to compute derivative of products

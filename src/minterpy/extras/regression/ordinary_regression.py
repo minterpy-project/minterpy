@@ -619,11 +619,11 @@ def compute_loocv_error(
         )
         loo_cv = ((yy - regression_matrix @ coeffs) / (1 - hi)) ** 2
         idx = np.where(np.isnan(loo_cv))
-        loo_cv[idx] = np.infty
+        loo_cv[idx] = np.inf
         loo_cv_error = np.mean(loo_cv)
     else:
         # NOTE: Under-determined system, unreliable results
-        loo_cv_error = np.infty
+        loo_cv_error = np.inf
 
     return loo_cv_error, loo_cv_error / np.var(yy)
 
