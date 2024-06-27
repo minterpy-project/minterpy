@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from minterpy.core.verification import (
+from minterpy.utils.verification import (
     verify_spatial_dimension,
     verify_poly_degree,
     verify_lp_degree,

@@ -1,6 +1,6 @@
 import numpy as np
 
-from minterpy.core.verification import rectify_query_points, check_dtype, rectify_eval_input, convert_eval_output
+from minterpy.utils.verification import rectify_query_points, check_dtype, rectify_eval_input, convert_eval_output
 from minterpy.global_settings import FLOAT_DTYPE, INT_DTYPE, DEBUG
 from minterpy.jit_compiled.newton.eval import eval_newton_monomials_multiple
 

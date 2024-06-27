@@ -17,7 +17,7 @@ from scipy.special import eval_chebyt
 
 from .utils import dummy
 from ..core.ABC import MultivariatePolynomialSingleABC
-from ..core.verification import verify_domain
+from minterpy.utils.verification import verify_domain
 
 __all__ = ["ChebyshevPolynomial", "evaluate_chebyshev_monomials"]
 

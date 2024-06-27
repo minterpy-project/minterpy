@@ -3,13 +3,13 @@ LagrangePolynomial class
 """
 import numpy as np
 
-from typing import Any, Optional
+from typing import Optional
 
 import minterpy as mp
 
 from minterpy.core import Grid, MultiIndexSet
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
-from minterpy.core.verification import verify_domain
+from minterpy.utils.verification import verify_domain
 from minterpy.global_settings import ARRAY
 from minterpy.polynomials.canonical_polynomial import (
     _match_dims,

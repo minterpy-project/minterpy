@@ -10,7 +10,7 @@ from scipy.special import factorial
 from minterpy.core import MultiIndexSet
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
 from minterpy.core.utils import find_match_between
-from minterpy.core.verification import convert_eval_output, verify_domain
+from minterpy.utils.verification import convert_eval_output, verify_domain
 from minterpy.global_settings import INT_DTYPE
 from minterpy.jit_compiled.multi_index import all_indices_are_contained
 from minterpy.polynomials.utils import integrate_monomials_canonical

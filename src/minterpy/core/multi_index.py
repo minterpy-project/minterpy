@@ -60,7 +60,7 @@ from minterpy.core.utils import (
     multiply_indices,
     union_indices,
 )
-from .verification import (
+from minterpy.utils.verification import (
     check_dimensionality,
     check_values,
     verify_lp_degree,

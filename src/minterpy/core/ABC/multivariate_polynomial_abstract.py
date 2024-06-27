@@ -6,7 +6,7 @@ This ensures that all polynomials work with the same interface, so futher featur
 """
 import abc
 from copy import deepcopy
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union
 
 import numpy as np
 
@@ -15,7 +15,7 @@ from minterpy.global_settings import ARRAY, SCALAR
 from ..grid import Grid
 from ..multi_index import MultiIndexSet
 from ..utils import expand_dim, find_match_between
-from ..verification import (
+from minterpy.utils.verification import (
     check_dimensionality,
     is_scalar,
     check_shape,

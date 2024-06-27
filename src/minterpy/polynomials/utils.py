@@ -11,7 +11,7 @@ from typing import Callable
 from minterpy.core.tree import MultiIndexTree
 from minterpy.dds import dds
 from minterpy.global_settings import FLOAT_DTYPE
-from minterpy.core.verification import rectify_eval_input
+from minterpy.utils.verification import rectify_eval_input
 from minterpy.utils.newton import eval_newton_monomials
 
 

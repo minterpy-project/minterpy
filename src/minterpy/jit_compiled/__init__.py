@@ -11,4 +11,10 @@ This means we already knows and specify in advance the input and output
 requirements of the compiled codes.
 ``njit`` is less flexible than ``jit``, but would in most cases be faster and
 memory-efficient.
+
+Notes
+-----
+- Input validation and error checking are usually not implemented within
+  JIT-compiled functions. It is therefore the responsibility of the caller
+  to make sure that the input and output requirements are met.
 """

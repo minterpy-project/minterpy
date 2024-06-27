@@ -10,7 +10,7 @@ from minterpy.core.ABC.multivariate_polynomial_abstract import (
     MultivariatePolynomialSingleABC,
 )
 from minterpy.core.grid import Grid
-from minterpy.core.verification import verify_domain
+from minterpy.utils.verification import verify_domain
 from minterpy.dds import dds
 from minterpy.global_settings import DEBUG
 from minterpy.utils.newton import eval_newton_polynomials
