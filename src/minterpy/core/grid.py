@@ -9,8 +9,8 @@ import numpy as np
 from minterpy.global_settings import ARRAY, INT_DTYPE
 from minterpy.gen_points import gen_chebychev_2nd_order_leja_ordered
 
-from .multi_index import MultiIndexSet
-from .tree import MultiIndexTree
+from minterpy.core.multi_index import MultiIndexSet
+from minterpy.core.tree import MultiIndexTree
 from minterpy.utils.verification import (
     check_dimensionality,
     check_domain_fit,

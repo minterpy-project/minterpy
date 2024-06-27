@@ -29,7 +29,7 @@ from minterpy import (
     ChebyshevToCanonical,
 )
 from minterpy.core.ABC.transformation_abstract import TransformationABC
-from minterpy.core.utils import get_exponent_matrix
+from minterpy.utils.multi_index import get_exponent_matrix
 
 # Supported polynomial classes
 POLY_CLASSES = [

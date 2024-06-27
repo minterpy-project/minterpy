@@ -15,11 +15,11 @@ from conftest import (
 from numpy.testing import assert_raises
 
 from minterpy import MultiIndexSet
-from minterpy.core.utils import (
+from minterpy.utils.arrays import expand_dim
+from minterpy.utils.multi_index import (
     get_exponent_matrix,
-    multiply_indices,
     insert_lexicographically,
-    expand_dim,
+    multiply_indices,
 )
 
 

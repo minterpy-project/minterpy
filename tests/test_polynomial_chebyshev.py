@@ -12,7 +12,7 @@ from conftest import (
 )
 
 from minterpy import ChebyshevPolynomial, MultiIndexSet
-from minterpy.core.utils import get_exponent_matrix
+from minterpy.utils.multi_index import get_exponent_matrix
 
 
 class TestEvaluation:

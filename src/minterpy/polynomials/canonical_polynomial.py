@@ -7,14 +7,14 @@ import numpy as np
 from copy import deepcopy
 from scipy.special import factorial
 
-from minterpy.core import MultiIndexSet
-from minterpy.core.ABC import MultivariatePolynomialSingleABC
-from minterpy.core.utils import find_match_between
-from minterpy.utils.verification import convert_eval_output, verify_domain
 from minterpy.global_settings import INT_DTYPE
-from minterpy.jit_compiled.multi_index import all_indices_are_contained
+from minterpy.core.ABC import MultivariatePolynomialSingleABC
+from minterpy.core import MultiIndexSet
 from minterpy.polynomials.utils import integrate_monomials_canonical
-from minterpy.utils.common import make_coeffs_2d
+from minterpy.utils.verification import convert_eval_output, verify_domain
+from minterpy.utils.arrays import make_coeffs_2d
+from minterpy.utils.multi_index import find_match_between
+from minterpy.jit_compiled.multi_index import all_indices_are_contained
 
 __all__ = ["CanonicalPolynomial"]
 
