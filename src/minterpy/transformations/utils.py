@@ -16,13 +16,13 @@ from typing import no_type_check
 from minterpy.core.ABC import OperatorABC, TransformationABC
 from minterpy.dds import dds
 from minterpy.global_settings import ARRAY, DEBUG, FLOAT_DTYPE
-from minterpy.jit_compiled_utils import compute_vandermonde_n2c
+from minterpy.jit_compiled.transformations import compute_vandermonde_n2c
 from minterpy.schemes.barycentric.precomp import (
     _build_lagrange_to_newton_bary,
     _build_newton_to_lagrange_bary,
 )
 from minterpy.schemes.matrix_operator import MatrixOperator
-from minterpy.utils import eval_newton_monomials
+from minterpy.utils.newton import eval_newton_monomials
 
 from minterpy.polynomials.chebyshev_polynomial import (
     evaluate_chebyshev_monomials

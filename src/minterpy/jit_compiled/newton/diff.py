@@ -1,5 +1,10 @@
 """
 A module for compiled code for polynomial differentiation in the Newton basis.
+
+Notes
+-----
+- The most "fine-grained" functions must be defined first in order for Numba
+  to properly infer the function types.
 """
 import math
 

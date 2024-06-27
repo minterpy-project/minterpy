@@ -10,12 +10,11 @@ from scipy.special import factorial
 from minterpy.core import MultiIndexSet
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
 from minterpy.core.utils import find_match_between
-from minterpy.core.verification import convert_eval_output, rectify_eval_input, verify_domain
-from minterpy.global_settings import DEBUG, FLOAT_DTYPE, INT_DTYPE
-from minterpy.jit_compiled_utils import can_eval_mult, all_indices_are_contained
+from minterpy.core.verification import convert_eval_output, verify_domain
+from minterpy.global_settings import INT_DTYPE
+from minterpy.jit_compiled.multi_index import all_indices_are_contained
 from minterpy.polynomials.utils import integrate_monomials_canonical
-from minterpy.utils import make_coeffs_2d
-
+from minterpy.utils.common import make_coeffs_2d
 
 __all__ = ["CanonicalPolynomial"]
 

@@ -14,7 +14,7 @@ from conftest import (
 from numpy.testing import assert_, assert_almost_equal
 
 from minterpy.global_settings import INT_DTYPE
-from minterpy.utils import eval_newton_polynomials
+from minterpy.utils.newton import eval_newton_polynomials
 from minterpy import Grid, MultiIndexSet
 
 from minterpy import (

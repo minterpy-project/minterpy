@@ -6,12 +6,13 @@ import math
 import numpy as np
 
 from scipy.special import roots_legendre
-from typing import Any, Callable, Optional
+from typing import Callable
 
 from minterpy.core.tree import MultiIndexTree
 from minterpy.dds import dds
 from minterpy.global_settings import FLOAT_DTYPE
-from minterpy.utils import rectify_eval_input, eval_newton_monomials
+from minterpy.core.verification import rectify_eval_input
+from minterpy.utils.newton import eval_newton_monomials
 
 
 def dummy(*args, **kwargs) -> None:

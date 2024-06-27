@@ -42,10 +42,9 @@ from minterpy.global_settings import (
     DEFAULT_LP_DEG,
     NOT_FOUND,
 )
-
-from minterpy.jit_compiled_utils import (
-    all_indices_are_contained,
+from minterpy.jit_compiled.multi_index import (
     search_lex_sorted,
+    all_indices_are_contained,
 )
 from minterpy.core.utils import (
     expand_dim as expand_dim_,
@@ -61,7 +60,6 @@ from minterpy.core.utils import (
     multiply_indices,
     union_indices,
 )
-
 from .verification import (
     check_dimensionality,
     check_values,

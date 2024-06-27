@@ -1,5 +1,5 @@
 """
-Test suite for multi_index_utils.py
+Test suite for utility functions related to the Multi-index set.
 """
 import numpy as np
 import pytest
@@ -31,12 +31,12 @@ from minterpy.core.utils import (
     union_indices,
 )
 from minterpy.global_settings import NOT_FOUND
-from minterpy.jit_compiled_utils import (
-    all_indices_are_contained,
-    is_lex_sorted,
-    is_index_contained,
+from minterpy.jit_compiled.multi_index import (
     is_lex_smaller_or_equal,
+    is_lex_sorted,
     search_lex_sorted,
+    is_index_contained,
+    all_indices_are_contained,
 )
 from minterpy.global_settings import NOT_FOUND
 
