@@ -12,12 +12,11 @@ from minterpy.core.ABC.multivariate_polynomial_abstract import (
 )
 from minterpy.core.grid import Grid
 from minterpy.dds import dds
-from minterpy.utils.verification import verify_domain
-from minterpy.utils.newton import eval_newton_polynomials
-from minterpy.polynomials.utils import (
+from minterpy.utils.verification import dummy, verify_domain
+from minterpy.utils.polynomials.newton import (
+    eval_newton_polynomials,
     deriv_newt_eval as eval_diff_numpy,
     integrate_monomials_newton,
-    dummy,
 )
 from minterpy.jit_compiled.newton.diff import (
     eval_multiple_query as eval_diff_numba,

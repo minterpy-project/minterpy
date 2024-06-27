@@ -9,23 +9,14 @@ import minterpy as mp
 
 from minterpy.core import Grid, MultiIndexSet
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
-from minterpy.utils.verification import verify_domain
+from minterpy.utils.verification import dummy, verify_domain
 from minterpy.global_settings import ARRAY
 from minterpy.polynomials.canonical_polynomial import (
     _match_dims,
 )
-from minterpy.polynomials.utils import integrate_monomials_lagrange
+from minterpy.utils.polynomials.lagrange import integrate_monomials_lagrange
 
 __all__ = ["LagrangePolynomial"]
-
-
-def dummy(*args, **kwargs) -> None:
-    """Placeholder function.
-
-    .. warning::
-      This feature is not implemented yet!
-    """
-    raise NotImplementedError("This feature is not implemented yet.")
 
 
 # TODO : poly2 can be of a different basis?
