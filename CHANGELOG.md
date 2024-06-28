@@ -53,6 +53,16 @@
 - Negating a polynomial with a non-default Grid instance returns a polynomial
   with the default grid.
 
+### Changed
+
+- The utility modules that were scattered across the codebase are now
+  collected inside the sub-package `minterpy.utils`. The residing functions
+  are supposed to deal with low-level computational details that support
+  higher-level constructs of Minterpy such as polynomials, multi-index set,
+  grid, etc. Vice versa, higher-level constructs should avoid directly
+  deal with low-level array manipulations without interfacing functions.
+  This reorganization has no effect on the overall code functionality.
+
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several
 new functionalities and enhances code quality and performance.
