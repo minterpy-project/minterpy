@@ -1,6 +1,6 @@
 ########################################
-JIT-Compiled Functions: Common Functions
+Polynomials: Canonical Utility Functions
 ########################################
 
-.. automodule:: minterpy.jit_compiled.common
+.. automodule:: minterpy.utils.polynomials.canonical
    :members:

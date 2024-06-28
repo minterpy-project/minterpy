@@ -1,5 +1,5 @@
 ###########################
-Numba-Accelerated Functions
+Compiled Internal Functions
 ###########################
 
 .. automodule:: minterpy.jit_compiled
@@ -7,5 +7,9 @@ Numba-Accelerated Functions
 .. toctree::
    :maxdepth: 2
 
-   Common Functions <common>
+   Common <common>
+   Multi-index exponents <multi-index>
    Newton: Differentiation <newton-diff>
+   Newton: Evaluation <newton-eval>
+   Canonical <canonical>
+   Polynomial transformations <transformations>

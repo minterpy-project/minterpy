@@ -1,5 +1,12 @@
 """
-A module with JIT-compiled utility functions related to the multi-index set.
+A module with JIT-compiled utility functions to process and manipulate
+multi-index set of exponents.
+
+Notes
+-----
+- All multi-index sets of exponents are always assumed to be two-dimensional
+  non-negative integer arrays. There is no explicit check of this conditions
+  in the following functions.
 """
 import numpy as np
 

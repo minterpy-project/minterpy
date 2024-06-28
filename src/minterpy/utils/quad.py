@@ -20,7 +20,7 @@ def gauss_leg(
 
     Returns
     -------
-    np.ndarray
+    :class:`numpy:numpy.ndarray`
         The integral of the function over the given bounds.
     """
     quad_nodes, quad_weights = roots_legendre(num_points)

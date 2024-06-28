@@ -1,6 +1,6 @@
 ########################################
-JIT-Compiled Functions: Common Functions
+Polynomials: Chebyshev Utility Functions
 ########################################
 
-.. automodule:: minterpy.jit_compiled.common
+.. automodule:: minterpy.utils.polynomials.chebyshev
    :members:

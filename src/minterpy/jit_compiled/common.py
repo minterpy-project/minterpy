@@ -20,8 +20,6 @@ from minterpy.global_settings import (
     F_2D,
 )
 
-__all__ = []
-
 
 @njit(UINT64(UINT32, UINT32), cache=True)
 def n_choose_r(n: int, r: int) -> int:
@@ -143,8 +141,8 @@ def combinations_iter(xx: np.ndarray, r: int) -> np.ndarray:
 def dot(a: np.ndarray, bb: np.ndarray) -> np.ndarray:
     """Compute vector-matrix dot product with contiguous arrays.
 
-    Parameter
-    ---------
+    Parameters
+    ----------
     a : :class:`numpy:numpy.ndarray`
         A one-dimensional array of length ``n``.
     bb : :class:`numpy:numpy.ndarray`

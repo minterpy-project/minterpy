@@ -484,8 +484,8 @@ def eval_multiple_query(
 
     See Also
     --------
-    minterpy.jit_compiled.newton.diff.eval_single_query
-        Evaluation of the derivative of polynomial(s) in the Newton form
+    minterpy.jit_compiled.newton.diff.eval_monomials_single_query
+        Evaluation of the derivative of monomials in the Newton form
         for a single query point.
     """
     # Get relevant problem sizes
@@ -582,8 +582,8 @@ def eval_multiple_query_par(
 
     See Also
     --------
-    minterpy.jit_compiled.newton.diff.eval_single_query
-        Evaluation of the derivative of polynomial(s) in the Newton basis
+    minterpy.jit_compiled.newton.diff.eval_monomials_single_query
+        Evaluation of the derivative of monomials in the Newton form
         for a single query point.
     minterpy.jit_compiled.newton.diff.eval_multiple_query
         Evaluation of the derivative of polynomial(s) in the Newton basis

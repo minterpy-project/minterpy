@@ -5,9 +5,9 @@ Generating points are the main ingredient of constructing a set of unisolvent
 nodes (i.e., interpolation nodes) on which a polynomial interpolant is uniquely
 determined.
 
-In one dimension, a set of generating points is unisolvent nodes.
-In higher dimension, a set of unisolvent nodes are constructed based on
-the generating points in each dimension and the multi-indices of polynomial
+In one dimension, a set of generating points is the same as the unisolvent
+nodes. In higher dimension, a set of unisolvent nodes are constructed based on
+the generating points in each dimension and the multi-index set of polynomial
 exponents.
 """
 import numpy as np
