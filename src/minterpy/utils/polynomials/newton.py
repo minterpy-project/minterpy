@@ -383,7 +383,7 @@ def integrate_monomials_newton(
 
     Returns
     -------
-    np.ndarray
+    :class:`numpy:numpy.ndarray`
         The integrated Newton monomials, an ``(N,)`` array, where N is
         the number of monomials (exponents).
 
@@ -393,8 +393,6 @@ def integrate_monomials_newton(
       :math:`M` is the number of spatial dimensions because the polynomial
       itself is defined in that domain. This condition may be relaxed in
       the future and the implementation below should be modified.
-    - Possibly reorganize this function in another module. Note, however, that
-      this function is shared by both the Newton basis and the Lagrange basis.
     """
     # --- Get some basic data
     num_monomials, num_dim = exponents.shape

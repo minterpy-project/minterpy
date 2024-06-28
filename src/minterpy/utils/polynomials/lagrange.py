@@ -4,15 +4,17 @@ in the Lagrange basis.
 """
 import numpy as np
 
-from minterpy.core.tree import MultiIndexTree
-from minterpy.dds import dds
+from minterpy.global_settings import ARRAY_DICT, TYPED_LIST
+from minterpy.dds import dds_
 from minterpy.utils.polynomials.newton import integrate_monomials_newton
 
 
 def integrate_monomials_lagrange(
     exponents: np.ndarray,
     generating_points: np.ndarray,
-    tree: MultiIndexTree,
+    split_positions: TYPED_LIST,
+    subtree_sizes: TYPED_LIST,
+    masks: ARRAY_DICT,
     bounds: np.ndarray,
 ) -> np.ndarray:
     """Integrate the monomials in the Lagrange basis given a set of exponents.
@@ -29,9 +31,13 @@ def integrate_monomials_lagrange(
         a ``(P + 1, M)`` array, where ``P`` is the maximum degree of
         the polynomial in any dimensions and ``M`` is the number
         of spatial dimensions.
-    tree : MultiIndexTree
-        The MultiIndexTree to perform multi-dimensional divided-difference
-        scheme (DDS) for transforming the Newton basis to Lagrange basis.
+    split_positions : TYPED_LIST
+        The split positions of the multi-index tree.
+    subtree_sizes : TYPED_LIST
+        The subtree sizes of the multi-index tree.
+    masks : ARRAY_DICT
+        The masks that define the correspondence between left and right parts
+        of the tree.
     bounds : :class:`numpy:numpy.ndarray`
         The bounds (lower and upper) of the definite integration, an ``(M, 2)``
         array, where ``M`` is the number of spatial dimensions.
@@ -55,14 +61,20 @@ def integrate_monomials_lagrange(
       :math:`M` is the number of spatial dimensions because the polynomial
       itself is defined in that domain. This condition may be relaxed in
       the future and the implementation below should be modified.
-    - Possibly reorganize this function in another module. This function is
-      currently only used by the concrete implementation of
-      the Lagrange basis.
     """
+    # --- Integrate the Lagrange basis represented in the Newton basis
     monomials_integrals_newton = integrate_monomials_newton(
         exponents, generating_points, bounds
     )
-    l2n = dds(np.eye(exponents.shape[0]), tree)
+    # Create the transformation
+    l2n = dds_(
+        np.eye(exponents.shape[0]),
+        exponents,
+        generating_points,
+        split_positions,
+        subtree_sizes,
+        masks,
+    )
 
     # --- Carry out the transformation from Newton to Lagrange
     monomials_integrals = l2n.T @ monomials_integrals_newton

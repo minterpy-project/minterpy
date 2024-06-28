@@ -56,9 +56,10 @@ def evaluate_chebyshev_polynomials(
         The array of coefficients of the polynomials of shape ``(N, Np)``.
         Multiple sets of coefficients (``Np > 1``) indicate multiple Chebyshev
         polynomials evaluated at the same time at the same query points.
+
     Notes
     -----
-    The Chebyshev Polynomial has domain [-1,1]
+    - The Chebyshev Polynomial has domain :math:`[-1, 1]^m`.
     """
     # Evaluate the monomials
     monomials = evaluate_chebyshev_monomials(xx, exponents)

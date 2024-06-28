@@ -9,5 +9,4 @@ Notes
 - By convention, the functions included in the modules operate on the
   "NumPy-arrays"-level and not on instances of Minterpy classes (e.g.,
   ``MultiIndexSet``, ``NewtonPolynomial``, ``LagrangePolynomial``).
-  Some exceptions may occur.
 """

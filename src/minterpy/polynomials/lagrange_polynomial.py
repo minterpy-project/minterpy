@@ -14,7 +14,7 @@ from minterpy.global_settings import ARRAY
 from minterpy.polynomials.canonical_polynomial import (
     _match_dims,
 )
-from minterpy.utils.polynomials.lagrange import integrate_monomials_lagrange
+from minterpy.polynomials.interface import compute_quad_weights_lagrange
 
 __all__ = ["LagrangePolynomial"]
 
@@ -199,14 +199,7 @@ def _lagrange_integrate_over(
     :class:`numpy:numpy.ndarray`
         The integral value of the polynomial over the given domain.
     """
-    # --- Compute the integrals of the Lagrange monomials (quadrature weights)
-    exponents = poly.multi_index.exponents
-    generating_points = poly.grid.generating_points
-    tree = poly.grid.tree
-
-    quad_weights = integrate_monomials_lagrange(
-        exponents, generating_points, tree, bounds
-    )
+    quad_weights = compute_quad_weights_lagrange(poly, bounds)
 
     return quad_weights @ poly.coeffs
 

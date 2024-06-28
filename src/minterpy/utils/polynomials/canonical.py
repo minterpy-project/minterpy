@@ -25,7 +25,7 @@ def integrate_monomials_canonical(
 
     Returns
     -------
-    np.ndarray
+    :class:`numpy:numpy.ndarray`
         The integrated Canonical monomials, an ``(N,)`` array, where ``N`` is
         the number of monomials (exponents).
 
@@ -35,9 +35,6 @@ def integrate_monomials_canonical(
       :math:`M` is the number of spatial dimensions because the polynomial
       itself is defined in that domain. This condition may be relaxed in
       the future and the implementation below should be modified.
-    - Possibly reorganize this function in another module. This function is
-      currently only used by the concrete implementation of
-      the canonical basis.
     """
     bounds_diff = np.diff(bounds)
 
