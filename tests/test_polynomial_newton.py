@@ -11,10 +11,10 @@ from conftest import (
     build_rnd_points,
     build_random_newton_polynom,
 )
-from numpy.testing import assert_, assert_almost_equal
+from numpy.testing import assert_almost_equal
 
 from minterpy.global_settings import INT_DTYPE
-from minterpy.utils import eval_newton_polynomials
+from minterpy.utils.polynomials.newton import eval_newton_polynomials
 from minterpy import Grid, MultiIndexSet
 
 from minterpy import (

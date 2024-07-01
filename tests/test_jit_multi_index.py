@@ -4,7 +4,7 @@ Test suite for JIT-compiled utility functions related to the multi-index set.
 import numpy as np
 
 from itertools import product
-from minterpy.core.utils import get_exponent_matrix, lex_sort
+from minterpy.utils.multi_index import get_exponent_matrix, lex_sort
 
 from minterpy.jit_compiled.multi_index import cross_and_sum, unique_indices
 

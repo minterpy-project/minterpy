@@ -16,4 +16,3 @@ __all__ += grid.__all__
 
 from . import ABC  # noqa # ABCs are not exposed to the top level!
 from . import tree  # noqa
-from . import utils  # noqa # core utils are not exposed to top level

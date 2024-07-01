@@ -1,5 +1,5 @@
 """
-Test suite for multi_index_utils.py
+Test suite for utility functions related to the Multi-index set.
 """
 import numpy as np
 import pytest
@@ -12,31 +12,30 @@ from conftest import (
 )
 from numpy.testing import assert_, assert_equal, assert_raises
 
-from minterpy.core.utils import (
-    _gen_multi_index_exponents,
+from minterpy.utils.arrays import expand_dim
+from minterpy.utils.multi_index import (
     find_match_between,
-    expand_dim,
     get_exponent_matrix,
+    _gen_multi_index_exponents,
     gen_backward_neighbors,
     gen_missing_backward_neighbors,
-    insert_lexicographically,
     is_complete,
     is_disjoint,
     is_downward_closed,
+    insert_lexicographically,
+    lex_sort,
+    make_derivable,
     make_complete,
     make_downward_closed,
-    make_derivable,
     multiply_indices,
-    lex_sort,
     union_indices,
 )
-from minterpy.global_settings import NOT_FOUND
-from minterpy.jit_compiled_utils import (
-    all_indices_are_contained,
-    is_lex_sorted,
-    is_index_contained,
+from minterpy.jit_compiled.multi_index import (
     is_lex_smaller_or_equal,
+    is_lex_sorted,
     search_lex_sorted,
+    is_index_contained,
+    all_indices_are_contained,
 )
 from minterpy.global_settings import NOT_FOUND
 

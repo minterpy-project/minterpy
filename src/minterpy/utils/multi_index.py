@@ -1,25 +1,18 @@
 """
-Here we store the core utilities of `minterpy`.
+Module with implementation routines for manipulating multi-indices exponents.
 """
 from __future__ import annotations
 
-import numpy as np
-
 from decimal import Decimal, ROUND_HALF_UP
-from itertools import product
 from math import ceil
 from typing import Iterable, no_type_check
 
-from minterpy.global_settings import DEFAULT_LP_DEG, INT_DTYPE, NOT_FOUND, B_DTYPE
-from minterpy.jit_compiled_utils import (
-    fill_match_positions,
-    is_index_contained,
-    is_lex_smaller_or_equal,
-    search_lex_sorted,
-)
-from minterpy.utils import cartesian_product, lp_norm, lp_sum
+import numpy as np
 
-from minterpy.jit_compiled.multi_index import cross_and_sum, unique_indices
+from minterpy.global_settings import INT_DTYPE, NOT_FOUND
+from minterpy.jit_compiled.multi_index import is_index_contained, search_lex_sorted, is_lex_smaller_or_equal, \
+    fill_match_positions, cross_and_sum, unique_indices
+from minterpy.utils.arrays import lp_norm, cartesian_product, lp_sum, expand_dim
 
 # if TYPE_CHECKING:
 #    from .tree import MultiIndexTree
@@ -27,12 +20,12 @@ from minterpy.jit_compiled.multi_index import cross_and_sum, unique_indices
 
 def get_poly_degree(exponents: np.ndarray, lp_degree: float) -> int:
     """Get the polynomial degree from a multi-index set for a given lp-degree.
-    
+
     Parameters
     ----------
     exponents : np.ndarray
         An array of exponents of a multi-index set.
-    
+
     lp_degree : float
         The lp-degree of the multi-index set.
 
@@ -106,9 +99,6 @@ def get_exponent_matrix(
         right_choices = candidates[cond]
     lex_idx = np.lexsort(right_choices.T)
     return right_choices[lex_idx]
-
-
-NORM_FCT = lp_norm
 
 
 def _gen_multi_index_exponents_recur(m, n, gamma, gamma2, lp_degree):
@@ -191,104 +181,7 @@ def _gen_multi_index_exponents(spatial_dimension, poly_degree, lp_degree):
     return exponents
 
 
-def expand_dim(
-    xx: np.ndarray,
-    new_dim: int,
-    new_values: np.ndarray = None,
-) -> np.ndarray:
-    """Expand the dimension of a given 2D array filled with given values.
-
-    Parameters
-    ----------
-    xx : :class:`numpy:numpy.ndarray`
-        Input array (exponents array or interpolating grid array) which will
-        be expanded; it must be a two-dimensional array.
-    new_dim : int
-        The target dimension up to which the array will be expanded.
-        The value must be larger than or equal to the dimension of the current
-        array.
-    new_values : :class:`numpy:numpy.ndarray`, optional
-       The new values for the expanded dimensions; the values will be tiled
-       to fill in the expanded dimensions.
-
-    Returns
-    -------
-    :class:`numpy:numpy.ndarray`
-        Exponents or grid array with expanded dimension (i.e., additional
-        columns).
-
-    Raises
-    ------
-    ValueError
-        If the number of dimension of the input array is not equal to 2;
-        if the target number of columns is less than the number of columns
-        of the input array;
-        or if the number of values for the new columns is inconsistent
-        (not equal the number of rows of the input array).
-
-    Notes
-    -----
-    - The term `dimension` here refers to dimensionality of exponents or
-      interpolating grid; in other words, it refers to the number of columns
-      of such arrays.
-
-    Examples
-    --------
-    >>> array = np.array([[0, 0], [1, 0], [0, 1]])  # 2 columns / "dimensions"
-    >>> expand_dim(array, 4)  # expand to 4 columns / "dimensions"
-    array([[0, 0, 0, 0],
-           [1, 0, 0, 0],
-           [0, 1, 0, 0]])
-    >>> expand_dim(array, 4, np.array([3, 2]))  # expand with tiled values
-    array([[0, 0, 3, 2],
-           [1, 0, 3, 2],
-           [0, 1, 3, 2]])
-    """
-    # Check the dimension of the input array
-    if xx.ndim != 2:
-        raise ValueError(
-            f"The exponent or grid array must be of dimension 2! "
-            f"Instead got {xx.ndim}."
-        )
-
-    # Get the shape of the input array
-    num_rows, num_columns = xx.shape
-
-    # --- Dimension contraction (smaller target), raises an exception
-    if new_dim < num_columns:
-        # TODO maybe build a reduce fun. which removes dims where all exps 0
-        raise ValueError(
-            f"Can't expand the exponent or grid array dimension "
-            f"from {num_columns} to {new_dim}."
-        )
-
-    # --- No dimension expansion (same target)
-    if new_dim == num_columns:
-        # Return the input array (identical)
-        return xx
-
-    # --- Dimension expansion
-    diff_dim = new_dim - num_columns
-    if new_values is None:
-        new_values = np.zeros(
-            (num_rows, diff_dim),
-            dtype=xx.dtype
-        )
-    else:
-        new_values = np.atleast_1d(new_values)
-        if len(new_values) != diff_dim:
-            raise ValueError(
-                f"The given set of new values {new_values} does not have "
-                f"enough elements to fill the extra columns! "
-                f"<{diff_dim}> required, got <{len(new_values)}> instead."
-            )
-
-        # Tile the new values according to the shape of the input array
-        new_values = np.require(
-            np.tile(new_values, (num_rows, 1)), dtype=xx.dtype
-        )
-
-    return np.append(xx, new_values, axis=1)
+NORM_FCT = lp_norm
 
 
 def iterate_indices(indices: np.ndarray | Iterable[np.ndarray]) -> Iterable[np.ndarray]:
@@ -635,17 +528,6 @@ def to_index_array(list_of_indices: list[np.ndarray]) -> np.ndarray:
     # NOTE: shape is: (N, m)
     index_array = np.array(list_of_indices, dtype=INT_DTYPE)
     return index_array
-
-
-# def list_based(func):
-#     """ TODO decorator for working with list of indices rather than with static numpy arrays"""
-#     @functools.wraps(func)
-#     def list_based_wrapper(*args, **kwargs):
-#         to_index_list(
-#         value = func(*args, **kwargs)
-#         to_index_array(
-#         return value
-#     return list_based_wrapper
 
 
 def insert_lexicographically(
@@ -1069,6 +951,17 @@ def _missing_backward_neighbors(indices: np.ndarray) -> np.ndarray:
         return lex_sort(backward_neighbors)
 
     return backward_neighbors
+
+
+# def list_based(func):
+#     """ TODO decorator for working with list of indices rather than with static numpy arrays"""
+#     @functools.wraps(func)
+#     def list_based_wrapper(*args, **kwargs):
+#         to_index_list(
+#         value = func(*args, **kwargs)
+#         to_index_array(
+#         return value
+#     return list_based_wrapper
 
 
 if __name__ == "__main__":

@@ -42,27 +42,25 @@ from minterpy.global_settings import (
     DEFAULT_LP_DEG,
     NOT_FOUND,
 )
-
-from minterpy.jit_compiled_utils import (
-    all_indices_are_contained,
+from minterpy.jit_compiled.multi_index import (
     search_lex_sorted,
+    all_indices_are_contained,
 )
-from minterpy.core.utils import (
-    expand_dim as expand_dim_,
+from minterpy.utils.arrays import expand_dim as expand_dim_
+from minterpy.utils.multi_index import (
     get_poly_degree,
     get_exponent_matrix,
-    insert_lexicographically,
     is_complete,
     is_disjoint,
     is_downward_closed,
-    lex_sort,
+    insert_lexicographically,
     make_complete,
     make_downward_closed,
+    lex_sort,
     multiply_indices,
     union_indices,
 )
-
-from .verification import (
+from minterpy.utils.verification import (
     check_dimensionality,
     check_values,
     verify_lp_degree,

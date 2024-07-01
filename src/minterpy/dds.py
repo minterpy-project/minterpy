@@ -824,3 +824,73 @@ def dds(fct_values: ARRAY, tree: "MultiIndexTree") -> ARRAY:
         exponents,
     )
     return result_placeholder  # = Newton coefficients
+
+
+def dds_(
+    lag_coeffs: ARRAY,
+    exponents: ARRAY,
+    generating_points: ARRAY,
+    split_positions: TYPED_LIST,
+    subtree_sizes: TYPED_LIST,
+    masks: ARRAY_DICT,
+) -> ARRAY:
+    """Computes the Newton coefficients from the Lagrange coefficients.
+
+    Parameters
+    ----------
+    lag_coeffs : :class:`numpy:numpy.ndarray`
+        The function values (i.e., the Lagrange coefficients).
+    exponents : :class:`numpy:numpy.ndarray`
+        A set of exponents from a multi-index set that defines the polynomial,
+        an ``(N, M)`` array, where ``N`` is the number of exponents
+        (multi-indices) and ``M`` is the number of spatial dimensions.
+        The number of exponents corresponds to the number of monomials.
+    generating_points : :class:`numpy:numpy.ndarray`
+        A set of generating points of the interpolating polynomial,
+        a ``(P + 1, M)`` array, where ``P`` is the maximum degree of
+        the polynomial in any dimensions and ``M`` is the number
+        of spatial dimensions.
+    split_positions : TYPED_LIST
+        The split positions of the multi-index tree.
+    subtree_sizes : TYPED_LIST
+        The subtree sizes of the multi-index tree.
+    masks : ARRAY_DICT
+        The masks that define the correspondence between left and right parts
+        of the tree.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        The corresponding Newton coefficients based on the Lagrange
+        coefficients and the multi-index tree.
+
+    Notes
+    -----
+    - This is a similar function to `dds()` but with a different interface.
+      It operates on a lower layer of abstraction where there is no instance
+      of `MultiIndexTree` is assumed only its required components.
+    - The DDS algorithm operates on a two-dimensional ``lag_coeffs`` array.
+      If `lag_coeffs` is a one-dimensional array, it is reshaped to have
+      a second dimension of size 1 before applying the algorithm.
+    """
+    # TODO type checking?!
+    # check_type_n_values(fct_values)
+    # check_shape(fct_values, shape=[len(tree.multi_index)])
+
+    # NOTE: for more memory efficiency computes the results "in place"
+    # initialise the placeholder with the function values (= Lagrange coefficients
+    # NOTE: the DDS function expects a 2D array as input
+    result_placeholder = lag_coeffs.copy()
+    if lag_coeffs.ndim == 1:
+        # ATTENTION: the DDS operates on the first dimension! -> second dimension must be 1
+        result_placeholder = result_placeholder.reshape(-1, 1)
+
+    jit_dds(
+        result_placeholder,
+        generating_points,
+        split_positions,
+        subtree_sizes,
+        masks,
+        exponents,
+    )
+    return result_placeholder

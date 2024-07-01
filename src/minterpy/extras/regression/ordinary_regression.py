@@ -20,9 +20,10 @@ from minterpy.polynomials import (
     ChebyshevPolynomial,
 )
 from minterpy.transformations import LagrangeToNewton
-from minterpy.utils import eval_newton_monomials, eval_newton_polynomials
-from minterpy.polynomials.chebyshev_polynomial import (
-    evaluate_chebyshev_monomials,
+from minterpy.utils.polynomials.chebyshev import evaluate_chebyshev_monomials
+from minterpy.utils.polynomials.newton import (
+    eval_newton_monomials,
+    eval_newton_polynomials,
 )
 
 from .regression_abc import RegressionABC

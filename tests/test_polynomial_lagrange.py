@@ -20,7 +20,7 @@ from minterpy.transformations import (
     LagrangeToCanonical,
     LagrangeToNewton,
 )
-from minterpy.core.utils import make_complete
+from minterpy.utils.multi_index import make_complete
 
 
 def test_neg(MultiIndices, NrSimilarPolynomials):

@@ -648,3 +648,17 @@ def _add_custom_exception_message(
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+
+
+def dummy(*args, **kwargs) -> None:
+    """A placeholder function to indicate a feature that is not supported.
+
+    .. warning::
+      This feature is not implemented yet!
+
+    Raises
+    ------
+    NotImplementedError
+        Any time this function or method is called.
+    """
+    raise NotImplementedError("This feature is not yet implemented!")

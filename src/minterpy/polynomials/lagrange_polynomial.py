@@ -3,29 +3,20 @@ LagrangePolynomial class
 """
 import numpy as np
 
-from typing import Any, Optional
+from typing import Optional
 
 import minterpy as mp
 
 from minterpy.core import Grid, MultiIndexSet
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
-from minterpy.core.verification import verify_domain
+from minterpy.utils.verification import dummy, verify_domain
 from minterpy.global_settings import ARRAY
 from minterpy.polynomials.canonical_polynomial import (
     _match_dims,
 )
-from minterpy.polynomials.utils import integrate_monomials_lagrange
+from minterpy.polynomials.interface import compute_quad_weights_lagrange
 
 __all__ = ["LagrangePolynomial"]
-
-
-def dummy(*args, **kwargs) -> None:
-    """Placeholder function.
-
-    .. warning::
-      This feature is not implemented yet!
-    """
-    raise NotImplementedError("This feature is not implemented yet.")
 
 
 # TODO : poly2 can be of a different basis?
@@ -208,14 +199,7 @@ def _lagrange_integrate_over(
     :class:`numpy:numpy.ndarray`
         The integral value of the polynomial over the given domain.
     """
-    # --- Compute the integrals of the Lagrange monomials (quadrature weights)
-    exponents = poly.multi_index.exponents
-    generating_points = poly.grid.generating_points
-    tree = poly.grid.tree
-
-    quad_weights = integrate_monomials_lagrange(
-        exponents, generating_points, tree, bounds
-    )
+    quad_weights = compute_quad_weights_lagrange(poly, bounds)
 
     return quad_weights @ poly.coeffs
 

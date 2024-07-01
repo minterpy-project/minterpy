@@ -6,25 +6,22 @@ Module of the NewtonPolynomial class
 """
 import numpy as np
 
-from minterpy.core import Grid
+from minterpy.global_settings import DEBUG
 from minterpy.core.ABC.multivariate_polynomial_abstract import (
     MultivariatePolynomialSingleABC,
 )
 from minterpy.core.grid import Grid
-from minterpy.core.verification import verify_domain
 from minterpy.dds import dds
-from minterpy.global_settings import DEBUG
-from minterpy.utils import eval_newton_polynomials
-from minterpy.polynomials.utils import (
+from minterpy.utils.verification import dummy, verify_domain
+from minterpy.utils.polynomials.newton import (
+    eval_newton_polynomials,
     deriv_newt_eval as eval_diff_numpy,
-    integrate_monomials_newton,
-    dummy,
 )
-
 from minterpy.jit_compiled.newton.diff import (
     eval_multiple_query as eval_diff_numba,
     eval_multiple_query_par as eval_diff_numba_par,
 )
+from minterpy.polynomials.interface import compute_quad_weights_newton
 
 __all__ = ["NewtonPolynomial"]
 
@@ -409,14 +406,7 @@ def newton_integrate_over(
     :class:`numpy:numpy.ndarray`
         The integral value of the polynomial over the given domain.
     """
-
-    # --- Compute the integrals of the Newton monomials (quadrature weights)
-    exponents = poly.multi_index.exponents
-    generating_points = poly.grid.generating_points
-
-    quad_weights = integrate_monomials_newton(
-        exponents, generating_points, bounds
-    )
+    quad_weights = compute_quad_weights_newton(poly, bounds)
 
     return quad_weights @ poly.coeffs
 

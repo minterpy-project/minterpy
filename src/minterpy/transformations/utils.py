@@ -16,17 +16,16 @@ from typing import no_type_check
 from minterpy.core.ABC import OperatorABC, TransformationABC
 from minterpy.dds import dds
 from minterpy.global_settings import ARRAY, DEBUG, FLOAT_DTYPE
-from minterpy.jit_compiled_utils import compute_vandermonde_n2c
+from minterpy.jit_compiled.transformations import compute_vandermonde_n2c
 from minterpy.schemes.barycentric.precomp import (
     _build_lagrange_to_newton_bary,
     _build_newton_to_lagrange_bary,
 )
 from minterpy.schemes.matrix_operator import MatrixOperator
-from minterpy.utils import eval_newton_monomials
+from minterpy.utils.polynomials.newton import eval_newton_monomials
 
-from minterpy.polynomials.chebyshev_polynomial import (
-    evaluate_chebyshev_monomials
-)
+from minterpy.utils.polynomials.chebyshev import evaluate_chebyshev_monomials
+
 
 # NOTE: avoid looping over a numpy array! e.g. for j in np.arange(num_monomials):
 # see: # https://stackoverflow.com/questions/10698858/built-in-range-or-numpy-arange-which-is-more-efficient

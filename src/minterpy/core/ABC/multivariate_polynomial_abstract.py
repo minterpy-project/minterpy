@@ -5,23 +5,23 @@ This module contains the abstract base classes, from which all concrete implemen
 This ensures that all polynomials work with the same interface, so futher features can be formulated without referencing the concrete polynomial implementation. See e.g. :PEP:`3119` for further explanations on that topic.
 """
 import abc
-from copy import deepcopy
-from typing import Any, List, Optional, Union
-
 import numpy as np
 
-from minterpy.global_settings import ARRAY, SCALAR
+from copy import deepcopy
+from typing import List, Optional, Union
 
-from ..grid import Grid
-from ..multi_index import MultiIndexSet
-from ..utils import expand_dim, find_match_between
-from ..verification import (
+from minterpy.global_settings import ARRAY, SCALAR
+from minterpy.core.grid import Grid
+from minterpy.core.multi_index import MultiIndexSet
+from minterpy.utils.verification import (
     check_dimensionality,
     is_scalar,
     check_shape,
     check_type_n_values,
     verify_domain,
 )
+from minterpy.utils.arrays import expand_dim
+from minterpy.utils.multi_index import find_match_between
 
 __all__ = ["MultivariatePolynomialABC", "MultivariatePolynomialSingleABC"]
 
