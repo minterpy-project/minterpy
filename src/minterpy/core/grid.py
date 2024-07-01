@@ -94,6 +94,7 @@ class Grid:
 
         self._tree: Optional[MultiIndexTree] = None
 
+    # --- Factory Methods
     # TODO rename: name is misleading. a generator is something different in python:
     #   cf. https://wiki.python.org/moin/Generators
     @classmethod
@@ -139,6 +140,7 @@ class Grid:
         generating_points = get_points_from_values(spatial_dimension, generating_values)
         return cls(multi_index, generating_points, generating_values)
 
+    # --- Properties
     @property
     def unisolvent_nodes(self):
         """Array of unidolvent nodes.
@@ -215,6 +217,7 @@ class Grid:
             self._tree = MultiIndexTree(self)
         return self._tree
 
+    # --- Instance methods
     def apply_func(self, func, out=None):
         """This function is not implemented yet and will raise a :class:`NotImplementedError` if called.
 
@@ -295,6 +298,7 @@ class Grid:
         multi_indices_new = self.multi_index.add_exponents(exponents)
         return self._new_instance_if_necessary(multi_indices_new)
 
+    # --- Special methods: Copies
     # copying
     def __copy__(self):
         """Creates of a shallow copy.
@@ -333,6 +337,7 @@ class Grid:
             deepcopy(self.generating_values),
         )
 
+    # --- Dunder methods: Rich comparison
     def __eq__(self, other: "Grid") -> bool:
         """Compare two instances of Grid for exact equality in value.
 
