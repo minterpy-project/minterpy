@@ -61,7 +61,6 @@ class Grid:
         self,
         multi_index: MultiIndexSet,
         generating_points: Optional[ARRAY] = None,
-        generating_values: Optional[ARRAY] = None,
     ):
         if not isinstance(multi_index, MultiIndexSet):
             raise TypeError(
@@ -74,26 +73,31 @@ class Grid:
         self.multi_index: MultiIndexSet = multi_index
 
         if generating_points is None:
-            if generating_values is None:
-                generating_values = DEFAULT_GRID_VAL_GEN_FCT(multi_index.poly_degree)
+            poly_degree = multi_index.poly_degree
+            generating_values = DEFAULT_GRID_VAL_GEN_FCT(poly_degree)
             spatial_dimension = multi_index.spatial_dimension
             generating_points = get_points_from_values(
-                spatial_dimension, generating_values
+                spatial_dimension,
+                generating_values,
             )
-
-        self.generating_values = (
-            generating_values  # perform type checks and assign degree
-        )
 
         check_type_n_values(generating_points)
         check_dimensionality(generating_points, dimensionality=2)
         check_domain_fit(generating_points)
+        self.poly_degree = len(generating_points)
+        # check if multi index and generating values fit together
+        if self.multi_index.poly_degree > self.poly_degree:
+            raise ValueError(
+                f"a grid of degree {self.poly_degree} "
+                f"cannot consist of indices with degree {self.multi_index.poly_degree}"
+            )
         self.generating_points: ARRAY = generating_points
         # TODO check if values and points fit together
         # TODO redundant information.
 
         self._tree: Optional[MultiIndexTree] = None
 
+    # --- Factory Methods
     # TODO rename: name is misleading. a generator is something different in python:
     #   cf. https://wiki.python.org/moin/Generators
     @classmethod
@@ -132,13 +136,12 @@ class Grid:
 
         :return: Instance of :class:`Grid` for the given input.
         :rtype: Grid
-
-
         """
         spatial_dimension = multi_index.spatial_dimension
         generating_points = get_points_from_values(spatial_dimension, generating_values)
-        return cls(multi_index, generating_points, generating_values)
+        return cls(multi_index, generating_points)
 
+    # --- Properties
     @property
     def unisolvent_nodes(self):
         """Array of unidolvent nodes.
@@ -169,38 +172,6 @@ class Grid:
         return self.multi_index.spatial_dimension
 
     @property
-    def generating_values(self):
-        """Generating values.
-
-        A one-dimensitonal set of points, the ``generating_points`` will be build on.
-
-        :return: Array of generating values.
-        :rtype: np.ndarray
-        :raise ValueError: If the given set of generating values is empty.
-        :raise ValueError: If the number of points is not consistent with the polynomial degree given through ``multi_index``.
-
-        """
-        return self._generating_values
-
-    @generating_values.setter
-    def generating_values(self, values: ARRAY):
-        check_type_n_values(values)
-        check_domain_fit(values.reshape(-1, 1))  # 2D
-        values = values.reshape(-1)  # 1D
-        nr_gen_vals = len(values)
-        if nr_gen_vals == 0:
-            raise ValueError("at least one generating value must be given")
-        self.poly_degree = nr_gen_vals - 1
-        # check if multi index and generating values fit together
-        if self.multi_index.poly_degree > self.poly_degree:
-            raise ValueError(
-                f"a grid of degree {self.poly_degree} "
-                f"cannot consist of indices with degree {self.multi_index.poly_degree}"
-            )
-        self._unisolvent_nodes = None  # reset the unisolvent nodes
-        self._generating_values: ARRAY = values
-
-    @property
     def tree(self):
         """The used :class:`MultiIndexTree`.
 
@@ -215,6 +186,7 @@ class Grid:
             self._tree = MultiIndexTree(self)
         return self._tree
 
+    # --- Instance methods
     def apply_func(self, func, out=None):
         """This function is not implemented yet and will raise a :class:`NotImplementedError` if called.
 
@@ -251,9 +223,7 @@ class Grid:
         if multi_indices_new is multi_indices_old:
             return self
         # construct new:
-        return self.__class__(
-            multi_indices_new, self.generating_points, self.generating_values
-        )
+        return self.__class__(multi_indices_new, self.generating_points)
 
     def make_complete(self) -> "Grid":
         """completes the multi index within this :class:`Grid` instance.
@@ -295,6 +265,7 @@ class Grid:
         multi_indices_new = self.multi_index.add_exponents(exponents)
         return self._new_instance_if_necessary(multi_indices_new)
 
+    # --- Special methods: Copies
     # copying
     def __copy__(self):
         """Creates of a shallow copy.
@@ -309,9 +280,7 @@ class Grid:
         copy.copy
             copy operator form the python standard library.
         """
-        return self.__class__(
-            self.multi_index, self.generating_points, self.generating_values
-        )
+        return self.__class__(self.multi_index, self.generating_points)
 
     def __deepcopy__(self, mem):
         """Creates of a deepcopy.
@@ -330,9 +299,9 @@ class Grid:
         return self.__class__(
             deepcopy(self.multi_index),
             deepcopy(self.generating_points),
-            deepcopy(self.generating_values),
         )
 
+    # --- Dunder methods: Rich comparison
     def __eq__(self, other: "Grid") -> bool:
         """Compare two instances of Grid for exact equality in value.
 

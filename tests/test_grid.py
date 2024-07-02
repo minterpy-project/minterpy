@@ -58,7 +58,10 @@ class TestEquality:
         # Chebyshev points
         grd_1 = Grid(mi)
         # Equidistant points
-        grd_2 = Grid.from_value_set(mi, np.linspace(-1, 1, PolyDegree+1))
+        grd_2 = Grid.from_value_set(
+            mi,
+            np.linspace(-0.99, 0.99, PolyDegree+1)[:, np.newaxis],
+        )
 
         # Assertions
         assert grd_1 is not grd_2  # Not identical instances
