@@ -106,8 +106,7 @@ def assert_grid_equal(grid1, grid2):
         assert_(isinstance(grid1, type(grid2)))
         assert_equal(grid1.unisolvent_nodes, grid2.unisolvent_nodes)
         assert_equal(grid1.spatial_dimension, grid2.spatial_dimension)
-        assert_equal(grid1.generating_values, grid2.generating_values)
-        assert_equal(grid1.generating_values, grid2.generating_values)
+        assert_equal(grid1.generating_points, grid2.generating_points)
         assert_multi_index_equal(grid1.multi_index, grid2.multi_index)
     except AssertionError as a:
         raise AssertionError(f"The two instances of Grid are not equal:\n\n {a}")
@@ -119,8 +118,7 @@ def assert_grid_almost_equal(grid1, grid2):
         assert_(isinstance(grid1, type(grid2)))
         assert_almost_equal(grid1.unisolvent_nodes, grid2.unisolvent_nodes)
         assert_almost_equal(grid1.spatial_dimension, grid2.spatial_dimension)
-        assert_almost_equal(grid1.generating_values, grid2.generating_values)
-        assert_almost_equal(grid1.generating_values, grid2.generating_values)
+        assert_almost_equal(grid1.generating_points, grid2.generating_points)
         assert_multi_index_almost_equal(grid1.multi_index, grid2.multi_index)
     except AssertionError as a:
         raise AssertionError(f"The two instances of Grid are not almost equal:\n\n {a}")

@@ -62,6 +62,10 @@
   grid, etc. Vice versa, higher-level constructs should avoid directly
   deal with low-level array manipulations without interfacing functions.
   This reorganization has no effect on the overall code functionality.
+- The property `generating_values` has been removed from the `Grid` class.
+  Furthermore, `generating_values` does not appear in the default constructor
+  of `Grid` and therefore is no longer required to construct an instance of
+  the class.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several

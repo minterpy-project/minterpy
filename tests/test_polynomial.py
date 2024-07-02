@@ -212,7 +212,10 @@ class TestInequality:
 
         # Generate two grids
         grd_1 = Grid(mi)
-        grd_2 = Grid.from_value_set(mi, np.linspace(-1, 1, PolyDegree+1))
+        grd_2 = Grid.from_value_set(
+            mi,
+            np.linspace(-0.99, 0.99, PolyDegree+1)[:, np.newaxis],
+        )
 
         # Generate a set of random coefficients
         coeffs = np.random.rand(len(mi))

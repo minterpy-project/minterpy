@@ -1407,9 +1407,8 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         grid = self.grid
         new_gen_pts = expand_dim(grid.generating_points, dim)
-        new_gen_vals = expand_dim(grid.generating_values.reshape(-1, 1), dim)
 
-        self.grid = Grid(self.multi_index, new_gen_pts, new_gen_vals)
+        self.grid = Grid(self.multi_index, new_gen_pts)
 
         extra_internal_domain = verify_domain(extra_internal_domain, diff_dim)
         self.internal_domain = np.concatenate(
