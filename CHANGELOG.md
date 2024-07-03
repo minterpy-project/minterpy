@@ -66,6 +66,8 @@
   Furthermore, `generating_values` does not appear in the default constructor
   of `Grid` and therefore is no longer required to construct an instance of
   the class.
+- Multi-index set is now a read-only property of `Grid` instances instead
+  of an instance attribute.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several

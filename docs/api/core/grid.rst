@@ -5,6 +5,7 @@ Grid
 .. currentmodule::minterpy.core.grid
 
 .. automodule:: minterpy.core.grid
+   :private-members:
 
 .. autoclass:: Grid
     :members:

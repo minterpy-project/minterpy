@@ -6,15 +6,24 @@ from minterpy import Grid, MultiIndexSet
 from conftest import create_mi_pair_distinct
 
 
-@pytest.mark.parametrize("spatial_dimension", [0, 1, 5])
-def test_empty_set(spatial_dimension, LpDegree):
-    """Test construction with an empty set."""
-    # Create an empty set
-    mi = MultiIndexSet(np.empty((0, spatial_dimension)), LpDegree)
+class TestInit:
+    """All tests related to the default constructor of Grid."""
 
-    # Assertion
-    with pytest.raises(ValueError):
-        Grid(mi)
+    @pytest.mark.parametrize("invalid_type", ["123", 1, np.array([1, 2, 3])])
+    def test_multi_index_type_error(self, invalid_type):
+        """Passing an invalid type of multi-index set raises an exception."""
+        with pytest.raises(TypeError):
+            Grid(invalid_type)
+
+    @pytest.mark.parametrize("spatial_dimension", [0, 1, 5])
+    def test_empty_set(self, spatial_dimension, LpDegree):
+        """Passing an empty multi-index set raises an exception."""
+        # Create an empty set
+        mi = MultiIndexSet(np.empty((0, spatial_dimension)), LpDegree)
+
+        # Assertion
+        with pytest.raises(ValueError):
+            Grid(mi)
 
 
 class TestEquality:

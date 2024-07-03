@@ -47,6 +47,13 @@ class Grid:
 
     For a definition of these nodes (refered to as unisolvent nodes), see the mathematical introduction.
 
+    Notes
+    -----
+    - The multi-index set to construct a :class:`Grid` may not be
+      downward-closed. However, building a :class:`.MultiIndexTree` used
+      in the transformation between polynomials in the Newton and Lagrange
+      bases requires a downward-closed multi-index set.
+
     .. todo::
         - insert a small introduction to the purpose of :class:`Grid` here.
         - refactor the exposed attributes (each needs at least a getter)
@@ -60,17 +67,11 @@ class Grid:
     def __init__(
         self,
         multi_index: MultiIndexSet,
+        /,
         generating_points: Optional[ARRAY] = None,
     ):
-        if not isinstance(multi_index, MultiIndexSet):
-            raise TypeError(
-                f"the indices must be given as {MultiIndexSet} class instance"
-            )
-        if len(multi_index) == 0:
-            raise ValueError("MultiIndexSet must not be empty!")
-        # NOTE: the multi indices of a grid must be NOT be 'lexicographically complete in order to form a basis!
-        # HOWEVER: building a MultiIndexTree requires complete indices
-        self.multi_index: MultiIndexSet = multi_index
+        # Process and assign the multi-index set argument
+        self._multi_index = _process_multi_index(multi_index)
 
         if generating_points is None:
             poly_degree = multi_index.poly_degree
@@ -142,6 +143,20 @@ class Grid:
         return cls(multi_index, generating_points)
 
     # --- Properties
+    @property
+    def multi_index(self) -> MultiIndexSet:
+        """The multi-index set of exponents associated with the Grid.
+
+        The multi-index set of a Grid indicates the largest interpolating
+        polynomial the Grid can support.
+
+        Returns
+        -------
+        MultiIndexSet
+            A multi-index set of polynomial exponents associated with the Grid.
+        """
+        return self._multi_index
+
     @property
     def unisolvent_nodes(self):
         """Array of unidolvent nodes.
@@ -334,3 +349,25 @@ class Grid:
             return False
 
         return True
+
+
+def _process_multi_index(multi_index: MultiIndexSet) -> MultiIndexSet:
+    """Process the MultiIndexSet given as an argument to Grid constructor.
+
+
+    Raises
+    ------
+    TypeError
+        If the argument is not an instance of :class:`MultiIndexSet`.
+    ValueError
+        If the argument is an empty instance of :class:`MultiIndexSet`.
+    """
+    if not isinstance(multi_index, MultiIndexSet):
+        raise TypeError(
+            f"The multi-index set must be an instance of {MultiIndexSet}"
+        )
+    # MultiIndexSet for a Grid cannot be an empty set
+    if len(multi_index) == 0:
+        raise ValueError("MultiIndexSet must not be empty!")
+
+    return multi_index
