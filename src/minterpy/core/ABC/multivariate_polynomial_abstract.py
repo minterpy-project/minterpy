@@ -14,10 +14,10 @@ from minterpy.global_settings import ARRAY, SCALAR
 from minterpy.core.grid import Grid
 from minterpy.core.multi_index import MultiIndexSet
 from minterpy.utils.verification import (
-    check_dimensionality,
+    check_type,
+    check_values,
     is_scalar,
     check_shape,
-    check_type_n_values,
     verify_domain,
 )
 from minterpy.utils.arrays import expand_dim
@@ -520,22 +520,22 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             self.multi_index = multi_index
         else:
             # TODO should passing multi indices as ndarray be supported?
-            check_type_n_values(multi_index)  # expected ARRAY
-            check_dimensionality(multi_index, dimensionality=2)
             self.multi_index = MultiIndexSet(multi_index)
 
         nr_monomials, spatial_dimension = self.multi_index.exponents.shape
         self.coeffs = coeffs  # calls the setter method and checks the input shape
 
         if internal_domain is not None:
-            check_type_n_values(internal_domain)
+            check_type(internal_domain, np.ndarray)
+            check_values(internal_domain)
             check_shape(internal_domain, shape=(spatial_dimension, 2))
         self.internal_domain = self.generate_internal_domain(
             internal_domain, self.multi_index.spatial_dimension
         )
 
         if user_domain is not None:  # TODO not better "external domain"?!
-            check_type_n_values(user_domain)
+            check_type(user_domain, np.ndarray)
+            check_values(user_domain)
             check_shape(user_domain, shape=(spatial_dimension, 2))
         self.user_domain = self.generate_user_domain(
             user_domain, self.multi_index.spatial_dimension
@@ -1275,7 +1275,8 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         if value is None:
             self._coeffs = None
             return
-        check_type_n_values(value)
+        check_type(value, np.ndarray)
+        check_values(value)
         if value.shape[0] != self.nr_active_monomials:
             raise ValueError(
                 f"the amount of given coefficients <{value.shape[0]}> does not match "

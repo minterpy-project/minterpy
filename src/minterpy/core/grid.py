@@ -12,9 +12,10 @@ from minterpy.gen_points import gen_chebychev_2nd_order_leja_ordered
 from minterpy.core.multi_index import MultiIndexSet
 from minterpy.core.tree import MultiIndexTree
 from minterpy.utils.verification import (
+    check_type,
+    check_values,
     check_dimensionality,
     check_domain_fit,
-    check_type_n_values,
 )
 
 __all__ = ["Grid"]
@@ -67,7 +68,6 @@ class Grid:
     def __init__(
         self,
         multi_index: MultiIndexSet,
-        /,
         generating_points: Optional[ARRAY] = None,
     ):
         # Process and assign the multi-index set argument
@@ -82,7 +82,8 @@ class Grid:
                 generating_values,
             )
 
-        check_type_n_values(generating_points)
+        check_type(generating_points, np.ndarray)
+        check_values(generating_points)
         check_dimensionality(generating_points, dimensionality=2)
         check_domain_fit(generating_points)
         self.poly_degree = len(generating_points)
@@ -140,7 +141,7 @@ class Grid:
         """
         spatial_dimension = multi_index.spatial_dimension
         generating_points = get_points_from_values(spatial_dimension, generating_values)
-        return cls(multi_index, generating_points)
+        return cls(multi_index, generating_points=generating_points)
 
     # --- Properties
     @property
@@ -313,7 +314,7 @@ class Grid:
         """
         return self.__class__(
             deepcopy(self.multi_index),
-            deepcopy(self.generating_points),
+            generating_points=deepcopy(self.generating_points),
         )
 
     # --- Dunder methods: Rich comparison
@@ -354,6 +355,17 @@ class Grid:
 def _process_multi_index(multi_index: MultiIndexSet) -> MultiIndexSet:
     """Process the MultiIndexSet given as an argument to Grid constructor.
 
+    Parameters
+    ----------
+    multi_index : MultiIndexSet
+        The multi-index set as input argument to the Grid constructor to be
+        processed.
+
+    Returns
+    -------
+    MultiIndexSet
+        The same instance of :class:`MultiIndexSet` if processing does not
+        raise any exceptions.
 
     Raises
     ------
@@ -362,10 +374,8 @@ def _process_multi_index(multi_index: MultiIndexSet) -> MultiIndexSet:
     ValueError
         If the argument is an empty instance of :class:`MultiIndexSet`.
     """
-    if not isinstance(multi_index, MultiIndexSet):
-        raise TypeError(
-            f"The multi-index set must be an instance of {MultiIndexSet}"
-        )
+    check_type(multi_index, MultiIndexSet, "The multi-index set")
+
     # MultiIndexSet for a Grid cannot be an empty set
     if len(multi_index) == 0:
         raise ValueError("MultiIndexSet must not be empty!")
