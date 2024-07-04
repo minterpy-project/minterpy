@@ -72,13 +72,12 @@ class Grid:
             self._generating_function,
         )
 
-        self.poly_degree = len(self._generating_points)
-        # check if multi index and generating values fit together
-        if self.multi_index.poly_degree > self.poly_degree:
-            raise ValueError(
-                f"a grid of degree {self.poly_degree} "
-                f"cannot consist of indices with degree {self.multi_index.poly_degree}"
-            )
+        # Get the polynomial degree of the grid
+        self._poly_degree = _get_poly_degree(
+            self._generating_points,
+            self._multi_index,
+        )
+
         # TODO check if values and points fit together
         # TODO redundant information.
 
@@ -166,6 +165,25 @@ class Grid:
             in any dimension and ``m`` is the spatial dimension.
         """
         return self._generating_points
+
+    @property
+    def poly_degree(self) -> int:
+        """The polynomial degree of the interpolation Grid.
+
+        Returns
+        -------
+        int
+            The polynomial degree of the interpolation Grid is the maximum
+            polynomial degree of one-dimensional polynomials in any dimension
+            that the Grid can support.
+
+        Notes
+        -----
+        - Unlike the polynomial degree associated with a multi-index set,
+          the polynomial degree of the Grid does not depend on the notion
+          of ``lp_degree`` as it is based only on one dimension.
+        """
+        return self._poly_degree
 
     @property
     def unisolvent_nodes(self):
@@ -361,6 +379,7 @@ class Grid:
         return True
 
 
+# --- Internal helper functions
 def _process_multi_index(multi_index: MultiIndexSet) -> MultiIndexSet:
     """Process the MultiIndexSet given as an argument to Grid constructor.
 
@@ -416,3 +435,57 @@ def _process_generating_points(
 
     # Return processed generating points
     return generating_points
+
+
+def _get_poly_degree(
+    generating_points: np.ndarray,
+    multi_index: MultiIndexSet,
+) -> int:
+    """Get the poly. degree of the grid from the gen. points.
+
+    Parameters
+    ----------
+    generating_points : :class:`numpy:numpy.ndarray`
+        The generating points of the grid, a two-dimensional array of floats
+        of shape ``(n, m)`` where ``n`` is the number of points and ``m``
+        is the number of spatial dimension. Note that ``n - 1`` is
+        the polynomial degree of the grid.
+    multi_index : MultiIndexSet
+        The multi-indices of polynomial exponents the grid needs to support.
+        The polynomial degree of the set must be smaller than or equal to
+        the degree of the grid.
+
+    Returns
+    -------
+    int
+        The polynomial degree of the Grid instance.
+
+    Notes
+    -----
+    - While it perhaps makes sense to store the polynomial degrees of each
+      dimension as the instance property instead of the maximum over all
+      dimensions, this has no use because the generating points have uniform
+      length for all dimension. For instance, if the maximum polynomial degrees
+      of two-dimensional polynomial are ``[5, 3]``, the stored generating
+      points remain ``(5, 2)`` not two arrays having length ``5`` and ``3``,
+      respectively.
+    """
+    # The number of available points (- 1) indicates the highest 1-dimensional
+    # polynomial degree the grid can support (the degree of the grid)
+    poly_degree_gen_points = len(generating_points) - 1
+
+    # ...but the maximum polynomial degree in any dimension of the multi-index
+    # set indicates the largest degree of one-dimensional polynomial
+    # the grid needs to support.
+    poly_degree_multi_index = np.max(multi_index.exponents)
+
+    # Both must be consistent; "smaller" multi-index may be contained
+    # in a larger grid, but not the other way around.
+    if poly_degree_multi_index > poly_degree_gen_points:
+        raise ValueError(
+            f"A grid of polynomial degree {poly_degree_gen_points} "
+            "cannot consist of multi-indices of with maximum polynomial degree"
+            f" {poly_degree_multi_index}"
+        )
+
+    return poly_degree_gen_points

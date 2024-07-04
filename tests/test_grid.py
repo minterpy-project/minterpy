@@ -42,6 +42,73 @@ class TestInit:
         assert grd_1 == grd_2
         assert grd_2 == grd_1
 
+    def test_larger_mi_invalid(self, SpatialDimension, PolyDegree, LpDegree):
+        """Larger complete multi-index set than the grid raises an exception.
+
+        Notes
+        -----
+        - The construction is expected to fail because a complete set of
+          a given degree will have that degree as the maximum degree in any
+          given dimension regardless of the lp-degree. If a grid is constructed
+          with a degree less than the given degree of multi-index set, the
+          grid cannot support the polynomials specified by the multi-index.
+        """
+        # create a multi-index set of a larger degree
+        mi = MultiIndexSet.from_degree(
+            SpatialDimension,
+            PolyDegree + 1,
+            LpDegree,
+        )
+
+        # Create an array of generating points with a lesser degree
+        gen_points = DEFAULT_GRID_VAL_GEN_FCT(PolyDegree, SpatialDimension)
+
+        # Creating a Grid raises an exception
+        with pytest.raises(ValueError):
+            Grid(mi, generating_points=gen_points)
+
+    def test_larger_mi_valid(self, SpatialDimension, PolyDegree, LpDegree):
+        """Multi-index set with larger poly. degree doesn't raise an exception.
+
+        Notes
+        -----
+        - Creating a multi-index set with the same exponents but with lower
+          lp-degree tends to increase the polynomial degree of set.
+          However, the polynomial degree of the grid is about the maximum
+          degree of one-dimensional polynomials any dimension, so it should not
+          matter if the polynomial degree of the multi-index set is larger than
+          the degree of the grid as long as the grid has a degree larger than
+          or equal to maximum degree of the multi-index set in any dimension.
+        """
+        # create a multi-index set
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, np.inf)
+        mi = MultiIndexSet(mi.exponents, LpDegree)
+
+        # Create an array of generating points with lesser degree
+        gen_points = DEFAULT_GRID_VAL_GEN_FCT(PolyDegree, SpatialDimension)
+
+        # Creating a Grid raises an exception
+        grd = Grid(mi, generating_points=gen_points)
+
+        # Assertions
+        assert grd.poly_degree == PolyDegree
+        assert grd.poly_degree <= mi.poly_degree
+
+    def test_smaller_mi(self, SpatialDimension, PolyDegree, LpDegree):
+        """Smaller complete multi-index set than the grid degree is okay."""
+        # create a multi-index set
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create an array of generating points with lesser degree
+        gen_points = DEFAULT_GRID_VAL_GEN_FCT(PolyDegree + 1, SpatialDimension)
+
+        # Creating a Grid raises an exception
+        grd = Grid(mi, generating_points=gen_points)
+
+        # Assertions
+        assert grd.poly_degree == PolyDegree + 1
+        assert grd.poly_degree > mi.poly_degree  # only for mnp set
+
 
 class TestEquality:
     """All tests related to equality check of Grid instances."""
