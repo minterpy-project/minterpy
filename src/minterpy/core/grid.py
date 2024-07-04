@@ -7,7 +7,7 @@ from typing import Callable, Optional
 import numpy as np
 
 from minterpy.global_settings import ARRAY, INT_DTYPE
-from minterpy.gen_points import gen_chebychev_2nd_order_leja_ordered
+from minterpy.gen_points import gen_chebychev_2nd_order_leja_ordered, gen_points_chebyshev, gen_points_from_values
 
 from minterpy.core.multi_index import MultiIndexSet
 from minterpy.core.tree import MultiIndexTree
@@ -29,17 +29,7 @@ def _gen_unisolvent_nodes(multi_index, generating_points):
     return np.take_along_axis(generating_points, multi_index.exponents, axis=0)
 
 
-def get_points_from_values(spatial_dimension: int, generating_values: ARRAY):
-    """
-    .. todo::
-        - document this function but ship it to utils first.
-    """
-    generating_points = np.tile(generating_values, (1, spatial_dimension))
-    generating_points[:, ::2] *= -1
-    return generating_points
-
-
-DEFAULT_GRID_VAL_GEN_FCT = gen_chebychev_2nd_order_leja_ordered
+DEFAULT_GRID_VAL_GEN_FCT = gen_points_chebyshev
 
 
 # TODO implement comparison operations based on multi index comparison operations and the generating values used
@@ -73,33 +63,28 @@ class Grid:
         # Process and assign the multi-index set argument
         self._multi_index = _process_multi_index(multi_index)
 
-        if generating_points is None:
-            poly_degree = multi_index.poly_degree
-            generating_values = DEFAULT_GRID_VAL_GEN_FCT(poly_degree)
-            spatial_dimension = multi_index.spatial_dimension
-            generating_points = get_points_from_values(
-                spatial_dimension,
-                generating_values,
-            )
+        self._generating_function = DEFAULT_GRID_VAL_GEN_FCT
 
-        check_type(generating_points, np.ndarray)
-        check_values(generating_points)
-        check_dimensionality(generating_points, dimensionality=2)
-        check_domain_fit(generating_points)
-        self.poly_degree = len(generating_points)
+        # Process and assign the generating points argument
+        self._generating_points = _process_generating_points(
+            generating_points,
+            self._multi_index,
+            self._generating_function,
+        )
+
+        self.poly_degree = len(self._generating_points)
         # check if multi index and generating values fit together
         if self.multi_index.poly_degree > self.poly_degree:
             raise ValueError(
                 f"a grid of degree {self.poly_degree} "
                 f"cannot consist of indices with degree {self.multi_index.poly_degree}"
             )
-        self.generating_points: ARRAY = generating_points
         # TODO check if values and points fit together
         # TODO redundant information.
 
         self._tree: Optional[MultiIndexTree] = None
 
-    # --- Factory Methods
+    # --- Factory methods
     # TODO rename: name is misleading. a generator is something different in python:
     #   cf. https://wiki.python.org/moin/Generators
     @classmethod
@@ -122,8 +107,12 @@ class Grid:
 
 
         """
-        generating_values = generating_function(multi_index.poly_degree)
-        return cls.from_value_set(multi_index, generating_values)
+        generating_points = generating_function(
+            multi_index.poly_degree,
+            multi_index.spatial_dimension,
+        )
+
+        return cls.from_value_set(multi_index, generating_points)
 
     @classmethod
     def from_value_set(cls, multi_index: MultiIndexSet, generating_values: ARRAY):
@@ -140,7 +129,10 @@ class Grid:
         :rtype: Grid
         """
         spatial_dimension = multi_index.spatial_dimension
-        generating_points = get_points_from_values(spatial_dimension, generating_values)
+        generating_points = gen_points_from_values(
+            generating_values,
+            spatial_dimension,
+        )
         return cls(multi_index, generating_points=generating_points)
 
     # --- Properties
@@ -157,6 +149,23 @@ class Grid:
             A multi-index set of polynomial exponents associated with the Grid.
         """
         return self._multi_index
+
+    @property
+    def generating_points(self) -> np.ndarray:
+        """The generating points of the interpolation Grid.
+
+        The generating points of the interpolation grid are the ingredients
+        of constructing unisolvent nodes.
+
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            A two-dimensional array of floats whose columns are the
+            generating points per spatial dimension. The shape of the array
+            is ``(n + 1, m)`` where ``n`` is the maximum polynomial degree
+            in any dimension and ``m`` is the spatial dimension.
+        """
+        return self._generating_points
 
     @property
     def unisolvent_nodes(self):
@@ -381,3 +390,29 @@ def _process_multi_index(multi_index: MultiIndexSet) -> MultiIndexSet:
         raise ValueError("MultiIndexSet must not be empty!")
 
     return multi_index
+
+
+def _process_generating_points(
+    generating_points: Optional[np.ndarray],
+    multi_index: MultiIndexSet,
+    generating_function: Optional[Callable],
+) -> np.ndarray:
+    """Process the generating points given as an argument to Grid constructor.
+    """
+
+    if generating_points is None:
+        poly_degree = multi_index.poly_degree
+        spatial_dimension = multi_index.spatial_dimension
+        generating_points = generating_function(poly_degree, spatial_dimension)
+
+    # Check type
+    check_type(generating_points, np.ndarray)
+    # Check array dimension
+    check_dimensionality(generating_points, dimensionality=2)
+    # No NaN's and inf's
+    check_values(generating_points)
+    # Check domain fit
+    check_domain_fit(generating_points)
+
+    # Return processed generating points
+    return generating_points

@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from minterpy import Grid, MultiIndexSet
+from minterpy.core.grid import DEFAULT_GRID_VAL_GEN_FCT
 
 from conftest import create_mi_pair_distinct
 
@@ -24,6 +25,22 @@ class TestInit:
         # Assertion
         with pytest.raises(ValueError):
             Grid(mi)
+
+    def test_from_gen_points(self, SpatialDimension, PolyDegree, LpDegree):
+        """Create a Grid with a specified generating points."""
+        # Create a multi-index set
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create an array of generating points (from the default)
+        gen_points = DEFAULT_GRID_VAL_GEN_FCT(PolyDegree, SpatialDimension)
+
+        # Create a Grid
+        grd_1 = Grid(mi)  # Use the same default for the generating points
+        grd_2 = Grid(mi, generating_points=gen_points)
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
 
 
 class TestEquality:
