@@ -47,6 +47,8 @@
 - Instances of `MultiIndexSet` may now be multiplied with each other;
   the result is an instance of `MultiIndexSet` whose exponents are
   the cross-product-and-sum of the two operands exponents.
+- A method `expand_dim()` is introduced to instances  of the `Grid` class
+  to encapsulate the procedure of expanding the dimension of a `Grid` instance.
 
 ### Fixed
 
@@ -68,6 +70,16 @@
   the class.
 - Multi-index set is now a read-only property of `Grid` instances instead
   of an instance attribute.
+- `generating_function`` is now stored as a read-only  property of a `Grid`
+  instances and also a factor in determining instances equality in value.
+- `generating_function` is now stored as a read-only property of a `Grid`
+  instances and also a factor in determining instances equality in value.
+- The default constructor of the `Grid` class now accepts as optional arguments
+  `generating_function` (instead of `generating_values` which is deprecated)
+  and `generating_points` both are defaulted to `None`.
+  If `generating_function` is not specified, then the default of Leja-ordered
+  Chebyshev-Lobatto generating function is selected. This preserves the 
+  previous behavior of calling the constructor without any optional arguments. 
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several

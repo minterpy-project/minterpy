@@ -1406,10 +1406,8 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # If dim<spatial_dimension, i.e. expand_dim<0, exception is raised
         self.multi_index = self.multi_index.expand_dim(dim)
 
-        grid = self.grid
-        new_gen_pts = expand_dim(grid.generating_points, dim)
-
-        self.grid = Grid(self.multi_index, new_gen_pts)
+        # Expand the dimension of the grid
+        self.grid = self.grid.expand_dim(dim)
 
         extra_internal_domain = verify_domain(extra_internal_domain, diff_dim)
         self.internal_domain = np.concatenate(

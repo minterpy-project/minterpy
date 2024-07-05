@@ -120,3 +120,8 @@ def gen_chebychev_2nd_order_leja_ordered(n: int):
     for i in range(n + 1):
         leja_points[i, 0] = points2[int(lj[0, i])]
     return leja_points
+
+
+GENERATING_FUNCTIONS = {
+    "chebyshev": gen_points_chebyshev,
+}

@@ -2,7 +2,8 @@ import numpy as np
 import pytest
 
 from minterpy import Grid, MultiIndexSet
-from minterpy.core.grid import DEFAULT_GRID_VAL_GEN_FCT
+from minterpy.gen_points import GENERATING_FUNCTIONS
+from minterpy.core.grid import DEFAULT_FUN
 
 from conftest import create_mi_pair_distinct
 
@@ -11,13 +12,13 @@ class TestInit:
     """All tests related to the default constructor of Grid."""
 
     @pytest.mark.parametrize("invalid_type", ["123", 1, np.array([1, 2, 3])])
-    def test_multi_index_type_error(self, invalid_type):
+    def test_with_invalid_multi_index_set(self, invalid_type):
         """Passing an invalid type of multi-index set raises an exception."""
         with pytest.raises(TypeError):
             Grid(invalid_type)
 
     @pytest.mark.parametrize("spatial_dimension", [0, 1, 5])
-    def test_empty_set(self, spatial_dimension, LpDegree):
+    def test_with_empty_multi_index_set(self, spatial_dimension, LpDegree):
         """Passing an empty multi-index set raises an exception."""
         # Create an empty set
         mi = MultiIndexSet(np.empty((0, spatial_dimension)), LpDegree)
@@ -26,21 +27,86 @@ class TestInit:
         with pytest.raises(ValueError):
             Grid(mi)
 
-    def test_from_gen_points(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_with_invalid_gen_function(self, multi_index_mnp):
+        """Invalid generating function raises an exception."""
+        # Get the multi-index set
+        mi = multi_index_mnp
+
+        # Invalid generating function
+        with pytest.raises(KeyError):
+            Grid(mi, generating_function="1234")
+
+        with pytest.raises(TypeError):
+            Grid(mi, generating_function=[1, 2, 3])
+
+    def test_with_valid_gen_function_and_points(self, multi_index_mnp):
+        """Valid generating function and points are passed as arguments."""
+        # Get the multi-index set
+        mi = multi_index_mnp
+
+        # Set up the generating function and points (the default)
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+
+        # Create Grids
+        grd_1 = Grid(
+            mi,
+            generating_function=gen_function,
+            generating_points=gen_points,
+        )
+        grd_2 = Grid(mi)
+
+        # Assertion
+        assert grd_1 == grd_2
+        assert grd_1.generating_function == grd_2.generating_function
+
+    def test_with_invalid_gen_function_and_points(self, multi_index_mnp):
+        """Invalid generating function and points are given.
+
+        They are invalid because the generating function does not reproduce
+        the given generating points.
+        """
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Set up the generating function and points (the default)
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+
+        # A generating function that is inconsistent with the gen. points above
+        def _gen_fun(poly_degree, spatial_dimension):
+            xx = np.linspace(-0.99, 0.99, poly_degree + 1)
+            return np.tile(xx, spatial_dimension)
+
+        # Assertion
+        with pytest.raises(ValueError):
+            Grid(
+                mi,
+                generating_function=_gen_fun,
+                generating_points=gen_points,
+            )
+
+
+class TestInitGenPoints:
+    """Tests construction with generating points."""
+    def test_with_gen_points(self, multi_index_mnp):
         """Create a Grid with a specified generating points."""
-        # Create a multi-index set
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        # Get the complete multi-index set
+        mi = multi_index_mnp
 
         # Create an array of generating points (from the default)
-        gen_points = DEFAULT_GRID_VAL_GEN_FCT(PolyDegree, SpatialDimension)
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
 
         # Create a Grid
         grd_1 = Grid(mi)  # Use the same default for the generating points
         grd_2 = Grid(mi, generating_points=gen_points)
 
         # Assertions
-        assert grd_1 == grd_2
-        assert grd_2 == grd_1
+        assert grd_2 != grd_1  # Not equal because generating functions differ
+        assert np.all(grd_1.generating_points == grd_2._generating_points)
+        assert grd_2.multi_index == grd_1.multi_index
+        assert grd_2.generating_function is None
 
     def test_larger_mi_invalid(self, SpatialDimension, PolyDegree, LpDegree):
         """Larger complete multi-index set than the grid raises an exception.
@@ -58,10 +124,11 @@ class TestInit:
             SpatialDimension,
             PolyDegree + 1,
             LpDegree,
-        )
+            )
 
         # Create an array of generating points with a lesser degree
-        gen_points = DEFAULT_GRID_VAL_GEN_FCT(PolyDegree, SpatialDimension)
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(PolyDegree, SpatialDimension)
 
         # Creating a Grid raises an exception
         with pytest.raises(ValueError):
@@ -85,7 +152,8 @@ class TestInit:
         mi = MultiIndexSet(mi.exponents, LpDegree)
 
         # Create an array of generating points with lesser degree
-        gen_points = DEFAULT_GRID_VAL_GEN_FCT(PolyDegree, SpatialDimension)
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(PolyDegree, SpatialDimension)
 
         # Creating a Grid raises an exception
         grd = Grid(mi, generating_points=gen_points)
@@ -94,20 +162,93 @@ class TestInit:
         assert grd.poly_degree == PolyDegree
         assert grd.poly_degree <= mi.poly_degree
 
-    def test_smaller_mi(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_smaller_mi(self, multi_index_mnp):
         """Smaller complete multi-index set than the grid degree is okay."""
-        # create a multi-index set
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        # Get the complete multi-index set
+        mi = multi_index_mnp
 
-        # Create an array of generating points with lesser degree
-        gen_points = DEFAULT_GRID_VAL_GEN_FCT(PolyDegree + 1, SpatialDimension)
+        # Create an array of generating points with a higher degree
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree + 1, mi.spatial_dimension)
 
-        # Creating a Grid raises an exception
+        # Create a Grid instance
         grd = Grid(mi, generating_points=gen_points)
 
         # Assertions
-        assert grd.poly_degree == PolyDegree + 1
-        assert grd.poly_degree > mi.poly_degree  # only for mnp set
+        assert grd.poly_degree == mi.poly_degree + 1
+        assert grd.poly_degree > mi.poly_degree  # only for a complete set
+
+
+class TestExpandDim:
+    """All tests related to the dimension expansion of a Grid instance."""
+    def test_default_same_dim(self, multi_index_mnp):
+        """Test the default behavior of expanding to the same dimension."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create a Grid
+        grd = Grid(mi)
+
+        # Expand the dimension: Same dimension
+        grd_expanded = grd.expand_dim(grd.spatial_dimension)
+
+        # Assertion
+        assert grd == grd_expanded
+
+    def test_default_diff_dim(self, multi_index_mnp):
+        """Test the default behavior of expanding to a higher dimension."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create a Grid
+        grd = Grid(mi)
+
+        # Expand the dimension: Higher dimension
+        new_dim = grd.spatial_dimension + 1
+        grd_expanded = grd.expand_dim(new_dim)
+
+        # Assertions
+        assert grd_expanded != grd
+        assert grd_expanded.spatial_dimension == new_dim
+        assert grd_expanded.multi_index == mi.expand_dim(new_dim)
+
+    def test_no_gen_fun_same_dim(self, multi_index_mnp):
+        """Test expanding to the same dimension w/o a generating function."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create a Grid
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+        grd = Grid(mi, generating_points=gen_points, generating_function=None)
+
+        # Expand the dimension: Same dimension
+        grd_expanded = grd.expand_dim(grd.spatial_dimension)
+
+        # Assertion
+        assert grd == grd_expanded
+
+    def test_no_gen_fun_diff_dim(self, multi_index_mnp):
+        """Test expanding to a higher dimension w/o a generating function."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create a Grid
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+        grd = Grid(mi, generating_points=gen_points, generating_function=None)
+
+        # Expand the dimension: Higher dimension
+        new_dim = grd.spatial_dimension + 1
+        grd_expanded = grd.expand_dim(new_dim)
+
+        # Assertions
+        assert np.array_equal(
+            grd_expanded.generating_points[:, :new_dim - 1],
+            grd.generating_points[:, :new_dim],
+        )
+        # New dimension is zero
+        assert np.all(grd_expanded.generating_points[:, new_dim - 1] == 0.0)
 
 
 class TestEquality:
