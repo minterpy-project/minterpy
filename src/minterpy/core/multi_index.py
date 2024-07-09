@@ -1092,7 +1092,7 @@ class MultiIndexSet:
         return self.is_subset(other, expand_dim=True)
 
     def __lt__(self, other: "MultiIndexSet") -> bool:
-        """Check if this instance is a proper subset of another via ``<=`` op.
+        """Check if this instance is a proper subset of another via ``<`` op.
 
         Notes
         -----

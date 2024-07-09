@@ -12,6 +12,8 @@ These two should be tested.
 import numpy as np
 import pytest
 
+from numpy.linalg import LinAlgError
+
 from conftest import build_rnd_coeffs, create_non_downward_closed_multi_index
 
 from minterpy import (
@@ -152,7 +154,16 @@ class TestNonDownwardClosed:
             NewtonToCanonical(nwt_poly)()
 
     def test_to_chebyshev(self, SpatialDimension, PolyDegree, LpDegree):
-        """Test the transformation to the Chebyshev basis."""
+        """Test the transformation to the Chebyshev basis.
+
+        Notes
+        -----
+        - Transformation of polynomials from the Newton basis to the Chebyshev
+          basis may result in singular matrix for some cases of
+          non-downward-closed multi-index sets. For such sets,
+          the transformation is not guaranteed and the proper exception is
+          caught below.
+        """
         mi = create_non_downward_closed_multi_index(
             SpatialDimension,
             PolyDegree,
@@ -169,7 +180,14 @@ class TestNonDownwardClosed:
         lag_coeffs_ref = nwt_poly(unisolvent_nodes)
 
         # Transform to the Chebyshev basis
-        cheb_poly = NewtonToChebyshev(nwt_poly)()
+        try:
+            cheb_poly = NewtonToChebyshev(nwt_poly)()
+        except LinAlgError as e_info:
+            # Some cases may cause an inversion of a singular matrix
+            # which is expected
+            assert "singular matrix" in str(e_info).lower()
+            return
+
         lag_coeffs = cheb_poly(unisolvent_nodes)
 
         # Assertion

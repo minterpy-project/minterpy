@@ -15,6 +15,48 @@ import numpy as np
 from minterpy.global_settings import FLOAT_DTYPE
 
 
+def gen_points_chebyshev(
+    poly_degree: int,
+    spatial_dimension: int,
+) -> np.ndarray:
+    """Create generating points from Chebyshev points.
+
+
+    """
+    xx = gen_chebychev_2nd_order_leja_ordered(poly_degree)
+
+    gen_points = gen_points_from_values(xx, spatial_dimension)
+
+    return gen_points
+
+
+def gen_points_from_values(
+    generating_values: np.ndarray,
+    spatial_dimension: int,
+) -> np.ndarray:
+    """Construct an array of generating points given values in one dimension.
+
+    Parameters
+    ----------
+    spatial_dimension : int
+
+    generating_values : :class:`numpy:numpy.ndarray`
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        A two-dimensional array of floats whose columns are the
+        generating points per spatial dimension. The shape of the array
+        is ``(n + 1, m)`` where ``n`` is the maximum polynomial degree
+        in one dimension and ``m`` is the spatial dimension.
+    """
+    if generating_values.ndim == 1:
+        generating_values = generating_values[:, np.newaxis]
+    generating_points = np.tile(generating_values, (1, spatial_dimension))
+    generating_points[:, ::2] *= -1
+    return generating_points
+
+
 def chebychev_2nd_order(n: int):  # 2nd order
     """Factory function of Chebychev points of the second kind.
 
@@ -78,3 +120,8 @@ def gen_chebychev_2nd_order_leja_ordered(n: int):
     for i in range(n + 1):
         leja_points[i, 0] = points2[int(lj[0, i])]
     return leja_points
+
+
+GENERATING_FUNCTIONS = {
+    "chebyshev": gen_points_chebyshev,
+}

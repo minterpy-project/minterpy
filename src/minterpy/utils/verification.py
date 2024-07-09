@@ -2,7 +2,7 @@
 """ functions for input verification
 """
 
-from typing import Optional, Sized, Tuple, TypeVar, Union
+from typing import Any, Optional, Sized, Tuple, TypeVar, Union, Type
 
 import numpy as np
 from _warnings import warn
@@ -74,6 +74,7 @@ def rectify_query_points(x, m):
                 f"does not match the polynomial dimensionality {m}"
             )
     return nr_points, x
+
 
 def rectify_eval_input(x, coefficients, exponents, verify_input):
     """Rectify input for evaluation.
@@ -153,25 +154,47 @@ def convert_eval_output(results_placeholder):
     return out
 
 
-def check_type(a, expected_type=np.ndarray, *args, **kwargs):
-    """Verify if the input has the expected type.
+def check_type(obj: Any, expected_type: Type[Any], obj_name: str = None):
+    """Check if the given input is of expected type.
+    
+    Parameters
+    ----------
+    obj : Any
+        An instance to be checked.
+    expected_type : Type[Any]
+        The expected type (i.e., class).
 
-    :param a: Object to be checked.
-    :type a: Any
+    Raises
+    ------
+    TypeError
+        If the given instance is not of the expected type.
 
-    :param expected_type: The type which is check against. Default is ``np.ndarray``
-    :type expected_type: type, optional
+    Notes
+    -----
+    - The purpose of this function is to unify type-checking procedure that
+      raises an exception with a common message to avoid repetition across
+      the codebase.
 
-    :raise TypeError: if input object hasn't the expected type.
-
-    .. todo::
-        - why not use ``isinstance``?
-        - why pass ``*args, **kwargs``?
-
+    Examples
+    --------
+    >>> check_type(1, int)  # 1 is an int
+    >>> check_type(np.array([1, 2]), np.ndarray)
+    >>> check_type("1.0", float)  # a string is not a float
+    Traceback (most recent call last):
+    ...
+    TypeError: Input must be of <class 'float'>, but got <class 'str'> instead
+    >>> check_type("1.0", float, "Number")
+    Traceback (most recent call last):
+    ...
+    TypeError: Number must be of <class 'float'>, but got <class 'str'> instead
     """
-    if not issubclass(type(a), expected_type):
+    if obj_name is None:
+        obj_name = "Input"
+
+    if not isinstance(obj, expected_type):
         raise TypeError(
-            f"input must be given as {expected_type} (encountered {type(a)})"
+            f"{obj_name} must be of {expected_type}, "
+            f"but got {type(obj)} instead",
         )
 
 
@@ -194,25 +217,6 @@ def check_dtype(a: np.ndarray, expected_dtype):
         raise TypeError(
             f"input must be given as {expected_dtype} (encountered {a.dtype})"
         )
-
-
-def check_type_n_values(a: np.ndarray, *args, **kwargs):
-    """Verify that the input array has correct type and does neither contain ``NaN`` nor ``inf`` values.
-
-    :param a: Array to be checked.
-    :type a: np.ndarray
-
-    .. todo::
-        - why pass ``*args, **kwargs``?
-
-    See Also
-    --------
-    check_type : verification of the type
-    check_values : verification of the values
-
-    """
-    check_type(a, *args, **kwargs)
-    check_values(a, *args, **kwargs)
 
 
 def check_dimensionality(xx: np.ndarray, dimensionality: int) -> None:
@@ -297,6 +301,68 @@ def check_shape(xx: np.ndarray, shape: Tuple[int, ...]):
         )
 
 
+def check_values(xx: Union[int, float, np.ndarray], **kwargs):
+    """Verify that the input has neither ``NaN`` nor ``inf`` values.
+
+    Parameters
+    ----------
+    xx : Union[int, float, :class:`numpy:numpy.ndarray`]
+        The scalar or array to be checked.
+    **kwargs
+        Keyword arguments with Boolean as values, if ``True`` then the invalid
+        value is allowed. The keys are ``nan`` (check for ``NaN`` values),
+        ``inf`` (check for ``inf`` values), ``zero`` (check for 0 values),
+        and ``negative`` (check for negative values).
+        If any of those set to ``True``,
+        the given value will raise an exception.
+        The default is ``NaN`` and ``inf`` values are not allowed, while
+        zero or negative values are allowed.
+
+    Raises
+    ------
+    ValueError
+        If the scalar value or the given array contains any of the specified
+        invalid values(e.g., ``NaN``, ``inf``, zero, or negative).
+
+    Examples
+    --------
+    >>> check_values(10)  # valid
+    >>> check_values(np.nan)  # Default, no nan
+    Traceback (most recent call last):
+    ...
+    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
+    >>> check_values(np.inf)  # Default, no inf
+    Traceback (most recent call last):
+    ...
+    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
+    >>> check_values(np.zeros((3, 2)), zero=False)  # No zero value is allowed
+    Traceback (most recent call last):
+    ...
+    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
+    >>> check_values(-10, negative=False)  # No negative value is allowed
+    Traceback (most recent call last):
+    ...
+    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
+    """
+    # Parse keyword arguments
+    kwargs = dict((key.lower(), val) for key, val in kwargs.items())
+    nan = kwargs.get("nan", False)
+    inf = kwargs.get("inf", False)
+    zero = kwargs.get("zero", True)
+    negative = kwargs.get("negative", True)
+
+    # Check values
+    is_nan = False if nan else np.any(np.isnan(xx))
+    is_inf = False if inf else np.any(np.isinf(xx))
+    is_zero = False if zero else np.any(xx == 0)
+    is_negative = False if negative else np.any(xx < 0)
+
+    if is_nan or is_inf or is_zero or is_negative:
+        raise ValueError(
+            "Invalid value(s) (NaN, inf, negative, zero)!"
+        )
+
+
 DOMAIN_WARN_MSG2 = "the grid points must fit the interpolation domain [-1;1]^m."
 DOMAIN_WARN_MSG = (
     "this may lead to unexpected behaviour, "
@@ -318,7 +384,8 @@ def check_domain_fit(points: np.ndarray):
 
     """
     # check first if the sample points are valid
-    check_type_n_values(points)
+    check_type(points, np.ndarray)
+    check_values(points)
     # check weather the points lie outside of the domain
     sample_max = np.max(points, axis=1)
     if not np.allclose(np.maximum(sample_max, 1.0), 1.0):
@@ -378,68 +445,6 @@ def is_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
     False
     """
     return isinstance(x, (int, float, np.integer, np.floating))
-
-
-def check_values(xx: Union[int, float, np.ndarray], **kwargs):
-    """Verify that the input array has neither ``NaN`` nor ``inf`` values.
-
-    Parameters
-    ----------
-    xx : Union[int, float, :class:`numpy:numpy.ndarray`]
-        The scalar or array to be checked.
-    **kwargs
-        Keyword arguments with Boolean as values, if ``True`` then the invalid
-        value is allowed. The keys are ``nan`` (check for ``NaN`` values),
-        ``inf`` (check for ``inf`` values), ``zero`` (check for 0 values),
-        and ``negative`` (check for negative values).
-        If any of those set to ``True``,
-        the given value will raise an exception.
-        The default is ``NaN`` and ``inf`` values are not allowed, while
-        zero or negative values are allowed.
-
-    Raises
-    ------
-    ValueError
-        If the scalar value or the given array contains any of the specified
-        invalid values(e.g., ``NaN``, ``inf``, zero, or negative).
-
-    Examples
-    --------
-    >>> check_values(10)  # valid
-    >>> check_values(np.nan)  # Default, no nan
-    Traceback (most recent call last):
-    ...
-    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
-    >>> check_values(np.inf)  # Default, no inf
-    Traceback (most recent call last):
-    ...
-    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
-    >>> check_values(np.zeros((3, 2)), zero=False)  # No zero value is allowed
-    Traceback (most recent call last):
-    ...
-    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
-    >>> check_values(-10, negative=False)  # No negative value is allowed
-    Traceback (most recent call last):
-    ...
-    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
-    """
-    # Parse keyword arguments
-    kwargs = dict((key.lower(), val) for key, val in kwargs.items())
-    nan = kwargs.get("nan", False)
-    inf = kwargs.get("inf", False)
-    zero = kwargs.get("zero", True)
-    negative = kwargs.get("negative", True)
-
-    # Check values
-    is_nan = False if nan else np.any(np.isnan(xx))
-    is_inf = False if inf else np.any(np.isinf(xx))
-    is_zero = False if zero else np.any(xx == 0)
-    is_negative = False if negative else np.any(xx < 0)
-
-    if is_nan or is_inf or is_zero or is_negative:
-        raise ValueError(
-            "Invalid value(s) (NaN, inf, negative, zero)!"
-        )
 
 
 def verify_spatial_dimension(spatial_dimension: int) -> int:
@@ -645,11 +650,6 @@ def _add_custom_exception_message(
     return exception_args
 
 
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
-
-
 def dummy(*args, **kwargs) -> None:
     """A placeholder function to indicate a feature that is not supported.
 
@@ -662,3 +662,8 @@ def dummy(*args, **kwargs) -> None:
         Any time this function or method is called.
     """
     raise NotImplementedError("This feature is not yet implemented!")
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

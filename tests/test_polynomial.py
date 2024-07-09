@@ -214,7 +214,7 @@ class TestInequality:
         grd_1 = Grid(mi)
         grd_2 = Grid.from_value_set(
             mi,
-            np.linspace(-0.99, 0.99, PolyDegree+1)[:, np.newaxis],
+            np.linspace(-0.99, 0.99, PolyDegree+1),
         )
 
         # Generate a set of random coefficients
@@ -402,7 +402,7 @@ class TestNegation:
         # Create a grid of equidistant point
         grd = Grid.from_value_set(
             mi,
-            np.linspace(-1, 1, PolyDegree+1)[:, np.newaxis],
+            np.linspace(-1, 1, PolyDegree+1),
         )
 
         # Create a polynomial instance
