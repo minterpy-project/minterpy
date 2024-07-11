@@ -1,5 +1,15 @@
 """
-Module for the generating points (which provides the unisolvent nodes)
+Module for the generating points (which provides the unisolvent nodes).
+
+How-To Guides
+-------------
+
+The relevant section of the :doc:`docs </how-to/grid/index>`
+contains several how-to guides related to instances of the `Grid` class
+demonstrating their usages and features.
+
+----
+
 """
 from copy import copy, deepcopy
 from typing import Callable, Optional, Union
@@ -48,12 +58,12 @@ class Grid:
     Parameters
     ----------
     multi_index : MultiIndexSet
-        The multi-index set of polynomial exponents that the Grid should
-        support.
+        The multi-index set of exponents of multi-dimensional polynomials
+        that the Grid should support.
     generating_function : Union[GEN_FUNCTION, str], optional
         The generating function to construct an array of generating points.
         One of the built-in generating functions may be selected via
-        a string key.
+        a string as a key to a dictionary.
         This parameter is optional; if neither this parameter nor
         ``generating_points`` is specified, the default generating function
         based on the Leja-ordered Chebyshev-Lobatto nodes is selected.
@@ -61,7 +71,7 @@ class Grid:
         The generating points of the interpolation grid, a two-dimensional
         array of floats whose columns are the generating points
         per spatial dimension. The shape of the array is ``(n + 1, m)``
-        where ``n`` is the maximum polynomial degree in all dimensions
+        where ``n`` is the maximum degree of all one-dimensional polynomials
         and ``m`` is the spatial dimension.
         This parameter is optional. If not specified, the generating points
         are created from the default generating function. If specified,
@@ -70,6 +80,11 @@ class Grid:
 
     Notes
     -----
+    - The ``Callable`` as a ``generating_function`` must accept as its
+      arguments two integers, namely, the maximum degree (``n``) of all
+      one-dimensional polynomials in the multi-index set
+      and the spatial dimension (``m``). Furthermore, it must return an array
+      of shape ``(n + 1, m)`` whose values are unique per column.
     - The multi-index set to construct a :class:`Grid` instance may not be
       downward-closed. However, building a :class:`.MultiIndexTree` used
       in the transformation between polynomials in the Newton and Lagrange
@@ -102,10 +117,11 @@ class Grid:
             generating_function
         )
 
-        # Process and assign the generating points argument
+        # Assign and verify the generating points argument
         if no_gen_points:
             generating_points = self._create_generating_points()
-        self._generating_points = _process_generating_points(generating_points)
+        self._generating_points = generating_points
+        self._verify_generating_points()
 
         # --- Post-assignment verifications
 
@@ -121,59 +137,184 @@ class Grid:
         self._tree = None
 
     # --- Factory methods
-    # TODO rename: name is misleading. a generator is something different in python:
-    #   cf. https://wiki.python.org/moin/Generators
     @classmethod
-    def from_generator(
+    def from_degree(
         cls,
-        multi_index: MultiIndexSet,
-        generating_function: Callable,
-    ) -> "Grid":
+        spatial_dimension: int,
+        poly_degree: int,
+        lp_degree: float,
+        generating_function: Optional[Union[GEN_FUNCTION, str]] = None,
+        generating_points: Optional[np.ndarray] = None,
+    ):
+        r"""Create an instance of Grid with a complete multi-index set.
+
+        A complete multi-index set denoted by :math:`A_{m, n, p}` contains
+        all the exponents
+        :math:`\boldsymbol{\alpha}=(\alpha_1,\ldots,\alpha_m) \in \mathbb{N}^m`
+        such that the :math:`l_p`-norm
+        :math:`|| \boldsymbol{\alpha} ||_p \leq n`, where:
+
+        - :math:`m`: the spatial dimension
+        - :math:`n`: the polynomial degree
+        - :math:`p`: the `l_p`-degree
+
+        Parameters
+        ----------
+        spatial_dimension : int
+            Spatial dimension of the multi-index set (:math:`m`); the value of
+            ``spatial_dimension`` must be a positive integer (:math:`m > 0`).
+        poly_degree : int
+            Polynomial degree of the multi-index set (:math:`n`); the value of
+            ``poly_degree`` must be a non-negative integer (:math:`n \geq 0`).
+        lp_degree : float, optional
+            :math:`p` of the :math:`l_p`-norm (i.e., the :math:`l_p`-degree)
+            that is used to define the multi-index set. The value of
+            ``lp_degree`` must be a positive float (:math:`p > 0`).
+            If not specified, ``lp_degree`` is assigned with the value of
+            :math:`2.0`.
+        generating_function : Union[GEN_FUNCTION, str], optional
+            The generating function to construct an array of generating points.
+            One of the built-in generating functions may be selected via
+            a string key.
+            This parameter is optional; if neither this parameter nor
+            ``generating_points`` is specified, the default generating function
+            based on the Leja-ordered Chebyshev-Lobatto nodes is selected.
+        generating_points : :class:`numpy:numpy.ndarray`, optional
+            The generating points of the interpolation grid, a two-dimensional
+            array of floats whose columns are the generating points
+            per spatial dimension. The shape of the array is ``(n + 1, m)``
+            where ``n`` is the maximum degree of all one-dimensional
+            polynomials and ``m`` is the spatial dimension.
+            This parameter is optional. If not specified, the generating points
+            are created from the default generating function. If specified,
+            then the points must be consistent with any non-``None`` generating
+            function.
+
+        Returns
+        -------
+        Grid
+            A new instance of the `Grid` class initialized with a complete
+            multi-index set (:math:`A_{m, n, p}`) and with the given
+            generating function and generating points.
         """
-        Constructor from a factory method for the ``generating_values``.
-
-        :param multi_index: The :class:`MultiIndexSet` this ``grid`` is based on.
-        :type multi_index: MultiIndexSet
-
-        :param generating_function: Factory method for the ``generating_values``. This functions gets a polynomial degree and returns a set of generating values of this degree.
-        :type generating_function: callable
-
-        :return: Instance of :class:`Grid` for the given input.
-        :rtype: Grid
-
-
-        """
-        generating_points = generating_function(
-            multi_index.poly_degree,
-            multi_index.spatial_dimension,
+        # Create a complete multi-index set
+        mi = MultiIndexSet.from_degree(
+            spatial_dimension,
+            poly_degree,
+            lp_degree,
         )
 
-        # TODO: Revise this
-        return cls.from_value_set(multi_index, generating_points)
+        # Create an instance of Grid
+        return cls(mi, generating_function, generating_points)
 
     @classmethod
-    def from_value_set(cls, multi_index: MultiIndexSet, generating_values: ARRAY):
+    def from_function(
+        cls,
+        multi_index: MultiIndexSet,
+        generating_function: Union[GEN_FUNCTION, str],
+    ) -> "Grid":
+        """Create an instance of Grid with a given generating function.
+
+        Parameters
+        ----------
+        multi_index : MultiIndexSet
+            The multi-index set of exponents of multi-dimensional polynomials
+            that the Grid should support.
+        generating_function: Union[GEN_FUNCTION, str]
+            The generating function to construct an array of generating points.
+            The function should accept as its arguments two integers, namely,
+            the maximum degree of all one-dimensional polynomials and
+            the spatial dimension and returns an array of shape ``(n + 1, m)``
+            where ``n`` is the one-dimensional polynomial degree
+            and ``m`` is the spatial dimension.
+            Alternatively, a string as a key to dictionary of built-in
+            generating functions may be specified.
+
+        Returns
+        -------
+        Grid
+            A new instance of the `Grid` class initialized with the given
+            generating function.
         """
-        Constructor from given ``generating_values``.
+        return cls(multi_index, generating_function=generating_function)
 
-        :param multi_index: The :class:`MultiIndexSet` this ``grid`` is based on.
-        :type multi_index: MultiIndexSet
+    @classmethod
+    def from_points(
+        cls,
+        multi_index: MultiIndexSet,
+        generating_points: np.ndarray,
+    ) -> "Grid":
+        """Create an instance of Grid from an array of generating points.
 
-        :param generating_values: Generating values the :class:`Grid` instance shall be based on. The input shape needs to be one-dimensional.
-        :type generating_function: np.ndarray
+        Parameters
+        ----------
+        multi_index : MultiIndexSet
+            The multi-index set of exponents of multi-dimensional polynomials
+            that the Grid should support.
+        generating_points : :class:`numpy:numpy.ndarray`
+            The generating points of the interpolation grid, a two-dimensional
+            array of floats whose columns are the generating points
+            per spatial dimension. The shape of the array is ``(n + 1, m)``
+            where ``n`` is the maximum polynomial degree in all dimensions
+            and ``m`` is the spatial dimension. The values in each column
+            must be unique.
 
-        :return: Instance of :class:`Grid` for the given input.
-        :rtype: Grid
+        Returns
+        -------
+        Grid
+            A new instance of the `Grid` class initialized
+            with the given multi-index set and generating points.
         """
+        return cls(multi_index, generating_points=generating_points)
+
+    @classmethod
+    def from_value_set(
+        cls,
+        multi_index: MultiIndexSet,
+        generating_values: np.ndarray,
+    ):
+        """Create an instance of Grid from an array of generating values.
+
+        A set of generating values is one-dimensional interpolation points.
+
+        Parameters
+        ----------
+        multi_index : MultiIndexSet
+            The multi-index set of polynomial exponents that defines the Grid.
+            The set, in turn, defines the polynomials the Grid can support.
+        generating_values : :class:`numpy:numpy.ndarray`
+            The one-dimensional generating points of the interpolation grid,
+            a one-dimensional array of floats of length ``(n + 1, )``
+            where ``n`` is the maximum polynomial degree in all dimensions.
+            The values in the array must be unique.
+
+        Returns
+        -------
+        Grid
+            A new instance of the `Grid` class initialized
+            with the given multi-index set and generating values.
+
+        Notes
+        -----
+        - An array of generating points are created based on tiling
+          the generating values to the required spatial dimension.
+        """
+        # Create the generating points from the generating values
         spatial_dimension = multi_index.spatial_dimension
+        if generating_values.ndim == 2 and generating_values.shape[1] > 1:
+            raise ValueError(
+                "Only one set of generating values can be provided; "
+                f"Got {generating_values.shape[1]} instead"
+            )
+        # Make sure it is one-dimensional array
+        if generating_values.ndim >= 1:
+            generating_values = generating_values.reshape(-1)
         generating_points = gen_points_from_values(
             generating_values,
             spatial_dimension,
         )
-        return cls(
-            multi_index,
-            generating_points=generating_points,
-        )
+
+        return cls(multi_index, generating_points=generating_points)
 
     # --- Properties
     @property
@@ -191,19 +332,19 @@ class Grid:
         return self._multi_index
 
     @property
-    def generating_function(self) -> Optional[Callable[[int, int], np.ndarray]]:
+    def generating_function(self) -> Optional[GEN_FUNCTION]:
         """The generating function of the interpolation Grid.
 
         Returns
         -------
-        Optional[Callable]
+        Optional[GEN_FUNCTION]
             The generating function of the interpolation Grid which is used
-            to generate the generating points.
+            to construct the array of generating points.
 
         Notes
         -----
         - If the generating function is ``None`` then the Grid may not be
-          manipulated that results in a grid of a higher degree.
+          manipulated that results in a grid of a higher degree or dimension.
         """
         return self._generating_function
 
@@ -211,8 +352,9 @@ class Grid:
     def generating_points(self) -> np.ndarray:
         """The generating points of the interpolation Grid.
 
-        The generating points of the interpolation grid are the ingredients
-        of constructing unisolvent nodes.
+        The generating points of the interpolation grid are one two main
+        ingredients of constructing unisolvent nodes (the other being the
+        multi-index set of exponents).
 
         Returns
         -------
@@ -232,8 +374,8 @@ class Grid:
         -------
         int
             The polynomial degree of the interpolation Grid is the maximum
-            polynomial degree of one-dimensional polynomials in any dimension
-            that the Grid can support.
+            polynomial degree of all one-dimensional polynomials according
+            to the multi-index set of exponents.
 
         Notes
         -----
@@ -487,6 +629,32 @@ class Grid:
         return True
 
     # --- Private internal methods: not to be called directly from outside
+    def _verify_generating_points(self):
+        """Verify if the generating points are valid.
+
+        Raises
+        ------
+        ValueError
+            If the points are not of the correct dimension, contains
+            NaN's or inf's, and do not fit the standard domain.
+        TypeError
+            If the points are not given in the correct type.
+        """
+        # Check array dimension
+        check_dimensionality(self._generating_points, dimensionality=2)
+        # No NaN's and inf's
+        check_values(self._generating_points)
+        # Check domain fit
+        check_domain_fit(self._generating_points)
+        # Check dimension against spatial dimension of the set
+        gen_points_dim = self._generating_points.shape[1]
+        if gen_points_dim != self.spatial_dimension:
+            raise ValueError(
+                "Dimension mismatch between the generating points "
+                f"({gen_points_dim}) and the multi-index set "
+                f"({self.spatial_dimension})"
+            )
+
     def _verify_matching_gen_function_and_points(self):
         """Verify if the generation function and points match.
 
@@ -625,28 +793,3 @@ def _process_generating_function(
     raise TypeError(
         f"The generating function {generating_function} is not callable"
     )
-
-
-def _process_generating_points(
-    generating_points: Optional[np.ndarray],
-) -> np.ndarray:
-    """Process the generating points given as an argument to Grid constructor.
-
-    Parameters
-    ----------
-    generating_points : :class:`numpy:numpy.ndarray`, optional
-        The generating points of the grid, a two-dimensional array of floats
-        of shape ``(n, m)`` where ``n`` is the number of points and ``m``
-        is the number of spatial dimension.
-    """
-    # Check type
-    check_type(generating_points, np.ndarray, "The generating points")
-    # Check array dimension
-    check_dimensionality(generating_points, dimensionality=2)
-    # No NaN's and inf's
-    check_values(generating_points)
-    # Check domain fit
-    check_domain_fit(generating_points)
-
-    # Return processed generating points
-    return generating_points

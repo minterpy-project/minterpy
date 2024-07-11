@@ -30,6 +30,9 @@ How-To Guides
 The relevant section of the :doc:`docs </how-to/multi-index-set/index>`
 contains several how-to guides related to instances of the `MultiIndexSet`
 class demonstrating their usages and features.
+
+----
+
 """
 import numpy as np
 

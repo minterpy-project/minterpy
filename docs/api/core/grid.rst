@@ -11,6 +11,7 @@ Grid
     :private-members:
     :inherited-members:
     :special-members:
+    :exclude-members: __init__
 
     .. rubric:: Properties
 
