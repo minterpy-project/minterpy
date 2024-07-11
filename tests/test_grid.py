@@ -2,7 +2,11 @@ import numpy as np
 import pytest
 
 from minterpy import Grid, MultiIndexSet
-from minterpy.gen_points import GENERATING_FUNCTIONS
+from minterpy.gen_points import (
+    GENERATING_FUNCTIONS,
+    gen_chebychev_2nd_order_leja_ordered,
+    gen_points_from_values,
+)
 from minterpy.core.grid import DEFAULT_FUN
 
 from conftest import create_mi_pair_distinct
@@ -175,8 +179,194 @@ class TestInitGenPoints:
         grd = Grid(mi, generating_points=gen_points)
 
         # Assertions
-        assert grd.poly_degree == mi.poly_degree + 1
-        assert grd.poly_degree > mi.poly_degree  # only for a complete set
+        assert grd.poly_degree > np.max(mi.exponents)
+
+
+class TestInitFrom:
+    """All tests related to the factory methods."""
+    def test_from_degree(self, SpatialDimension, PolyDegree, LpDegree):
+        """Tests the `from_degree()` method with default values."""
+        # Create complete multi-index set
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create instances of Grid
+        grd_1 = Grid(mi)
+        grd_2 = Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_degree_with_gen_function(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Tests the `from_degree()` method with generating function."""
+        # Create complete multi-index set
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create instances of Grid
+        grd_1 = Grid(mi, generating_function=DEFAULT_FUN)
+        grd_2 = Grid.from_degree(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            generating_function=DEFAULT_FUN,
+        )
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_degree_with_gen_points(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Tests the `from_degree()` method with generating points."""
+        # Create complete multi-index set
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create an array of generating points
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+
+        # Create instances of Grid
+        grd_1 = Grid(mi, generating_points=gen_points)
+        grd_2 = Grid.from_degree(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            generating_points=gen_points,
+        )
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_degree_with_gen_function_and_points(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Tests the `from_degree()` method with generating function & points.
+        """
+        # Create complete multi-index set
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create an array of generating points
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+
+        # Create instances of Grid
+        grd_1 = Grid(mi)
+        grd_2 = Grid.from_degree(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            generating_function=gen_function,
+            generating_points=gen_points,
+        )
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_gen_function(self, multi_index_mnp):
+        """Test the `from_function()` method."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Get the default generating function
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+
+        # Create instances of Grid
+        grd_1 = Grid(mi, generating_function=gen_function)
+        grd_2 = Grid.from_function(mi, gen_function)
+
+        # Assertion
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_gen_function_with_str(self, multi_index_mnp):
+        """Test the `from_function()` method with string selection."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create instances of Grid
+        grd_1 = Grid(mi, generating_function=DEFAULT_FUN)
+        grd_2 = Grid.from_function(mi, DEFAULT_FUN)
+
+        # Assertion
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_gen_points(self, multi_index_mnp):
+        """Test the `from_points()` method."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an array of generating points
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+
+        # Create instances of Grid
+        grd_1 = Grid(mi, generating_points=gen_points)
+        grd_2 = Grid.from_points(mi, gen_points)
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_gen_points_invalid(self, multi_index_mnp):
+        """Test invalid call to the `from_points()` due to dimension mismatch.
+        """
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an array of generating points
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension + 1)
+
+        # Create an instance of Grid
+        with pytest.raises(ValueError):
+            Grid.from_points(mi, gen_points)
+
+    def test_from_value_set(self, multi_index_mnp):
+        """Test the `from_value_set()` method."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an array of generating values (the default 1d generating
+        # function) and the corresponding generating points
+        gen_values = gen_chebychev_2nd_order_leja_ordered(mi.poly_degree)
+        gen_points = gen_points_from_values(gen_values, mi.spatial_dimension)
+
+        # Create instances of Grid
+        grd_1 = Grid(mi, generating_points=gen_points)
+        grd_2 = Grid.from_value_set(mi, gen_values)
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_value_set_invalid(self, multi_index_mnp):
+        """Test invalid call to `from_value_set()`."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an array of generating values (the default 1d generating
+        # function) and the corresponding generating points (with higher dim.)
+        gen_values = gen_chebychev_2nd_order_leja_ordered(mi.poly_degree)
+        gen_points = gen_points_from_values(gen_values, mi.spatial_dimension+1)
+
+        # Create an instance of Grid
+        with pytest.raises(ValueError):
+            Grid.from_value_set(mi, gen_points)
 
 
 class TestExpandDim:

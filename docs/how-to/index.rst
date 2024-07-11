@@ -10,6 +10,7 @@ of the main components of Minterpy.
    :maxdepth: 2
 
    Multi-index Set <multi-index-set/index>
+   Grid <grid/index>
    Integration <integration/index>
 
 ..
