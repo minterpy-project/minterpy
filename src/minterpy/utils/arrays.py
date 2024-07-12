@@ -222,6 +222,41 @@ def expand_dim(
     return np.append(xx, new_values, axis=1)
 
 
+def is_unique(xx: np.ndarray) -> bool:
+    """Return ``True`` if the input array has unique values.
+
+    Parameters
+    ----------
+    xx : :class:`numpy:numpy.ndarray`
+        The one-dimensional array to be checked.
+
+    Returns
+    -------
+    bool
+        ``True`` if the values in the array are unique.
+
+    Examples
+    --------
+    >>> is_unique(np.array([0, 1, 2, 3, 4, 5]))
+    True
+    >>> is_unique(np.array([0, 1, 2, 3, 4, 5, 5, 6]))
+    False
+    >>> is_unique(np.array([[0, 1, 2, 3, 4]])) # two-dimensional, squeeze-able
+    True
+    >>> is_unique(np.array([0.0]))
+    True
+    >>> is_unique(np.array([[1, 0], [1, 0]]))
+    Traceback (most recent call last):
+    ...
+    ValueError: The input array must be one-dimensional
+    """
+    xx = np.atleast_1d(np.squeeze(xx))
+    if xx.ndim > 1:
+        raise ValueError("The input array must be one-dimensional")
+
+    return len(np.unique(xx)) == len(xx)
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

@@ -87,6 +87,9 @@
   previous behavior of calling the constructor without any optional arguments.
 - The factory method `from_generator()` of the `Grid` class has been renamed
   to `from_function()` to avoid confusion with the Python's term.
+- The generating points provided or created by a generating function for
+  an instance of the `Grid` class must now have unique values per column,
+  otherwise an exception is raised.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several
