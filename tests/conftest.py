@@ -559,7 +559,7 @@ def create_non_downward_closed_multi_index(
     """Create a non-downward-closed multi-index set."""
     if poly_degree == 0:
         # NOTE: Skip the test as degree 0 contains only one element
-        pytest.skip()
+        pytest.skip("Poly. degree 0 cannot be made non-downward closed")
     exponents = get_exponent_matrix(spatial_dimension, poly_degree, lp_degree)
     if poly_degree > 0:
         # NOTE: Only applies for poly_degree > 0 (== 0 has only 1 element)

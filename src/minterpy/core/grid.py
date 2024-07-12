@@ -21,6 +21,7 @@ from minterpy.gen_points import GENERATING_FUNCTIONS, gen_points_from_values
 
 from minterpy.core.multi_index import MultiIndexSet
 from minterpy.core.tree import MultiIndexTree
+from minterpy.utils.arrays import is_unique
 from minterpy.utils.verification import (
     check_type,
     check_values,
@@ -654,7 +655,8 @@ class Grid:
         ------
         ValueError
             If the points are not of the correct dimension, contains
-            NaN's or inf's, and do not fit the standard domain.
+            NaN's or inf's, do not fit the standard domain, or the values
+            per column are not unique.
         TypeError
             If the points are not given in the correct type.
         """
@@ -671,6 +673,12 @@ class Grid:
                 "Dimension mismatch between the generating points "
                 f"({gen_points_dim}) and the multi-index set "
                 f"({self.spatial_dimension})"
+            )
+        # Check the uniqueness of values columnwise
+        are_unique = all([is_unique(xx) for xx in self._generating_points.T])
+        if not are_unique:
+            raise ValueError(
+                "One or more columns of the generating points are not unique"
             )
 
     def _verify_matching_gen_function_and_points(self):

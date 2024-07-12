@@ -305,6 +305,22 @@ class TestInitFrom:
         assert grd_1 == grd_2
         assert grd_2 == grd_1
 
+    #@pytest.mark.skipif(multi_index_mnp.poly_degree == 0, reason="Generating point of length 1 is always unique")
+    def test_from_gen_function_invalid_non_unique(self, multi_index_mnp):
+        """Test the `from_function()` method."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        if mi.poly_degree == 0:
+            pytest.skip("Generating points of length 1 is always unique")
+
+        # Get the default generating function
+        gen_function = lambda x, y: np.ones((x + 1, y))
+
+        # Create instances of Grid
+        with pytest.raises(ValueError):
+            Grid.from_function(mi, gen_function)
+
     def test_from_gen_points(self, multi_index_mnp):
         """Test the `from_points()` method."""
         # Get the complete multi-index set
@@ -322,7 +338,7 @@ class TestInitFrom:
         assert grd_1 == grd_2
         assert grd_2 == grd_1
 
-    def test_from_gen_points_invalid(self, multi_index_mnp):
+    def test_from_gen_points_invalid_wrong_shape(self, multi_index_mnp):
         """Test invalid call to the `from_points()` due to dimension mismatch.
         """
         # Get the complete multi-index set
@@ -331,6 +347,22 @@ class TestInitFrom:
         # Create an array of generating points
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
         gen_points = gen_function(mi.poly_degree, mi.spatial_dimension + 1)
+
+        # Create an instance of Grid
+        with pytest.raises(ValueError):
+            Grid.from_points(mi, gen_points)
+
+    def test_from_gen_points_invalid_non_unique(self, multi_index_mnp):
+        """Test invalid call to the `from_points()` due to non-unique values.
+        """
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        if mi.poly_degree == 0:
+            pytest.skip("Generating points of length 1 is always unique")
+
+        # Create an array of generating points
+        gen_points = np.ones((mi.poly_degree + 1, mi.spatial_dimension))
 
         # Create an instance of Grid
         with pytest.raises(ValueError):
@@ -354,8 +386,8 @@ class TestInitFrom:
         assert grd_1 == grd_2
         assert grd_2 == grd_1
 
-    def test_from_value_set_invalid(self, multi_index_mnp):
-        """Test invalid call to `from_value_set()`."""
+    def test_from_value_set_invalid_wrong_shape(self, multi_index_mnp):
+        """Test invalid call to `from_value_set()` due to wrong shape."""
         # Get the complete multi-index set
         mi = multi_index_mnp
 
@@ -367,6 +399,21 @@ class TestInitFrom:
         # Create an instance of Grid
         with pytest.raises(ValueError):
             Grid.from_value_set(mi, gen_points)
+
+    def test_from_value_set_invalid_non_unique(self, multi_index_mnp):
+        """Test invalid call to `from_value_set()` due to non-unique values."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        if mi.poly_degree == 0:
+            pytest.skip("Generating values of length 1 is always unique")
+
+        # Create an array of generating values
+        gen_values = np.ones(mi.poly_degree + 1)
+
+        # Create an instance of Grid
+        with pytest.raises(ValueError):
+            Grid.from_value_set(mi, gen_values)
 
 
 class TestExpandDim:
