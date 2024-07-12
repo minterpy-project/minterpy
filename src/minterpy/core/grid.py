@@ -21,7 +21,6 @@ from minterpy.gen_points import GENERATING_FUNCTIONS, gen_points_from_values
 
 from minterpy.core.multi_index import MultiIndexSet
 from minterpy.core.tree import MultiIndexTree
-from minterpy.utils.arrays import expand_dim
 from minterpy.utils.verification import (
     check_type,
     check_values,
@@ -166,12 +165,10 @@ class Grid:
         poly_degree : int
             Polynomial degree of the multi-index set (:math:`n`); the value of
             ``poly_degree`` must be a non-negative integer (:math:`n \geq 0`).
-        lp_degree : float, optional
+        lp_degree : float
             :math:`p` of the :math:`l_p`-norm (i.e., the :math:`l_p`-degree)
             that is used to define the multi-index set. The value of
             ``lp_degree`` must be a positive float (:math:`p > 0`).
-            If not specified, ``lp_degree`` is assigned with the value of
-            :math:`2.0`.
         generating_function : Union[GEN_FUNCTION, str], optional
             The generating function to construct an array of generating points.
             One of the built-in generating functions may be selected via
@@ -429,6 +426,18 @@ class Grid:
             self._tree = MultiIndexTree(self)
         return self._tree
 
+    @property
+    def has_generating_function(self) -> bool:
+        """Return ``True`` if the instance has a generating function.
+
+        Returns
+        -------
+        bool
+            ``True`` if the instance has a generating function assigned to it,
+            and ``False`` otherwise.
+        """
+        return self.generating_function is not None
+
     # --- Instance methods
     def apply_func(self, func, out=None):
         """This function is not implemented yet and will raise a :class:`NotImplementedError` if called.
@@ -508,12 +517,12 @@ class Grid:
         multi_indices_new = self.multi_index.add_exponents(exponents)
         return self._new_instance_if_necessary(multi_indices_new)
 
-    def expand_dim(self, new_dimension: int) -> "Grid":
+    def expand_dim(self, target_dimension: int) -> "Grid":
         """Expand the dimension of the Grid.
 
         Parameters
         ----------
-        new_dimension : int
+        target_dimension : int
             The new spatial dimension. It must be larger than or equal
             to the current dimension of the Grid.
 
@@ -522,30 +531,39 @@ class Grid:
         Grid
             The Grid with expanded dimension.
 
+        Raises
+        ------
+        ValueError
+            If an instance without a generating function is expanded to
+            a higher dimension.
+
         Notes
         -----
-        - If no generating function is available, then the generating points
-          are directly expanded by appending zeros in the last column.
+        - An expansion to a higher dimension is possible only if the instance
+          has a generating function.
         """
         # Expand the dimension of the multi-index set
-        multi_index = self.multi_index.expand_dim(new_dimension)
+        multi_index = self.multi_index.expand_dim(target_dimension)
 
-        if self.generating_function is None:
-            # If generating function is not available,
-            # directly expand the generating points
-            gen_points = expand_dim(self.generating_points, new_dimension)
-
-            # Return a new instance
-            return self.__class__(
-                multi_index,
-                generating_points=gen_points,
-                generating_function=self._generating_function,
+        # Check if expansion indeed happened
+        is_index_equal = multi_index == self.multi_index
+        if not self.has_generating_function and not is_index_equal:
+            raise ValueError(
+                "The dimension of a Grid instance without a generating "
+                "function cannot be expanded"
             )
 
-        # Return a new instance
-        return self.__class__(
+        # Return a new instance with an expanded dimension
+        if self.has_generating_function:
+            return self.__class__.from_function(
+                multi_index,
+                self._generating_function,
+            )
+
+        # ... or with the same generating points if no expansion
+        return self.__class__.from_points(
             multi_index,
-            generating_function=copy(self._generating_function),
+            self._generating_points
         )
 
     # --- Special methods: Copies

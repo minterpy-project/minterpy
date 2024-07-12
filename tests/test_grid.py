@@ -419,26 +419,19 @@ class TestExpandDim:
         assert grd == grd_expanded
 
     def test_no_gen_fun_diff_dim(self, multi_index_mnp):
-        """Test expanding to a higher dimension w/o a generating function."""
+        """Expanding to a higher dim. w/o a generating function raises error.
+        """
         # Get the complete multi-index set
         mi = multi_index_mnp
 
-        # Create a Grid
+        # Create a Grid without a generating function
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
         gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
-        grd = Grid(mi, generating_points=gen_points, generating_function=None)
+        grd = Grid.from_points(mi, gen_points)
 
         # Expand the dimension: Higher dimension
-        new_dim = grd.spatial_dimension + 1
-        grd_expanded = grd.expand_dim(new_dim)
-
-        # Assertions
-        assert np.array_equal(
-            grd_expanded.generating_points[:, :new_dim - 1],
-            grd.generating_points[:, :new_dim],
-        )
-        # New dimension is zero
-        assert np.all(grd_expanded.generating_points[:, new_dim - 1] == 0.0)
+        with pytest.raises(ValueError):
+            grd.expand_dim(grd.spatial_dimension + 1)
 
 
 class TestEquality:
