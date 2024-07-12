@@ -54,6 +54,9 @@
   to create an instance with a given array of generating points.
 - Instances of `Grid` has now `has_generating_function` property that returns
   `True` if a generating function is defined on the grid and `False` otherwise.
+- Instances of `MultiIndexSet` has now `max_exponent` and `max_exponents`
+  properties. The former is the maximum exponent across all dimensions in the
+  multi-index set, while the latter is the maximum exponents per dimension.
 
 ### Fixed
 

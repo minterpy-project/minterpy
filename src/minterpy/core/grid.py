@@ -714,7 +714,7 @@ class Grid:
             and ``m`` is the spatial dimension.
         """
         multi_index = self._multi_index
-        poly_degree = np.max(multi_index.exponents)
+        poly_degree = multi_index.max_exponent
         spatial_dimension = multi_index.spatial_dimension
 
         generating_function = self._generating_function
@@ -744,11 +744,11 @@ class Grid:
         # The maximum polynomial degree in any dimension of the multi-index
         # set indicates the largest degree of one-dimensional polynomial
         # the grid needs to support.
-        poly_degree_multi_index = np.max(self.multi_index.exponents)
+        max_exponent_multi_index = self.multi_index.max_exponent
 
         # Both must be consistent; "smaller" multi-index may be contained
         # in a larger grid, but not the other way around.
-        if poly_degree_multi_index > self.poly_degree:
+        if max_exponent_multi_index > self.poly_degree:
             raise ValueError(
                 f"A grid of a polynomial degree {self.poly_degree} "
                 "cannot consist of multi-indices with a maximum polynomial "
