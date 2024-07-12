@@ -410,7 +410,7 @@ class MultiIndexSet:
 
     def expand_dim(
         self,
-        new_dimension: int,
+        target_dimension: int,
         inplace: bool = False,
     ) -> Optional["MultiIndexSet"]:
         """Expand the dimension of the multi-index set.
@@ -419,7 +419,7 @@ class MultiIndexSet:
 
         Parameters
         ----------
-        new_dimension : int
+        target_dimension : int
             The new spatial dimension. It must be larger than or equal
             to the current spatial dimension of the multi-index set.
         inplace : bool, optional
@@ -449,7 +449,7 @@ class MultiIndexSet:
         """
         # Expand the dimension of the current exponents, i.e., add a new column
         expanded_exponents = expand_dim_(
-            self._exponents, new_dimension
+            self._exponents, target_dimension
         )
 
         # --- Identical exponents after expansion

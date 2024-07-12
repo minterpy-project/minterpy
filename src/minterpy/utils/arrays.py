@@ -124,7 +124,7 @@ def make_coeffs_2d(coefficients: np.ndarray) -> np.ndarray:
 
 def expand_dim(
     xx: np.ndarray,
-    new_dim: int,
+    target_dim: int,
     new_values: np.ndarray = None,
 ) -> np.ndarray:
     """Expand the dimension of a given 2D array filled with given values.
@@ -134,7 +134,7 @@ def expand_dim(
     xx : :class:`numpy:numpy.ndarray`
         Input array (exponents array or interpolating grid array) which will
         be expanded; it must be a two-dimensional array.
-    new_dim : int
+    target_dim : int
         The target dimension up to which the array will be expanded.
         The value must be larger than or equal to the dimension of the current
         array.
@@ -186,20 +186,20 @@ def expand_dim(
     num_rows, num_columns = xx.shape
 
     # --- Dimension contraction (smaller target), raises an exception
-    if new_dim < num_columns:
+    if target_dim < num_columns:
         # TODO maybe build a reduce fun. which removes dims where all exps 0
         raise ValueError(
             f"Can't expand the exponent or grid array dimension "
-            f"from {num_columns} to {new_dim}."
+            f"from {num_columns} to {target_dim}."
         )
 
     # --- No dimension expansion (same target)
-    if new_dim == num_columns:
+    if target_dim == num_columns:
         # Return the input array (identical)
         return xx
 
     # --- Dimension expansion
-    diff_dim = new_dim - num_columns
+    diff_dim = target_dim - num_columns
     if new_values is None:
         new_values = np.zeros(
             (num_rows, diff_dim),

@@ -49,6 +49,11 @@
   the cross-product-and-sum of the two operands exponents.
 - A method `expand_dim()` is introduced to instances  of the `Grid` class
   to encapsulate the procedure of expanding the dimension of a `Grid` instance.
+- Add two new factory methods for the `Grid` class: `from_degree()` to
+  create a `Grid` instance with a complete multi-index set and `from_points()`
+  to create an instance with a given array of generating points.
+- Instances of `Grid` has now `has_generating_function` property that returns
+  `True` if a generating function is defined on the grid and `False` otherwise.
 
 ### Fixed
 
@@ -79,7 +84,9 @@
   and `generating_points` both are defaulted to `None`.
   If `generating_function` is not specified, then the default of Leja-ordered
   Chebyshev-Lobatto generating function is selected. This preserves the 
-  previous behavior of calling the constructor without any optional arguments. 
+  previous behavior of calling the constructor without any optional arguments.
+- The factory method `from_generator()` of the `Grid` class has been renamed
+  to `from_function()` to avoid confusion with the Python's term.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several
