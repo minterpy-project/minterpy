@@ -317,11 +317,13 @@ class TestAttributes:
         # Assertions
         assert isinstance(multi_index, MultiIndexSet)
         assert multi_index.lp_degree == LpDegree
-        assert multi_index.poly_degree is None
+        assert not multi_index.poly_degree
         assert multi_index.spatial_dimension == 0
         assert len(multi_index) == 0
         assert not multi_index.is_complete
         assert not multi_index.is_downward_closed
+        assert not multi_index.max_exponent
+        assert not multi_index.max_exponents
 
     @pytest.mark.parametrize("spatial_dimension", [0, 1, 5])
     def test_empty_set_dims(self, spatial_dimension, LpDegree):

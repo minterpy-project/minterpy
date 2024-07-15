@@ -296,26 +296,34 @@ class MultiIndexSet:
         return self._is_downward_closed
 
     @property
-    def max_exponent(self) -> int:
+    def max_exponent(self) -> Optional[int]:
         """The maximum exponent of the multi-index set.
 
         Returns
         -------
-        int
+        int, optional
             The maximum exponent over all dimensions of the multi-index set.
+            If the index set is empty, `None` is returned.
         """
+        if len(self) == 0:
+            return None
+
         return np.max(self._exponents)
 
     @property
-    def max_exponents(self) -> np.ndarray:
+    def max_exponents(self) -> Optional[np.ndarray]:
         """The maximum exponents per dimension of the multi-index set.
 
         Returns
         -------
-        :class:`numpy:numpy.ndarray`
+        :class:`numpy:numpy.ndarray`, optional
             The maximum exponents per dimension of the multi-index set given
             as one-dimensional array of length ``m`` (the spatial dimension).
+            If the index set is empty, `None` is returned.
         """
+        if len(self) == 0:
+            return None
+
         return np.max(self._exponents, axis=0)
 
     # --- Instance methods
