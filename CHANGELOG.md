@@ -57,6 +57,9 @@
 - Instances of `MultiIndexSet` has now `max_exponent` and `max_exponents`
   properties. The former is the maximum exponent across all dimensions in the
   multi-index set, while the latter is the maximum exponents per dimension.
+- An instance of `Grid` is now a callable; when it is called with a callable
+  or a function, the function will be evaluated on the unisolvent nodes of the
+  grid and the corresponding function values are returned.
 
 ### Fixed
 
@@ -93,6 +96,12 @@
 - The generating points provided or created by a generating function for
   an instance of the `Grid` class must now have unique values per column,
   otherwise an exception is raised.
+
+### Removed
+
+- The method `apply_func()` of the `Grid` class previously not implemented
+  (calling it raises an exception) is now removed completely
+  in favor of `__call__()`.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several

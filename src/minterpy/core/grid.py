@@ -378,15 +378,18 @@ class Grid:
         return len(self.generating_points) - 1
 
     @property
-    def unisolvent_nodes(self):
-        """Array of unidolvent nodes.
+    def unisolvent_nodes(self) -> np.ndarray:
+        """The array of unisolvent nodes.
 
-        For a definition of unisolvent nodes, see the mathematical introduction.
+        For a definition of unisolvent nodes, see
+        :ref:`fundamentals/introduction:The notion of unisolvence` in the docs.
 
-        :return: Array of the unisolvent nodes. If None were given, the output is lazily build from ``multi_index`` and ``generation_points``.
-        :rtype: np.ndarray
-
-
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            The unisolvent nodes as a two-dimensional array of floats.
+            The shape of the array is ``(N, m)`` where ``N`` is the number of
+            elements in the multi-index set and ``m`` is the spatial dimension.
         """
         if self._unisolvent_nodes is None:  # lazy evaluation
             self._unisolvent_nodes = _gen_unisolvent_nodes(
@@ -434,27 +437,6 @@ class Grid:
         return self.generating_function is not None
 
     # --- Instance methods
-    def apply_func(self, func, out=None):
-        """This function is not implemented yet and will raise a :class:`NotImplementedError` if called.
-
-        Apply a given (universal) function on this :class:`Grid` instance.
-
-        :param func: The function, which will be evaluated on the grid points.
-        :type func: callable
-        :raise NotImplementedError: if called, since it is not implemented yet.
-
-        :param out: The array, where the result of the function evaluation will be stored. If given, the ``out`` array will be changed inplace, otherwise the a new one will be initialised.
-        :type out: np.ndarray, optional
-
-
-        .. todo::
-            - implement an evaluation function for :class:`Grid` instances.
-            - think about using the numpy interface for universal funcions.
-
-        """
-        # apply func to unisolvent nodes and return the func values, or store them alternatively in out
-        raise NotImplementedError
-
     def _new_instance_if_necessary(self, multi_indices_new: MultiIndexSet) -> "Grid":
         """Constructs new grid instance only if the multi indices have changed
 
@@ -602,6 +584,48 @@ class Grid:
             generating_points=deepcopy(self._generating_points),
         )
 
+    # --- Dunder method: Callable instance
+    def __call__(self, fun: Callable, *args, **kwargs) -> np.ndarray:
+        """Evaluate the given function on the unisolvent nodes of the grid.
+
+        Parameters
+        ----------
+        fun : Callable
+            The given function to evaluate. The function must accept as its
+            first argument a two-dimensional array and return as its output
+            an array of the same length as the input array.
+        *args
+            Additional positional arguments passed to the given function.
+        **kwargs
+            Additional keyword arguments:
+
+            - ``fun_dim`` with ``int`` value allows a function of a
+              lower-dimension to be evaluated on the grid of a higher-dimension
+              assuming the extraneous dimensions are in the last dimensions.
+              The value indicates that the function should be evaluated with
+              the unisolvent nodes up to the specified ``fun_dim`` dimension.
+
+            - The rest of the keyword arguments is passed to the given
+              function. Note that following the above ``fun_dim`` becomes
+              a reserved keyword argument.
+
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            The values of the given function evaluated on the unisolvent nodes
+            (i.e., the coefficients of the polynomial in the Lagrange basis).
+        """
+        # No need for type checking the argument; rely on Python to raise
+        # exceptions when the given argument is called on the unisolvent nodes.
+
+        # Allow a lower-dimensional function to be evaluated on the grid.
+        fun_dim = kwargs.pop("fun_dim", None)
+        if fun_dim is not None:
+            # Evaluate 'fun' only up to 'fun_dim'
+            return fun(self.unisolvent_nodes[:, :fun_dim], *args, **kwargs)
+
+        return fun(self.unisolvent_nodes, *args, **kwargs)
+
     # --- Dunder methods: Rich comparison
     def __eq__(self, other: "Grid") -> bool:
         """Compare two instances of Grid for exact equality in value.
@@ -668,7 +692,7 @@ class Grid:
                 f"({gen_points_dim}) and the multi-index set "
                 f"({self.spatial_dimension})"
             )
-        # Check the uniqueness of values columnwise
+        # Check the uniqueness of values column-wise
         are_unique = all([is_unique(xx) for xx in self._generating_points.T])
         if not are_unique:
             raise ValueError(
