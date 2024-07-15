@@ -120,6 +120,9 @@ class Grid:
         # Assign and verify the generating points argument
         if no_gen_points:
             generating_points = self._create_generating_points()
+        else:
+            # Create a copy to avoid accidental changes from the outside
+            generating_points = copy(generating_points)
         self._generating_points = generating_points
         self._verify_generating_points()
 
@@ -615,8 +618,8 @@ class Grid:
             The values of the given function evaluated on the unisolvent nodes
             (i.e., the coefficients of the polynomial in the Lagrange basis).
         """
-        # No need for type checking the argument; rely on Python to raise
-        # exceptions when the given argument is called on the unisolvent nodes.
+        # No need for type checking the argument; rely on Python to raise any
+        # exceptions when a problematic 'fun' is called on the nodes.
 
         # Allow a lower-dimensional function to be evaluated on the grid.
         fun_dim = kwargs.pop("fun_dim", None)
@@ -648,19 +651,23 @@ class Grid:
             ``True`` if the two instances are equal in value,
             ``False`` otherwise.
         """
+        # Checks are from the cheapest to the most expensive for early exit
+        # (multi-index equality check is the most expensive one)
+
         # Check for consistent type
         if not isinstance(other, Grid):
             return False
 
-        # Multi-index set equality
-        if self.multi_index != other.multi_index:
+        # Generating function equality
+        if self.generating_function != other.generating_function:
             return False
 
         # Generating points equality
         if not np.array_equal(self.generating_points, other.generating_points):
             return False
 
-        if self.generating_function != other.generating_function:
+        # Multi-index set equality
+        if self.multi_index != other.multi_index:
             return False
 
         return True
