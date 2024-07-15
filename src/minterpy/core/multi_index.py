@@ -141,6 +141,7 @@ class MultiIndexSet:
         # TODO: Possibly remove this property
         self._exponents_completed: Optional[ARRAY] = None
 
+    # --- Factory method
     @classmethod
     def from_degree(
         cls,
@@ -184,6 +185,7 @@ class MultiIndexSet:
 
         return cls(exponents, lp_degree=lp_degree)
 
+    # --- Properties
     @property
     def exponents(self) -> np.ndarray:
         """Array of exponents in the form of multi-indices.
@@ -293,6 +295,30 @@ class MultiIndexSet:
 
         return self._is_downward_closed
 
+    @property
+    def max_exponent(self) -> int:
+        """The maximum exponent of the multi-index set.
+
+        Returns
+        -------
+        int
+            The maximum exponent over all dimensions of the multi-index set.
+        """
+        return np.max(self._exponents)
+
+    @property
+    def max_exponents(self) -> np.ndarray:
+        """The maximum exponents per dimension of the multi-index set.
+
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            The maximum exponents per dimension of the multi-index set given
+            as one-dimensional array of length ``m`` (the spatial dimension).
+        """
+        return np.max(self._exponents, axis=0)
+
+    # --- Instance methods
     def add_exponents(
         self,
         exponents: np.ndarray,

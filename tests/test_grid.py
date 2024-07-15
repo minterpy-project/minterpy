@@ -50,7 +50,7 @@ class TestInit:
 
         # Set up the generating function and points (the default)
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension)
 
         # Create Grids
         grd_1 = Grid(
@@ -75,7 +75,7 @@ class TestInit:
 
         # Set up the generating function and points (the default)
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension)
 
         # A generating function that is inconsistent with the gen. points above
         def _gen_fun(poly_degree, spatial_dimension):
@@ -100,7 +100,7 @@ class TestInitGenPoints:
 
         # Create an array of generating points (from the default)
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension)
 
         # Create a Grid
         grd_1 = Grid(mi)  # Use the same default for the generating points
@@ -144,8 +144,8 @@ class TestInitGenPoints:
         Notes
         -----
         - Creating a multi-index set with the same exponents but with lower
-          lp-degree tends to increase the polynomial degree of set.
-          However, the polynomial degree of the grid is about the maximum
+          lp-degree tends to increase the polynomial degree of the set.
+          However, the maximum exponent of the grid is about the maximum
           degree of one-dimensional polynomials any dimension, so it should not
           matter if the polynomial degree of the multi-index set is larger than
           the degree of the grid as long as the grid has a degree larger than
@@ -153,18 +153,19 @@ class TestInitGenPoints:
         """
         # create a multi-index set
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, np.inf)
+        # recreate with smaller lp-degree
         mi = MultiIndexSet(mi.exponents, LpDegree)
 
         # Create an array of generating points with lesser degree
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
         gen_points = gen_function(PolyDegree, SpatialDimension)
 
-        # Creating a Grid raises an exception
+        # Create an instance of Grid
         grd = Grid(mi, generating_points=gen_points)
 
         # Assertions
-        assert grd.poly_degree == PolyDegree
-        assert grd.poly_degree <= mi.poly_degree
+        assert grd.max_exponent == PolyDegree
+        assert grd.max_exponent <= mi.poly_degree
 
     def test_smaller_mi(self, multi_index_mnp):
         """Smaller complete multi-index set than the grid degree is okay."""
@@ -173,13 +174,13 @@ class TestInitGenPoints:
 
         # Create an array of generating points with a higher degree
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        gen_points = gen_function(mi.poly_degree + 1, mi.spatial_dimension)
+        gen_points = gen_function(mi.max_exponent + 1, mi.spatial_dimension)
 
         # Create a Grid instance
         grd = Grid(mi, generating_points=gen_points)
 
         # Assertions
-        assert grd.poly_degree > np.max(mi.exponents)
+        assert grd.max_exponent > np.max(mi.exponents)
 
 
 class TestInitFrom:
@@ -328,7 +329,7 @@ class TestInitFrom:
 
         # Create an array of generating points
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension)
 
         # Create instances of Grid
         grd_1 = Grid(mi, generating_points=gen_points)
@@ -346,7 +347,7 @@ class TestInitFrom:
 
         # Create an array of generating points
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension + 1)
+        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension + 1)
 
         # Create an instance of Grid
         with pytest.raises(ValueError):
@@ -358,11 +359,11 @@ class TestInitFrom:
         # Get the complete multi-index set
         mi = multi_index_mnp
 
-        if mi.poly_degree == 0:
+        if mi.max_exponent == 0:
             pytest.skip("Generating points of length 1 is always unique")
 
         # Create an array of generating points
-        gen_points = np.ones((mi.poly_degree + 1, mi.spatial_dimension))
+        gen_points = np.ones((mi.max_exponent + 1, mi.spatial_dimension))
 
         # Create an instance of Grid
         with pytest.raises(ValueError):
@@ -375,7 +376,7 @@ class TestInitFrom:
 
         # Create an array of generating values (the default 1d generating
         # function) and the corresponding generating points
-        gen_values = gen_chebychev_2nd_order_leja_ordered(mi.poly_degree)
+        gen_values = gen_chebychev_2nd_order_leja_ordered(mi.max_exponent)
         gen_points = gen_points_from_values(gen_values, mi.spatial_dimension)
 
         # Create instances of Grid
@@ -393,7 +394,7 @@ class TestInitFrom:
 
         # Create an array of generating values (the default 1d generating
         # function) and the corresponding generating points (with higher dim.)
-        gen_values = gen_chebychev_2nd_order_leja_ordered(mi.poly_degree)
+        gen_values = gen_chebychev_2nd_order_leja_ordered(mi.max_exponent)
         gen_points = gen_points_from_values(gen_values, mi.spatial_dimension+1)
 
         # Create an instance of Grid
@@ -405,11 +406,11 @@ class TestInitFrom:
         # Get the complete multi-index set
         mi = multi_index_mnp
 
-        if mi.poly_degree == 0:
+        if mi.max_exponent == 0:
             pytest.skip("Generating values of length 1 is always unique")
 
         # Create an array of generating values
-        gen_values = np.ones(mi.poly_degree + 1)
+        gen_values = np.ones(mi.max_exponent + 1)
 
         # Create an instance of Grid
         with pytest.raises(ValueError):
@@ -456,7 +457,7 @@ class TestExpandDim:
 
         # Create a Grid
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension)
         grd = Grid(mi, generating_points=gen_points, generating_function=None)
 
         # Expand the dimension: Same dimension
@@ -473,7 +474,7 @@ class TestExpandDim:
 
         # Create a Grid without a generating function
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        gen_points = gen_function(mi.poly_degree, mi.spatial_dimension)
+        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension)
         grd = Grid.from_points(mi, gen_points)
 
         # Expand the dimension: Higher dimension

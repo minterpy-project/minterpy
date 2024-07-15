@@ -72,7 +72,7 @@ class Grid:
         array of floats whose columns are the generating points
         per spatial dimension. The shape of the array is ``(n + 1, m)``
         where ``n`` is the maximum degree of all one-dimensional polynomials
-        and ``m`` is the spatial dimension.
+        (i.e., the maximum exponent) and ``m`` is the spatial dimension.
         This parameter is optional. If not specified, the generating points
         are created from the default generating function. If specified,
         then the points must be consistent with any non-``None`` generating
@@ -81,10 +81,10 @@ class Grid:
     Notes
     -----
     - The ``Callable`` as a ``generating_function`` must accept as its
-      arguments two integers, namely, the maximum degree (``n``) of all
-      one-dimensional polynomials in the multi-index set
-      and the spatial dimension (``m``). Furthermore, it must return an array
-      of shape ``(n + 1, m)`` whose values are unique per column.
+      arguments two integers, namely, the maximum exponent (``n``) of all
+      of the multi-index set of polynomial exponents and the spatial dimension
+      (``m``). Furthermore, it must return an array of shape ``(n + 1, m)``
+      whose values are unique per column.
     - The multi-index set to construct a :class:`Grid` instance may not be
       downward-closed. However, building a :class:`.MultiIndexTree` used
       in the transformation between polynomials in the Newton and Lagrange
@@ -125,8 +125,8 @@ class Grid:
 
         # --- Post-assignment verifications
 
-        # Verify the polynomial degree of the Grid
-        self._verify_grid_poly_degree()
+        # Verify the maximum exponent
+        self._verify_grid_max_exponent()
 
         # Verify generating function and points again if both are specified
         if not no_gen_function and not no_gen_points:
@@ -182,11 +182,11 @@ class Grid:
             array of floats whose columns are the generating points
             per spatial dimension. The shape of the array is ``(n + 1, m)``
             where ``n`` is the maximum degree of all one-dimensional
-            polynomials and ``m`` is the spatial dimension.
-            This parameter is optional. If not specified, the generating points
-            are created from the default generating function. If specified,
-            then the points must be consistent with any non-``None`` generating
-            function.
+            polynomials (i.e., the maximum exponent) and ``m`` is the spatial
+            dimension. This parameter is optional. If not specified,
+            the generating points are created from the default generating
+            function. If specified, then the points must be consistent
+            with any non-``None`` generating function.
 
         Returns
         -------
@@ -221,7 +221,7 @@ class Grid:
         generating_function: Union[GEN_FUNCTION, str]
             The generating function to construct an array of generating points.
             The function should accept as its arguments two integers, namely,
-            the maximum degree of all one-dimensional polynomials and
+            the maximum exponent of the multi-index set of exponents and
             the spatial dimension and returns an array of shape ``(n + 1, m)``
             where ``n`` is the one-dimensional polynomial degree
             and ``m`` is the spatial dimension.
@@ -254,8 +254,8 @@ class Grid:
             array of floats whose columns are the generating points
             per spatial dimension. The shape of the array is ``(n + 1, m)``
             where ``n`` is the maximum polynomial degree in all dimensions
-            and ``m`` is the spatial dimension. The values in each column
-            must be unique.
+            (i.e., the maximum exponent) and ``m`` is the spatial dimension.
+            The values in each column must be unique.
 
         Returns
         -------
@@ -283,7 +283,7 @@ class Grid:
         generating_values : :class:`numpy:numpy.ndarray`
             The one-dimensional generating points of the interpolation grid,
             a one-dimensional array of floats of length ``(n + 1, )``
-            where ``n`` is the maximum polynomial degree in all dimensions.
+            where ``n`` is the maximum exponent of the multi-index set.
             The values in the array must be unique.
 
         Returns
@@ -359,27 +359,21 @@ class Grid:
         :class:`numpy:numpy.ndarray`
             A two-dimensional array of floats whose columns are the
             generating points per spatial dimension. The shape of the array
-            is ``(n + 1, m)`` where ``n`` is the maximum polynomial degree
-            in any dimension and ``m`` is the spatial dimension.
+            is ``(n + 1, m)`` where ``n`` is the maximum exponent of the
+            multi-index set of exponents and ``m`` is the spatial dimension.
         """
         return self._generating_points
 
     @property
-    def poly_degree(self) -> int:
-        """The polynomial degree of the interpolation Grid.
+    def max_exponent(self) -> int:
+        """The maximum exponent of the interpolation grid.
 
         Returns
         -------
         int
-            The polynomial degree of the interpolation Grid is the maximum
+            The maximum exponent of the interpolation grid is the maximum
             polynomial degree of all one-dimensional polynomials according
             to the multi-index set of exponents.
-
-        Notes
-        -----
-        - Unlike the polynomial degree associated with a multi-index set,
-          the polynomial degree of the Grid does not depend on the notion
-          of ``lp_degree`` as it is based only on one dimension.
         """
         return len(self.generating_points) - 1
 
@@ -508,11 +502,11 @@ class Grid:
             - this is boilerplate, since similar code appears in :class:`MultivariatePolynomialSingleABC`.
         """
         exponents = np.require(exponents, dtype=INT_DTYPE)
-        if np.max(exponents) > self.poly_degree:
+        if np.max(exponents) > self.max_exponent:
             # TODO 'enlarge' the grid, increase the degree, ATTENTION:
             raise ValueError(
                 f"trying to add point with exponent {np.max(exponents)} "
-                f"but the grid is only of degree {self.poly_degree}"
+                f"but the grid is only of degree {self.max_exponent}"
             )
 
         multi_indices_new = self.multi_index.add_exponents(exponents)
@@ -691,7 +685,7 @@ class Grid:
             then ones that are provided.
         """
         gen_points = self.generating_function(
-            self.poly_degree,
+            self.max_exponent,
             self.spatial_dimension,
         )
 
@@ -710,49 +704,48 @@ class Grid:
             The generating points of the interpolation grid, a two-dimensional
             array of floats whose columns are the generating points
             per spatial dimension. The shape of the array is ``(n + 1, m)``
-            where ``n`` is the maximum polynomial degree in all dimensions
-            and ``m`` is the spatial dimension.
+            where ``n`` is the maximum exponent of the multi-index set of
+            exponents and ``m`` is the spatial dimension.
         """
         multi_index = self._multi_index
-        poly_degree = np.max(multi_index.exponents)
+        poly_degree = multi_index.max_exponent
         spatial_dimension = multi_index.spatial_dimension
 
         generating_function = self._generating_function
 
         return generating_function(poly_degree, spatial_dimension)
 
-    def _verify_grid_poly_degree(self):
-        """Verify if the degree of the Grid is consistent with the multi-index.
+    def _verify_grid_max_exponent(self):
+        """Verify if the Grid max. exponent is consistent with the multi-index.
 
         Raises
         ------
         ValueError
-            If the degree of the Grid is smaller than the maximum
-            one-dimensional polynomial degree in all dimensions specified
-            in the corresponding multi-index set of polynomial exponents.
+            If the maximum exponent of the Grid is smaller than the maximum
+            exponent of the multi-index set of polynomial exponents.
 
         Notes
         -----
-        - While it perhaps makes sense to store the polynomial degrees of each
+        - While it perhaps makes sense to store the maximum exponent of each
           dimension as the instance property instead of the maximum over all
           dimensions, this has no use because the generating points have
           a uniform length in every dimension. For instance, if the maximum
-          polynomial degrees per dimension of a two-dimensional polynomial are
+          exponent per dimension of a two-dimensional polynomial are
           ``[5, 3]``, the stored generating points remain ``(5, 2)`` instead of
           two arrays having lengths of ``5`` and ``3``, respectively.
         """
-        # The maximum polynomial degree in any dimension of the multi-index
-        # set indicates the largest degree of one-dimensional polynomial
+        # The maximum exponent in any dimension of the multi-index set
+        # indicates the largest degree of one-dimensional polynomial
         # the grid needs to support.
-        poly_degree_multi_index = np.max(self.multi_index.exponents)
+        max_exponent_multi_index = self.multi_index.max_exponent
 
         # Both must be consistent; "smaller" multi-index may be contained
         # in a larger grid, but not the other way around.
-        if poly_degree_multi_index > self.poly_degree:
+        if max_exponent_multi_index > self.max_exponent:
             raise ValueError(
-                f"A grid of a polynomial degree {self.poly_degree} "
-                "cannot consist of multi-indices with a maximum polynomial "
-                "degree {poly_degree_multi_index}"
+                f"A grid of a maximum exponent {self.max_exponent} "
+                "cannot consist of multi-indices with a maximum exponent "
+                f"of {max_exponent_multi_index}"
             )
 
 

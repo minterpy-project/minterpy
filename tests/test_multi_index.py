@@ -239,6 +239,13 @@ class TestAttributes:
         assert len(multi_index) == len(exponents)
         assert multi_index.is_complete
         assert multi_index.is_downward_closed
+        assert multi_index.max_exponent == PolyDegree
+        assert np.all(
+            multi_index.max_exponents == PolyDegree * np.ones(
+                SpatialDimension,
+                dtype=int,
+            )
+        )
 
         # Assigning to read-only properties
         with pytest.raises(AttributeError):
@@ -337,6 +344,19 @@ class TestAttributes:
         assert len(multi_index) == 0
         assert not multi_index.is_complete
         assert not multi_index.is_downward_closed
+
+    def test_max_exponent(self):
+        """Test the maximum exponent property for incomplete set."""
+        # Create a set of exponents
+        exponents = get_exponent_matrix(4, 5, 2.0)
+        # Create a multi-index set with respect to a lower lp-degree
+        # the maximum exponent will be lower than the polynomial degree with
+        # respect to the lower lp-degree
+        multi_index = MultiIndexSet(exponents, 1.0)
+
+        # Assertions
+        assert not multi_index.is_complete
+        assert multi_index.max_exponent < multi_index.poly_degree
 
 
 class TestCopy:
