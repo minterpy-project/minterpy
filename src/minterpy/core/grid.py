@@ -122,7 +122,7 @@ class Grid:
             generating_points = self._create_generating_points()
         else:
             # Create a copy to avoid accidental changes from the outside
-            generating_points = copy(generating_points)
+            generating_points = generating_points.copy()
         self._generating_points = generating_points
         self._verify_generating_points()
 
@@ -375,8 +375,7 @@ class Grid:
         -------
         int
             The maximum exponent of the interpolation grid is the maximum
-            polynomial degree of all one-dimensional polynomials according
-            to the multi-index set of exponents.
+            degree of any one-dimensional polynomials the grid can support.
         """
         return len(self.generating_points) - 1
 
@@ -600,17 +599,7 @@ class Grid:
         *args
             Additional positional arguments passed to the given function.
         **kwargs
-            Additional keyword arguments:
-
-            - ``fun_dim`` with ``int`` value allows a function of a
-              lower-dimension to be evaluated on the grid of a higher-dimension
-              assuming the extraneous dimensions are in the last dimensions.
-              The value indicates that the function should be evaluated with
-              the unisolvent nodes up to the specified ``fun_dim`` dimension.
-
-            - The rest of the keyword arguments is passed to the given
-              function. Note that following the above ``fun_dim`` becomes
-              a reserved keyword argument.
+            Additional keyword arguments passed to the given function.
 
         Returns
         -------
@@ -620,13 +609,6 @@ class Grid:
         """
         # No need for type checking the argument; rely on Python to raise any
         # exceptions when a problematic 'fun' is called on the nodes.
-
-        # Allow a lower-dimensional function to be evaluated on the grid.
-        fun_dim = kwargs.pop("fun_dim", None)
-        if fun_dim is not None:
-            # Evaluate 'fun' only up to 'fun_dim'
-            return fun(self.unisolvent_nodes[:, :fun_dim], *args, **kwargs)
-
         return fun(self.unisolvent_nodes, *args, **kwargs)
 
     # --- Dunder methods: Rich comparison

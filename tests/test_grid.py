@@ -12,7 +12,7 @@ from minterpy.core.grid import DEFAULT_FUN
 from conftest import create_mi_pair_distinct
 
 
-def _fun_one_dim(xx: np.ndarray, sum: bool = False):
+def _fun_one_out(xx: np.ndarray, sum: bool = False):
     """Test function for calling an instance of grid."""
     if sum:
         return np.sum(xx, axis=1)
@@ -20,7 +20,7 @@ def _fun_one_dim(xx: np.ndarray, sum: bool = False):
     return np.prod(xx, axis=1)
 
 
-def _fun_multi_dim(xx: np.ndarray):
+def _fun_multi_out(xx: np.ndarray):
     """Return the same output as input."""
     return xx  # xx is assumed to be multi-dimensional
 
@@ -458,7 +458,7 @@ class TestUnisolventNodes:
 class TestCall:
     """All tests related to calling an instance with a callable."""
     def test_call_multi_dim_output(self, multi_index_mnp):
-        """Test calling on a valid callable that returns multi-dim arrray."""
+        """Test calling on a valid callable that returns a multi-dim arrray."""
         # Get the complete multi-index set
         mi = multi_index_mnp
 
@@ -466,13 +466,13 @@ class TestCall:
         grd = Grid(mi)
 
         # Call the Grid instance
-        lag_coeffs = grd(_fun_multi_dim)
+        lag_coeffs = grd(_fun_multi_out)
 
         # Assertion
         assert lag_coeffs.shape == (len(mi), mi.spatial_dimension)
 
     def test_call_one_dim_output(self, multi_index_mnp):
-        """Test calling on a valid callable that returns one-dim array."""
+        """Test calling on a valid callable that returns a one-dim array."""
         # Get the complete multi-index set
         mi = multi_index_mnp
 
@@ -480,40 +480,13 @@ class TestCall:
         grd = Grid(mi)
 
         # Call the Grid instance
-        lag_coeffs_1 = grd(_fun_one_dim, True)  # pass a pos. argument
-        lag_coeffs_2 = grd(_fun_one_dim, sum=True)  # pass a keyword argument
+        lag_coeffs_1 = grd(_fun_one_out, True)  # pass a pos. argument
+        lag_coeffs_2 = grd(_fun_one_out, sum=True)  # pass a keyword argument
 
         # Assertions
         assert len(lag_coeffs_1) == len(mi)
         assert len(lag_coeffs_2) == len(mi)
         assert np.array_equal(lag_coeffs_1, lag_coeffs_2)
-
-    def test_call_dim_mismatch_fun(self, multi_index_mnp):
-        """Test calling on a function whose dimension mismatch the grid."""
-        if multi_index_mnp.spatial_dimension == 1:
-            pytest.skip("Spatial dimension 1 has no lower dimension.")
-
-        def _fun(xx: np.ndarray) -> np.ndarray:
-            """Function that requires one fewer column than the grid."""
-            if xx.shape[1] != multi_index_mnp.spatial_dimension - 1:
-                raise ValueError("Dimension mismatch")
-            return np.sum(xx[:, :multi_index_mnp.spatial_dimension-1], axis=1)
-
-        # Get the complete multi-index set
-        mi = multi_index_mnp
-
-        # Create a Grid
-        grd = Grid(mi)
-
-        # Call the Grid
-        lag_coeffs = grd(_fun, fun_dim=mi.spatial_dimension-1)
-
-        # Assertions
-        assert len(lag_coeffs) == len(mi)
-        with pytest.raises(ValueError):
-            grd(_fun)
-        with pytest.raises(ValueError):
-            grd(_fun, fun_dim=mi.spatial_dimension - 2)
 
     @pytest.mark.parametrize("invalid_function", [1, 2.0, "3.5"])
     def test_call_invalid_function(self, multi_index_mnp, invalid_function):
