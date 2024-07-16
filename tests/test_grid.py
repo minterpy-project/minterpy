@@ -12,6 +12,19 @@ from minterpy.core.grid import DEFAULT_FUN
 from conftest import create_mi_pair_distinct
 
 
+def _fun_one_out(xx: np.ndarray, sum: bool = False):
+    """Test function for calling an instance of grid."""
+    if sum:
+        return np.sum(xx, axis=1)
+
+    return np.prod(xx, axis=1)
+
+
+def _fun_multi_out(xx: np.ndarray):
+    """Return the same output as input."""
+    return xx  # xx is assumed to be multi-dimensional
+
+
 class TestInit:
     """All tests related to the default constructor of Grid."""
 
@@ -415,6 +428,78 @@ class TestInitFrom:
         # Create an instance of Grid
         with pytest.raises(ValueError):
             Grid.from_value_set(mi, gen_values)
+
+
+class TestUnisolventNodes:
+    """All tests related to the unisolvent nodes property."""
+    def test_unisolvent_nodes(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test the property of unisolvent nodes of complete set"""
+        # Create a Grid instance
+        grd = Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Get the relevant properties
+        mi = grd.multi_index
+        unisolvent_nodes = grd.unisolvent_nodes
+        gen_points = grd.generating_points
+
+        # Assertions
+        assert unisolvent_nodes.shape == (len(mi), mi.spatial_dimension)
+        # The condition below only applies for a complete multi-index set
+        # i.e., all generating points appear in the unisolvent nodes
+        # Transpose to iterate dimension (column)-wise
+        assert all(
+            [
+                np.all(np.unique(xx) == np.sort(yy))
+                for xx, yy in zip(unisolvent_nodes.T, gen_points.T)
+            ]
+        )
+
+
+class TestCall:
+    """All tests related to calling an instance with a callable."""
+    def test_call_multi_dim_output(self, multi_index_mnp):
+        """Test calling on a valid callable that returns a multi-dim arrray."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create a Grid
+        grd = Grid(mi)
+
+        # Call the Grid instance
+        lag_coeffs = grd(_fun_multi_out)
+
+        # Assertion
+        assert lag_coeffs.shape == (len(mi), mi.spatial_dimension)
+
+    def test_call_one_dim_output(self, multi_index_mnp):
+        """Test calling on a valid callable that returns a one-dim array."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create a Grid
+        grd = Grid(mi)
+
+        # Call the Grid instance
+        lag_coeffs_1 = grd(_fun_one_out, True)  # pass a pos. argument
+        lag_coeffs_2 = grd(_fun_one_out, sum=True)  # pass a keyword argument
+
+        # Assertions
+        assert len(lag_coeffs_1) == len(mi)
+        assert len(lag_coeffs_2) == len(mi)
+        assert np.array_equal(lag_coeffs_1, lag_coeffs_2)
+
+    @pytest.mark.parametrize("invalid_function", [1, 2.0, "3.5"])
+    def test_call_invalid_function(self, multi_index_mnp, invalid_function):
+        """Test calling on an invalid function."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create a Grid
+        grd = Grid(mi)
+
+        # Assertion
+        with pytest.raises(TypeError):
+            grd(invalid_function)
 
 
 class TestExpandDim:

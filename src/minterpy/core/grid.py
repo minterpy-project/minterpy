@@ -120,6 +120,9 @@ class Grid:
         # Assign and verify the generating points argument
         if no_gen_points:
             generating_points = self._create_generating_points()
+        else:
+            # Create a copy to avoid accidental changes from the outside
+            generating_points = generating_points.copy()
         self._generating_points = generating_points
         self._verify_generating_points()
 
@@ -372,21 +375,23 @@ class Grid:
         -------
         int
             The maximum exponent of the interpolation grid is the maximum
-            polynomial degree of all one-dimensional polynomials according
-            to the multi-index set of exponents.
+            degree of any one-dimensional polynomials the grid can support.
         """
         return len(self.generating_points) - 1
 
     @property
-    def unisolvent_nodes(self):
-        """Array of unidolvent nodes.
+    def unisolvent_nodes(self) -> np.ndarray:
+        """The array of unisolvent nodes.
 
-        For a definition of unisolvent nodes, see the mathematical introduction.
+        For a definition of unisolvent nodes, see
+        :ref:`fundamentals/introduction:The notion of unisolvence` in the docs.
 
-        :return: Array of the unisolvent nodes. If None were given, the output is lazily build from ``multi_index`` and ``generation_points``.
-        :rtype: np.ndarray
-
-
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            The unisolvent nodes as a two-dimensional array of floats.
+            The shape of the array is ``(N, m)`` where ``N`` is the number of
+            elements in the multi-index set and ``m`` is the spatial dimension.
         """
         if self._unisolvent_nodes is None:  # lazy evaluation
             self._unisolvent_nodes = _gen_unisolvent_nodes(
@@ -434,27 +439,6 @@ class Grid:
         return self.generating_function is not None
 
     # --- Instance methods
-    def apply_func(self, func, out=None):
-        """This function is not implemented yet and will raise a :class:`NotImplementedError` if called.
-
-        Apply a given (universal) function on this :class:`Grid` instance.
-
-        :param func: The function, which will be evaluated on the grid points.
-        :type func: callable
-        :raise NotImplementedError: if called, since it is not implemented yet.
-
-        :param out: The array, where the result of the function evaluation will be stored. If given, the ``out`` array will be changed inplace, otherwise the a new one will be initialised.
-        :type out: np.ndarray, optional
-
-
-        .. todo::
-            - implement an evaluation function for :class:`Grid` instances.
-            - think about using the numpy interface for universal funcions.
-
-        """
-        # apply func to unisolvent nodes and return the func values, or store them alternatively in out
-        raise NotImplementedError
-
     def _new_instance_if_necessary(self, multi_indices_new: MultiIndexSet) -> "Grid":
         """Constructs new grid instance only if the multi indices have changed
 
@@ -602,6 +586,31 @@ class Grid:
             generating_points=deepcopy(self._generating_points),
         )
 
+    # --- Dunder method: Callable instance
+    def __call__(self, fun: Callable, *args, **kwargs) -> np.ndarray:
+        """Evaluate the given function on the unisolvent nodes of the grid.
+
+        Parameters
+        ----------
+        fun : Callable
+            The given function to evaluate. The function must accept as its
+            first argument a two-dimensional array and return as its output
+            an array of the same length as the input array.
+        *args
+            Additional positional arguments passed to the given function.
+        **kwargs
+            Additional keyword arguments passed to the given function.
+
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            The values of the given function evaluated on the unisolvent nodes
+            (i.e., the coefficients of the polynomial in the Lagrange basis).
+        """
+        # No need for type checking the argument; rely on Python to raise any
+        # exceptions when a problematic 'fun' is called on the nodes.
+        return fun(self.unisolvent_nodes, *args, **kwargs)
+
     # --- Dunder methods: Rich comparison
     def __eq__(self, other: "Grid") -> bool:
         """Compare two instances of Grid for exact equality in value.
@@ -624,19 +633,23 @@ class Grid:
             ``True`` if the two instances are equal in value,
             ``False`` otherwise.
         """
+        # Checks are from the cheapest to the most expensive for early exit
+        # (multi-index equality check is the most expensive one)
+
         # Check for consistent type
         if not isinstance(other, Grid):
             return False
 
-        # Multi-index set equality
-        if self.multi_index != other.multi_index:
+        # Generating function equality
+        if self.generating_function != other.generating_function:
             return False
 
         # Generating points equality
         if not np.array_equal(self.generating_points, other.generating_points):
             return False
 
-        if self.generating_function != other.generating_function:
+        # Multi-index set equality
+        if self.multi_index != other.multi_index:
             return False
 
         return True
@@ -668,7 +681,7 @@ class Grid:
                 f"({gen_points_dim}) and the multi-index set "
                 f"({self.spatial_dimension})"
             )
-        # Check the uniqueness of values columnwise
+        # Check the uniqueness of values column-wise
         are_unique = all([is_unique(xx) for xx in self._generating_points.T])
         if not are_unique:
             raise ValueError(

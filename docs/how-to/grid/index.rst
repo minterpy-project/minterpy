@@ -13,3 +13,4 @@ the :py:class:`.Grid` class (i.e., the interpolation grid).
    Create with an array of generating values <grid-create-from-value-set>
    Create with a complete multi-index set <grid-create-from-degree>
    Create using the default constructor <grid-create-default-constructor>
+   Evaluating a Function on a Grid <grid-call>
