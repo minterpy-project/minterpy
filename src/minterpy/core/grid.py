@@ -496,14 +496,17 @@ class Grid:
         multi_indices_new = self.multi_index.add_exponents(exponents)
         return self._new_instance_if_necessary(multi_indices_new)
 
-    def expand_dim(self, target_dimension: int) -> "Grid":
+    def expand_dim(self, target_dimension: Union[int, "Grid"]) -> "Grid":
         """Expand the dimension of the Grid.
 
         Parameters
         ----------
-        target_dimension : int
+        target_dimension : Union[Grid, int]
             The new spatial dimension. It must be larger than or equal
-            to the current dimension of the Grid.
+            to the current dimension of the Grid. Alternatively,
+            another instance of Grid whose dimension is higher can also
+            be specified as a target dimension.
+
 
         Returns
         -------
@@ -514,36 +517,20 @@ class Grid:
         ------
         ValueError
             If an instance without a generating function is expanded to
-            a higher dimension.
+            a higher dimension or if the target grid is inconsistent
+            with the current instance.
 
         Notes
         -----
-        - An expansion to a higher dimension is possible only if the instance
-          has a generating function.
+        - If ``target_dimension`` is an `int`, then an expansion to a higher
+          dimension is possible only if the instance has a generating function.
         """
-        # Expand the dimension of the multi-index set
-        multi_index = self.multi_index.expand_dim(target_dimension)
+        # Expand the dimension to the target Grid instance
+        if isinstance(target_dimension, Grid):
+            return _expand_dim_to_target_grid(self, target_dimension)
 
-        # Check if expansion indeed happened
-        is_index_equal = multi_index == self.multi_index
-        if not self.has_generating_function and not is_index_equal:
-            raise ValueError(
-                "The dimension of a Grid instance without a generating "
-                "function cannot be expanded"
-            )
-
-        # Return a new instance with an expanded dimension
-        if self.has_generating_function:
-            return self.__class__.from_function(
-                multi_index,
-                self._generating_function,
-            )
-
-        # ... or with the same generating points if no expansion
-        return self.__class__.from_points(
-            multi_index,
-            self._generating_points
-        )
+        # Expand to the target dimension
+        return _expand_dim_to_target_dim(self, target_dimension)
 
     # --- Special methods: Copies
     # copying
@@ -825,3 +812,136 @@ def _process_generating_function(
     raise TypeError(
         f"The generating function {generating_function} is not callable"
     )
+
+
+def _expand_dim_to_target_dim(
+    origin_grid: "Grid",
+    target_dimension: int,
+) -> "Grid":
+    """Expand the dimension of a given Grid to a target dimension.
+
+    Parameters
+    ----------
+    origin_grid : Grid
+        The `Grid` instance whose dimension is to be expanded.
+    target_dimension : Grid
+        The target dimension; must be equal to or larger than the current
+        dimension of the `Grid` instance.
+
+    Returns
+    -------
+    Grid
+        The grid with an expanded dimension.
+
+    Raises
+    ------
+    ValueError
+        If no generating function is available and the target dimension
+        is higher than the current dimension.
+    """
+    # Expand the dimension of the multi-index set
+    multi_index = origin_grid.multi_index.expand_dim(target_dimension)
+
+    # Check if expansion indeed happened
+    is_index_equal = multi_index == origin_grid.multi_index
+    if not origin_grid.has_generating_function and not is_index_equal:
+        raise ValueError(
+            "The dimension of a Grid instance without a generating "
+            "function cannot be expanded"
+        )
+
+    # Return a new instance with an expanded dimension
+    if origin_grid.has_generating_function:
+        return origin_grid.__class__.from_function(
+            multi_index,
+            origin_grid.generating_function,
+        )
+
+    # ... or with the same generating points if no expansion
+    return origin_grid.__class__.from_points(
+        multi_index,
+        origin_grid.generating_points
+    )
+
+
+def _expand_dim_to_target_grid(
+    origin_grid: "Grid",
+    target_grid: "Grid",
+) -> "Grid":
+    """Expand the dimension of a given Grid to the dimension of another.
+
+    Parameters
+    ----------
+    origin_grid : Grid
+        The grid whose dimension is to be expanded.
+    target_grid : Grid
+        The grid whose dimension is the base for expansion.
+
+    Returns
+    -------
+    Grid
+        The grid with an expanded dimension.
+
+    Raises
+    ------
+    ValueError
+        If the generating functions are not consistent (if available) or
+        if the generating points are not consistent.
+    """
+    target_dim = target_grid.spatial_dimension
+
+    # Create expanded multi-index set
+    mi_expanded = origin_grid.multi_index.expand_dim(target_dim)
+
+    # Check if either grids have no generating function
+    origin_has_gen_fun = origin_grid.has_generating_function
+    target_has_gen_fun = target_grid.has_generating_function
+    if not origin_has_gen_fun or not target_has_gen_fun:
+        # Check if the generating points of both grids are consistent
+        if _have_consistent_gen_points(origin_grid, target_grid):
+            return origin_grid.__class__.from_points(
+                mi_expanded,
+                target_grid.generating_points,
+            )
+        # Points are inconsistent
+        raise ValueError(
+            "Grid has inconsistent generating points with the target Grid"
+        )
+
+    # Check if the generating functions of both grids are the same
+    if origin_grid.generating_function != target_grid.generating_function:
+        raise ValueError(
+            "Grid has an inconsistent generating function with target Grid"
+        )
+
+    # Consistent generating function, create from function
+    return origin_grid.__class__.from_function(
+        mi_expanded,
+        target_grid.generating_function,
+    )
+
+
+def _have_consistent_gen_points(grid_1: "Grid", grid_2: "Grid") -> bool:
+    """Check if two grids have consistent generating points.
+
+    Parameters
+    ----------
+    grid_1 : Grid
+        First `Grid` instance to compare.
+    grid_2 : Grid
+        Second `Grid` instance to compare.
+
+    Returns
+    -------
+    bool
+        ``True`` if all generating points in the common spatial dimension
+        of the two `Grid` instances are equal; ``False`` otherwise.
+    """
+    dim_1 = grid_1.spatial_dimension
+    dim_2 = grid_2.spatial_dimension
+    dim = np.min([dim_1, dim_2])
+
+    gen_points_1 = grid_1.generating_points[:, :dim]
+    gen_points_2 = grid_2.generating_points[:, :dim]
+
+    return np.array_equal(gen_points_1, gen_points_2)
