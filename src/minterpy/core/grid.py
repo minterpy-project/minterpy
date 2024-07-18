@@ -529,7 +529,28 @@ class Grid:
         return _expand_dim_to_target_dim(self, target_dimension)
 
     def merge(self, other: "Grid", multi_index: MultiIndexSet) -> "Grid":
-        """Merge two instances of Grid with a new multi-index set."""
+        """Merge two instances of Grid with a new multi-index set.
+
+        Parameters
+        ----------
+        other : Grid
+            Another instance of `Grid` to merge with the current instance.
+        multi_index : MultiIndexSet
+            The multi-index set of the merged instance.
+
+        Returns
+        -------
+        Grid
+            The merged instance with the given multi-index set.
+
+        Raises
+        ------
+        ValueError
+            If the generating functions of the instances are incompatible
+            with each other (if both are specified) or if the generating points
+            are incompatible with each other (if an instance is missing
+            a generating function).
+        """
         if _have_gen_functions(self, other):
             # Check if the Grid instances have compatible generating functions
             if _have_compatible_gen_functions(self, other):
@@ -538,7 +559,7 @@ class Grid:
                 return self.__class__.from_function(multi_index, gen_fun)
             else:
                 raise ValueError(
-                    "The Grid instance has an inconsistent generating function"
+                    "The Grid instance has an incompatible generating function"
                     " with the other instance"
                 )
 
@@ -662,6 +683,26 @@ class Grid:
             return False
 
         return True
+
+    # --- Dunder methods: Arithmetics
+    def __mul__(self, other: "Grid") -> "Grid":
+        """Multiply two instances of Grid.
+
+        Parameters
+        ----------
+        other : `Grid`
+            The second operand of the grid multiplication.
+
+        Returns
+        -------
+        `Grid`
+            The product of two grids; the underlying multi-index set is
+            the product of the multi-index sets of the operands.
+        """
+        # Multiply the underlying multi-index sets
+        mi_product = self.multi_index * other.multi_index
+
+        return self.merge(other, mi_product)
 
     # --- Private internal methods: not to be called directly from outside
     def _create_generating_points(self) -> np.ndarray:

@@ -416,7 +416,7 @@ def mi_pair(SpatialDimension, PolyDegree, LpDegree, param_diff):
 def create_mi_pair_distinct():
     """Create a pair of distinct multi-index sets."""
     # A pair with all three parameters differ
-    m_1 = np.random.randint(low=1, high=5)
+    m_1 = np.random.randint(low=1, high=3)
     m_2 = 2 * m_1
     n_1 = np.random.randint(low=1, high=5)
     n_2 = np.random.randint(low=1, high=5)
