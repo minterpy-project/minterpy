@@ -358,9 +358,12 @@ class TestInitFrom:
         # Get the complete multi-index set
         mi = multi_index_mnp
 
+        if mi.spatial_dimension == 1:
+            pytest.skip("Dimension 1 has no relevant lesser dimension.")
+
         # Create an array of generating points
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension + 1)
+        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension - 1)
 
         # Create an instance of Grid
         with pytest.raises(ValueError):
@@ -512,13 +515,14 @@ class TestExpandDim:
         # Create a Grid
         grd = Grid(mi)
 
-        # Expand the dimension: Same dimension
+        # Expand the dimension: Same dimension (always a valid operation)
         grd_expanded = grd.expand_dim(grd.spatial_dimension)
 
-        # Assertion
-        assert grd == grd_expanded
+        # Assertions
+        assert grd == grd_expanded  # Equal in value
+        assert grd is not grd_expanded  # Not an identical instance
 
-    def test_target_dim_diff_dim(self, multi_index_mnp):
+    def test_target_dim_with_gen_fun(self, multi_index_mnp):
         """Test the default behavior of expanding to a higher dimension."""
         # Get the complete multi-index set
         mi = multi_index_mnp
@@ -526,7 +530,7 @@ class TestExpandDim:
         # Create a Grid
         grd = Grid(mi)
 
-        # Expand the dimension: Higher dimension
+        # Expand the dimension: Higher dimension (always valid w/ gen. func)
         new_dim = grd.spatial_dimension + 1
         grd_expanded = grd.expand_dim(new_dim)
 
@@ -535,32 +539,52 @@ class TestExpandDim:
         assert grd_expanded.spatial_dimension == new_dim
         assert grd_expanded.multi_index == mi.expand_dim(new_dim)
 
-    def test_target_dim_gen_fun_same_dim(self, multi_index_mnp):
-        """Test expanding to the same dimension w/o a generating function."""
+    def test_target_dim_same_dim_with_gen_points(self, multi_index_mnp):
+        """Test expanding to the same dimension with generating points."""
         # Get the complete multi-index set
         mi = multi_index_mnp
 
         # Create a Grid
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
         gen_points = gen_function(mi.max_exponent, mi.spatial_dimension)
-        grd = Grid(mi, generating_points=gen_points, generating_function=None)
+        grd = Grid.from_points(mi, gen_points)
 
-        # Expand the dimension: Same dimension
+        # Expand the dimension: Same dimension (always a valid operation)
         grd_expanded = grd.expand_dim(grd.spatial_dimension)
 
-        # Assertion
-        assert grd == grd_expanded
+        # Assertions
+        assert grd == grd_expanded  # Equal in value
+        assert grd is not grd_expanded  # Not an identical instances
 
-    def test_target_dim_no_gen_fun_diff_dim(self, multi_index_mnp):
-        """Test expanding the dimension to a higher dimension without
-        a generating function; this should raise an exception.
-        """
+    def test_target_dim_with_gen_points_valid(self, multi_index_mnp):
+        """Test expanding the dimension with valid generating points."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+        target_dim = mi.spatial_dimension + 1
+
+        # Create generating points with a higher dimension
+        gen_fun = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_fun(mi.max_exponent, target_dim)
+
+        # Create a Grid instance
+        grd = Grid.from_points(mi, gen_points)
+
+        # Expand the dimension of the Grid
+        grd_expanded = grd.expand_dim(target_dim)
+
+        # Assertion
+        assert grd_expanded.spatial_dimension == target_dim
+
+    def test_target_dim_with_gen_points_invalid(self, multi_index_mnp):
+        """Test expanding the dimension with invalid generating points."""
         # Get the complete multi-index set
         mi = multi_index_mnp
 
-        # Create a Grid without a generating function
+        # Create generating points with the same dimension
         gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
         gen_points = gen_function(mi.max_exponent, mi.spatial_dimension)
+
+        # Create a Grid instance
         grd = Grid.from_points(mi, gen_points)
 
         # Expand the dimension: Higher dimension
@@ -610,6 +634,40 @@ class TestExpandDim:
         expanded_dim = expanded_grid.spatial_dimension
         target_dim = target_grid.spatial_dimension
         assert expanded_dim == target_dim
+
+    def test_target_grid_with_larger_origin_gen_points(self, multi_index_mnp):
+        """Test expanding the dimension to the dimension of a target grid
+        but the origin generating points already have a larger dimension.
+        """
+        # Create multi-indices
+        origin_mi = multi_index_mnp
+        target_mi = origin_mi.expand_dim(origin_mi.spatial_dimension + 1)
+
+        # Get the ingredients for a Grid
+        gen_fun = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        origin_gen_points = gen_fun(
+            origin_mi.max_exponent,
+            origin_mi.spatial_dimension + 1,
+        )
+        target_gen_points = gen_fun(
+            target_mi.max_exponent,
+            target_mi.spatial_dimension,
+        )
+
+        # Create instances of Grid
+        origin_grid = Grid.from_points(origin_mi, origin_gen_points)
+        target_grid = Grid.from_points(target_mi, target_gen_points)
+
+        # Expand the dimension
+        expanded_grid = origin_grid.expand_dim(target_grid)
+
+        # Assertions
+        expanded_dim = expanded_grid.spatial_dimension
+        target_dim = target_grid.spatial_dimension
+        assert expanded_dim == target_dim
+        assert np.all(
+            expanded_grid.generating_points == origin_grid.generating_points
+        )
 
     def test_target_grid_with_gen_points_invalid(self, multi_index_mnp):
         """Test expanding the dimension to the dimension of a target grid
@@ -699,11 +757,12 @@ class TestEquality:
         assert grd_1 == grd_2  # but equal in value
         assert grd_2 == grd_1  # symmetric property
 
-    def test_inequal_multi_index(self):
+    def test_unequal_multi_index(self, SpatialDimension, PolyDegree, LpDegree):
         """Test inequality of two Grid instances due to different multi-index.
         """
         # Create two different multi-index set
-        mi_1, mi_2 = create_mi_pair_distinct()
+        mi_1 = MultiIndexSet.from_degree(3, 2, 1.0)
+        mi_2 = MultiIndexSet.from_degree(3, 2, 2.0)
 
         # Create two Grid instances
         grd_1 = Grid(mi_1)
@@ -714,7 +773,7 @@ class TestEquality:
         assert grd_1 != grd_2  # Not equal in values
         assert grd_2 != grd_1  # symmetric property
 
-    def test_inequal_gen_points(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_unequal_gen_points(self, SpatialDimension, PolyDegree, LpDegree):
         """Test inequality of two Grid instances due to diff. gen. points."""
         # Create a common multi-index set
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
@@ -741,7 +800,7 @@ class TestEquality:
         # Create a Grid instance
         grd = Grid(mi)
 
-        # Assertions
+        # Assertions: Return False if one of the operands is inconsistent
         assert grd != mi
         assert grd != "123"
         assert grd != 1
