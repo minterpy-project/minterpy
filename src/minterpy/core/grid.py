@@ -507,7 +507,6 @@ class Grid:
             another instance of Grid whose dimension is higher can also
             be specified as a target dimension.
 
-
         Returns
         -------
         Grid
@@ -528,6 +527,32 @@ class Grid:
 
         # Expand to the target dimension
         return _expand_dim_to_target_dim(self, target_dimension)
+
+    def merge(self, other: "Grid", multi_index: MultiIndexSet) -> "Grid":
+        """Merge two instances of Grid with a new multi-index set."""
+        if _have_gen_functions(self, other):
+            # Check if the Grid instances have compatible generating functions
+            if _have_compatible_gen_functions(self, other):
+                # The functions are compatible
+                gen_fun = self.generating_function
+                return self.__class__.from_function(multi_index, gen_fun)
+            else:
+                raise ValueError(
+                    "The Grid instance has an inconsistent generating function"
+                    " with the other instance"
+                )
+
+        # Check if the Grid instances have compatible generating points
+        if _have_compatible_gen_points(self, other):
+            # Get the largest generating points from the two
+            gen_points = _get_larger_gen_points(self, other)
+            return self.__class__.from_points(multi_index, gen_points)
+
+        # Points are inconsistent
+        raise ValueError(
+            "The Grid instance has incompatible generating points "
+            "with the other instance"
+        )
 
     # --- Special methods: Copies
     # copying
@@ -888,32 +913,7 @@ def _expand_dim_to_target_grid(
     target_dim = target_grid.spatial_dimension
     mi_expanded = origin_grid.multi_index.expand_dim(target_dim)
 
-    if _have_gen_functions(origin_grid, target_grid):
-        # Check if the Grid instances have compatible generating functions
-        if _have_compatible_gen_functions(origin_grid, target_grid):
-            # The functions are compatible
-            return origin_grid.__class__.from_function(
-                mi_expanded,
-                target_grid.generating_function,
-            )
-        else:
-            raise ValueError(
-                "Grid has an inconsistent generating function with target Grid"
-            )
-
-    # Check if the Grid instances have compatible generating points
-    if _have_compatible_gen_points(origin_grid, target_grid):
-        # Get the largest generating points from the two
-        gen_points = _get_larger_gen_points(origin_grid, target_grid)
-        return origin_grid.__class__.from_points(
-            mi_expanded,
-            gen_points,
-        )
-
-    # Points are inconsistent
-    raise ValueError(
-        "Grid has inconsistent generating points with the target Grid"
-    )
+    return origin_grid.merge(target_grid, mi_expanded)
 
 
 def _have_gen_functions(*grids) -> bool:
