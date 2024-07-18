@@ -496,14 +496,16 @@ class Grid:
         multi_indices_new = self.multi_index.add_exponents(exponents)
         return self._new_instance_if_necessary(multi_indices_new)
 
-    def expand_dim(self, target_dimension: int) -> "Grid":
+    def expand_dim(self, target_dimension: Union[int, "Grid"]) -> "Grid":
         """Expand the dimension of the Grid.
 
         Parameters
         ----------
-        target_dimension : int
+        target_dimension : Union[Grid, int]
             The new spatial dimension. It must be larger than or equal
-            to the current dimension of the Grid.
+            to the current dimension of the Grid. Alternatively,
+            another instance of Grid whose dimension is higher can also
+            be specified as a target dimension.
 
         Returns
         -------
@@ -513,36 +515,64 @@ class Grid:
         Raises
         ------
         ValueError
-            If an instance without a generating function is expanded to
-            a higher dimension.
-
-        Notes
-        -----
-        - An expansion to a higher dimension is possible only if the instance
-          has a generating function.
+            If an instance is expanded to a dimension that cannot be supported
+            either by the available generating function or generating points.
+            If the target dimension is a `Grid`, the exception is raised
+            when there are inconsistencies in either generating function
+            or points.
         """
-        # Expand the dimension of the multi-index set
-        multi_index = self.multi_index.expand_dim(target_dimension)
+        # Expand the dimension to the target Grid instance
+        if isinstance(target_dimension, Grid):
+            return _expand_dim_to_target_grid(self, target_dimension)
 
-        # Check if expansion indeed happened
-        is_index_equal = multi_index == self.multi_index
-        if not self.has_generating_function and not is_index_equal:
-            raise ValueError(
-                "The dimension of a Grid instance without a generating "
-                "function cannot be expanded"
-            )
+        # Expand to the target dimension
+        return _expand_dim_to_target_dim(self, target_dimension)
 
-        # Return a new instance with an expanded dimension
-        if self.has_generating_function:
-            return self.__class__.from_function(
-                multi_index,
-                self._generating_function,
-            )
+    def merge(self, other: "Grid", multi_index: MultiIndexSet) -> "Grid":
+        """Merge two instances of Grid with a new multi-index set.
 
-        # ... or with the same generating points if no expansion
-        return self.__class__.from_points(
-            multi_index,
-            self._generating_points
+        Parameters
+        ----------
+        other : Grid
+            Another instance of `Grid` to merge with the current instance.
+        multi_index : MultiIndexSet
+            The multi-index set of the merged instance.
+
+        Returns
+        -------
+        Grid
+            The merged instance with the given multi-index set.
+
+        Raises
+        ------
+        ValueError
+            If the generating functions of the instances are incompatible
+            with each other (if both are specified) or if the generating points
+            are incompatible with each other (if an instance is missing
+            a generating function).
+        """
+        if _have_gen_functions(self, other):
+            # Check if the Grid instances have compatible generating functions
+            if _have_compatible_gen_functions(self, other):
+                # The functions are compatible
+                gen_fun = self.generating_function
+                return self.__class__.from_function(multi_index, gen_fun)
+            else:
+                raise ValueError(
+                    "The Grid instance has an incompatible generating function"
+                    " with the other instance"
+                )
+
+        # Check if the Grid instances have compatible generating points
+        if _have_compatible_gen_points(self, other):
+            # Get the largest generating points from the two
+            gen_points = _get_larger_gen_points(self, other)
+            return self.__class__.from_points(multi_index, gen_points)
+
+        # Points are inconsistent
+        raise ValueError(
+            "The Grid instance has incompatible generating points "
+            "with the other instance"
         )
 
     # --- Special methods: Copies
@@ -654,7 +684,47 @@ class Grid:
 
         return True
 
+    # --- Dunder methods: Arithmetics
+    def __mul__(self, other: "Grid") -> "Grid":
+        """Multiply two instances of Grid.
+
+        Parameters
+        ----------
+        other : `Grid`
+            The second operand of the grid multiplication.
+
+        Returns
+        -------
+        `Grid`
+            The product of two grids; the underlying multi-index set is
+            the product of the multi-index sets of the operands.
+        """
+        # Multiply the underlying multi-index sets
+        mi_product = self.multi_index * other.multi_index
+
+        return self.merge(other, mi_product)
+
     # --- Private internal methods: not to be called directly from outside
+    def _create_generating_points(self) -> np.ndarray:
+        """Construct generating points from the generating function.
+
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            The generating points of the interpolation grid, a two-dimensional
+            array of floats whose columns are the generating points
+            per spatial dimension. The shape of the array is ``(n + 1, m)``
+            where ``n`` is the maximum exponent of the multi-index set of
+            exponents and ``m`` is the spatial dimension.
+        """
+        multi_index = self._multi_index
+        poly_degree = multi_index.max_exponent
+        spatial_dimension = multi_index.spatial_dimension
+
+        generating_function = self._generating_function
+
+        return generating_function(poly_degree, spatial_dimension)
+
     def _verify_generating_points(self):
         """Verify if the generating points are valid.
 
@@ -675,7 +745,7 @@ class Grid:
         check_domain_fit(self._generating_points)
         # Check dimension against spatial dimension of the set
         gen_points_dim = self._generating_points.shape[1]
-        if gen_points_dim != self.spatial_dimension:
+        if gen_points_dim < self.spatial_dimension:
             raise ValueError(
                 "Dimension mismatch between the generating points "
                 f"({gen_points_dim}) and the multi-index set "
@@ -707,26 +777,6 @@ class Grid:
                 "The generating function generates points that are "
                 "inconsistent with the generating points"
             )
-
-    def _create_generating_points(self) -> np.ndarray:
-        """Construct generating points from the generating function.
-
-        Returns
-        -------
-        :class:`numpy:numpy.ndarray`
-            The generating points of the interpolation grid, a two-dimensional
-            array of floats whose columns are the generating points
-            per spatial dimension. The shape of the array is ``(n + 1, m)``
-            where ``n`` is the maximum exponent of the multi-index set of
-            exponents and ``m`` is the spatial dimension.
-        """
-        multi_index = self._multi_index
-        poly_degree = multi_index.max_exponent
-        spatial_dimension = multi_index.spatial_dimension
-
-        generating_function = self._generating_function
-
-        return generating_function(poly_degree, spatial_dimension)
 
     def _verify_grid_max_exponent(self):
         """Verify if the Grid max. exponent is consistent with the multi-index.
@@ -825,3 +875,160 @@ def _process_generating_function(
     raise TypeError(
         f"The generating function {generating_function} is not callable"
     )
+
+
+def _expand_dim_to_target_dim(
+    origin_grid: "Grid",
+    target_dimension: int,
+) -> "Grid":
+    """Expand the dimension of a given Grid to a target dimension.
+
+    Parameters
+    ----------
+    origin_grid : Grid
+        The `Grid` instance whose dimension is to be expanded.
+    target_dimension : Grid
+        The target dimension; must be equal to or larger than the current
+        dimension of the `Grid` instance.
+
+    Returns
+    -------
+    Grid
+        The grid with an expanded dimension.
+
+    Raises
+    ------
+    ValueError
+        If the target dimension cannot be accommodated by the available
+        generating points.
+    """
+    # Expand the dimension of the multi-index set
+    mi_expanded = origin_grid.multi_index.expand_dim(target_dimension)
+
+    # Check if a generating function is available
+    if origin_grid.has_generating_function:
+        return origin_grid.__class__.from_function(
+            mi_expanded,
+            origin_grid.generating_function,
+        )
+
+    # Check if the available generating points can accommodate higher dimension
+    gen_points_dim = origin_grid.generating_points.shape[1]
+    if gen_points_dim >= target_dimension:
+        return origin_grid.__class__.from_points(
+            mi_expanded,
+            origin_grid.generating_points,
+        )
+
+    raise ValueError(
+        f"The available dimension of the generating points ({gen_points_dim} "
+        f"can't accommodate target dimension ({target_dimension})"
+    )
+
+
+def _expand_dim_to_target_grid(
+    origin_grid: "Grid",
+    target_grid: "Grid",
+) -> "Grid":
+    """Expand the dimension of a given Grid to the dimension of another.
+
+    Parameters
+    ----------
+    origin_grid : Grid
+        The grid whose dimension is to be expanded.
+    target_grid : Grid
+        The grid whose dimension is the base for expansion.
+
+    Returns
+    -------
+    Grid
+        The grid with an expanded dimension.
+
+    Raises
+    ------
+    ValueError
+        If the generating functions are not compatible (when available) or
+        if the generating points are not compatible.
+    """
+    # Create expanded multi-index set
+    target_dim = target_grid.spatial_dimension
+    mi_expanded = origin_grid.multi_index.expand_dim(target_dim)
+
+    return origin_grid.merge(target_grid, mi_expanded)
+
+
+def _have_gen_functions(*grids) -> bool:
+    """Check if a sequence of Grid instances all have generating function."""
+    return all(grd.has_generating_function for grd in grids)
+
+
+def _have_compatible_gen_functions(grid_1: "Grid", grid_2: "Grid") -> bool:
+    """Check if two grids have compatible generating functions.
+
+    Parameters
+    ----------
+    grid_1 : Grid
+        First instance of `Grid` to compare.
+    grid_2 : Grid
+        Second instance of `Grid` to compare.
+    """
+    # There is no way in Python to check for equality to what functions do
+    return (
+        grid_1.has_generating_function
+        and grid_2.has_generating_function
+        and grid_1.generating_function == grid_2.generating_function
+    )
+
+
+def _have_compatible_gen_points(grid_1: "Grid", grid_2: "Grid") -> bool:
+    """Check if two grids have compatible generating points.
+
+    Parameters
+    ----------
+    grid_1 : Grid
+        First `Grid` instance to compare.
+    grid_2 : Grid
+        Second `Grid` instance to compare.
+
+    Returns
+    -------
+    bool
+        ``True`` if all generating points in the common spatial dimension
+        of the two `Grid` instances are equal; ``False`` otherwise.
+    """
+    dim_1 = grid_1.spatial_dimension
+    dim_2 = grid_2.spatial_dimension
+    dim = np.min([dim_1, dim_2])
+
+    gen_points_1 = grid_1.generating_points[:, :dim]
+    gen_points_2 = grid_2.generating_points[:, :dim]
+
+    return np.array_equal(gen_points_1, gen_points_2)
+
+
+def _get_larger_gen_points(grid_1: "Grid", grid_2: "Grid") -> np.ndarray:
+    """Get the larger array of generating points from two Grid instances.
+
+    Parameters
+    ----------
+    grid_1 : Grid
+        First `Grid` instance to check.
+    grid_2 : Grid
+        Second `Grid` instance to check.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        The generating points with the larger number of columns.
+
+    Notes
+    -----
+    - It is assumed that the generating points are consistent (i.e.,
+      equal up to the common dimension/columns).
+    """
+    dim_1 = grid_1.generating_points.shape[1]
+    dim_2 = grid_2.generating_points.shape[1]
+    grids = [grid_1, grid_2]
+    idx = np.argmax([dim_1, dim_2])
+
+    return grids[idx].generating_points
