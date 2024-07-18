@@ -826,6 +826,7 @@ class TestMultiplication:
         assert len(grd_prod.unisolvent_nodes) == len(mi * mi)
 
     def test_with_gen_points(self):
+        """Test the multiplication of instances having only gen. points."""
         # Create a pair of distinct complete multi-index sets
         mi_1, mi_2 = create_mi_pair_distinct()  # the second has higher dim.
 
@@ -860,3 +861,58 @@ class TestMultiplication:
         # Assertion
         with pytest.raises(AttributeError):
             grd * invalid_value
+
+
+class TestUnion:
+    """All tests related to taking the union of `Grid` instances."""
+    def test_self(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test taking the union of an instance with the itself."""
+        # Create a complete multi_index set
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+
+        # Create an instance of Grid
+        grd = Grid(mi)
+
+        # Create a union Grid
+        grd_union = grd | grd
+
+        # Assertions
+        assert grd_union == grd
+        assert grd == grd_union
+
+    def test_with_gen_points(self):
+        """Test taking the union of instances having only generating points."""
+        # Create a pair of distinct complete multi-index sets
+        mi_1, mi_2 = create_mi_pair_distinct()  # the second has higher dim.
+
+        # Get the ingredients for a Grid
+        gen_fun = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        # The max of two maximum exponents
+        max_exponent = np.max([mi_1.max_exponent, mi_2.max_exponent])
+        gen_points_1 = gen_fun(max_exponent, mi_1.spatial_dimension)
+        gen_points_2 = gen_fun(max_exponent, mi_2.spatial_dimension)
+
+        # Create instances of Grid
+        grd_1 = Grid.from_points(mi_1, gen_points_1)
+        grd_2 = Grid.from_points(mi_2, gen_points_2)
+
+        # Multiply the Grid
+        grd_prod = grd_1 | grd_2
+
+        # Assertions
+        assert grd_prod.multi_index == mi_1 | mi_2
+        assert len(grd_prod.unisolvent_nodes) == len(mi_1 | mi_2)
+        assert np.all(grd_prod.generating_points == gen_points_2)
+
+    @pytest.mark.parametrize("invalid_value", [1.0, 2, "123", np.array([1])])
+    def test_invalid(self, multi_index_mnp, invalid_value):
+        """Test the multiplication with an invalid value"""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create a Grid instance
+        grd = Grid(mi)
+
+        # Assertion
+        with pytest.raises(AttributeError):
+            grd | invalid_value
