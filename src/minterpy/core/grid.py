@@ -450,6 +450,18 @@ class Grid:
         """
         return self.multi_index.is_complete
 
+    @property
+    def is_downward_closed(self) -> bool:
+        """Return ``True`` if the instance has a downward-closed multi-indices.
+
+        Returns
+        -------
+        bool
+            ``True`` if the underlying multi-index set of the instance
+            is a downward-closed set and ``False`` otherwise.
+        """
+        return self.multi_index.is_downward_closed
+
     # --- Instance methods
     def make_complete(self) -> "Grid":
         """Complete the underlying multi-index set of the `Grid` instance.
@@ -475,6 +487,29 @@ class Grid:
         mi_complete = self.multi_index.make_complete()
 
         return self._new_instance(mi_complete)
+
+    def make_downward_closed(self) -> "Grid":
+        """Make the underlying multi-index set downward-closed.
+
+        Returns
+        -------
+        Grid
+            A new instance of `Grid` whose underlying multi-index set is
+            a downward-closed set.
+        Notes
+        -----
+        - Calling the function always returns a new instance. If the index-set
+          is already downward-closed, a deep copy of the current instance
+          is returned.
+        """
+        if self.is_downward_closed:
+            # This is a deep copy
+            return deepcopy(self)
+
+        # Make the index set downward-closed -> New instance
+        mi_downward_closed = self.multi_index.make_downward_closed()
+
+        return self._new_instance(mi_downward_closed)
 
     def add_points(self, exponents: ARRAY) -> "Grid":
         """Extend ``grid`` and ``multi_index``
