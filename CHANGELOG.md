@@ -60,11 +60,16 @@
 - An instance of `Grid` is now a callable; when it is called with a callable
   or a function, the function will be evaluated on the unisolvent nodes of the
   grid and the corresponding function values are returned.
-- Instances of `Grid` may now be multiplied with each other; this operation
-  returns a new instance of `Grid` whose multi-index set is the product of
-  the multi-index sets of the operands. Procedures are implemented such that
-  only instances that are compatible (w.r.t generating function or points)
-  with each other can be multiplied.
+- Instances of `Grid` may now be multiplied with each other via the `*`
+  operator; this operation returns a new instance of `Grid` whose multi-index
+  set is the product of the multi-index sets of the operands. Procedures are
+  implemented such that only instances that are compatible (w.r.t generating
+  function or points) with each other can be multiplied.
+- Instances of `Grid` may now be unionized with each other via the `|`
+  operator; this operation returns a new instance of `Grid` whose multi-index
+  set is the union of the multi-index sets of the operands. Procedures are
+  implemented such that only instances that are compatible (w.r.t generating
+  function or points) with each other can be unionized.
 
 ### Fixed
 

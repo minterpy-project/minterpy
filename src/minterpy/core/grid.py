@@ -686,7 +686,7 @@ class Grid:
 
     # --- Dunder methods: Arithmetics
     def __mul__(self, other: "Grid") -> "Grid":
-        """Multiply two instances of Grid.
+        """Multiply two instances of `Grid` via the ``*`` operator.
 
         Parameters
         ----------
@@ -703,6 +703,25 @@ class Grid:
         mi_product = self.multi_index * other.multi_index
 
         return self.merge(other, mi_product)
+
+    def __or__(self, other: "Grid") -> "Grid":
+        """Combine two instances of `Grid` via the ``|`` operator.
+
+        Parameters
+        ----------
+        other : `Grid`
+            The second operand of the grid union.
+
+        Returns
+        -------
+        `Grid`
+            The union of two grids; the underlying multi-index set is
+            the union of the multi-index sets of the operands.
+        """
+        # Add (union) the underlying multi-index sets
+        mi_union = self.multi_index | other.multi_index
+
+        return self.merge(other, mi_union)
 
     # --- Private internal methods: not to be called directly from outside
     def _create_generating_points(self) -> np.ndarray:
