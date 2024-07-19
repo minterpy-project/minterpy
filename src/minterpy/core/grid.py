@@ -438,38 +438,43 @@ class Grid:
         """
         return self.generating_function is not None
 
-    # --- Instance methods
-    def _new_instance_if_necessary(self, multi_indices_new: MultiIndexSet) -> "Grid":
-        """Constructs new grid instance only if the multi indices have changed
+    @property
+    def is_complete(self) -> bool:
+        """Return ``True`` if the instance has a complete multi-index set.
 
-        :param new_indices: :class:`MultiIndexSet` instance for the ``grid``, needs to be a subset of the current ``multi_index``.
-        :type new_indices: MultiIndexSet
-
-        :return: Same :class:`Grid` instance if ``multi_index`` stays the same, otherwise new polynomial instance with the new ``multi_index``.
-        :rtype: Grid
+        Returns
+        -------
+        bool
+            ``True`` if the underlying multi-index set of the instance
+            is a complete index set and ``False`` otherwise.
         """
-        multi_indices_old = self.multi_index
-        # TODO: Following MR !69, the MultiIndexSet will always be a new
-        # instance, revise this for consistency.
-        if multi_indices_new is multi_indices_old:
-            return self
-        # construct new:
-        return self.__class__(multi_indices_new, self.generating_points)
+        return self.multi_index.is_complete
 
+    # --- Instance methods
     def make_complete(self) -> "Grid":
-        """completes the multi index within this :class:`Grid` instance.
+        """Complete the underlying multi-index set of the `Grid` instance.
 
-        :return: completed :class:`Grid` instance
-        :rtype: Grid
+        Returns
+        -------
+        Grid
+            A new instance of `Grid` whose underlying multi-index set is
+            a complete set with respect to the spatial dimension, polynomial
+            degree, and :math:`l_p`-degree.
 
         Notes
         -----
-        - This is required e.g. for building a multi index tree (DDS scheme)!
-
-
+        - Calling the function always returns a new instance. If the index-set
+          is already complete, a deep copy of the current instance
+          is returned.
         """
-        multi_indices_new = self.multi_index.make_complete(inplace=False)
-        return self._new_instance_if_necessary(multi_indices_new)
+        if self.is_complete:
+            # This is a deep copy
+            return deepcopy(self)
+
+        # Complete the index set -> New instance
+        mi_complete = self.multi_index.make_complete()
+
+        return self._new_instance(mi_complete)
 
     def add_points(self, exponents: ARRAY) -> "Grid":
         """Extend ``grid`` and ``multi_index``
@@ -494,7 +499,7 @@ class Grid:
             )
 
         multi_indices_new = self.multi_index.add_exponents(exponents)
-        return self._new_instance_if_necessary(multi_indices_new)
+        return self._new_instance(multi_indices_new)
 
     def expand_dim(self, target_dimension: Union[int, "Grid"]) -> "Grid":
         """Expand the dimension of the Grid.
@@ -597,24 +602,27 @@ class Grid:
         )
 
     def __deepcopy__(self, mem):
-        """Creates of a deepcopy.
+        """Create of a deepcopy.
 
-        This function is called, if one uses the top-level function ``deepcopy()`` on an instance of this class.
+        This function is called, if one uses the top-level function
+        ``deepcopy()`` on an instance of this class.
 
-        :return: The deepcopy of the current instance.
-        :rtype: Grid
+        Returns
+        -------
+        Grid
+            A deepcopy of the current instance where the underlying
+            multi-index set and the generating points are deepcopied.
 
         See Also
         --------
         copy.deepcopy
-            copy operator form the python standard library.
-
+            copy function from the Python standard library.
         """
-        return self.__class__(
-            deepcopy(self._multi_index),
-            generating_function=deepcopy(self._generating_function),
-            generating_points=deepcopy(self._generating_points),
-        )
+        # Create a new instance with deep-copied multi-index set
+        multi_index = deepcopy(self._multi_index)
+        new_self = self._new_instance(multi_index)
+
+        return new_self
 
     # --- Dunder method: Callable instance
     def __call__(self, fun: Callable, *args, **kwargs) -> np.ndarray:
@@ -829,6 +837,38 @@ class Grid:
                 "cannot consist of multi-indices with a maximum exponent "
                 f"of {max_exponent_multi_index}"
             )
+
+    def _new_instance(self, multi_index: MultiIndexSet) -> "Grid":
+        """Construct new grid instance with a new multi-index set.
+
+        Parameters
+        ----------
+        multi_index : MultiIndexSet
+            The multi-index set of the new instance.
+
+        Returns
+        -------
+        Grid
+            The new instance of `Grid` with the given multi-index set.
+
+        Notes
+        -----
+        - The new instance will have the same underlying generating function
+          and generating points.
+        - If the new multi-index set cannot be accommodated either by
+          the generating function or the generating points, an exception
+          will be raised.
+        """
+        if self.has_generating_function:
+            return self.__class__.from_function(
+                multi_index,
+                self.generating_function,
+            )
+
+        return self.__class__.from_points(
+            multi_index,
+            self.generating_points,
+        )
 
 
 # --- Internal helper functions

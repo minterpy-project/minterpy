@@ -573,3 +573,21 @@ def create_non_downward_closed_multi_index(
     mi = MultiIndexSet(exponents, lp_degree)
 
     return mi
+
+
+@pytest.fixture
+def multi_index_incomplete(SpatialDimension, PolyDegree, LpDegree):
+    """Create an incomplete multi-index set."""
+    if PolyDegree == 0:
+        # NOTE: Skip the test as degree 0 contains only one element
+        pytest.skip("Poly. degree 0 cannot be made incomplete")
+
+    exponents = get_exponent_matrix(SpatialDimension, PolyDegree, LpDegree)
+    if PolyDegree > 0:
+        # Taking the first element make it not downward-closed
+        exponents = np.delete(exponents, 0, axis=0)
+    if PolyDegree > 1:
+        # Taking out the largest element make the set incomplete
+        exponents = np.delete(exponents, -1, axis=0)
+
+    return MultiIndexSet(exponents, LpDegree)

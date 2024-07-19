@@ -916,3 +916,38 @@ class TestUnion:
         # Assertion
         with pytest.raises(AttributeError):
             grd | invalid_value
+
+
+class TestMakeComplete:
+    """All tests related to make the Grid complete."""
+    def test_already_complete(self, multi_index_mnp):
+        """Test making an already complete grid complete."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an instance of Grid
+        grd = Grid(mi)
+
+        # Make the Grid complete
+        grd_complete = grd.make_complete()
+
+        # Assertions
+        assert grd.is_complete  # Already complete
+        assert grd_complete == grd
+        assert grd == grd_complete
+        assert grd is not grd_complete
+
+    def test_incomplete(self, multi_index_incomplete):
+        """Test making an incomplete set complete."""
+        # Get the incomplete multi-index set
+        mi = multi_index_incomplete
+
+        # Create an instance of Grid
+        grd = Grid(mi)
+
+        # Make the Grid complete
+        grd_complete = grd.make_complete()
+
+        # Assertions
+        assert not grd.is_complete
+        assert grd_complete.is_complete
