@@ -551,26 +551,23 @@ def build_random_multi_index():
     return mi
 
 
-def create_non_downward_closed_multi_index(
-    spatial_dimension: int,
-    poly_degree: int,
-    lp_degree: float,
-) -> MultiIndexSet:
+@pytest.fixture
+def multi_index_non_downward_closed(SpatialDimension, PolyDegree, LpDegree):
     """Create a non-downward-closed multi-index set."""
-    if poly_degree == 0:
+    if PolyDegree == 0:
         # NOTE: Skip the test as degree 0 contains only one element
         pytest.skip("Poly. degree 0 cannot be made non-downward closed")
-    exponents = get_exponent_matrix(spatial_dimension, poly_degree, lp_degree)
-    if poly_degree > 0:
+    exponents = get_exponent_matrix(SpatialDimension, PolyDegree, LpDegree)
+    if PolyDegree > 0:
         # NOTE: Only applies for poly_degree > 0 (== 0 has only 1 element)
         # Without the lexicographically smallest element
         exponents = np.delete(exponents, 0, axis=0)
-    if poly_degree > 1:
+    if PolyDegree > 1:
         # NOTE: Only applies for poly_degree > 1 (== 1 has at least 2 elements)
         # Without the 2nd lexicographically smallest element
         exponents = np.delete(exponents, 1, axis=0)
 
-    mi = MultiIndexSet(exponents, lp_degree)
+    mi = MultiIndexSet(exponents, LpDegree)
 
     return mi
 

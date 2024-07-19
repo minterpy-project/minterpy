@@ -17,3 +17,4 @@ the :py:class:`.Grid` class (i.e., the interpolation grid).
    Multiply Grids <grid-multiply>
    Create the Union of Grids <grid-union>
    Make a Grid complete <grid-complete>
+   Make a Grid downward-closed <grid-downward-closed>

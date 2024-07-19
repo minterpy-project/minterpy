@@ -938,7 +938,7 @@ class TestMakeComplete:
         assert grd is not grd_complete
 
     def test_incomplete(self, multi_index_incomplete):
-        """Test making an incomplete set complete."""
+        """Test making an incomplete grid complete."""
         # Get the incomplete multi-index set
         mi = multi_index_incomplete
 
@@ -951,3 +951,38 @@ class TestMakeComplete:
         # Assertions
         assert not grd.is_complete
         assert grd_complete.is_complete
+
+
+class TestMakeDownwardClosed:
+    """All tests related to make the Grid downward-closed."""
+    def test_already_downward_closed(self, multi_index_mnp):
+        """Test making an already downward-closed grid downward-closed."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an instance of Grid
+        grd = Grid(mi)
+
+        # Make the Grid downward_closed
+        grd_downward_closed = grd.make_downward_closed()
+
+        # Assertions
+        assert grd.is_downward_closed  # Already downward_closed
+        assert grd_downward_closed == grd
+        assert grd == grd_downward_closed
+        assert grd is not grd_downward_closed
+
+    def test_non_downward_closed(self, multi_index_non_downward_closed):
+        """Test making a non-downward-closed grid downward-closed."""
+        # Get the non-downward multi-index set
+        mi = multi_index_non_downward_closed
+
+        # Create an instance of Grid
+        grd = Grid(mi)
+
+        # Make the Grid downward-closed
+        grd_downward_closed = grd.make_downward_closed()
+
+        # Assertions
+        assert not grd.is_downward_closed
+        assert grd_downward_closed.is_downward_closed

@@ -8,7 +8,7 @@ and the corresponding operators are tested in a separate module.
 import numpy as np
 import pytest
 
-from conftest import build_rnd_coeffs, create_non_downward_closed_multi_index
+from conftest import build_rnd_coeffs
 
 from minterpy import (
     MultiIndexSet,
@@ -79,14 +79,10 @@ class TestDownwardClosed:
 class TestNonDownwardClosed:
     """All transformation tests involving polys. with non-downward-closed sets.
     """
-    def test_to_lagrange(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_to_lagrange(self, multi_index_non_downward_closed):
         """Test the transformation to the Lagrange basis."""
-        # Create a non-downward-closed multi-index set
-        mi = create_non_downward_closed_multi_index(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree
-        )
+        # Get the non-downward-closed multi-index set
+        mi = multi_index_non_downward_closed
         assert not mi.is_downward_closed
 
         # Create a Chebyshev polynomial
@@ -104,14 +100,10 @@ class TestNonDownwardClosed:
         # Assertion
         assert np.allclose(lag_coeffs_ref, lag_coeffs)
 
-    def test_to_newton(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_to_newton(self, multi_index_non_downward_closed):
         """Test the transformation to the Newton basis."""
-        # Create a non-downward-closed multi-index set
-        mi = create_non_downward_closed_multi_index(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree
-        )
+        # Get the non-downward-closed multi-index set
+        mi = multi_index_non_downward_closed
         assert not mi.is_downward_closed
 
         # Create a Chebyshev polynomial
@@ -129,7 +121,7 @@ class TestNonDownwardClosed:
         # Assertion
         assert np.allclose(lag_coeffs_ref, lag_coeffs)
 
-    def test_to_canonical(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_to_canonical(self, multi_index_non_downward_closed):
         """Test the transformation to the canonical basis.
 
         Notes
@@ -137,12 +129,8 @@ class TestNonDownwardClosed:
         - Transformation to the canonical basis strictly requires
           a downward-closed multi-index set.
         """
-        # Create a non-downward-closed multi-index set
-        mi = create_non_downward_closed_multi_index(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree
-        )
+        # Get the non-downward-closed multi-index set
+        mi = multi_index_non_downward_closed
         assert not mi.is_downward_closed
 
         # Create a Chebyshev polynomial

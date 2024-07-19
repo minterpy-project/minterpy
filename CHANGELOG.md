@@ -70,6 +70,9 @@
   set is the union of the multi-index sets of the operands. Procedures are
   implemented such that only instances that are compatible (w.r.t generating
   function or points) with each other can be unionized.
+- The method `make_downward_closed()` is now available for instances of
+  the `Grid` class. Calling the method results in a new instance of `Grid`
+  whose underlying multi-index set is downward-closed.
 
 ### Fixed
 

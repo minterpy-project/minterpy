@@ -14,7 +14,7 @@ Notes
 import numpy as np
 import pytest
 
-from conftest import build_rnd_coeffs, create_non_downward_closed_multi_index
+from conftest import build_rnd_coeffs
 
 from minterpy import (
     MultiIndexSet,
@@ -90,14 +90,10 @@ class TestNonDownwardClosed:
     - Any transformation from canonical polynomial strictly requires
       a downward-closed multi-index set.
     """
-    def test_to_lagrange(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_to_lagrange(self, multi_index_non_downward_closed):
         """Test the transformation to the Lagrange basis."""
-        # Create a non-downward-closed multi-index set
-        mi = create_non_downward_closed_multi_index(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree
-        )
+        # Get the non-downward-closed multi-index set
+        mi = multi_index_non_downward_closed
         assert not mi.is_downward_closed
 
         # Create a canonical polynomial
@@ -108,14 +104,10 @@ class TestNonDownwardClosed:
         with pytest.raises(ValueError):
             CanonicalToLagrange(can_poly)()
 
-    def test_to_newton(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_to_newton(self, multi_index_non_downward_closed):
         """Test the transformation to the Newton basis."""
-        # Create a non-downward-closed multi-index set
-        mi = create_non_downward_closed_multi_index(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree
-        )
+        # Get the non-downward-closed multi-index set
+        mi = multi_index_non_downward_closed
         assert not mi.is_downward_closed
 
         # Create a canonical polynomial
@@ -126,14 +118,10 @@ class TestNonDownwardClosed:
         with pytest.raises(ValueError):
             CanonicalToNewton(can_poly)()
 
-    def test_to_chebyshev(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_to_chebyshev(self, multi_index_non_downward_closed):
         """Test the transformation to the Chebyshev basis."""
-        # Create a non-downward-closed multi-index set
-        mi = create_non_downward_closed_multi_index(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree
-        )
+        # Get the non-downward-closed multi-index set
+        mi = multi_index_non_downward_closed
         assert not mi.is_downward_closed
 
         # Create a canonical polynomial

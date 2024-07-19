@@ -14,7 +14,7 @@ import pytest
 
 from numpy.linalg import LinAlgError
 
-from conftest import build_rnd_coeffs, create_non_downward_closed_multi_index
+from conftest import build_rnd_coeffs
 
 from minterpy import (
     MultiIndexSet,
@@ -101,7 +101,7 @@ class TestNonDownwardClosed:
       for the transformation. Furthermore, certain transformations strictly
       require that the polynomials having a downward-close multi-index set.
     """
-    def test_to_lagrange(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_to_lagrange(self, multi_index_non_downward_closed):
         """Test the transformation to the Lagrange basis.
 
         Notes
@@ -109,11 +109,8 @@ class TestNonDownwardClosed:
         - If the multi-index set is not downward-closed,
           the naive transformation operator is automatically selected.
         """
-        mi = create_non_downward_closed_multi_index(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree
-        )
+        # Get the non-downward-closed multi-index set
+        mi = multi_index_non_downward_closed
         assert not mi.is_downward_closed
 
         # Create a Newton polynomial
@@ -130,7 +127,7 @@ class TestNonDownwardClosed:
         # Assertion
         assert np.allclose(lag_coeffs_ref, lag_coeffs)
 
-    def test_to_canonical(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_to_canonical(self, multi_index_non_downward_closed):
         """Test the transformation to the canonical basis.
 
         Notes
@@ -138,11 +135,8 @@ class TestNonDownwardClosed:
         - Newton to Canonical transformation strictly requires the multi-index
           set to be downward-closed.
         """
-        mi = create_non_downward_closed_multi_index(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree
-        )
+        # Get the non-downward-closed multi-index set
+        mi = multi_index_non_downward_closed
         assert not mi.is_downward_closed
 
         # Create a Newton polynomial
@@ -153,7 +147,7 @@ class TestNonDownwardClosed:
         with pytest.raises(ValueError):
             NewtonToCanonical(nwt_poly)()
 
-    def test_to_chebyshev(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_to_chebyshev(self, multi_index_non_downward_closed):
         """Test the transformation to the Chebyshev basis.
 
         Notes
@@ -164,11 +158,8 @@ class TestNonDownwardClosed:
           the transformation is not guaranteed and the proper exception is
           caught below.
         """
-        mi = create_non_downward_closed_multi_index(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree
-        )
+        # Get the non-downward-closed multi-index set
+        mi = multi_index_non_downward_closed
         assert not mi.is_downward_closed
 
         # Create a Newton polynomial
