@@ -1373,7 +1373,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # ATTENTION: the grid might be defined on other indices than multi_index!
         #   but all indices from multi_index must be contained in the grid!
         # -> make sure to add all new additional indices also to the grid!
-        grid_new = self.grid.add_points(exponents)
+        grid_new = self.grid.add_exponents(exponents)
         multi_indices_new = None
         if self.indices_are_separate:
             multi_indices_new = self.multi_index.add_exponents(exponents)

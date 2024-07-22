@@ -16,5 +16,6 @@ the :py:class:`.Grid` class (i.e., the interpolation grid).
    Evaluate a Function on a Grid <grid-call>
    Multiply Grids <grid-multiply>
    Create the Union of Grids <grid-union>
+   Add Elements of a Multi-Index Set to a Grid <grid-add>
    Make a Grid complete <grid-complete>
    Make a Grid downward-closed <grid-downward-closed>

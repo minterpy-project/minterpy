@@ -8,6 +8,7 @@ from minterpy.gen_points import (
     gen_points_from_values,
 )
 from minterpy.core.grid import DEFAULT_FUN
+from minterpy.utils.multi_index import get_exponent_matrix
 
 from conftest import create_mi_pair_distinct
 
@@ -916,6 +917,73 @@ class TestUnion:
         # Assertion
         with pytest.raises(AttributeError):
             grd | invalid_value
+
+
+class TestAddExponents:
+    """All tests related to the method to add a set of exponents."""
+    def test_identical(self, multi_index_mnp):
+        """Test adding identical set of exponents to a Grid."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an instance of Grid
+        grd = Grid(mi)
+
+        # Add the same exponents
+        grd_added = grd.add_exponents(mi.exponents)
+
+        # Assertion
+        assert grd == grd_added
+        assert grd_added == grd
+
+    def test_too_large_exponent(self, multi_index_mnp):
+        """Test adding an exponent that cannot be supported by the grid."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an array of generating points
+        gen_fun = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_fun(mi.max_exponent, mi.spatial_dimension)
+
+        # Create an instance of Grid
+        grd = Grid.from_points(mi, gen_points)
+
+        # Add a new exponent
+        exponent = np.zeros(mi.spatial_dimension)
+        exponent[0] = mi.max_exponent + 1
+
+        with pytest.raises(ValueError):
+            grd.add_exponents(exponent)
+
+    def test_set_diff(self, multi_index_mnp):
+        """Test adding the set difference to a Grid."""
+        # Get the complete multi-index set
+        mi_1 = multi_index_mnp
+        exponents_1 = mi_1.exponents
+
+        # Create a larger set of exponents
+        exponents_2 = get_exponent_matrix(
+            mi_1.spatial_dimension,
+            mi_1.poly_degree * 2,
+            mi_1.lp_degree
+        )
+        mi_2 = MultiIndexSet(exponents_2, mi_1.lp_degree)
+
+        # Compute the set difference between the larger set and the smaller set
+        exponents_diff = np.array(
+            list(set(map(tuple, exponents_2)) - set(map(tuple, exponents_1)))
+        )
+
+        # Create Grid instances
+        grd_1 = Grid(mi_1)
+        grd_2 = Grid(mi_2)
+
+        # Add the set difference
+        grd_1_added = grd_1.add_exponents(exponents_diff)
+
+        # Assertion
+        assert grd_1_added == grd_2
+        assert grd_2 == grd_1_added
 
 
 class TestMakeComplete:
