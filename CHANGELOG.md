@@ -109,6 +109,10 @@
 - The generating points provided or created by a generating function for
   an instance of the `Grid` class must now have unique values per column,
   otherwise an exception is raised.
+- The method `add_points()` of the `Grid` class has been renamed to
+  `add_exponents()` to conform with a method of the same name of the
+  `MultiIndexSet` class that handle the process of adding exponents
+  to the underlying multi-index set of a `Grid` instance.
 
 ### Removed
 

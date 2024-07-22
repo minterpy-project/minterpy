@@ -463,6 +463,64 @@ class Grid:
         return self.multi_index.is_downward_closed
 
     # --- Instance methods
+    def add_exponents(self, exponents: np.ndarray) -> "Grid":
+        """Add a set of exponents to the underlying multi-index set.
+
+        Parameters
+        ----------
+        exponents : `numpy:numpy.ndarray`
+            Array of integers to be added. A single element of multi-index set
+            may be specified as a one-dimensional array with the length
+            of the spatial dimension. Multiple elements must be specified
+            as a two-dimensional array with the spatial dimension as
+            the number of columns
+
+        Returns
+        -------
+        Grid
+            A new instance of `Grid` with the updated multi-index set.
+
+        Notes
+        -----
+        - The set of exponents are added lexicographically.
+        """
+        # Add the set of exponents
+        mi_added = self.multi_index.add_exponents(exponents)
+
+        return self._new_instance(mi_added)
+
+    def expand_dim(self, target_dimension: Union[int, "Grid"]) -> "Grid":
+        """Expand the dimension of the Grid.
+
+        Parameters
+        ----------
+        target_dimension : Union[Grid, int]
+            The new spatial dimension. It must be larger than or equal
+            to the current dimension of the Grid. Alternatively,
+            another instance of Grid whose dimension is higher can also
+            be specified as a target dimension.
+
+        Returns
+        -------
+        Grid
+            The Grid with expanded dimension.
+
+        Raises
+        ------
+        ValueError
+            If an instance is expanded to a dimension that cannot be supported
+            either by the available generating function or generating points.
+            If the target dimension is a `Grid`, the exception is raised
+            when there are inconsistencies in either generating function
+            or points.
+        """
+        # Expand the dimension to the target Grid instance
+        if isinstance(target_dimension, Grid):
+            return _expand_dim_to_target_grid(self, target_dimension)
+
+        # Expand to the target dimension
+        return _expand_dim_to_target_dim(self, target_dimension)
+
     def make_complete(self) -> "Grid":
         """Complete the underlying multi-index set of the `Grid` instance.
 
@@ -510,63 +568,6 @@ class Grid:
         mi_downward_closed = self.multi_index.make_downward_closed()
 
         return self._new_instance(mi_downward_closed)
-
-    def add_points(self, exponents: ARRAY) -> "Grid":
-        """Extend ``grid`` and ``multi_index``
-
-        Adds points ``grid`` and exponents to ``multi_index`` related to a given set of additional exponents.
-
-        :param exponents: Array of exponents added.
-        :type exponents: np.ndarray
-
-        :return: New ``grid`` with the added exponents.
-        :rtype: Grid
-
-        .. todo::
-            - this is boilerplate, since similar code appears in :class:`MultivariatePolynomialSingleABC`.
-        """
-        exponents = np.require(exponents, dtype=INT_DTYPE)
-        if np.max(exponents) > self.max_exponent:
-            # TODO 'enlarge' the grid, increase the degree, ATTENTION:
-            raise ValueError(
-                f"trying to add point with exponent {np.max(exponents)} "
-                f"but the grid is only of degree {self.max_exponent}"
-            )
-
-        multi_indices_new = self.multi_index.add_exponents(exponents)
-        return self._new_instance(multi_indices_new)
-
-    def expand_dim(self, target_dimension: Union[int, "Grid"]) -> "Grid":
-        """Expand the dimension of the Grid.
-
-        Parameters
-        ----------
-        target_dimension : Union[Grid, int]
-            The new spatial dimension. It must be larger than or equal
-            to the current dimension of the Grid. Alternatively,
-            another instance of Grid whose dimension is higher can also
-            be specified as a target dimension.
-
-        Returns
-        -------
-        Grid
-            The Grid with expanded dimension.
-
-        Raises
-        ------
-        ValueError
-            If an instance is expanded to a dimension that cannot be supported
-            either by the available generating function or generating points.
-            If the target dimension is a `Grid`, the exception is raised
-            when there are inconsistencies in either generating function
-            or points.
-        """
-        # Expand the dimension to the target Grid instance
-        if isinstance(target_dimension, Grid):
-            return _expand_dim_to_target_grid(self, target_dimension)
-
-        # Expand to the target dimension
-        return _expand_dim_to_target_dim(self, target_dimension)
 
     def merge(self, other: "Grid", multi_index: MultiIndexSet) -> "Grid":
         """Merge two instances of Grid with a new multi-index set.
