@@ -106,6 +106,34 @@ class TestInitialization:
             polynomial_class(mi)
 
 
+class TestFrom:
+    """All tests related to the different factory methods."""
+    def test_from_grid_uninit(self, polynomial_class, grid_mnp):
+        """Test creating an uninitialized polynomial from a Grid instance."""
+        # Create a polynomial instance
+        poly = polynomial_class.from_grid(grid_mnp)
+
+        # Assertions
+        assert poly.grid == grid_mnp
+        assert poly.multi_index == grid_mnp.multi_index
+
+    def test_from_grid_init(self, polynomial_class, grid_mnp):
+        """Test creating an initialized polynomial from a Grid instance."""
+        # Generate random coefficients to initialize the polynomial
+        coeffs = np.random.rand(len(grid_mnp.multi_index))
+        # Create a polynomial instance
+        # From grid - grid the same as default
+        poly_1 = polynomial_class.from_grid(grid_mnp, coeffs)
+        # Default constructor - default grid
+        poly_2 = polynomial_class(grid_mnp.multi_index, coeffs)
+        # Default constructor - grid the same as default
+        poly_3 = polynomial_class(grid_mnp.multi_index, coeffs, grid=grid_mnp)
+
+        # Assertions
+        assert poly_1 == poly_2
+        assert poly_1 == poly_3
+
+
 class TestEquality:
     """All tests related to the equality check between polynomial instances."""
 

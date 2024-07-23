@@ -11,6 +11,7 @@ from numpy.testing import assert_, assert_almost_equal, assert_equal
 
 from minterpy import (
     MultiIndexSet,
+    Grid,
     LagrangePolynomial,
     NewtonPolynomial,
     CanonicalPolynomial,
@@ -588,3 +589,9 @@ def multi_index_incomplete(SpatialDimension, PolyDegree, LpDegree):
         exponents = np.delete(exponents, -1, axis=0)
 
     return MultiIndexSet(exponents, LpDegree)
+
+
+@pytest.fixture
+def grid_mnp(SpatialDimension, PolyDegree, LpDegree):
+    """Create a Grid with a complete multi-index set."""
+    return Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
