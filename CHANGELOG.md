@@ -73,6 +73,9 @@
 - The method `make_downward_closed()` is now available for instances of
   the `Grid` class. Calling the method results in a new instance of `Grid`
   whose underlying multi-index set is downward-closed.
+- A new factory method `from_grid()` is available for all concrete polynomial
+  classes. Calling the method with an instance of `Grid` creates a polynomial
+  with the given grid and with the multi-index of the given grid.
 
 ### Fixed
 

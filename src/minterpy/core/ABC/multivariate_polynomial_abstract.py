@@ -563,6 +563,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
                 self.multi_index.exponents, self.grid.multi_index.exponents
             )
 
+    # --- Factory methods
     @classmethod
     def from_degree(
         cls,
@@ -625,8 +626,46 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         return cls(p.multi_index, new_coeffs, p.internal_domain, p.user_domain, p.grid)
 
-    # --- Special methods: Rich comparison
+    @classmethod
+    def from_grid(
+        cls,
+        grid: Grid,
+        coeffs: Optional[np.ndarray] = None,
+        internal_domain: Optional[np.ndarray] = None,
+        user_domain: Optional[np.ndarray] = None,
+    ):
+        """Create an instance of polynomial with a `Grid` instance.
 
+        Parameters
+        ----------
+        grid : Grid
+            The grid on which the polynomial is defined.
+        coeffs : :class:`numpy:numpy.ndarray`, optional
+            The coefficients of the polynomial(s); a one-dimensional array
+            with the same length as the length of the multi-index set or
+            a two-dimensional array with each column corresponds to the
+            coefficients of a single polynomial on the same grid.
+            This parameter is optional, if not specified the polynomial
+            is considered "uninitialized".
+        internal_domain  : :class:`numpy:numpy.ndarray`, optional
+            The internal domain of the polynomial(s).
+        user_domain : :class:`numpy:numpy.ndarray`, optional
+            The user domain of the polynomial(s).
+
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            An instance of polynomial defined on the given grid.
+        """
+        return cls(
+            multi_index=grid.multi_index,
+            coeffs=coeffs,
+            internal_domain=internal_domain,
+            user_domain=user_domain,
+            grid=grid,
+        )
+
+    # --- Special methods: Rich comparison
     def __eq__(self, other: "MultivariatePolynomialSingleABC") -> bool:
         """Compare two concrete polynomial instances for exact equality.
 
