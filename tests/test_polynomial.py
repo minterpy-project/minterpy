@@ -134,6 +134,63 @@ class TestFrom:
         assert poly_1 == poly_3
 
 
+class TestGetSetCoeffs:
+    """All tests related to setting the polynomial coefficients."""
+    def test_uninit(self, poly_mnp_uninit):
+        """Test accessing the coefficients of an uninitialized polynomial."""
+        # Get the uninitialized polynomial
+        poly = poly_mnp_uninit
+
+        with pytest.raises(ValueError):
+            print(poly.coeffs)
+
+    def test_valid(self, poly_mnp_uninit):
+        """Test setting with valid coefficients."""
+        # Get the uninitialized polynomial
+        poly = poly_mnp_uninit
+
+        # Create valid coefficients
+        coeffs = np.random.rand(len(poly.multi_index))
+
+        # Set the coefficients
+        poly.coeffs = coeffs
+
+        # Assertion
+        assert np.array_equal(poly.coeffs, coeffs)
+
+    def test_invalid_type(self, poly_mnp_uninit):
+        """Test setting an invalid type/value as the polynomial coefficients.
+        """
+        # Get the uninitialized polynomial
+        poly = poly_mnp_uninit
+
+        with pytest.raises(TypeError):
+            poly.coeffs = {"a": 1}  # Dictionary can't be converted
+
+    def test_invalid_value(self, poly_mnp_uninit):
+        """Test setting an invalid value as the polynomial coefficients."""
+        # Get the uninitialized polynomial
+        poly = poly_mnp_uninit
+
+        # Create the coefficients with invalid value
+        coeffs = np.random.rand(len(poly.multi_index))
+        coeffs[0] = np.nan
+
+        with pytest.raises(ValueError):
+            poly.coeffs = coeffs
+
+    def test_invalid_length(self, poly_mnp_uninit):
+        """Test setting polynomial coefficients with an invalid length."""
+        # Get the uninitialized polynomial
+        poly = poly_mnp_uninit
+
+        # Create the coefficients with invalid length
+        coeffs = np.random.rand(len(poly.multi_index) + 1)
+
+        with pytest.raises(ValueError):
+            poly.coeffs = coeffs
+
+
 class TestEquality:
     """All tests related to the equality check between polynomial instances."""
 
@@ -170,7 +227,7 @@ class TestEquality:
     ):
         """Test equality between two instances with multiple sets of coeffs."""
         # Create a common multi-index set
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)\
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
 
         # Generate random coefficient values
         coeffs = np.random.rand(len(mi), num_polynomials)

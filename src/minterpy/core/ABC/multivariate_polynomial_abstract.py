@@ -19,6 +19,7 @@ from minterpy.utils.verification import (
     is_scalar,
     check_shape,
     verify_domain,
+    verify_poly_coeffs,
 )
 from minterpy.utils.arrays import expand_dim
 from minterpy.utils.multi_index import find_match_between
@@ -47,12 +48,13 @@ class MultivariatePolynomialABC(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def nr_active_monomials(self):  # pragma: no cover
+    def num_active_monomials(self):  # pragma: no cover
         """Abstract container for the number of monomials of the polynomial(s).
 
         Notes
         -----
-        This is a placeholder of the ABC, which is overwritten by the concrete implementation.
+        This is a placeholder of the ABC, which is overwritten
+        by the concrete implementation.
         """
         pass
 
@@ -665,6 +667,69 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             grid=grid,
         )
 
+    # --- Properties
+    @property
+    def coeffs(self) -> np.ndarray:
+        """The coefficients of the polynomial(s).
+
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            One- or two-dimensional array that contains the polynomial
+            coefficients. Coefficients of multiple polynomials having common
+            structure are stored in a two-dimensional array of shape ``(N, P)``
+            where ``N`` is the number of monomials and ``P`` is the number
+            of polynomials.
+
+        Raises
+        ------
+        ValueError
+            If the coefficients of an uninitialized polynomial are accessed.
+
+        Notes
+        -----
+        - ``coeffs`` may be assigned with `None` to indicate an uninitialized
+           polynomial. Accessing such coefficients, however,
+           raises an exception. Many operations involving polynomial instances,
+           require the instance to be initialized and raising the exception
+           here provides a common single point of failure.
+        """
+        if self._coeffs is None:
+            raise ValueError(
+                "Coefficients of an uninitialized polynomial "
+                "cannot be accessed."
+            )
+
+        return self._coeffs
+
+    @coeffs.setter
+    def coeffs(self, value: Optional[np.ndarray]) -> None:
+        # setters shall not have docstrings. See numpydoc class example.
+        if value is None:
+            # `None` indicates an uninitialized polynomial
+            self._coeffs = None
+            return
+
+        # Verify and assign the coefficient values
+        expected_num_monomials = self.num_active_monomials
+        self._coeffs = verify_poly_coeffs(value, expected_num_monomials)
+
+    @property
+    def num_active_monomials(self) -> int:
+        """The number of active monomials of the polynomial(s).
+
+        The multi-index set that directly defines a polynomial and the grid
+        (where the polynomial lives) may differ. Active monomials are
+        the monomials that are defined by the multi-index set not by the one
+        in the grid.
+
+        Returns
+        -------
+        int
+            The number of active monomials.
+        """
+        return len(self.multi_index)
+
     # --- Special methods: Rich comparison
     def __eq__(self, other: "MultivariatePolynomialSingleABC") -> bool:
         """Compare two concrete polynomial instances for exact equality.
@@ -1258,22 +1323,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         )
 
     @property
-    def nr_active_monomials(self):
-        """Number of active monomials of the polynomial(s).
-
-        For caching and methods based on switching single monomials on and off, it is distigushed between active and passive monomials, where only the active monomials particitpate on exposed functions.
-
-        :return: Number of active monomials.
-        :rtype: int
-
-        Notes
-        -----
-        This is usually equal to the "amount of coefficients". However the coefficients can also be a 2D array (representing a multitude of polynomials with the same base grid).
-        """
-
-        return len(self.multi_index)
-
-    @property
     def spatial_dimension(self):
         """Spatial dimension.
 
@@ -1287,41 +1336,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         This is propagated from the ``multi_index.spatial_dimension``.
         """
         return self.multi_index.spatial_dimension
-
-    @property
-    def coeffs(self) -> Optional[ARRAY]:
-        """Array which stores the coefficients of the polynomial.
-
-        With shape (N,) or (N, p) the coefficients of the multivariate polynomial(s), where N is the amount of monomials and p is the amount of polynomials.
-
-        :return: Array of coefficients.
-        :rtype: np.ndarray
-        :raise ValueError: Raised if the coeffs are not initialised.
-
-        Notes
-        -----
-        It is allowed to set the coefficients to `None` to represent a not yet initialised polynomial
-        """
-        if self._coeffs is None:
-            raise ValueError(
-                "trying to access an uninitialized polynomial (coefficients are `None`)"
-            )
-        return self._coeffs
-
-    @coeffs.setter
-    def coeffs(self, value: Optional[ARRAY]):
-        # setters shall not have docstrings. See numpydoc class example.
-        if value is None:
-            self._coeffs = None
-            return
-        check_type(value, np.ndarray)
-        check_values(value)
-        if value.shape[0] != self.nr_active_monomials:
-            raise ValueError(
-                f"the amount of given coefficients <{value.shape[0]}> does not match "
-                f"with the amount of monomials in the polynomial <{self.nr_active_monomials}>."
-            )
-        self._coeffs = value
 
     @property
     def unisolvent_nodes(self):

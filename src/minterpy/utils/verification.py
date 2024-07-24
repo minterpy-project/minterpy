@@ -2,7 +2,7 @@
 """ functions for input verification
 """
 
-from typing import Any, Optional, Sized, Tuple, TypeVar, Union, Type
+from typing import Any, List, Optional, Sized, Tuple, Type, TypeVar, Union
 
 import numpy as np
 from _warnings import warn
@@ -154,7 +154,7 @@ def convert_eval_output(results_placeholder):
     return out
 
 
-def check_type(obj: Any, expected_type: Type[Any], obj_name: str = None):
+def check_type(obj: Any, expected_type: Type[Any]):
     """Check if the given input is of expected type.
     
     Parameters
@@ -182,19 +182,11 @@ def check_type(obj: Any, expected_type: Type[Any], obj_name: str = None):
     >>> check_type("1.0", float)  # a string is not a float
     Traceback (most recent call last):
     ...
-    TypeError: Input must be of <class 'float'>, but got <class 'str'> instead
-    >>> check_type("1.0", float, "Number")
-    Traceback (most recent call last):
-    ...
-    TypeError: Number must be of <class 'float'>, but got <class 'str'> instead
+    TypeError: Expected <class 'float'>, but got <class 'str'> instead.
     """
-    if obj_name is None:
-        obj_name = "Input"
-
     if not isinstance(obj, expected_type):
         raise TypeError(
-            f"{obj_name} must be of {expected_type}, "
-            f"but got {type(obj)} instead",
+            f"Expected {expected_type}, but got {type(obj)} instead.",
         )
 
 
@@ -219,7 +211,10 @@ def check_dtype(a: np.ndarray, expected_dtype):
         )
 
 
-def check_dimensionality(xx: np.ndarray, dimensionality: int) -> None:
+def check_dimensionality(
+    xx: np.ndarray,
+    dimensionality: Union[List[int], int],
+) -> None:
     """Verify the dimensionality of a given array.
 
     Use this verification function when its expected dimensionality is known.
@@ -228,9 +223,10 @@ def check_dimensionality(xx: np.ndarray, dimensionality: int) -> None:
     ----------
     xx : np.ndarray
         A given array to verify.
-    dimensionality : int
+    dimensionality : Union[List[int], int]
         The expected dimensionality (i.e., the number of dimensions)
-        of the array.
+        of the array. If given in a list then multiple dimensionality is
+        allowed.
 
     Raises
     ------
@@ -248,11 +244,16 @@ def check_dimensionality(xx: np.ndarray, dimensionality: int) -> None:
     >>> check_dimensionality(yy, dimensionality=1)  # Wrong dimensionality
     Traceback (most recent call last):
     ...
-    ValueError: 1D array is expected; got instead 2D!
+    ValueError: 1-D array is expected; got instead 2-D.
+    >>> check_dimensionality(yy, dimensionality=[1, 2])
     """
-    if xx.ndim != dimensionality:
+    if isinstance(dimensionality, list):
+        invalid = not any([xx.ndim == dim for dim in dimensionality])
+    else:
+        invalid = xx.ndim != dimensionality
+    if invalid:
         raise ValueError(
-            f"{dimensionality}D array is expected; got instead {xx.ndim}D!"
+            f"{dimensionality}-D array is expected; got instead {xx.ndim}-D."
         )
 
 
@@ -285,11 +286,11 @@ def check_shape(xx: np.ndarray, shape: Tuple[int, ...]):
     >>> check_shape(yy, shape=(1, 5))  # Wrong shape
     Traceback (most recent call last):
     ...
-    ValueError: Array of shape (1, 5) is expected; got instead (2, 4)!
+    ValueError: Array of shape (1, 5) is expected; got instead (2, 4).
     >>> check_shape(yy, shape=(2, 4, 1))  # Wrong dimensionality
     Traceback (most recent call last):
     ...
-    ValueError: 3D array is expected; got instead 2D!
+    ValueError: 3-D array is expected; got instead 2-D.
     """
     # Check dimensionality
     check_dimensionality(xx, dimensionality=len(shape))
@@ -297,7 +298,7 @@ def check_shape(xx: np.ndarray, shape: Tuple[int, ...]):
     # Check shape
     if xx.shape != shape:
         raise ValueError(
-            f"Array of shape {shape} is expected; got instead {xx.shape}!"
+            f"Array of shape {shape} is expected; got instead {xx.shape}."
         )
 
 
@@ -330,19 +331,19 @@ def check_values(xx: Union[int, float, np.ndarray], **kwargs):
     >>> check_values(np.nan)  # Default, no nan
     Traceback (most recent call last):
     ...
-    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
+    ValueError: Invalid value(s) (NaN, inf, negative, zero).
     >>> check_values(np.inf)  # Default, no inf
     Traceback (most recent call last):
     ...
-    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
+    ValueError: Invalid value(s) (NaN, inf, negative, zero).
     >>> check_values(np.zeros((3, 2)), zero=False)  # No zero value is allowed
     Traceback (most recent call last):
     ...
-    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
+    ValueError: Invalid value(s) (NaN, inf, negative, zero).
     >>> check_values(-10, negative=False)  # No negative value is allowed
     Traceback (most recent call last):
     ...
-    ValueError: Invalid value(s) (NaN, inf, negative, zero)!
+    ValueError: Invalid value(s) (NaN, inf, negative, zero).
     """
     # Parse keyword arguments
     kwargs = dict((key.lower(), val) for key, val in kwargs.items())
@@ -359,7 +360,7 @@ def check_values(xx: Union[int, float, np.ndarray], **kwargs):
 
     if is_nan or is_inf or is_zero or is_negative:
         raise ValueError(
-            "Invalid value(s) (NaN, inf, negative, zero)!"
+            "Invalid value(s) (NaN, inf, negative, zero)."
         )
 
 
@@ -420,14 +421,14 @@ def is_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
 
     Parameters
     ----------
-    x : Union[int, float, np.integer, np.floating]
+    x : Union[int, float, numpy.integer, numpy.floating]
         The variable to be checked.
 
     Returns
     -------
     bool
-        ``True`` if the variable is a scalar (an int, float, np.integer,
-        or np.floating), ``False`` otherwise.
+        ``True`` if the variable is a scalar (an ``int``, ``float``,
+        `numpy.integer`, or `numpy.floating`), ``False`` otherwise.
 
     Examples
     --------
@@ -488,7 +489,7 @@ def verify_spatial_dimension(spatial_dimension: int) -> int:
 
         # Other type than int may be acceptable if it's a whole number
         if spatial_dimension % 1 != 0:
-            raise ValueError("Spatial dimension must be a whole number!")
+            raise ValueError("Spatial dimension must be a whole number.")
 
         # Make sure that it's an int (whole number checked must come first!)
         spatial_dimension = int(spatial_dimension)
@@ -549,7 +550,7 @@ def verify_poly_degree(poly_degree: int) -> int:
 
         # Other type than int may be acceptable if it's a whole number
         if poly_degree % 1 != 0:
-            raise ValueError("Poly. degree must be a whole number!")
+            raise ValueError("Poly. degree must be a whole number.")
 
         # Make sure that it's an int (whole number checked must come first!)
         poly_degree = int(poly_degree)
@@ -590,7 +591,7 @@ def verify_lp_degree(lp_degree: float) -> float:
         cannot be verified or the conversion to `float` cannot be carried
         out.
     ValueError
-        If ``lp-degree`` is, for example, a non strictly positive value.
+        If ``lp_degree`` is, for example, a non strictly positive value.
 
     Examples
     --------
@@ -621,6 +622,78 @@ def verify_lp_degree(lp_degree: float) -> float:
         raise err
 
     return lp_degree
+
+
+def verify_poly_coeffs(coeffs: np.ndarray, num_monomials: int) -> np.ndarray:
+    """Verify that the given polynomial(s) coefficients are valid.
+
+    Parameters
+    ----------
+    coeffs : :class:`numpy:numpy.ndarray`
+        The polynomial coefficients to verify. Other container sequences
+        may be accepted as long as it can be converted to a
+        :class:`numpy:numpy.ndarray` of `numpy.float64`.
+    num_monomials : int
+        The number of monomials in the polynomials, used as the basis
+        to verify the length of the coefficients.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        Verified polynomial coefficients. If the input is not of
+        `numpy.float64`, the function does a type conversion
+        to the type if possible. This type is expected by Numba functions.
+
+    Raises
+    ------
+    TypeError
+        If ``coeffs`` is not of correct type or the conversion to
+        :class:`numpy:numpy.ndarray` or `numpy.float64`
+        cannot be carried out.
+    ValueError
+        If ``coeffs`` contains inf or nan's or if the dimensionality of
+        the coefficients is incorrect (not 1 or 2).
+
+    Examples
+    --------
+    >>> verify_poly_coeffs(np.array([1, 2, 3]), 3)  # numpy.int64
+    array([1., 2., 3.])
+    >>> verify_poly_coeffs(np.array([10., 20.]), 2)  # numpy.float64
+    array([10., 20.])
+    >>> verify_poly_coeffs(np.array([[1., 2.], [3., 4.]]), 2)  # multi-dim
+    array([[1., 2.],
+           [3., 4.]])
+    >>> verify_poly_coeffs(1.0, 1)  # a scalar
+    array([1.])
+    """
+    try:
+        # Convert the coefficients as a numpy.float64 (expected by Numba)
+        coeffs = np.atleast_1d(np.array(coeffs)).astype(np.float64)
+
+        # The dimension of the array (it may be one- or two-dimensional)
+        check_dimensionality(coeffs, dimensionality=[1, 2])
+
+        # The values must not contain NaN or inf
+        check_values(coeffs, nan=False, inf=False, zero=True, negative=True)
+
+        # The length must be the same as the number of monomials
+        if len(coeffs) != num_monomials:
+            raise ValueError(
+                f"The number of coefficients ({len(coeffs)}) does not match "
+                f"the number of monomials ({num_monomials})."
+            )
+
+    except TypeError as err:
+        custom_message = "Invalid type for polynomial coefficients!"
+        err.args = _add_custom_exception_message(err.args, custom_message)
+        raise err
+
+    except ValueError as err:
+        custom_message = "Invalid values in the polynomial coefficients!"
+        err.args = _add_custom_exception_message(err.args, custom_message)
+        raise err
+
+    return coeffs
 
 
 def _add_custom_exception_message(

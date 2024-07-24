@@ -116,6 +116,8 @@
   `add_exponents()` to conform with a method of the same name of the
   `MultiIndexSet` class that handle the process of adding exponents
   to the underlying multi-index set of a `Grid` instance.
+- Polynomial coefficients will now be stored as an array of `numpy.float64`
+  as expected by Numba. Conversion will always be attempted.
 
 ### Removed
 
