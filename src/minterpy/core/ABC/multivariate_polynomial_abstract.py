@@ -226,7 +226,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     # TODO static methods should not have a parameter "self"
     @staticmethod
     @abc.abstractmethod
-    def _add(self, other):  # pragma: no cover
+    def _add(poly_1, poly_2):  # pragma: no cover
         # no docstring here, since it is given in the concrete implementation
         pass
 
@@ -1283,7 +1283,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         return self.__iadd__(-other)
 
-    # copying
+    # --- Special methods: copies
     def __copy__(self):
         """Creates of a shallow copy.
 
@@ -1326,6 +1326,23 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             deepcopy(self.user_domain),
             deepcopy(self.grid),
         )
+
+    # Special methods: Collection emulation
+    def __len__(self) -> int:
+        """Return the number of polynomials in the instance.
+
+        Returns
+        -------
+        int
+            The number of polynomial in the instance. A single instance of
+            polynomial may contain multiple polynomials with different
+            coefficient values but sharing the same underlying multi-index set
+            and grid.
+        """
+        if self.coeffs.ndim == 1:
+            return 1
+
+        return self.coeffs.shape[1]
 
     @property
     def spatial_dimension(self):

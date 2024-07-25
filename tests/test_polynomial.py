@@ -191,6 +191,22 @@ class TestGetSetCoeffs:
             poly.coeffs = coeffs
 
 
+class TestLength:
+    """All tests related to '__len__()' method of polynomial instances."""
+    def test_single(self, rand_poly_mnp):
+        """Test getting the length of a single polynomial."""
+        assert len(rand_poly_mnp) == 1
+
+    def test_multiple(self, rand_polys_mnp):
+        """Test getting the length of multiple polynomials."""
+        assert len(rand_polys_mnp) == rand_polys_mnp.coeffs.shape[1]
+
+    def test_uninit(self, poly_mnp_uninit):
+        """Test getting the length of an uninitialized polynomial."""
+        with pytest.raises(ValueError):
+            print(len(poly_mnp_uninit))
+
+
 class TestExpandDim:
     """All tests related to the dimension expansion of polynomial instances."""
     def test_target_dim_higher_dim_uninit(self, poly_mnp_uninit):
