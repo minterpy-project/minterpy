@@ -191,6 +191,160 @@ class TestGetSetCoeffs:
             poly.coeffs = coeffs
 
 
+class TestExpandDim:
+    """All tests related to the dimension expansion of polynomial instances."""
+    def test_target_dim_higher_dim_uninit(self, poly_mnp_uninit):
+        """Test dimension expansion of a un-initialized polynomial
+        to a higher dimension.
+        """
+        # Get the current dimension
+        origin_poly = poly_mnp_uninit
+        origin_dim = origin_poly.spatial_dimension
+        target_dim = origin_dim + 1
+
+        # Expand the dimension to the same dimension
+        target_poly = poly_mnp_uninit.expand_dim(target_dim)
+
+        # Assertions
+        assert target_poly != origin_poly
+        assert target_poly.spatial_dimension == target_dim
+        assert target_poly.multi_index == target_poly.multi_index.expand_dim(
+            target_dim,
+        )
+        assert target_poly.grid == origin_poly.grid.expand_dim(target_dim)
+
+    def test_target_dim_same_dim(self, rand_poly_mnp):
+        """Test dimension expansion of a polynomial to the same dimension."""
+        # Get the current dimension
+        dim = rand_poly_mnp.spatial_dimension
+
+        # Expand the dimension to the same dimension
+        poly = rand_poly_mnp.expand_dim(dim)
+
+        # Assertions
+        assert poly == rand_poly_mnp
+        assert poly.spatial_dimension == dim
+
+    def test_target_dim_contraction(self, rand_poly_mnp):
+        """Test dimension contraction; this should raise an exception."""
+        # Get the current dimension
+        dim = rand_poly_mnp.spatial_dimension
+
+        # Contract the dimension
+        with pytest.raises(ValueError):
+            rand_poly_mnp.expand_dim(dim - 1)
+
+    def test_target_dim_higher_dim(self, rand_poly_mnp):
+        """Test dimension expansion of a polynomial to a higher dimension."""
+        # Get the random polynomial
+        poly_1 = rand_poly_mnp
+
+        # Get the new dimension
+        new_dim = poly_1.spatial_dimension + 1
+
+        # Expand the dimension
+        poly_2 = poly_1.expand_dim(new_dim)
+
+        # Assertions
+        assert poly_1 != poly_2
+        assert poly_2.spatial_dimension == new_dim
+        assert poly_2.multi_index == poly_1.multi_index.expand_dim(new_dim)
+        assert poly_2.grid == poly_1.grid.expand_dim(new_dim)
+
+    def test_target_dim_new_domains(self, rand_poly_mnp):
+        """Test dimension expansion of a polynomial with specified domains."""
+        # Get the random polynomial
+        poly_1 = rand_poly_mnp
+
+        # Get the current and the new dimension
+        dim = poly_1.spatial_dimension
+        new_dim = dim + 2
+
+        # Define valid additional domains
+        new_domains = np.array([[-2, -2], [2, 2]])
+
+        # Expand the dimension
+        poly_2 = poly_1.expand_dim(
+            new_dim,
+            extra_internal_domain=new_domains,
+            extra_user_domain=new_domains,
+        )
+
+        # Assertions
+        assert poly_1 != poly_2
+        assert poly_2.spatial_dimension == new_dim
+        assert poly_2.multi_index == poly_1.multi_index.expand_dim(new_dim)
+        assert poly_2.grid == poly_1.grid.expand_dim(new_dim)
+        assert np.array_equal(poly_2.user_domain[:, dim:], new_domains)
+        assert np.array_equal(poly_2.internal_domain[:, dim:], new_domains)
+
+    def test_target_dim_non_uniform_domain(self, poly_mnp_non_unif_domain):
+        """Test dimension expansion in which the domain cannot be extrapolated.
+        """
+        origin_dim = poly_mnp_non_unif_domain.spatial_dimension
+        target_dim = origin_dim + 1
+
+        # Expansion of polynomials w/ a non-uniform domain raises an exception
+        with pytest.raises(ValueError):
+            poly_mnp_non_unif_domain.expand_dim(target_dim)
+
+    def test_target_poly_same_dim(self, rand_poly_mnp):
+        """Test dimension expansion of a polynomial to the dimension of
+        another polynomial having the same dimension.
+        """
+        # Get the random polynomial
+        poly_1 = rand_poly_mnp
+
+        # Expand the dimension
+        poly_2 = poly_1.expand_dim(poly_1)
+
+        # Assertions
+        assert poly_1 == poly_2
+        assert poly_2 == poly_1
+
+    def test_target_poly_higher_dim(self, poly_mnp_pair_diff_dim):
+        """Test dimension expansion of a polynomial to the dimension of another
+        polynomial having a higher dimension.
+        """
+        # Get the polynomial instances
+        poly_1, poly_2 = poly_mnp_pair_diff_dim
+        # The first polynomial must have smaller dimension
+        if poly_1.spatial_dimension > poly_2.spatial_dimension:
+            poly_1, poly_2 = poly_2, poly_1
+
+        # Expand the dimension
+        poly_1_exp = poly_1.expand_dim(poly_2)
+
+        # Assertions
+        assert poly_1_exp.has_matching_dimension(poly_2)
+        assert poly_1_exp.has_matching_domain(poly_2)
+
+    def test_target_poly_contraction(self, poly_mnp_pair_diff_dim):
+        """Test dimension expansion of a polynomial to the dimension of another
+        polynomial having a smaller dimension; this should raise an exception.
+        """
+        # Get the polynomial instances
+        poly_1, poly_2 = poly_mnp_pair_diff_dim
+        # The first polynomial must have larger dimension
+        if poly_1.spatial_dimension < poly_2.spatial_dimension:
+            poly_1, poly_2 = poly_2, poly_1
+
+        # Expand (contract) the dimension
+        with pytest.raises(ValueError):
+            poly_1.expand_dim(poly_2)
+
+    def test_target_poly_incompatible_domain(self, poly_mnp_pair_diff_domain):
+        """Test dimension expansion of a polynomial to the dimension of another
+        polynomial with incompatible internal domain.
+        """
+        # Get the polynomial instances
+        poly_1, poly_2 = poly_mnp_pair_diff_domain
+
+        # Expanding the dimension to a polynomial with incompatible domain
+        with pytest.raises(ValueError):
+            poly_1.expand_dim(poly_2)
+
+
 class TestEquality:
     """All tests related to the equality check between polynomial instances."""
 
@@ -583,13 +737,13 @@ class TestHasMatchingDomain:
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
 
         # Create a polynomial instance
-        user_domain_1 = np.ones((SpatialDimension, 2))
-        user_domain_1[:, 0] *= -2
-        user_domain_1[:, 1] *= 2
+        user_domain_1 = np.ones((2, SpatialDimension))
+        user_domain_1[0, :] *= -2
+        user_domain_1[1, :] *= 2
         poly_1 = polynomial_class(mi, user_domain=user_domain_1)
-        user_domain_2 = np.ones((SpatialDimension, 2))
-        user_domain_2[:, 0] *= -0.5
-        user_domain_2[:, 1] *= 0.5
+        user_domain_2 = np.ones((2, SpatialDimension))
+        user_domain_2[0, :] *= -0.5
+        user_domain_2[1, :] *= 0.5
         poly_2 = polynomial_class(mi, user_domain=user_domain_2)
 
         # Assertion
@@ -608,13 +762,13 @@ class TestHasMatchingDomain:
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
 
         # Create a polynomial instance
-        internal_domain_1 = np.ones((SpatialDimension, 2))
-        internal_domain_1[:, 0] *= -2
-        internal_domain_1[:, 1] *= 2
+        internal_domain_1 = np.ones((2, SpatialDimension))
+        internal_domain_1[0, :] *= -2
+        internal_domain_1[1, :] *= 2
         poly_1 = polynomial_class(mi, internal_domain=internal_domain_1)
-        internal_domain_2 = np.ones((SpatialDimension, 2))
-        internal_domain_2[:, 0] *= -0.5
-        internal_domain_2[:, 1] *= 0.5
+        internal_domain_2 = np.ones((2, SpatialDimension))
+        internal_domain_2[0, :] *= -0.5
+        internal_domain_2[1, :] *= 0.5
         poly_2 = polynomial_class(mi, internal_domain=internal_domain_2)
 
         # Assertion
@@ -768,13 +922,13 @@ class TestPolyMultiplication:
         coeffs = np.random.rand(len(mi))
 
         # Create a polynomial instance
-        domain_1 = np.ones((SpatialDimension, 2))
-        domain_1[:, 0] *= -2
-        domain_1[:, 1] *= 2
+        domain_1 = np.ones((2, SpatialDimension))
+        domain_1[0, :] *= -2
+        domain_1[1, :] *= 2
         poly_1 = polynomial_class(mi, coeffs, user_domain=domain_1)
-        domain_2 = np.ones((SpatialDimension, 2))
-        domain_2[:, 0] *= -0.5
-        domain_2[:, 1] *= 0.5
+        domain_2 = np.ones((2, SpatialDimension))
+        domain_2[0, :] *= -0.5
+        domain_2[1, :] *= 0.5
         poly_2 = polynomial_class(mi, coeffs, user_domain=domain_2)
 
         # Perform multiplication
@@ -891,13 +1045,13 @@ class TestPolyAdditionSubtraction:
         coeffs = np.random.rand(len(mi))
 
         # Create a polynomial instance
-        domain_1 = np.ones((SpatialDimension, 2))
-        domain_1[:, 0] *= -2
-        domain_1[:, 1] *= 2
+        domain_1 = np.ones((2, SpatialDimension))
+        domain_1[0, :] *= -2
+        domain_1[1, :] *= 2
         poly_1 = polynomial_class(mi, coeffs, user_domain=domain_1)
-        domain_2 = np.ones((SpatialDimension, 2))
-        domain_2[:, 0] *= -0.5
-        domain_2[:, 1] *= 0.5
+        domain_2 = np.ones((2, SpatialDimension))
+        domain_2[0, :] *= -0.5
+        domain_2[1, :] *= 0.5
         poly_2 = polynomial_class(mi, coeffs, user_domain=domain_2)
 
         # Assertions
@@ -978,13 +1132,13 @@ class TestPolyAdditionSubtractionAugmented:
         coeffs = np.random.rand(len(mi))
 
         # Create a polynomial instance with different domains
-        domain_1 = np.ones((SpatialDimension, 2))
-        domain_1[:, 0] *= -2
-        domain_1[:, 1] *= 2
+        domain_1 = np.ones((2, SpatialDimension))
+        domain_1[0, :] *= -2
+        domain_1[1, :] *= 2
         poly_1 = polynomial_class(mi, coeffs, user_domain=domain_1)
-        domain_2 = np.ones((SpatialDimension, 2))
-        domain_2[:, 0] *= -0.5
-        domain_2[:, 1] *= 0.5
+        domain_2 = np.ones((2, SpatialDimension))
+        domain_2[0, :] *= -0.5
+        domain_2[1, :] *= 0.5
         poly_2 = polynomial_class(mi, coeffs, user_domain=domain_2)
 
         # Assertions

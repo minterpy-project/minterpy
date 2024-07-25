@@ -126,9 +126,9 @@ def _match_dims(poly1, poly2, copy=None):
     dim1 = p1.multi_index.spatial_dimension
     dim2 = p2.multi_index.spatial_dimension
     if dim1 >= dim2:
-        p2.expand_dim(dim1)
+        p2 = p2.expand_dim(dim1)
     else:
-        p1.expand_dim(dim2)
+        p1 = p1.expand_dim(dim2)
     return p1, p2
 
 

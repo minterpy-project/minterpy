@@ -315,6 +315,12 @@ def param_diff(request):
     return request.param
 
 
+# Fixture for polynomial domain selection
+@pytest.fixture(params=["user", "internal"])
+def poly_domain(request):
+    return request.param
+
+
 # --- Composite fixtures
 @pytest.fixture()
 def MultiIndices(SpatialDimension, PolyDegree, LpDegree):
@@ -360,6 +366,77 @@ def poly_mnp_uninit(polynomial_class, multi_index_mnp):
     having a complete multi-index set.
     """
     return polynomial_class(multi_index_mnp)
+
+
+@pytest.fixture
+def poly_mnp_non_unif_domain(polynomial_class, multi_index_mnp, poly_domain):
+    """Create an uninitialized polynomial instance of each concrete class
+    having a complete multi-index set with non-uniform polynomial domain.
+    """
+    if multi_index_mnp.spatial_dimension == 1:
+        pytest.skip(
+            "Domain with spatial dimension 1 can always be extrapolated"
+        )
+
+    # Define the domain (non-uniform: cannot be extrapolated)
+    domain = np.ones((2, multi_index_mnp.spatial_dimension))
+    domain[0, :] = -1
+    domain[0, 0] = -2
+    domain[1, 0] = 2
+
+    if poly_domain == "user":
+        return polynomial_class(multi_index_mnp, user_domain=domain)
+    elif poly_domain == "internal":
+        return polynomial_class(multi_index_mnp, internal_domain=domain)
+    else:
+        raise ValueError
+
+
+@pytest.fixture
+def poly_mnp_pair_diff_dim(
+    polynomial_class,
+    SpatialDimension,
+    PolyDegree,
+    LpDegree,
+):
+    """Create a pair of uninitialized polynomial instances of each concrete
+    class having a complete multi-index set but with different dimension.
+    """
+    # Create polynomial instances
+    poly_1 = polynomial_class.from_degree(
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    )
+    poly_2 = polynomial_class.from_degree(
+        SpatialDimension + 1,
+        PolyDegree,
+        LpDegree,
+    )
+
+    return poly_1, poly_2
+
+
+@pytest.fixture
+def poly_mnp_pair_diff_domain(polynomial_class, multi_index_mnp, poly_domain):
+    """Create a pair of un-initialized polynomial instances of each concrete
+    class having a complete multi-index set but with a different domain.
+    """
+    # Define a non-default domain
+    domain = np.ones((2, multi_index_mnp.spatial_dimension))
+    domain[0, 0] = -2
+    domain[1, 0] = 2
+
+    # Create polynomial instances
+    poly_1 = polynomial_class(multi_index_mnp)
+    if poly_domain == "user":
+        poly_2 = polynomial_class(multi_index_mnp, user_domain=domain)
+    elif poly_domain == "internal":
+        poly_2 = polynomial_class(multi_index_mnp, internal_domain=domain)
+    else:
+        raise ValueError
+
+    return poly_1, poly_2
 
 
 @pytest.fixture
