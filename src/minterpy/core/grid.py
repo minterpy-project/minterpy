@@ -930,7 +930,7 @@ def _process_multi_index(multi_index: MultiIndexSet) -> MultiIndexSet:
     ValueError
         If the argument is an empty instance of :class:`MultiIndexSet`.
     """
-    check_type(multi_index, MultiIndexSet, "The multi-index set")
+    check_type(multi_index, MultiIndexSet)
 
     # MultiIndexSet for a Grid cannot be an empty set
     if len(multi_index) == 0:

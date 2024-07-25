@@ -355,6 +355,14 @@ def rand_polys_mnp(polynomial_class, multi_index_mnp, num_polynomials):
 
 
 @pytest.fixture
+def poly_mnp_uninit(polynomial_class, multi_index_mnp):
+    """Create an uninitialized polynomial instance of each concrete class
+    having a complete multi-index set.
+    """
+    return polynomial_class(multi_index_mnp)
+
+
+@pytest.fixture
 def mi_pair(SpatialDimension, PolyDegree, LpDegree, param_diff):
     """Create a pair of MultiIndexSets with different parameters."""
     if param_diff == "equal":
