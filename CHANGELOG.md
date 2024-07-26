@@ -76,6 +76,9 @@
 - A new factory method `from_grid()` is available for all concrete polynomial
   classes. Calling the method with an instance of `Grid` creates a polynomial
   with the given grid and with the multi-index of the given grid.
+- All concrete polynomial classes now inherits `__len__()` from the abstract
+  base class. Calling `len()` on a polynomial instance returns the number
+  of coefficient sets the instance has.
 
 ### Fixed
 

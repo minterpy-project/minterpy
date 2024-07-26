@@ -28,11 +28,11 @@ def verify_domain(domain, spatial_dimension):
 
     """
     if domain is None:
-        domain = np.repeat([DEFAULT_DOMAIN], spatial_dimension, axis=0)
+        domain = np.repeat(DEFAULT_DOMAIN[:, np.newaxis], spatial_dimension, axis=1)
     domain = np.require(domain, dtype=FLOAT_DTYPE)
     if domain.ndim == 1:
-        domain = np.repeat([domain], spatial_dimension, axis=0)
-    check_shape(domain, shape=(spatial_dimension, 2))
+        domain = np.repeat(domain[:, np.newaxis], spatial_dimension, axis=1)
+    check_shape(domain, shape=(2, spatial_dimension))
     return domain
 
 
@@ -448,6 +448,7 @@ def is_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
     return isinstance(x, (int, float, np.integer, np.floating))
 
 
+# --- Verifications of Minterpy Value Objects
 def verify_spatial_dimension(spatial_dimension: int) -> int:
     """Verify if the value of a given spatial dimension is valid.
 
@@ -683,6 +684,10 @@ def verify_poly_coeffs(coeffs: np.ndarray, num_monomials: int) -> np.ndarray:
                 f"the number of monomials ({num_monomials})."
             )
 
+        # A single set is stored as one-dimensional array
+        if coeffs.ndim > 1 and coeffs.shape[1] == 1:
+            coeffs = coeffs.reshape(-1)
+
     except TypeError as err:
         custom_message = "Invalid type for polynomial coefficients!"
         err.args = _add_custom_exception_message(err.args, custom_message)
@@ -694,6 +699,73 @@ def verify_poly_coeffs(coeffs: np.ndarray, num_monomials: int) -> np.ndarray:
         raise err
 
     return coeffs
+
+
+def verify_poly_domain(
+    domain: np.ndarray,
+    spatial_dimension: int,
+) -> np.ndarray:
+    r"""Verify that the given polynomial domain is valid.
+
+    Examples
+    --------
+    >>> verify_poly_domain(np.array([[1], [2]]), 1)  # integer array
+    array([[1.],
+           [2.]])
+    >>> verify_poly_domain(np.array([[1, 2], [2, 3]]), 2)
+    array([[1., 2.],
+           [2., 3.]])
+    >>> verify_poly_domain([3, 2], 1) # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    ValueError: The upper bounds must be strictly larger than the lower
+    bounds. Invalid values in the polynomial domain!
+    """
+    try:
+        # The domain must be a NumPy ndarray
+        domain = np.atleast_2d(np.array(domain)).astype(np.float64)
+        if domain.shape[0] == 1:
+            # Column array
+            domain = domain.T
+
+        # The dimension of the array must be two-dimensional
+        check_dimensionality(domain, dimensionality=2)
+
+        # The values must not contain inf
+        check_values(domain, nan=False, inf=True, zero=True, negative=True)
+
+        # The length must be two (lower and upper bounds)
+        if domain.shape[0] != 2:
+            raise ValueError(
+                f"The domain is defined by {domain.shape[0]} numbers "
+                "instead of by 2 (lower and upper bounds)."
+            )
+
+        # The number of columns must be the same as the dimension
+        if domain.shape[1] != spatial_dimension:
+            raise ValueError(
+                f"The dimension of the domain ({domain.shape[1]}) does not "
+                f"match the required dimension ({spatial_dimension})."
+            )
+
+        # The lower bounds must be smaller than the upper bounds
+        if np.any(domain[1, :] - domain[0, :] <= 0):
+            raise ValueError(
+                "The upper bounds must be strictly larger than "
+                "the lower bounds."
+            )
+
+    except TypeError as err:
+        custom_message = "Invalid type for polynomial domain!"
+        err.args = _add_custom_exception_message(err.args, custom_message)
+        raise err
+
+    except ValueError as err:
+        custom_message = "Invalid values in the polynomial domain!"
+        err.args = _add_custom_exception_message(err.args, custom_message)
+        raise err
+
+    return domain
 
 
 def _add_custom_exception_message(

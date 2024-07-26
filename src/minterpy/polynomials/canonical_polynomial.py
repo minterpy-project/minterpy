@@ -9,7 +9,6 @@ from scipy.special import factorial
 
 from minterpy.global_settings import INT_DTYPE
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
-from minterpy.core import MultiIndexSet
 from minterpy.utils.polynomials.canonical import integrate_monomials_canonical
 from minterpy.utils.verification import (
     convert_eval_output,
@@ -24,73 +23,6 @@ __all__ = ["CanonicalPolynomial"]
 
 
 # Arithmetics
-
-
-def _generic_canonical_add(mi1, c1, mi2, c2):
-    """
-    Generic add function based on exponents and coeffs (passed as arrays).
-
-    Parameters
-    ----------
-    mi1 : array_like (shape = (mi1_len,dim))
-        exponents of the first multi_index set.
-    c1 : array_like (shape = (mi1_len,))
-        coeffs related to mi1
-    mi2 : array_like (shape = (mi2_len,dim))
-        exponents of the second multi_index set.
-    c2 : array_like (shape = (mi2_len,))
-        coeffs related to mi2
-
-    Returns
-    -------
-    res_mi : array_like
-        Resulting exponents (essentially the union of mi1 and mi2) in lexicographical order.
-    res_coeffs : array_like
-        Resulting coefficients related to res_mi
-        (essentially the sum of c1 and c2 where the exponents in mi1 and mi2 are the same and a concatenation of the rest.)
-
-    Notes
-    -----
-    - there is no check if the shapes of the passed arrays match. This lies in the actual canonical_add function.
-    """
-
-    len1, dim1 = mi1.shape
-    (
-        len2,
-        dim2,
-    ) = (
-        mi2.shape
-    )  # assume m1 and m2 are same dimension -> expand_dim of the mi with smaller dim
-
-    mi1r = mi1.reshape(len1, 1, dim1)
-    mi2r = mi2.reshape(1, len2, dim1)
-
-    add_cond = np.equal(mi1r, mi2r).all(
-        axis=2, keepdims=False
-    )  # where are mi1 and mi2 equal along the dim?
-    add_cond1 = add_cond.any(axis=1)  # added condition for m1,c1
-    not_add_cond1 = np.logical_not(add_cond1)  # not added condition for m1,c1
-    add_cond2 = add_cond.any(axis=0)  # add condition for m2,c2
-    not_add_cond2 = np.logical_not(add_cond2)  # not added condition for m2,c2
-
-    # build resulting mi
-    added_mi = mi1[add_cond1, :]  # shall be the same as mi2[add_cond2,:]
-    not_added_mi = np.concatenate(
-        (mi1[not_add_cond1, :], mi2[not_add_cond2, :]), axis=0
-    )  # collect the rest
-    res_mi = np.concatenate(
-        (added_mi, not_added_mi), axis=0
-    )  # summed mi shall be the first
-    sort_args = np.lexsort(res_mi.T, axis=-1)
-
-    # build resulting coeffs
-    added_c = c1[add_cond1] + c2[add_cond2]
-    not_added_c = np.concatenate((c1[not_add_cond1], c2[not_add_cond2]))
-    res_c = np.concatenate((added_c, not_added_c))
-
-    return res_mi[sort_args], res_c[sort_args]
-
-
 def _match_dims(poly1, poly2, copy=None):
     """Dimensional expansion of two polynomial in order to match their spatial_dimensions.
 
@@ -126,77 +58,91 @@ def _match_dims(poly1, poly2, copy=None):
     dim1 = p1.multi_index.spatial_dimension
     dim2 = p2.multi_index.spatial_dimension
     if dim1 >= dim2:
-        p2.expand_dim(dim1)
+        p2 = p2.expand_dim(dim1)
     else:
-        p1.expand_dim(dim2)
+        p1 = p1.expand_dim(dim2)
     return p1, p2
 
 
-def _canonical_add(poly1, poly2):
-    """
-    Addition of two polynomials in canonical basis.
+def _shape_coeffs(poly_1, poly_2):
+    """Shape the polynomial coefficients before processing."""
+    assert len(poly_1) == len(poly_2)
+
+    num_poly = len(poly_1)
+    if num_poly > 1:
+        return poly_1.coeffs, poly_2.coeffs
+
+    coeffs_1 = poly_1.coeffs[:, np.newaxis]
+    coeffs_2 = poly_2.coeffs[:, np.newaxis]
+
+    return coeffs_1, coeffs_2
+
+
+def _canonical_add(
+    poly_1: "CanonicalPolynomial",
+    poly_2: "CanonicalPolynomial",
+) -> "CanonicalPolynomial":
+    """Add two polynomial instances in the canonical basis.
+
+    This is the concrete implementation of ``_add()`` method in the
+    ``MultivariatePolynomialSingleABC`` abstract class.
 
     Parameters
     ----------
-    poly1 : CanonicalPolynomial
-        First summand of the sum
-    poly2 : CanonicalPolynomial
-        Second summand of the sum
+    poly_1 : CanonicalPolynomial
+        Left operand of the addition expression.
+    poly_2 : CanonicalPolynomial
+        Right operand of the addition expression.
 
     Returns
     -------
-    summed_polynomial : CanonicalPolynomial
-        The sum of the passed polynomials in canonical base
+    CanonicalPolynomial
+        The sum of two polynomials in the canonical basis; a new instance
+        of polynomial.
 
     Notes
     -----
-     - This works only for the same domains!
-     - This function will be called on `self,other` if `__add__` is called.
+    - This function assumes: both polynomials must be in canonical basis,
+      they must be initialized, have the same dimension and their domains
+      are matching, and the number of polynomials per instance are the same.
+      These conditions are not explicitly checked in this function.
     """
-    p1, p2 = _match_dims(poly1, poly2)
-    # print(p1.internal_domain,p2.internal_domain) # here is the error!!!!
-    if p1.has_matching_domain(p2):
-        res_mi_arr, res_c = _generic_canonical_add(
-            p1.multi_index.exponents, p1.coeffs, p2.multi_index.exponents, p2.coeffs
-        )
+    # --- Compute the union of the grid instances
+    grd_add = poly_1.grid | poly_2.grid
 
-        # warning: this is not general. we are *assuming* that the resultant lp_degree is
-        # max of the two. This is done in order to avoid issue #37.
-        max_lp_degree = np.max([p1.multi_index.lp_degree, p2.multi_index.lp_degree])
-        res_mi = MultiIndexSet(res_mi_arr, lp_degree=max_lp_degree)
-        return CanonicalPolynomial(
-            res_mi,
-            res_c,
-            internal_domain=p1.internal_domain,
-            user_domain=p1.user_domain,
-        )
+    # --- Compute union of the multi-index sets if they are separate
+    if poly_1.indices_are_separate or poly_2.indices_are_separate:
+        mi_add = poly_1.multi_index | poly_2.multi_index
     else:
-        raise NotImplementedError(
-            "Addition is not implemented for canonical polynomials with different domains"
-        )
+        # Otherwise use the one attached to the grid instance
+        mi_add = grd_add.multi_index
+    num_monomials = len(mi_add)
 
+    # --- Process the coefficients
+    idx_1 = find_match_between(poly_1.multi_index.exponents, mi_add.exponents)
+    idx_2 = find_match_between(poly_2.multi_index.exponents, mi_add.exponents)
 
-def _canonical_sub(poly1, poly2):
-    """
-    Substraction of two polynomials in canonical basis.
+    # Shape the coefficients before addition
+    coeffs_1, coeffs_2 = _shape_coeffs(poly_1, poly_2)
 
-    Parameters
-    ----------
-    poly1 : CanonicalPolynomial
-        Minuend of the difference.
-    poly2 : CanonicalPolynomial
-        Subtrahend of the difference.
+    # Add the coefficients column-wise
+    num_polys = len(poly_1)
+    coeffs_add = np.zeros((num_monomials, num_polys))
+    coeffs_add[idx_1, :] += coeffs_1[:, :]
+    coeffs_add[idx_2, :] += coeffs_2[:, :]
 
-    Returns
-    -------
-    difference_polynomial : CanonicalPolynomial
-        The difference of the passed polynomials in canonical base.
+    # Squeeze the resulting coefficients if there's only one polynomial
+    if num_polys == 1:
+        coeffs_add = coeffs_add.reshape(-1)
 
-    Notes
-    -----
-    This works only for the same domains!
-    """
-    return _canonical_add(poly1, -poly2)
+    # --- Return a new instance
+    return CanonicalPolynomial(
+        mi_add,
+        coeffs=coeffs_add,
+        user_domain=poly_1.user_domain,
+        internal_domain=poly_1.internal_domain,
+        grid=grd_add,
+    )
 
 
 def _canonical_eval(pts: np.ndarray,exponents: np.ndarray, coeffs: np.ndarray):
@@ -336,7 +282,7 @@ class CanonicalPolynomial(MultivariatePolynomialSingleABC):
     # __doc__ += MultivariatePolynomialSingleABC.__doc_attrs__
     # Virtual Functions
     _add = staticmethod(_canonical_add)
-    _sub = staticmethod(_canonical_sub)
+    _sub = staticmethod(dummy)
     _mul = staticmethod(dummy)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)

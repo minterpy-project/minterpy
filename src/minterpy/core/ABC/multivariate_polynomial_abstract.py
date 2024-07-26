@@ -7,8 +7,8 @@ This ensures that all polynomials work with the same interface, so futher featur
 import abc
 import numpy as np
 
-from copy import deepcopy
-from typing import List, Optional, Union
+from copy import copy, deepcopy
+from typing import List, Optional, Tuple, Union
 
 from minterpy.global_settings import ARRAY, SCALAR
 from minterpy.core.grid import Grid
@@ -20,8 +20,8 @@ from minterpy.utils.verification import (
     check_shape,
     verify_domain,
     verify_poly_coeffs,
+    verify_poly_domain,
 )
-from minterpy.utils.arrays import expand_dim
 from minterpy.utils.multi_index import find_match_between
 
 __all__ = ["MultivariatePolynomialABC", "MultivariatePolynomialSingleABC"]
@@ -225,7 +225,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     # TODO static methods should not have a parameter "self"
     @staticmethod
     @abc.abstractmethod
-    def _add(self, other):  # pragma: no cover
+    def _add(poly_1, poly_2):  # pragma: no cover
         # no docstring here, since it is given in the concrete implementation
         pass
 
@@ -530,7 +530,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         if internal_domain is not None:
             check_type(internal_domain, np.ndarray)
             check_values(internal_domain)
-            check_shape(internal_domain, shape=(spatial_dimension, 2))
+            check_shape(internal_domain, shape=(2, spatial_dimension))
         self.internal_domain = self.generate_internal_domain(
             internal_domain, self.multi_index.spatial_dimension
         )
@@ -538,7 +538,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         if user_domain is not None:  # TODO not better "external domain"?!
             check_type(user_domain, np.ndarray)
             check_values(user_domain)
-            check_shape(user_domain, shape=(spatial_dimension, 2))
+            check_shape(user_domain, shape=(2, spatial_dimension))
         self.user_domain = self.generate_user_domain(
             user_domain, self.multi_index.spatial_dimension
         )
@@ -765,8 +765,12 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         if self.grid != other.grid:
             return False
 
+        # The coefficients are both None
+        if self._coeffs is None and other._coeffs is None:
+            return True
+
         # The coefficients of the polynomials are equal
-        if not np.array_equal(self.coeffs, other.coeffs):
+        if not np.array_equal(self._coeffs, other._coeffs):
             return False
 
         return True
@@ -817,7 +821,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         return self
 
     # --- Special methods: Arithmetic operators
-
     def __add__(
         self,
         other: Union["MultivariatePolynomialSingleABC", SCALAR],
@@ -850,14 +853,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         -----
         - The concrete implementation of polynomial-polynomial addition
           is delegated to the respective polynomial concrete class.
-
-        See Also
-        --------
-        _add
-            Concrete implementation of ``__add__``
-        _scalar_add
-            Concrete implementation of ``__add__`` when the right operand
-            is a real scalar number.
         """
         # Handle scalar addition
         if is_scalar(other):
@@ -870,28 +865,25 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
                 f"'{self.__class__}', '{other.__class__}'"
             )
 
-        # Check if the number of coefficients remain consistent.
-        if not _has_consistent_number_of_polys(self, other):
+        # Check if the number of coefficients is consistent
+        if len(self) != len(other):
             raise ValueError(
                 "Cannot add polynomials with inconsistent "
                 "number of coefficient sets"
             )
 
-        # Only do it if the dimension is matching and inplace
-        if not self.has_matching_domain(other):
-            raise ValueError(
-                "Cannot add polynomials of different domains"
-            )
+        # Match the dimension of operands
+        poly_1, poly_2 = self._match_dims(other)
 
         # Handle equal value
-        if self == other:
-            return self._scalar_mul(2.0)
+        if poly_1 == poly_2:
+            return poly_1._scalar_mul(2.0)
 
         # Handle equal but negated value
-        if self == -other:
-            return self._scalar_mul(0.0)
+        if poly_1 == -poly_2:
+            return poly_1._scalar_mul(0.0)
 
-        result = self._add(self, other)
+        result = self._add(poly_1, poly_2)
 
         return result
 
@@ -1278,7 +1270,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         return self.__iadd__(-other)
 
-    # copying
+    # --- Special methods: copies
     def __copy__(self):
         """Creates of a shallow copy.
 
@@ -1322,6 +1314,23 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             deepcopy(self.grid),
         )
 
+    # Special methods: Collection emulation
+    def __len__(self) -> int:
+        """Return the number of polynomials in the instance.
+
+        Returns
+        -------
+        int
+            The number of polynomial in the instance. A single instance of
+            polynomial may contain multiple polynomials with different
+            coefficient values but sharing the same underlying multi-index set
+            and grid.
+        """
+        if self.coeffs.ndim == 1:
+            return 1
+
+        return self.coeffs.shape[1]
+
     @property
     def spatial_dimension(self):
         """Spatial dimension.
@@ -1352,6 +1361,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         return self.grid.unisolvent_nodes
 
+    # --- Instance methods
     def _new_instance_if_necessary(
         self, new_grid, new_indices: Optional[MultiIndexSet] = None
     ) -> "MultivariatePolynomialSingleABC":
@@ -1441,33 +1451,58 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
     def expand_dim(
         self,
-        dim: int,
-        extra_internal_domain: ARRAY = None,
-        extra_user_domain: ARRAY = None,
+        target_dimension: Union["MultivariatePolynomialSingleABC", int],
+        extra_internal_domain: Optional[np.ndarray] = None,
+        extra_user_domain: Optional[np.ndarray] = None,
     ):
-        """Expand the spatial dimention.
+        """Expand the spatial dimension of the polynomial instance.
 
-        Expands the dimension of the domain space of the polynomial by adding zeros to the multi_indices
-        (which is equivalent to the multiplication of ones to each monomial).
-        Furthermore, the grid is now embedded in the higher dimensional space by pinning the grid arrays to the origin in the additional spatial dimension.
+        Parameters
+        ----------
+        target_dimension : Union[int, MultivariatePolynomialSingleABC]
+            The new spatial dimension. It must be larger than or equal to
+            the current dimension of the polynomial. Alternatively, another
+            instance of polynomial that has a higher dimension, a consistent
+            underlying `Grid` instance is consistent, and a matching domain
+            can also be specified as a target dimension.
+        extra_internal_domain : :class:`numpy:numpy.ndarray`, optional
+            The additional internal domains for the expanded polynomial.
+            This parameter is optional; if not specified, the values are either
+            taken from the domain of the higher-dimensional polynomial or
+            from the domain of the other dimensions.
+        extra_user_domain : :class:`numpy:numpy.ndarray`, optional
+            The additional user domains for the expanded polynomial.
+            This parameter is optional; if not specified, the values are either
+            taken from the domain of the higher-dimensional polynomial or
+            from the domain of the other dimensions.
 
-        :param dim: Number of additional dimensions.
-        :type dim: int
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            A new instance of polynomial whose spatial dimension has been
+            expanded to the target.
+
+        Raises
+        ------
+        ValueError
+            If the target dimension is an `int`, the exception is raised
+            when the user or internal domains cannot be extrapolated to
+            a higher dimension. If the target dimension is an instance of
+            `MultivariatePolynomialSingleABC`, the exception is raised when
+            the user or internal domains do no match.
+            In both cases, an exception may also be raised by attempting
+            to expand the dimension of the underlying `Grid` or `MultiIndexSet`
+            instances.
         """
-        diff_dim = dim - self.multi_index.spatial_dimension
+        if isinstance(target_dimension, MultivariatePolynomialSingleABC):
+            return _expand_dim_to_target_poly(self, target_dimension)
 
-        # If dim<spatial_dimension, i.e. expand_dim<0, exception is raised
-        self.multi_index = self.multi_index.expand_dim(dim)
-
-        # Expand the dimension of the grid
-        self.grid = self.grid.expand_dim(dim)
-
-        extra_internal_domain = verify_domain(extra_internal_domain, diff_dim)
-        self.internal_domain = np.concatenate(
-            (self.internal_domain, extra_internal_domain)
+        return _expand_dim_to_target_dim(
+            self,
+            target_dimension,
+            extra_internal_domain,
+            extra_user_domain,
         )
-        extra_user_domain = verify_domain(extra_user_domain, diff_dim)
-        self.user_domain = np.concatenate((self.user_domain, extra_user_domain))
 
     def partial_diff(
         self,
@@ -1622,7 +1657,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         See Also
         --------
         _integrate_over
-            The underluing static method to integrate the polynomial instance
+            The underlying static method to integrate the polynomial instance
             over the given bounds.
 
         TODO
@@ -1664,15 +1699,31 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         except ValueError:
             return value
 
-    # Utility public methods
+    # --- Public utility methods
+    def has_matching_dimension(
+        self,
+        other: "MultivariatePolynomialSingleABC",
+    ) -> bool:
+        """Return ``True`` if the poly. instances have matching dimensions.
+
+        Parameters
+        ----------
+        other : MultivariatePolynomialSingleABC
+            The second instance of polynomial to compare.
+
+        Returns
+        -------
+        bool
+            ``True`` if the two spatial dimensions match, ``False`` otherwise.
+        """
+        return self.spatial_dimension == other.spatial_dimension
 
     def has_matching_domain(
         self,
         other: "MultivariatePolynomialSingleABC",
         tol: float = 1e-16,
     ) -> bool:
-        """
-        Check if two MultivariatePolynomialSingleABC objects have matching domains.
+        """Return ``True``if the poly. instances have matching domains.
 
         Parameters
         ----------
@@ -1699,16 +1750,16 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         dim = np.min([dim_1, dim_2])  # Check up to the smallest matching dim.
 
         # Check matching internal domain
-        internal_domain_1 = self.internal_domain[:dim, :]
-        internal_domain_2 = other.internal_domain[:dim, :]
+        internal_domain_1 = self.internal_domain[:, :dim]
+        internal_domain_2 = other.internal_domain[:, :dim]
         has_matching_internal_domain = np.less_equal(
             np.abs(internal_domain_1 - internal_domain_2),
             tol,
         )
 
         # Check matching user domain
-        user_domain_1 = self.user_domain[:dim, :]
-        user_domain_2 = other.user_domain[:dim, :]
+        user_domain_1 = self.user_domain[:, :dim]
+        user_domain_2 = other.user_domain[:, :dim]
         has_matching_user_domain = np.less_equal(
             np.abs(user_domain_1 - user_domain_2),
             tol,
@@ -1721,6 +1772,52 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         )
 
         return np.all(has_matching_domain)
+
+    # --- Private utility methods
+    def _match_dims(
+        self,
+        other: "MultivariatePolynomialSingleABC",
+    ) -> Tuple[
+        "MultivariatePolynomialSingleABC",
+        "MultivariatePolynomialSingleABC",
+    ]:
+        """Match the dimension of two polynomials.
+
+        Parameters
+        ----------
+        other : MultivariatePolynomialSingleABC
+            An instance polynomial whose dimension is to match with the current
+            polynomial instance.
+
+        Returns
+        -------
+        Tuple[MultivariatePolynomialSingleABC, MultivariatePolynomialSingleABC]
+            The two instances of polynomials whose dimensions have been
+            matched.
+
+        Raises
+        ------
+        ValueError
+            If the dimension of one of the polynomial instance can't be
+            matched due to, for instance, incompatible domain.
+
+        Notes
+        -----
+        - If both polynomials have matching dimension and domains, then
+          the function return the two polynomials as they are.
+        """
+        if self.has_matching_dimension(other) and \
+                self.has_matching_domain(other):
+            # Dimension and domain match, no need to do anything
+            return self, other
+
+        # Otherwise expand the lower dimension polynomial to a higher dimension
+        if self.spatial_dimension > other.spatial_dimension:
+            other_expanded = other.expand_dim(self)
+            return self, other_expanded
+        else:
+            self_expanded = self.expand_dim(other)
+            return self_expanded, other
 
 
 def _has_consistent_number_of_polys(
@@ -1746,3 +1843,217 @@ def _has_consistent_number_of_polys(
         return False
 
     return has_same_dims and has_same_cols
+
+
+def _expand_dim_to_target_poly(
+    origin_poly: "MultivariatePolynomialSingleABC",
+    target_poly: "MultivariatePolynomialSingleABC",
+) -> "MultivariatePolynomialSingleABC":
+    """Expand the dimension of the polynomial to the dimension of another.
+
+    Parameters
+    ----------
+    origin_poly : MultivariatePolynomialSingleABC
+        The polynomial whose spatial dimension is to be expanded.
+    target_poly : MultivariatePolynomialSingleABC
+        The polynomial whose spatial dimension is the target dimension.
+
+    Returns
+    -------
+    MultivariatePolynomialSingleABC
+        A new instance of polynomial with an expanded dimension.
+
+    Notes
+    -----
+    - The extra internal and user domains of the resulting instance takes
+      the values from the target polynomial.
+    """
+    if not origin_poly.has_matching_domain(target_poly):
+        raise ValueError(
+            "Polynomial cannot be expanded to the dimension of the target "
+            "due to non-matching domain."
+        )
+
+    # Domains and dimensions match: return a copy
+    if origin_poly.has_matching_dimension(target_poly):
+        return copy(origin_poly)
+
+    # Otherwise: expand the dimension
+
+    # Get the dimensions
+    origin_dimension = origin_poly.spatial_dimension
+    target_dimension = target_poly.spatial_dimension
+
+    # Expand the dimension underlying multi-index set to the target dimension
+    mi = origin_poly.multi_index.expand_dim(target_dimension)
+
+    # Expand the dimension of the underlying grid to the target grid
+    grd = origin_poly.grid.expand_dim(target_poly.grid)
+
+    # Expand the dimension of the internal domain (use values from the larger)
+    origin_internal_domain = origin_poly.internal_domain
+    target_internal_domain = target_poly.internal_domain
+    internal_domain = np.c_[
+        origin_internal_domain,
+        target_internal_domain[:, origin_dimension:],
+    ]
+
+    # Expand the dimension of the user domain (use values from the larger)
+    origin_user_domain = origin_poly.user_domain
+    target_user_domain = target_poly.user_domain
+    user_domain = np.c_[
+        origin_user_domain,
+        target_user_domain[:, origin_dimension:],
+    ]
+
+    # NOTE: There is no need to verify the domains again because they are
+    # taken from the properties of polynomial instances (already verified)
+
+    # Return a new instance
+    try:
+        # The instance is initialized with coefficients
+        return origin_poly.__class__(
+            multi_index=mi,
+            coeffs=origin_poly.coeffs,
+            internal_domain=internal_domain,
+            user_domain=user_domain,
+            grid=grd,
+        )
+    except ValueError:
+        # The instance has no coefficients
+        return origin_poly.__class__(
+            multi_index=mi,
+            coeffs=None,
+            internal_domain=internal_domain,
+            user_domain=user_domain,
+            grid=grd,
+        )
+
+
+def _expand_dim_to_target_dim(
+    origin_poly: "MultivariatePolynomialSingleABC",
+    target_dimension: int,
+    extra_internal_domain: Optional[np.ndarray] = None,
+    extra_user_domain: Optional[np.ndarray] = None,
+) -> "MultivariatePolynomialSingleABC":
+    """Expand the dimension of the polynomial to the target dimension.
+
+    Parameters
+    ----------
+    origin_poly : MultivariatePolynomialSingleABC
+        The polynomial whose spatial dimension is to be expanded.
+    target_dimension : int
+        The target dimension to which the given polynomial will be expanded.
+    extra_internal_domain : :class:`numpy:numpy.ndarray`, optional
+        The additional internal domains for the expanded dimensions.
+    extra_user_domain : :class:`numpy:numpy.ndarray`, optional
+        The additional user domains for the expanded dimensions.
+
+    Returns
+    -------
+    MultivariatePolynomialSingleABC
+        A new instance of polynomial with an expanded dimension.
+
+    Raises
+    ------
+    ValueError
+        If ``extra_internal_domain`` and ``extra_user_domain`` are both
+        ``None`` and the domains of the origin polynomial are not uniform
+        such that the domains cannot be extrapolated to higher dimension.
+    """
+    if origin_poly.spatial_dimension == target_dimension:
+        return copy(origin_poly)
+
+    # Expand the underlying multi-index set
+    mi = origin_poly.multi_index.expand_dim(target_dimension)
+
+    # Expand the dimension of the underlying grid
+    grd = origin_poly.grid.expand_dim(target_dimension)
+
+    # Expand the dimension of the internal domain
+    origin_internal_domain = origin_poly.internal_domain
+    target_internal_domain = _expand_domain(
+        origin_internal_domain,
+        target_dimension,
+        extra_internal_domain,
+    )
+
+    # Expand the dimension of the user domain
+    origin_user_domain = origin_poly.user_domain
+    target_user_domain = _expand_domain(
+        origin_user_domain,
+        target_dimension,
+        extra_user_domain,
+    )
+
+    # Return a new instance
+    try:
+        # The instance is initialized with coefficients
+        return origin_poly.__class__(
+            multi_index=mi,
+            coeffs=origin_poly.coeffs,
+            internal_domain=target_internal_domain,
+            user_domain=target_user_domain,
+            grid=grd,
+        )
+    except ValueError:
+        # The instance has no coefficients
+        return origin_poly.__class__(
+            multi_index=mi,
+            coeffs=None,
+            internal_domain=target_internal_domain,
+            user_domain=target_user_domain,
+            grid=grd,
+        )
+
+
+def _is_domain_uniform(domain: np.ndarray):
+    """Check if a given domain is non-uniform"""
+    lb_uniform = np.unique(domain[0, :]).size == 1
+    ub_uniform = np.unique(domain[1, :]).size == 1
+
+    return lb_uniform and ub_uniform
+
+
+def _expand_domain(
+    origin_domain: np.ndarray,
+    target_dimension: int,
+    extra_domain: Optional[np.ndarray] = None,
+) -> np.ndarray:
+    """Append additional polynomial domains to the origin domain column-wise.
+
+    Parameters
+    ----------
+    origin_domain : :class:`numpy:numpy.ndarray`
+        The origin polynomial domain to be expanded.
+    target_dimension : int
+        The target spatial dimension to which the given polynomial
+        will be expanded.
+    extra_domain : :class:`numpy:numpy.ndarray`, optional
+        The additional domain to be added to form the target domain.
+        This parameter is optional, if `None` is provided, the domain can only
+        be expanded if ``origin_domain`` is uniform.
+    """
+    # Get the spatial dimension difference
+    origin_dimension = origin_domain.shape[1]
+    diff_dimension = target_dimension - origin_dimension
+
+    # If no extra domain is provided
+    if extra_domain is None:
+        if _is_domain_uniform(origin_domain):
+            extra_domain = np.repeat(
+                origin_domain[:, 0][:, np.newaxis],
+                repeats=diff_dimension,
+                axis=1,
+            )
+        else:
+            raise ValueError(
+                "Non-uniform domain cannot be extrapolated "
+                "for dimension expansion"
+            )
+    # Combine the extra domain
+    target_domain = np.c_[origin_domain, extra_domain]
+    # Verify the resulting domain
+    target_domain = verify_poly_domain(target_domain, target_dimension)
+
+    return target_domain
