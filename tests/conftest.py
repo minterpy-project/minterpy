@@ -270,7 +270,7 @@ def NrPoints(request):
     return request.param
 
 
-@pytest.fixture(params=[2, 5, 10])
+@pytest.fixture(params=[1, 2, 5])
 def num_polynomials(request):
     """Fixture for the number of polynomials."""
     return request.param
@@ -435,6 +435,47 @@ def poly_mnp_pair_diff_domain(polynomial_class, multi_index_mnp, poly_domain):
         poly_2 = polynomial_class(multi_index_mnp, internal_domain=domain)
     else:
         raise ValueError
+
+    return poly_1, poly_2
+
+
+@pytest.fixture
+def rand_poly_mnp_pair(polynomial_class, mi_pair):
+    """Create a pair of randomly initialized polynomial instances of each
+    concrete class having a complete multi-index sets.
+    """
+    # Get the multi-index sets
+    mi_1, mi_2 = mi_pair
+    if len(mi_1) == 0 or len(mi_2) == 0:
+        pytest.skip("Polynomial can't have empty multi-index set.")
+
+    # Create polynomial instances
+    coeffs_1 = np.random.rand(len(mi_1))
+    poly_1 = polynomial_class(mi_1, coeffs_1)
+
+    coeffs_2 = np.random.rand(len(mi_2))
+    poly_2 = polynomial_class(mi_2, coeffs_2)
+
+    return poly_1, poly_2
+
+
+@pytest.fixture
+def rand_polys_mnp_pair(polynomial_class, mi_pair, num_polynomials):
+    """Create a pair of randomly initialized polynomial instances of each
+    concrete class having a complete multi-index sets and multiple sets of
+    coefficients.
+    """
+    # Get the multi-index sets
+    mi_1, mi_2 = mi_pair
+    if len(mi_1) == 0 or len(mi_2) == 0:
+        pytest.skip("Polynomial can't have empty multi-index set.")
+
+    # Create polynomial instances
+    coeffs_1 = np.random.rand(len(mi_1), num_polynomials)
+    poly_1 = polynomial_class(mi_1, coeffs_1)
+
+    coeffs_2 = np.random.rand(len(mi_2), num_polynomials)
+    poly_2 = polynomial_class(mi_2, coeffs_2)
 
     return poly_1, poly_2
 

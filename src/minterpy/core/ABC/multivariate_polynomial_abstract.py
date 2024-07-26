@@ -8,7 +8,7 @@ import abc
 import numpy as np
 
 from copy import copy, deepcopy
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 from minterpy.global_settings import ARRAY, SCALAR
 from minterpy.core.grid import Grid
@@ -22,7 +22,6 @@ from minterpy.utils.verification import (
     verify_poly_coeffs,
     verify_poly_domain,
 )
-from minterpy.utils.arrays import expand_dim
 from minterpy.utils.multi_index import find_match_between
 
 __all__ = ["MultivariatePolynomialABC", "MultivariatePolynomialSingleABC"]
@@ -822,7 +821,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         return self
 
     # --- Special methods: Arithmetic operators
-
     def __add__(
         self,
         other: Union["MultivariatePolynomialSingleABC", SCALAR],
@@ -855,14 +853,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         -----
         - The concrete implementation of polynomial-polynomial addition
           is delegated to the respective polynomial concrete class.
-
-        See Also
-        --------
-        _add
-            Concrete implementation of ``__add__``
-        _scalar_add
-            Concrete implementation of ``__add__`` when the right operand
-            is a real scalar number.
         """
         # Handle scalar addition
         if is_scalar(other):
@@ -875,28 +865,25 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
                 f"'{self.__class__}', '{other.__class__}'"
             )
 
-        # Check if the number of coefficients remain consistent.
-        if not _has_consistent_number_of_polys(self, other):
+        # Check if the number of coefficients is consistent
+        if len(self) != len(other):
             raise ValueError(
                 "Cannot add polynomials with inconsistent "
                 "number of coefficient sets"
             )
 
-        # Only do it if the dimension is matching and inplace
-        if not self.has_matching_domain(other):
-            raise ValueError(
-                "Cannot add polynomials of different domains"
-            )
+        # Match the dimension of operands
+        poly_1, poly_2 = self._match_dims(other)
 
         # Handle equal value
-        if self == other:
-            return self._scalar_mul(2.0)
+        if poly_1 == poly_2:
+            return poly_1._scalar_mul(2.0)
 
         # Handle equal but negated value
-        if self == -other:
-            return self._scalar_mul(0.0)
+        if poly_1 == -poly_2:
+            return poly_1._scalar_mul(0.0)
 
-        result = self._add(self, other)
+        result = self._add(poly_1, poly_2)
 
         return result
 
@@ -1491,7 +1478,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         Returns
         -------
-        MultivariatePolynomialABC
+        MultivariatePolynomialSingleABC
             A new instance of polynomial whose spatial dimension has been
             expanded to the target.
 
@@ -1786,6 +1773,52 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         return np.all(has_matching_domain)
 
+    # --- Private utility methods
+    def _match_dims(
+        self,
+        other: "MultivariatePolynomialSingleABC",
+    ) -> Tuple[
+        "MultivariatePolynomialSingleABC",
+        "MultivariatePolynomialSingleABC",
+    ]:
+        """Match the dimension of two polynomials.
+
+        Parameters
+        ----------
+        other : MultivariatePolynomialSingleABC
+            An instance polynomial whose dimension is to match with the current
+            polynomial instance.
+
+        Returns
+        -------
+        Tuple[MultivariatePolynomialSingleABC, MultivariatePolynomialSingleABC]
+            The two instances of polynomials whose dimensions have been
+            matched.
+
+        Raises
+        ------
+        ValueError
+            If the dimension of one of the polynomial instance can't be
+            matched due to, for instance, incompatible domain.
+
+        Notes
+        -----
+        - If both polynomials have matching dimension and domains, then
+          the function return the two polynomials as they are.
+        """
+        if self.has_matching_dimension(other) and \
+                self.has_matching_domain(other):
+            # Dimension and domain match, no need to do anything
+            return self, other
+
+        # Otherwise expand the lower dimension polynomial to a higher dimension
+        if self.spatial_dimension > other.spatial_dimension:
+            other_expanded = other.expand_dim(self)
+            return self, other_expanded
+        else:
+            self_expanded = self.expand_dim(other)
+            return self_expanded, other
+
 
 def _has_consistent_number_of_polys(
     poly_1: "MultivariatePolynomialSingleABC",
@@ -1815,7 +1848,7 @@ def _has_consistent_number_of_polys(
 def _expand_dim_to_target_poly(
     origin_poly: "MultivariatePolynomialSingleABC",
     target_poly: "MultivariatePolynomialSingleABC",
-):
+) -> "MultivariatePolynomialSingleABC":
     """Expand the dimension of the polynomial to the dimension of another.
 
     Parameters
@@ -1827,7 +1860,7 @@ def _expand_dim_to_target_poly(
 
     Returns
     -------
-    MultivariatePolynomialABC
+    MultivariatePolynomialSingleABC
         A new instance of polynomial with an expanded dimension.
 
     Notes
@@ -1902,7 +1935,7 @@ def _expand_dim_to_target_dim(
     target_dimension: int,
     extra_internal_domain: Optional[np.ndarray] = None,
     extra_user_domain: Optional[np.ndarray] = None,
-):
+) -> "MultivariatePolynomialSingleABC":
     """Expand the dimension of the polynomial to the target dimension.
 
     Parameters
@@ -1918,7 +1951,7 @@ def _expand_dim_to_target_dim(
 
     Returns
     -------
-    MultivariatePolynomialABC
+    MultivariatePolynomialSingleABC
         A new instance of polynomial with an expanded dimension.
 
     Raises

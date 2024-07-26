@@ -92,33 +92,6 @@ def test_sub_same_poly(Poly):
     assert_polynomial_almost_equal(res, groundtruth)
 
 
-P1 = Poly
-P2 = Poly
-
-
-def test_add_different_poly(P1, P2):
-    res = P1 + P2
-    if P1 is P2:
-        groundtruth_coeffs = P1.coeffs * 2
-        groundtruth_multi_index_exponents = P1.multi_index.exponents
-    else:
-        groundtruth_coeffs = np.array([2, 2, 2, 3, 7, 4, 5])
-        groundtruth_multi_index_exponents = np.array(
-            [
-                [0, 0, 0],
-                [1, 0, 0],
-                [2, 0, 0],
-                [0, 1, 0],
-                [1, 1, 0],
-                [0, 2, 0],
-                [0, 0, 2],
-            ]
-        )
-    groundtruth_multi_index = MultiIndexSet(groundtruth_multi_index_exponents, lp_degree=1.0)
-    groundtruth = P1.__class__(groundtruth_multi_index, groundtruth_coeffs)
-    assert_polynomial_almost_equal(res, groundtruth)
-
-
 def test_sub_different_poly():
     """
     .. todo::

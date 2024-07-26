@@ -684,6 +684,10 @@ def verify_poly_coeffs(coeffs: np.ndarray, num_monomials: int) -> np.ndarray:
                 f"the number of monomials ({num_monomials})."
             )
 
+        # A single set is stored as one-dimensional array
+        if coeffs.ndim > 1 and coeffs.shape[1] == 1:
+            coeffs = coeffs.reshape(-1)
+
     except TypeError as err:
         custom_message = "Invalid type for polynomial coefficients!"
         err.args = _add_custom_exception_message(err.args, custom_message)
