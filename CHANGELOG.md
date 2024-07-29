@@ -79,6 +79,8 @@
 - All concrete polynomial classes now inherits `__len__()` from the abstract
   base class. Calling `len()` on a polynomial instance returns the number
   of coefficient sets the instance has.
+- Polynomial-polynomial multiplication is now supported for polynomials in the
+  canonical basis.
 
 ### Fixed
 

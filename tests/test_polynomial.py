@@ -941,6 +941,63 @@ class TestPolyMultiplication:
             # Perform multiplication
             poly *= poly
 
+    def test_eval(self, rand_polys_mnp_pair):
+        """Test the evaluation polynomials product."""
+        # Get the polynomial pairs
+        poly_1, poly_2 = rand_polys_mnp_pair
+
+        if not isinstance(poly_1, CanonicalPolynomial):
+            pytest.skip(
+                "Skipping addition between "
+                f"{type(poly_1)}, {type(poly_2)}"
+            )
+
+        # Get the maximum dimension
+        dim_1 = poly_1.spatial_dimension
+        dim_2 = poly_2.spatial_dimension
+        dim = np.max([dim_1, dim_2])
+
+        # Generate random test points
+        xx_test = -1 + 2 * np.random.rand(1000, dim)
+
+        # Compute reference results
+        yy_1 = poly_1(xx_test[:, :dim_1])
+        yy_2 = poly_2(xx_test[:, :dim_2])
+        yy_ref = yy_1 * yy_2
+
+        # Multiply polynomials and evaluate
+        yy_prod_1 = (poly_1 * poly_2)(xx_test)
+        yy_prod_2 = (poly_2 * poly_1)(xx_test)
+
+        # Assertion
+        assert np.allclose(yy_ref, yy_prod_1)
+        assert np.allclose(yy_ref, yy_prod_2)
+
+    def test_constant_poly(self, rand_polys_mnp):
+        """Test the multiplication with an arbitrary constant polynomial.
+
+        A polynomial multiplied with a constant polynomial should return
+        a polynomial whose coefficients multiplied with the scalar coefficient.
+        """
+        # Get the polynomial
+        poly = rand_polys_mnp
+
+        # Create a constant polynomial
+        exponents = np.zeros((1, poly.spatial_dimension), dtype=np.int_)
+        mi = MultiIndexSet(exponents, poly.multi_index.lp_degree)
+        coeffs = np.random.rand(1, len(poly))
+        poly_constant = poly.__class__(mi, coeffs)
+
+        # Multiplication
+        poly_prod_1 = poly * poly_constant
+        poly_prod_2 = poly_constant * poly
+
+        # Assertions
+        assert poly_prod_1 == poly_prod_2
+        assert poly_prod_2 == poly_prod_1
+        assert np.all(poly_prod_1.coeffs == poly.coeffs * coeffs)
+        assert np.all(poly_prod_2.coeffs == poly.coeffs * coeffs)
+
 
 class TestPolyAdditionSubtraction:
     """All tests related to polynomial-polynomial addition and subtraction
