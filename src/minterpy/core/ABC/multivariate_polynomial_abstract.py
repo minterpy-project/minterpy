@@ -13,6 +13,7 @@ from typing import List, Optional, Tuple, Union
 from minterpy.global_settings import ARRAY, SCALAR
 from minterpy.core.grid import Grid
 from minterpy.core.multi_index import MultiIndexSet
+from minterpy.services import is_constant
 from minterpy.utils.verification import (
     check_type,
     check_values,
@@ -237,7 +238,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
     @staticmethod
     @abc.abstractmethod
-    def _mul(self, other, **kwargs):  # pragma: no cover
+    def _mul(poly_1, poly_2, **kwargs):  # pragma: no cover
         # no docstring here, since it is given in the concrete implementation
         pass
 
@@ -402,18 +403,20 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         pass
 
     # --- Concrete implementations of operations
-
+    @staticmethod
     def _scalar_mul(
-        self,
-        other: SCALAR,
+        poly: "MultivariatePolynomialSingleABC",
+        scalar: Union[SCALAR, np.ndarray],
         inplace=False,
     ) -> Optional["MultivariatePolynomialSingleABC"]:
         """Multiply the polynomial by a (real) scalar value.
 
         Parameters
         ----------
-        other : SCALAR
+        scalar : Union[SCALAR, np.ndarray]
             The real scalar value to multiply the polynomial by.
+            Multiple scalars may be specified as an array as long as the length
+            is consistent with the length of the polynomial instance.
         inplace : bool, optional
             ``True`` if the multiplication should be done in-place,
             ``False`` otherwise. The default is ``False``.
@@ -436,11 +439,11 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         if inplace:
             # Don't do 'self._coeffs *= other' because external coeffs
             # will change and cause a side effect.
-            self._coeffs = self._coeffs * other
+            poly._coeffs = poly._coeffs * scalar
         else:
-
-            self_copy = deepcopy(self)
-            self_copy._coeffs *= other  # inplace is safe due to deepcopy above
+            self_copy = deepcopy(poly)
+            # inplace is safe due to deepcopy above
+            self_copy._coeffs *= scalar
 
             return self_copy
 
@@ -776,7 +779,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         return True
 
     # --- Special methods: Unary numeric
-
     def __neg__(self) -> "MultivariatePolynomialSingleABC":
         """Negate the polynomial(s) instance.
 
@@ -858,39 +860,22 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         if is_scalar(other):
             return self._scalar_add(other, inplace=False)
 
-        # Only supported for polynomials of the same concrete class
-        if self.__class__ != other.__class__:
-            raise TypeError(
-                f"Addition operation is not implemented for "
-                f"'{self.__class__}', '{other.__class__}'"
-            )
-
-        # Check if the number of coefficients is consistent
-        if len(self) != len(other):
-            raise ValueError(
-                "Cannot add polynomials with inconsistent "
-                "number of coefficient sets"
-            )
-
-        # Match the dimension of operands
-        poly_1, poly_2 = self._match_dims(other)
+        # Verify the operands before conducting addition
+        poly_1, poly_2 = self._verify_operands(other, operation="+ or -")
 
         # Handle equal value
         if poly_1 == poly_2:
-            return poly_1._scalar_mul(2.0)
+            return self._scalar_mul(poly_1, scalar=2.0, inplace=False)
 
         # Handle equal but negated value
         if poly_1 == -poly_2:
-            return poly_1._scalar_mul(0.0)
+            return self._scalar_mul(poly_1, scalar=0.0, inplace=False)
 
         result = self._add(poly_1, poly_2)
 
         return result
 
-    def __sub__(
-        self,
-        other: Union["MultivariatePolynomialSingleABC", SCALAR],
-    ) -> "MultivariatePolynomialSingleABC":
+    def __sub__(self, other: Union["MultivariatePolynomialSingleABC", SCALAR]):
         """Subtract the polynomial(s) with another poly. or a real scalar.
 
         This function is called when:
@@ -936,10 +921,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         return self.__add__(-other)
 
-    def __mul__(
-        self,
-        other: Union["MultivariatePolynomialSingleABC", SCALAR]
-    ) -> "MultivariatePolynomialSingleABC":
+    def __mul__(self, other: Union["MultivariatePolynomialSingleABC", SCALAR]):
         """Multiply the polynomial(s) with another polynomial or a real scalar.
 
         This function is called when:
@@ -969,43 +951,25 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         -----
         - The concrete implementation of polynomial-polynomial multiplication
           is delegated to the respective polynomial concrete class.
-
-        See Also
-        --------
-        _mul
-            Concrete implementation of ``__mil__``
-        _scalar_mul
-            Concrete implementation of ``__mul__`` when the right operand
-            is a real scalar number.
         """
         # Multiplication by a real scalar number
         if is_scalar(other):
-            return self._scalar_mul(other, inplace=False)
+            return self._scalar_mul(self, other, inplace=False)
 
-        if isinstance(self, type(other)):
-            # Check if the number of coefficients remain consistent.
-            if not _has_consistent_number_of_polys(self, other):
-                raise ValueError(
-                    "Cannot multiply polynomials with inconsistent "
-                    "number of coefficient sets"
-                )
-            # Only do it if the dimension is matching and inplace
-            if not self.has_matching_domain(other):
-                raise ValueError(
-                    "Cannot multiply polynomials of different domains"
-                )
+        # Verify the operands before conducting multiplication
+        poly_1, poly_2 = self._verify_operands(other, operation="*")
 
+        # Check if the polynomial is a constant polynomial
+        if is_constant(poly_1):
+            return self._scalar_mul(poly_2, poly_1.coeffs, inplace=False)
+        elif is_constant(poly_2):
+            return self._scalar_mul(poly_1, poly_2.coeffs, inplace=False)
+        else:
             # Rely on the subclass concrete implementation (static method)
-            return self._mul(self, other)
-
-        return NotImplemented
+            return self._mul(poly_1, poly_2)
 
     # --- Special methods: Reversed arithmetic operation
-
-    def __radd__(
-        self,
-        other: SCALAR,
-    ) -> "MultivariatePolynomialSingleABC":
+    def __radd__(self, other: SCALAR):
         """Right-sided addition of the polynomial(s) with a real scalar number.
 
         This function is called for the expression ``a + P`` where ``a``
@@ -1043,10 +1007,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # it will rely on the left operand '__add__()' method
         return NotImplemented
 
-    def __rsub__(
-        self,
-        other: SCALAR,
-    ) -> "MultivariatePolynomialSingleABC":
+    def __rsub__(self, other: SCALAR):
         """Right-sided subtraction of the polynomial(s) with a real scalar.
 
         This function is called for the expression ``a - P`` where ``a``
@@ -1088,7 +1049,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # it will rely on the left operand '__sub__()' method
         return NotImplemented
 
-    def __rmul__(self, other: SCALAR) -> "MultivariatePolynomialSingleABC":
+    def __rmul__(self, other: SCALAR):
         """Right sided multiplication of the polynomial(s) with a real scalar.
 
         This function is called if a real scalar number is multiplied
@@ -1105,27 +1066,17 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         MultivariatePolynomialSingleABC
             The result of the multiplication, an instance of multiplied
             polynomial.
-
-        See Also
-        --------
-        _scalar_mul
-            Concrete implementation of ``__mul__`` when the right operand
-            is a real scalar number.
         """
         # Multiplication by a real scalar number
         if is_scalar(other):
-            return self._scalar_mul(other, inplace=False)
+            return self._scalar_mul(self, other, inplace=False)
 
         # Right-sided multiplication with other types is not explicitly
         # supported; it will rely on the left operand '__mul__()' method
         return NotImplemented
 
     # --- Special methods: Augmented assignment arithmetic operators
-
-    def __imul__(
-        self,
-        other: SCALAR,
-    ) -> "MultivariatePolynomialSingleABC":
+    def __imul__(self, other: SCALAR):
         """Multiply a polynomial with a real scalar in-place.
 
         This function is called when a polynomial is multiplied with a real
@@ -1154,7 +1105,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         - Add support for polynomial-polynomial multiplication in-place.
         """
         if is_scalar(other):
-            self._scalar_mul(other, inplace=True)
+            self._scalar_mul(self, other, inplace=True)
             return self
 
         # TODO: Currently only multiplication with scalar is supported inplace
@@ -1773,7 +1724,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         return np.all(has_matching_domain)
 
-    # --- Private utility methods
+    # --- Private utility methods: Not supposed to be called from the outside
     def _match_dims(
         self,
         other: "MultivariatePolynomialSingleABC",
@@ -1818,6 +1769,33 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         else:
             self_expanded = self.expand_dim(other)
             return self_expanded, other
+
+    def _verify_operands(
+        self,
+        other: "MultivariatePolynomialSingleABC",
+        operation: str,
+    ) -> Tuple[
+         "MultivariatePolynomialSingleABC",
+         "MultivariatePolynomialSingleABC",
+         ]:
+        """Verify the operands are valid before moving on."""
+        # Only supported for polynomials of the same concrete class
+        if self.__class__ != other.__class__:
+            raise TypeError(
+                f"Unsupported operand type(s) for {operation}: "
+                f"'{self.__class__}' and '{other.__class__}'"
+            )
+
+        # Check if the number of coefficients is consistent
+        if len(self) != len(other):
+            raise ValueError(
+                "Cannot add polynomials with inconsistent "
+                "number of coefficient sets"
+            )
+
+        poly_1, poly_2 = self._match_dims(other)
+
+        return poly_1, poly_2
 
 
 def _has_consistent_number_of_polys(
