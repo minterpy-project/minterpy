@@ -9,6 +9,7 @@ from scipy.special import factorial
 
 from minterpy.global_settings import INT_DTYPE
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
+from minterpy.jit_compiled.canonical import compute_product_coefficients
 from minterpy.utils.polynomials.canonical import integrate_monomials_canonical
 from minterpy.utils.verification import (
     convert_eval_output,
@@ -85,7 +86,8 @@ def _canonical_add(
     """Add two polynomial instances in the canonical basis.
 
     This is the concrete implementation of ``_add()`` method in the
-    ``MultivariatePolynomialSingleABC`` abstract class.
+    ``MultivariatePolynomialSingleABC`` abstract class specifically for
+    polynomial in the canonical basis.
 
     Parameters
     ----------
@@ -122,7 +124,7 @@ def _canonical_add(
     idx_1 = find_match_between(poly_1.multi_index.exponents, mi_add.exponents)
     idx_2 = find_match_between(poly_2.multi_index.exponents, mi_add.exponents)
 
-    # Shape the coefficients before addition
+    # Shape the coefficients; ensure they have the same dimension
     coeffs_1, coeffs_2 = _shape_coeffs(poly_1, poly_2)
 
     # Add the coefficients column-wise
@@ -142,6 +144,80 @@ def _canonical_add(
         user_domain=poly_1.user_domain,
         internal_domain=poly_1.internal_domain,
         grid=grd_add,
+    )
+
+
+def _canonical_mul(
+    poly_1: "CanonicalPolynomial",
+    poly_2: "CanonicalPolynomial",
+) -> "CanonicalPolynomial":
+    """Multiply two polynomial instances in the canonical basis.
+
+    This is the concrete implementation of ``_mul()`` method in the
+    ``MultivariatePolynomialSingleABC`` abstract class specifically for
+    polynomials in the canonical basis.
+
+    Parameters
+    ----------
+    poly_1 : CanonicalPolynomial
+        Left operand of the multiplication expression.
+    poly_2 : CanonicalPolynomial
+        Right operand of the multiplication expression.
+
+    Returns
+    -------
+    CanonicalPolynomial
+        The product of two polynomials in the canonical basis; a new instance
+        of polynomial.
+
+    Notes
+    -----
+    - This function assumes: both polynomials must be in canonical basis,
+      they must be initialized, have the same dimension and their domains
+      are matching, and the number of polynomials per instance are the same.
+      These conditions are not explicitly checked in this function.
+    """
+    # --- Compute the union of the grid instances
+    grd_prod = poly_1.grid * poly_2.grid
+
+    # --- Compute union of the multi-index sets if they are separate
+    if poly_1.indices_are_separate or poly_2.indices_are_separate:
+        mi_prod = poly_1.multi_index * poly_2.multi_index
+    else:
+        # Otherwise use the one attached to the grid instance
+        mi_prod = grd_prod.multi_index
+    num_monomials = len(mi_prod)
+
+    # --- Process the coefficients
+
+    # Shape the coefficients; ensure they have the same dimension
+    coeffs_1, coeffs_2 = _shape_coeffs(poly_1, poly_2)
+
+    # Create output array placeholder
+    num_polys = len(poly_1)
+    coeffs_prod = np.zeros((num_monomials, num_polys))
+
+    # Compute the coefficients
+    compute_product_coefficients(
+        poly_1.multi_index.exponents,
+        coeffs_1,
+        poly_2.multi_index.exponents,
+        coeffs_2,
+        mi_prod.exponents,
+        coeffs_prod,
+    )
+
+    # Squeeze the resulting coefficients if there's only one polynomial
+    if num_polys == 1:
+        coeffs_prod = coeffs_prod.reshape(-1)
+
+    # --- Return a new instance
+    return CanonicalPolynomial(
+        mi_prod,
+        coeffs=coeffs_prod,
+        user_domain=poly_1.user_domain,
+        internal_domain=poly_1.internal_domain,
+        grid=grd_prod,
     )
 
 
@@ -283,7 +359,7 @@ class CanonicalPolynomial(MultivariatePolynomialSingleABC):
     # Virtual Functions
     _add = staticmethod(_canonical_add)
     _sub = staticmethod(dummy)
-    _mul = staticmethod(dummy)
+    _mul = staticmethod(_canonical_mul)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
     _eval = staticmethod(canonical_eval)

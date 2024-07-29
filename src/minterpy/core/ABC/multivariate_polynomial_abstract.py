@@ -959,7 +959,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # Verify the operands before conducting multiplication
         poly_1, poly_2 = self._verify_operands(other, operation="*")
 
-        # Check if the polynomial is a constant polynomial
+        # If one of the operands is constant, avoid multi-index set operation
         if is_constant(poly_1):
             return self._scalar_mul(poly_2, poly_1.coeffs, inplace=False)
         elif is_constant(poly_2):
