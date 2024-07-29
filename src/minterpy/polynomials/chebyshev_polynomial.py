@@ -15,9 +15,62 @@ import numpy as np
 
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
 from minterpy.utils.polynomials.chebyshev import evaluate_chebyshev_polynomials
+from minterpy.utils.polynomials.interface import (
+    compute_poly_sum_data_chebyshev,
+)
 from minterpy.utils.verification import dummy, verify_domain
 
 __all__ = ["ChebyshevPolynomial"]
+
+
+def _chebyshev_add(
+    poly_1: "ChebyshevPolynomial",
+    poly_2: "ChebyshevPolynomial",
+) -> "ChebyshevPolynomial":
+    """Add two polynomial instances in the Chebyshev basis.
+
+    This is the concrete implementation of ``_add()`` method in the
+    ``MultivariatePolynomialSingleABC`` abstract base class specifically for
+    polynomials in the Chebyshev basis.
+
+    Parameters
+    ----------
+    poly_1 : ChebyshevPolynomial
+        Left operand of the addition expression.
+    poly_2 : ChebyshevPolynomial
+        Right operand of the addition expression.
+
+    Returns
+    -------
+    ChebyshevPolynomial
+        The sum of two polynomials in the Chebyshev basis; a new instance
+        of polynomial.
+
+    Notes
+    -----
+    - This function assumes: both polynomials must be in the Chebyshev basis,
+      they must be initialized, have the same dimension, their domains are
+      matching, and their length must be the same. These conditions are not
+      checked explicitly in this function.
+    """
+    # --- Get the ingredients of a summed polynomial in the Chebyshev basis
+    grd_sum, mi_sum, coeffs_sum = compute_poly_sum_data_chebyshev(
+        poly_1,
+        poly_2,
+    )
+    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
+    # a matching domain, it does not matter which one to use
+    user_domain_sum = poly_1.user_domain
+    internal_domain_sum = poly_1.internal_domain
+
+    # --- Return a new instance
+    return ChebyshevPolynomial(
+        mi_sum,
+        coeffs=coeffs_sum,
+        user_domain=user_domain_sum,
+        internal_domain=internal_domain_sum,
+        grid=grd_sum,
+    )
 
 
 def chebyshev_eval(
@@ -58,7 +111,7 @@ class ChebyshevPolynomial(MultivariatePolynomialSingleABC):
     """Datatype to describe polynomials in Chebyshev bases."""
 
     # Virtual Functions
-    _add = staticmethod(dummy)
+    _add = staticmethod(_chebyshev_add)
     _sub = staticmethod(dummy)
     _mul = staticmethod(dummy)
     _div = staticmethod(dummy)  # type: ignore
