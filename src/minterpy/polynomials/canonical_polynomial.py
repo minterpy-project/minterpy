@@ -2,15 +2,27 @@
 Base class for polynomials in the canonical base.
 
 """
+from __future__ import annotations
+
 import numpy as np
 
-from copy import deepcopy
 from scipy.special import factorial
 
 from minterpy.global_settings import INT_DTYPE
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
-from minterpy.jit_compiled.canonical import compute_product_coefficients
-from minterpy.utils.polynomials.canonical import integrate_monomials_canonical
+from minterpy.jit_compiled.canonical import (
+    compute_coeffs_poly_prod,
+)
+from minterpy.utils.polynomials.canonical import (
+    compute_coeffs_poly_sum,
+    integrate_monomials,
+)
+from minterpy.utils.polynomials.interface import (
+    get_grid_and_multi_index_poly_prod,
+    get_grid_and_multi_index_poly_sum,
+    PolyData,
+    shape_coeffs,
+)
 from minterpy.utils.verification import (
     convert_eval_output,
     dummy,
@@ -23,63 +35,8 @@ from minterpy.jit_compiled.multi_index import all_indices_are_contained
 __all__ = ["CanonicalPolynomial"]
 
 
-# Arithmetics
-def _match_dims(poly1, poly2, copy=None):
-    """Dimensional expansion of two polynomial in order to match their spatial_dimensions.
-
-    Parameters
-    ----------
-    poly1 : CanonicalPolynomial
-        First polynomial in canonical basis
-    poly2 : CanonicalPolynomial
-        Second polynomial in canonical basis
-    copy : bool
-        If True, work on deepcopies of the passed polynomials (doesn't change the input).
-        If False, inplace expansion of the passed polynomials
-
-    Returns
-    -------
-    (poly1,poly2) : (CanonicalPolynomial,CanonicalPolynomial)
-        Dimensionally matched polynomials in the same order as input.
-
-    Notes
-    -----
-    - Maybe move this to the MultivariatePolynomialSingleABC since it shall be avialable for all poly bases
-    """
-    if copy is None:
-        copy = True
-
-    if copy:
-        p1 = deepcopy(poly1)
-        p2 = deepcopy(poly2)
-    else:
-        p1 = poly1
-        p2 = poly2
-
-    dim1 = p1.multi_index.spatial_dimension
-    dim2 = p2.multi_index.spatial_dimension
-    if dim1 >= dim2:
-        p2 = p2.expand_dim(dim1)
-    else:
-        p1 = p1.expand_dim(dim2)
-    return p1, p2
-
-
-def _shape_coeffs(poly_1, poly_2):
-    """Shape the polynomial coefficients before processing."""
-    assert len(poly_1) == len(poly_2)
-
-    num_poly = len(poly_1)
-    if num_poly > 1:
-        return poly_1.coeffs, poly_2.coeffs
-
-    coeffs_1 = poly_1.coeffs[:, np.newaxis]
-    coeffs_2 = poly_2.coeffs[:, np.newaxis]
-
-    return coeffs_1, coeffs_2
-
-
-def _canonical_add(
+# --- Arithmetics (Addition, Multiplication)
+def add_canonical(
     poly_1: "CanonicalPolynomial",
     poly_2: "CanonicalPolynomial",
 ) -> "CanonicalPolynomial":
@@ -109,45 +66,14 @@ def _canonical_add(
       are matching, and the number of polynomials per instance are the same.
       These conditions are not explicitly checked in this function.
     """
-    # --- Compute the union of the grid instances
-    grd_add = poly_1.grid | poly_2.grid
-
-    # --- Compute union of the multi-index sets if they are separate
-    if poly_1.indices_are_separate or poly_2.indices_are_separate:
-        mi_add = poly_1.multi_index | poly_2.multi_index
-    else:
-        # Otherwise use the one attached to the grid instance
-        mi_add = grd_add.multi_index
-    num_monomials = len(mi_add)
-
-    # --- Process the coefficients
-    idx_1 = find_match_between(poly_1.multi_index.exponents, mi_add.exponents)
-    idx_2 = find_match_between(poly_2.multi_index.exponents, mi_add.exponents)
-
-    # Shape the coefficients; ensure they have the same dimension
-    coeffs_1, coeffs_2 = _shape_coeffs(poly_1, poly_2)
-
-    # Add the coefficients column-wise
-    num_polys = len(poly_1)
-    coeffs_add = np.zeros((num_monomials, num_polys))
-    coeffs_add[idx_1, :] += coeffs_1[:, :]
-    coeffs_add[idx_2, :] += coeffs_2[:, :]
-
-    # Squeeze the resulting coefficients if there's only one polynomial
-    if num_polys == 1:
-        coeffs_add = coeffs_add.reshape(-1)
+    # --- Get the ingredients of the summed polynomial in the Canonical basis
+    poly_sum_data = _compute_poly_sum_data_canonical(poly_1, poly_2)
 
     # --- Return a new instance
-    return CanonicalPolynomial(
-        mi_add,
-        coeffs=coeffs_add,
-        user_domain=poly_1.user_domain,
-        internal_domain=poly_1.internal_domain,
-        grid=grd_add,
-    )
+    return CanonicalPolynomial(**poly_sum_data._asdict())
 
 
-def _canonical_mul(
+def mul_canonical(
     poly_1: "CanonicalPolynomial",
     poly_2: "CanonicalPolynomial",
 ) -> "CanonicalPolynomial":
@@ -177,48 +103,11 @@ def _canonical_mul(
       are matching, and the number of polynomials per instance are the same.
       These conditions are not explicitly checked in this function.
     """
-    # --- Compute the union of the grid instances
-    grd_prod = poly_1.grid * poly_2.grid
-
-    # --- Compute union of the multi-index sets if they are separate
-    if poly_1.indices_are_separate or poly_2.indices_are_separate:
-        mi_prod = poly_1.multi_index * poly_2.multi_index
-    else:
-        # Otherwise use the one attached to the grid instance
-        mi_prod = grd_prod.multi_index
-    num_monomials = len(mi_prod)
-
-    # --- Process the coefficients
-
-    # Shape the coefficients; ensure they have the same dimension
-    coeffs_1, coeffs_2 = _shape_coeffs(poly_1, poly_2)
-
-    # Create output array placeholder
-    num_polys = len(poly_1)
-    coeffs_prod = np.zeros((num_monomials, num_polys))
-
-    # Compute the coefficients
-    compute_product_coefficients(
-        poly_1.multi_index.exponents,
-        coeffs_1,
-        poly_2.multi_index.exponents,
-        coeffs_2,
-        mi_prod.exponents,
-        coeffs_prod,
-    )
-
-    # Squeeze the resulting coefficients if there's only one polynomial
-    if num_polys == 1:
-        coeffs_prod = coeffs_prod.reshape(-1)
+    # --- Get the ingredients of the product polynomial in the canonical basis
+    poly_prod_data = _compute_poly_prod_data_canonical(poly_1, poly_2)
 
     # --- Return a new instance
-    return CanonicalPolynomial(
-        mi_prod,
-        coeffs=coeffs_prod,
-        user_domain=poly_1.user_domain,
-        internal_domain=poly_1.internal_domain,
-        grid=grd_prod,
-    )
+    return CanonicalPolynomial(**poly_prod_data._asdict())
 
 
 def _canonical_eval(pts: np.ndarray,exponents: np.ndarray, coeffs: np.ndarray):
@@ -339,9 +228,7 @@ def _canonical_integrate_over(
         The integral value of the polynomial over the given domain.
     """
     # --- Compute the integral of the canonical monomials (quadrature weights)
-    exponents = poly.multi_index.exponents
-
-    quad_weights = integrate_monomials_canonical(exponents, bounds)
+    quad_weights = _compute_quad_weights_canonical(poly, bounds)
 
     return quad_weights @ poly.coeffs
 
@@ -357,9 +244,9 @@ class CanonicalPolynomial(MultivariatePolynomialSingleABC):
 
     # __doc__ += MultivariatePolynomialSingleABC.__doc_attrs__
     # Virtual Functions
-    _add = staticmethod(_canonical_add)
+    _add = staticmethod(add_canonical)
     _sub = staticmethod(dummy)
-    _mul = staticmethod(_canonical_mul)
+    _mul = staticmethod(mul_canonical)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
     _eval = staticmethod(canonical_eval)
@@ -372,3 +259,134 @@ class CanonicalPolynomial(MultivariatePolynomialSingleABC):
 
     generate_internal_domain = staticmethod(canonical_generate_internal_domain)
     generate_user_domain = staticmethod(canonical_generate_user_domain)
+
+
+# --- Internal utility functions
+def _compute_poly_sum_data_canonical(
+    poly_1: "CanonicalPolynomial",
+    poly_2: "CanonicalPolynomial",
+) -> PolyData:
+    """Compute the data to create a summed polynomial in the canonical basis.
+
+    Parameters
+    ----------
+    poly_1 : CanonicalPolynomial
+        Left operand of the addition expression.
+    poly_2 : CanonicalPolynomial
+        Right operand of the addition expression.
+
+    Returns
+    -------
+    PolyData
+        A tuple with all the ingredients to construct a summed polynomial
+        in the canonical basis.
+
+    Notes
+    -----
+    - Both polynomials are assumed to have the same dimension
+      and matching domains.
+    """
+    # --- Get the grid and multi-index set of the summed polynomial
+    grd_sum, mi_sum = get_grid_and_multi_index_poly_sum(poly_1, poly_2)
+
+    # --- Process the coefficients
+    # Shape the coefficients; ensure they have the same dimension
+    coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
+
+    # Compute the coefficients of the summed polynomial
+    coeffs_sum = compute_coeffs_poly_sum(
+        poly_1.multi_index.exponents,
+        coeffs_1,
+        poly_2.multi_index.exponents,
+        coeffs_2,
+        mi_sum.exponents,
+    )
+
+    # --- Process the domains
+    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
+    # matching domains, it does not matter which one to use
+    internal_domain_sum = poly_1.internal_domain
+    user_domain_sum = poly_1.user_domain
+
+    return PolyData(
+        multi_index=mi_sum,
+        coeffs=coeffs_sum,
+        internal_domain=internal_domain_sum,
+        user_domain=user_domain_sum,
+        grid=grd_sum,
+    )
+
+
+def _compute_poly_prod_data_canonical(
+    poly_1: "CanonicalPolynomial",
+    poly_2: "CanonicalPolynomial",
+) -> PolyData:
+    """Compute the data to create a product polynomial in the canonical basis.
+
+    Parameters
+    ----------
+    poly_1 : CanonicalPolynomial
+        Left operand of the addition expression.
+    poly_2 : CanonicalPolynomial
+        Right operand of the addition expression.
+
+    Returns
+    -------
+    PolyData
+        A tuple with all the ingredients to construct a product polynomial
+        in the canonical basis.
+
+    Notes
+    -----
+    - Both polynomials are assumed to have the same dimension
+      and matching domains.
+    """
+    # --- Get the grid and multi-index set of the summed polynomial
+    grd_prod, mi_prod = get_grid_and_multi_index_poly_prod(poly_1, poly_2)
+
+    # --- Process the coefficients
+    # Shape the coefficients; ensure they have the same dimension
+    coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
+
+    # Create output array placeholder
+    num_monomials = len(mi_prod)
+    num_polys = len(poly_1)
+    coeffs_prod = np.zeros((num_monomials, num_polys))
+
+    # Compute the coefficients (use pre-allocated placeholder as output)
+    compute_coeffs_poly_prod(
+        poly_1.multi_index.exponents,
+        coeffs_1,
+        poly_2.multi_index.exponents,
+        coeffs_2,
+        mi_prod.exponents,
+        coeffs_prod,
+    )
+
+    # --- Process the domains
+    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
+    # matching domains, it does not matter which one to use
+    internal_domain_prod= poly_1.internal_domain
+    user_domain_prod = poly_1.user_domain
+
+    return PolyData(
+        multi_index=mi_prod,
+        coeffs=coeffs_prod,
+        internal_domain=internal_domain_prod,
+        user_domain=user_domain_prod,
+        grid=grd_prod,
+    )
+
+
+def _compute_quad_weights_canonical(
+    poly: CanonicalPolynomial,
+    bounds: np.ndarray,
+) -> np.ndarray:
+    """Compute the quadrature weights of a polynomial in the Canonical basis.
+    """
+    # Get the relevant data from the polynomial instance
+    exponents = poly.multi_index.exponents
+
+    quad_weights = integrate_monomials(exponents, bounds)
+
+    return quad_weights

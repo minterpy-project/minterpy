@@ -4,6 +4,8 @@ Module of the NewtonPolynomial class
 .. todo::
     - implement staticmethods for Newton polynomials (or at least transform them to another base).
 """
+from __future__ import annotations
+
 import numpy as np
 
 from minterpy.global_settings import DEBUG
@@ -15,13 +17,12 @@ from minterpy.dds import dds
 from minterpy.utils.verification import dummy, verify_domain
 from minterpy.utils.polynomials.newton import (
     eval_newton_polynomials,
-    deriv_newt_eval as eval_diff_numpy,
+    deriv_newt_eval as eval_diff_numpy, integrate_monomials_newton,
 )
 from minterpy.jit_compiled.newton.diff import (
     eval_multiple_query as eval_diff_numba,
     eval_multiple_query_par as eval_diff_numba_par,
 )
-from minterpy.polynomials.interface import compute_quad_weights_newton
 
 __all__ = ["NewtonPolynomial"]
 
@@ -406,7 +407,7 @@ def newton_integrate_over(
     :class:`numpy:numpy.ndarray`
         The integral value of the polynomial over the given domain.
     """
-    quad_weights = compute_quad_weights_newton(poly, bounds)
+    quad_weights = _compute_quad_weights_newton(poly, bounds)
 
     return quad_weights @ poly.coeffs
 
@@ -442,3 +443,21 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     # Utility
     generate_internal_domain = staticmethod(newton_generate_internal_domain)
     generate_user_domain = staticmethod(newton_generate_user_domain)
+
+
+# --- Internal utility functions
+def _compute_quad_weights_newton(
+    poly: NewtonPolynomial,
+    bounds: np.ndarray,
+) -> np.ndarray:
+    """Compute the quadrature weights of a polynomial in the Newton basis.
+    """
+    # Get the relevant data from the polynomial instance
+    exponents = poly.multi_index.exponents
+    generating_points = poly.grid.generating_points
+
+    quad_weights = integrate_monomials_newton(
+        exponents, generating_points, bounds
+    )
+
+    return quad_weights

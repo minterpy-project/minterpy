@@ -20,7 +20,9 @@ from minterpy.polynomials import (
     ChebyshevPolynomial,
 )
 from minterpy.transformations import LagrangeToNewton
-from minterpy.utils.polynomials.chebyshev import evaluate_chebyshev_monomials
+from minterpy.utils.polynomials.chebyshev import (
+    evaluate_monomials as evaluate_monomials_chebyshev,
+)
 from minterpy.utils.polynomials.newton import (
     eval_newton_monomials,
     eval_newton_polynomials,
@@ -478,7 +480,7 @@ def compute_regression_matrix(
         )
 
     elif isinstance(basis_poly, ChebyshevPolynomial):
-        regression_matrix = evaluate_chebyshev_monomials(xx, exponents)
+        regression_matrix = evaluate_monomials_chebyshev(xx, exponents)
 
     else:
         raise TypeError(f"Polynomial {type(basis_poly)} is not supported!")

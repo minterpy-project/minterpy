@@ -23,6 +23,7 @@ from conftest import (
 from minterpy import (
     LagrangePolynomial,
     CanonicalPolynomial,
+    ChebyshevPolynomial,
     MultiIndexSet,
     Grid,
 )
@@ -948,7 +949,7 @@ class TestPolyMultiplication:
 
         if not isinstance(poly_1, CanonicalPolynomial):
             pytest.skip(
-                "Skipping addition between "
+                "Skipping multiplication between "
                 f"{type(poly_1)}, {type(poly_2)}"
             )
 
@@ -1099,13 +1100,13 @@ class TestPolyAddition:
     """All tests related to polynomial-polynomial addition for all concrete
     polynomial classes.
     """
-    def test_self_single_poly(self, rand_polys_mnp):
+    def test_self(self, rand_polys_mnp):
         """Test adding a polynomial with itself."""
         # Get the polynomial
         poly = rand_polys_mnp
 
-        if not isinstance(rand_polys_mnp, CanonicalPolynomial):
-            pytest.skip(f"Skipping addition of {type(rand_polys_mnp)}")
+        if not isinstance(poly, (CanonicalPolynomial, ChebyshevPolynomial)):
+            pytest.skip(f"Skipping addition of {type(poly)}")
 
         # Self addition
         poly_sum = poly + poly
@@ -1118,8 +1119,7 @@ class TestPolyAddition:
         # Get the polynomial pairs
         poly_1, poly_2 = rand_polys_mnp_pair
 
-        if not isinstance(poly_1, CanonicalPolynomial) and \
-                not isinstance(poly_2, CanonicalPolynomial):
+        if not isinstance(poly_1, (CanonicalPolynomial, ChebyshevPolynomial)):
             pytest.skip(
                 "Skipping addition between "
                 f"{type(poly_1)}, {type(poly_2)}"
@@ -1146,6 +1146,42 @@ class TestPolyAddition:
         assert np.allclose(yy_ref, yy_1)
         assert np.allclose(yy_ref, yy_2)
 
+    def test_constant_poly(self, rand_polys_mnp):
+        """Test the addition with an arbitrary constant polynomial.
+
+        A polynomial added with a constant polynomial should return
+        a polynomial whose coefficients are added with the scalar coefficient.
+        """
+        # Get the polynomial
+        poly = rand_polys_mnp
+
+        if not isinstance(poly, (CanonicalPolynomial, ChebyshevPolynomial)):
+            pytest.skip(
+               f"Skipping addition of {type(poly)}"
+            )
+
+        # Create a constant polynomial
+        exponents = np.zeros((1, poly.spatial_dimension), dtype=np.int_)
+        mi = MultiIndexSet(exponents, poly.multi_index.lp_degree)
+        coeffs = np.random.rand(1, len(poly))
+        poly_constant = poly.__class__(mi, coeffs)
+
+        # Addition
+        poly_prod_1 = poly + poly_constant
+        poly_prod_2 = poly_constant + poly
+        # Reference polynomial coefficients
+        coeffs_ref = poly.coeffs.copy()
+        if len(poly) == 1:
+            coeffs_ref[0] += coeffs[:]
+        else:
+            coeffs_ref[0, :] += coeffs[0, :]
+
+        # Assertions
+        assert poly_prod_1 == poly_prod_2
+        assert poly_prod_2 == poly_prod_1
+        assert np.all(poly_prod_1.coeffs == coeffs_ref)
+        assert np.all(poly_prod_2.coeffs == coeffs_ref)
+
 
 class TestPolySubtraction:
     """All tests related to polynomial-polynomial subtraction for all concrete
@@ -1156,8 +1192,8 @@ class TestPolySubtraction:
         # Get the polynomial
         poly = rand_polys_mnp
 
-        if not isinstance(rand_polys_mnp, CanonicalPolynomial):
-            pytest.skip(f"Skipping addition of {type(rand_polys_mnp)}")
+        if not isinstance(poly, (CanonicalPolynomial, ChebyshevPolynomial)):
+            pytest.skip(f"Skipping subtraction of {type(poly)} with itself")
 
         # Self subtraction
         poly_sub_1 = poly - poly
@@ -1168,16 +1204,14 @@ class TestPolySubtraction:
         assert poly_sub_1 == 0 * poly
         assert poly_sub_2 == 0 * poly
 
-    def test_eval_multiple_polys(self, rand_polys_mnp_pair):
+    def test_eval(self, rand_polys_mnp_pair):
         """Test the evaluation of subtracted polynomial."""
         # Get the polynomial pairs
         poly_1, poly_2 = rand_polys_mnp_pair
 
-        if not isinstance(poly_1, CanonicalPolynomial) and \
-                not isinstance(poly_2, CanonicalPolynomial):
+        if not isinstance(poly_1, (CanonicalPolynomial, ChebyshevPolynomial)):
             pytest.skip(
-                "Skipping addition between "
-                f"{type(poly_1)}, {type(poly_2)}"
+                f"Skipping evaluation of subtracted {type(poly_1)}"
             )
 
         # Get the maximum dimension
@@ -1200,6 +1234,38 @@ class TestPolySubtraction:
         # Assertions
         assert np.allclose(yy_ref, yy_1)
         assert np.allclose(yy_ref, yy_2)
+
+    def test_constant_poly(self, rand_polys_mnp):
+        """Test the subtraction with an arbitrary constant polynomial."""
+        # Get the polynomial
+        poly = rand_polys_mnp
+
+        if not isinstance(poly, (CanonicalPolynomial, ChebyshevPolynomial)):
+            pytest.skip(
+               f"Skipping subtraction of {type(poly)} with a constant poly"
+            )
+
+        # Create a constant polynomial
+        exponents = np.zeros((1, poly.spatial_dimension), dtype=np.int_)
+        mi = MultiIndexSet(exponents, poly.multi_index.lp_degree)
+        coeffs = np.random.rand(1, len(poly))
+        poly_constant = poly.__class__(mi, coeffs)
+
+        # Addition
+        poly_prod_1 = poly - poly_constant
+        poly_prod_2 = -poly_constant + poly
+        # Reference polynomial coefficients
+        coeffs_ref = poly.coeffs.copy()
+        if len(poly) == 1:
+            coeffs_ref[0] -= coeffs[:]
+        else:
+            coeffs_ref[0, :] -= coeffs[0, :]
+
+        # Assertions
+        assert poly_prod_1 == poly_prod_2
+        assert poly_prod_2 == poly_prod_1
+        assert np.all(poly_prod_1.coeffs == coeffs_ref)
+        assert np.all(poly_prod_2.coeffs == coeffs_ref)
 
 
 class TestPolyAdditionSubtractionAugmented:

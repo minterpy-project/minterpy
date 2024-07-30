@@ -2,29 +2,30 @@
 This module provides computational routines relevant to polynomials
 in the Chebyshev basis.
 """
-
 import numpy as np
+
 from scipy.special import eval_chebyt
 
+from minterpy.utils.polynomials.canonical import (
+    compute_coeffs_poly_sum as compute_poly_sum_coeffs_canonical,
+)
 
-def evaluate_chebyshev_monomials(
-    xx: np.ndarray,
-    exponents: np.ndarray,
-) -> np.ndarray:
+
+def evaluate_monomials(xx: np.ndarray, exponents: np.ndarray) -> np.ndarray:
     """Evaluate the Chebyshev monomials at all query points.
 
     Parameters
     ----------
-    xx : np.ndarray
+    xx : :class:`numpy:numpy.ndarray`
         The array of query points of shape ``(k, m)`` at which the monomials
         are evaluated. The values must be in :math:`[-1, 1]^m`.
-    exponents : np.ndarray
+    exponents : :class:`numpy:numpy.ndarray`
         The non-negative integer array of polynomial exponents (i.e., as
         multi-indices) of shape ``(N, m)``.
 
     Returns
     -------
-    np.ndarray
+    :class:`numpy:numpy.ndarray`
         The value of each Chebyshev basis evaluated at each given point.
         The array is of shape ``(k, N)``.
     """
@@ -37,22 +38,22 @@ def evaluate_chebyshev_monomials(
     return monomials
 
 
-def evaluate_chebyshev_polynomials(
+def evaluate_polynomials(
     xx: np.ndarray,
     exponents: np.ndarray,
     coefficients: np.ndarray,
 ) -> np.ndarray:
-    """Evaluate polynomial(s) in the Chebyshev bases.
+    """Evaluate polynomial(s) in the Chebyshev basis at all query points.
 
     Parameters
     ----------
-    xx : np.ndarray
+    xx : :class:`numpy:numpy.ndarray`
         The array of query points of shape ``(k, m)`` at which the monomials
         are evaluated. The values must be in :math:`[-1, 1]^m`.
-    exponents : np.ndarray
+    exponents : :class:`numpy:numpy.ndarray`
         The non-negative integer array of polynomial exponents (i.e., as
         multi-indices) of shape ``(N, m)``.
-    coefficients : np.ndarray
+    coefficients : :class:`numpy:numpy.ndarray`
         The array of coefficients of the polynomials of shape ``(N, Np)``.
         Multiple sets of coefficients (``Np > 1``) indicate multiple Chebyshev
         polynomials evaluated at the same time at the same query points.
@@ -62,9 +63,14 @@ def evaluate_chebyshev_polynomials(
     - The Chebyshev Polynomial has domain :math:`[-1, 1]^m`.
     """
     # Evaluate the monomials
-    monomials = evaluate_chebyshev_monomials(xx, exponents)
+    monomials = evaluate_monomials(xx, exponents)
 
     # Multiply with the coefficients
     results = monomials @ coefficients
 
     return results
+
+
+# NOTE: The logic behind polynomial-polynomial addition in the Chebyshev basis
+# is the same as the logic behind the canonical basis
+compute_poly_sum_coeffs = compute_poly_sum_coeffs_canonical

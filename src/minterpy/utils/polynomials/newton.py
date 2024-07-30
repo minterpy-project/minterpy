@@ -386,13 +386,6 @@ def integrate_monomials_newton(
     :class:`numpy:numpy.ndarray`
         The integrated Newton monomials, an ``(N,)`` array, where N is
         the number of monomials (exponents).
-
-    TODO
-    ----
-    - The whole integration domain is assumed to be :math:`[-1, 1]^M` where
-      :math:`M` is the number of spatial dimensions because the polynomial
-      itself is defined in that domain. This condition may be relaxed in
-      the future and the implementation below should be modified.
     """
     # --- Get some basic data
     num_monomials, num_dim = exponents.shape
@@ -426,5 +419,11 @@ def integrate_monomials_newton(
             exp = exponents[i, j]
             out *= one_dim_integrals[exp, j]
         monomials_integrals[i] = out
+
+    # TODO: The whole integration domain is assumed to be :math:`[-1, 1]^M`
+    #       where :math:`M` is the number of spatial dimensions because
+    #       the current interpolating polynomial itself is defined
+    #       in that domain. This condition may be relaxed in the future
+    #       and the implementation.
 
     return monomials_integrals

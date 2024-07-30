@@ -256,7 +256,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
     @staticmethod
     @abc.abstractmethod
-    def _iadd(self, other):  # pragma: no cover
+    def _iadd(poly_1, poly_2):  # pragma: no cover
         # no docstring here, since it is given in the concrete implementation
         pass
 
@@ -447,16 +447,19 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
             return self_copy
 
+    @staticmethod
     def _scalar_add(
-        self,
-        other: SCALAR,
+        poly: "MultivariatePolynomialSingleABC",
+        scalar: SCALAR,
         inplace=False,
     ) -> Optional["MultivariatePolynomialSingleABC"]:
         """Add the polynomial with a real scalar value.
 
         Parameters
         ----------
-        other : SCALAR
+        poly : MultivariatePolynomialSingleABC
+            ss
+        scalar : SCALAR
             The real scalar value to add the polynomial with.
         inplace : bool, optional
             ``True`` if the addition should be done in-place,
@@ -476,37 +479,16 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
           ``__add__()`` or ``__iadd__()`` is responsible for handling
           the polynomial-polynomial addition.
         """
-        # Create a constant polynomial
-        dim = self.spatial_dimension
-        lp_degree = self.multi_index.lp_degree
-        mi_constant = MultiIndexSet.from_degree(
-            spatial_dimension=dim,
-            poly_degree=0,
-            lp_degree=lp_degree,
-        )
-        if self.coeffs.ndim == 1:
-            coeffs_shape = (1,)
-        else:
-            coeffs_shape = (1, self.coeffs.shape[1])
-        coeffs_constant = other * np.ones(
-            coeffs_shape,
-            dtype=self.coeffs.dtype,
-        )
-        poly_constant = type(self)(
-            multi_index=mi_constant,
-            coeffs=coeffs_constant,
-            internal_domain=self.internal_domain,
-            user_domain=self.user_domain,
-            grid=self.grid,
-        )
+        # Create a constant polynomial from the given polynomial
+        poly_constant = _create_constant_poly(poly, scalar)
 
         # Call the relevant method
         if inplace:
             # Call back `__iadd__()` because it contains verification routines
-            return self.__iadd__(poly_constant)
+            return poly.__iadd__(poly_constant)
         else:
             # Call back `__add__()` because it contains verification routines
-            return self.__add__(poly_constant)
+            return poly.__add__(poly_constant)
 
     # --- Constructors
 
@@ -823,18 +805,16 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         return self
 
     # --- Special methods: Arithmetic operators
-    def __add__(
-        self,
-        other: Union["MultivariatePolynomialSingleABC", SCALAR],
-    ) -> "MultivariatePolynomialSingleABC":
+    def __add__(self, other: Union["MultivariatePolynomialSingleABC", SCALAR]):
         """Add the polynomial(s) with another polynomial(s) or a real scalar.
 
         This function is called when:
 
-        - two polynomials are added: ``P1 + P2``, where ``P1`` and ``P2``
-          are both instances of a concrete polynomial class.
+        - two polynomials are added: ``P1 + P2``, where ``P1`` (i.e., ``self``)
+          and ``P2`` (``other``) are both instances of a concrete polynomial
+          class.
         - a polynomial is added with a real scalar number: ``P1 + a``,
-          where ``a`` is a real scalar number.
+          where ``a`` (``other``) is a real scalar number.
 
         Polynomials are closed under scalar addition, meaning that
         the result of the addition is also a polynomial with the same
@@ -858,7 +838,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         # Handle scalar addition
         if is_scalar(other):
-            return self._scalar_add(other, inplace=False)
+            return self._scalar_add(self, other, inplace=False)
 
         # Verify the operands before conducting addition
         poly_1, poly_2 = self._verify_operands(other, operation="+ or -")
@@ -904,20 +884,11 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         Notes
         -----
         - Under the hood subtraction is an addition operation with a negated
-          operand on the right; no separate concrete implementation is
-          used.
-
-        See Also
-        --------
-        _add
-            Concrete implementation of ``__add__``
-        _scalar_add
-            Concrete implementation of ``__add__`` when the right operand
-            is a real scalar number.
+          operand on the right; no separate concrete implementation is used.
         """
         # Handle scalar addition
         if is_scalar(other):
-            return self._scalar_add(-other, inplace=False)
+            return self._scalar_add(self, -other, inplace=False)
 
         return self.__add__(-other)
 
@@ -992,16 +963,10 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         - If the left operand is not a real scalar number, the right-sided
           addition is not explicitly supported, and it will rely on
           the `__add__()` method of the left operand.
-
-        See Also
-        --------
-        _scalar_add
-            Concrete implementation of ``__add__`` when the right operand
-            is a real scalar number.
         """
         # Addition of a real scalar number by a polynomial
         if is_scalar(other):
-            return self._scalar_add(other, inplace=False)
+            return self._scalar_add(self, other, inplace=False)
 
         # Right-sided addition with other types is not explicitly supported;
         # it will rely on the left operand '__add__()' method
@@ -1032,18 +997,10 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
           the `__add__()` method of the left operand.
         - This operation relies on the negation of a polynomial and scalar
           addition
-
-        See Also
-        --------
-        _scalar_add
-            Concrete implementation of ``__add__`` when the right operand
-            is a real scalar number.
-        __neg__
-            Negating a polynomial.
         """
         # Subtraction of a real scalar number by a polynomial
         if is_scalar(other):
-            return (-self)._scalar_add(other, inplace=False)
+            return self._scalar_add(-self, other, inplace=False)
 
         # Right-sided subtraction with other types is not explicitly supported;
         # it will rely on the left operand '__sub__()' method
@@ -1117,7 +1074,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     def __iadd__(
         self,
         other: Union["MultivariatePolynomialSingleABC", SCALAR],
-    ) -> "MultivariatePolynomialSingleABC":
+    ):
         """Add a polynomial with a poly. or a real scalar in-place.
 
         This function is called when a polynomial is added in-place,
@@ -1141,44 +1098,24 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             The result of the addition, an updated instance of summed
             polynomial.
 
-        See Also
-        --------
-        _iadd
-            Concrete implementation of ``__iadd__``.
-        _scalar_add
-            Concrete implementation of ``__mul__`` when the right operand
-            is a real scalar number.
+        Notes
+        -----
+        - The concrete implementation of augmented polynomial-polynomial
+          addition is delegated to the respective polynomial concrete class.
         """
         # Handle in-place addition by a scalar
         if is_scalar(other):
-            return self._scalar_add(other, inplace=True)
+            return self._scalar_add(self, other, inplace=True)
 
-        #  Only supported for polynomials of the same concrete class
-        if self.__class__ != other.__class__:
-            raise TypeError(
-                f"Subtraction operation not implemented for "
-                f"'{self.__class__}', '{other.__class__}'"
-            )
+        # Verify the operands before conducting multiplication
+        poly_1, poly_2 = self._verify_operands(other, operation="+= or -=")
 
-        # Check if the number of coefficients remain consistent.
-        if not _has_consistent_number_of_polys(self, other):
-            raise ValueError(
-                "Cannot subtract polynomials with inconsistent "
-                "number of coefficient sets"
-            )
-
-        # Only do it if the dimension is matching and inplace
-        if not self.has_matching_domain(other):
-            raise ValueError(
-                "Cannot subtract polynomials of different domains"
-            )
-
-        return self._iadd(self, other)
+        return self._iadd(poly_1, poly_2)
 
     def __isub__(
         self,
         other: Union["MultivariatePolynomialSingleABC", SCALAR],
-    ) -> "MultivariatePolynomialSingleABC":
+    ):
         """Subtract a polynomial with a poly. or a real scalar in-place.
 
         This function is called when a polynomial is subtracted in-place,
@@ -1206,18 +1143,10 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         - Under the hood subtraction is an addition operation with a negated
           operand on the right; no separate concrete implementation is
           used.
-
-        See Also
-        --------
-        _iadd
-            Concrete implementation of ``__iadd__``.
-        _scalar_add
-            Concrete implementation of ``__mul__`` when the right operand
-            is a real scalar number.
         """
         # Handle in-place subtraction by a scalar
         if is_scalar(other):
-            return self._scalar_add(-other, inplace=True)
+            return self._scalar_add(self, -other, inplace=True)
 
         return self.__iadd__(-other)
 
@@ -1796,6 +1725,51 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         poly_1, poly_2 = self._match_dims(other)
 
         return poly_1, poly_2
+
+
+def _create_constant_poly(
+    poly: "MultivariatePolynomialSingleABC",
+    scalar: Union[SCALAR, np.ndarray],
+) -> "MultivariatePolynomialSingleABC":
+    """Create a constant polynomial from a given polynomial.
+
+    Parameters
+    ----------
+    poly : MultivariatePolynomialSingleABC
+        An instance of polynomial from which a constant polynomial will be
+        created.
+    scalar : Union[SCALAR, np.ndarray]
+        Real scalar numbers for the coefficient value of the constant
+        polynomial.
+
+    Returns
+    -------
+    MultivariatePolynomialSingleABC
+        A polynomial of the same instance as ``poly`` having the same grid and
+        domains but with a single element multi-index set.
+    """
+    # Create a multi-index set
+    dim = poly.spatial_dimension
+    lp_degree = poly.multi_index.lp_degree
+    mi = MultiIndexSet.from_degree(dim, poly_degree=0, lp_degree=lp_degree)
+
+    # Create the coefficient
+    if len(poly) == 1:
+        coeffs = np.array([scalar])
+    else:
+        coeffs = scalar * np.ones(
+            shape=(1, len(poly)),
+            dtype=poly.coeffs.dtype,
+        )
+
+    # Return a polynomial instance
+    return poly.__class__(
+        multi_index=mi,
+        coeffs=coeffs,
+        internal_domain=poly.internal_domain,
+        user_domain=poly.user_domain,
+        grid=poly.grid,
+    )
 
 
 def _has_consistent_number_of_polys(

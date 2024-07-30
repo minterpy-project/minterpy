@@ -52,7 +52,7 @@ def can_eval_mult(x_multiple, coeffs, exponents, result_placeholder):
 
 
 @njit(void(I_2D, F_2D, I_2D, F_2D, I_2D, F_2D), cache=True)
-def compute_product_coefficients(
+def compute_coeffs_poly_prod(
     exponents_1: np.ndarray,
     coeffs_1: np.ndarray,
     exponents_2: np.ndarray,

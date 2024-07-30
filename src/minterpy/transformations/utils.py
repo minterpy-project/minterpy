@@ -24,7 +24,9 @@ from minterpy.schemes.barycentric.precomp import (
 from minterpy.schemes.matrix_operator import MatrixOperator
 from minterpy.utils.polynomials.newton import eval_newton_monomials
 
-from minterpy.utils.polynomials.chebyshev import evaluate_chebyshev_monomials
+from minterpy.utils.polynomials.chebyshev import (
+    evaluate_monomials as evaluate_monomials_chebyshev,
+)
 
 
 # NOTE: avoid looping over a numpy array! e.g. for j in np.arange(num_monomials):
@@ -234,7 +236,7 @@ def build_lagrange_to_chebyshev_operator(
         exponents = transformation.grid.multi_index.exponents
 
     # Compute the Chebyshev monomials at the unisolvent nodes
-    cheb2lag_matrix = evaluate_chebyshev_monomials(
+    cheb2lag_matrix = evaluate_monomials_chebyshev(
         unisolvent_nodes,
         exponents,
     )
@@ -447,7 +449,7 @@ def build_chebyshev_to_lagrange_operator(
         exponents = transformation.grid.multi_index.exponents
 
     # Compute the Chebyshev monomials at the unisolvent nodes
-    chebyshev_monomials = evaluate_chebyshev_monomials(
+    chebyshev_monomials = evaluate_monomials_chebyshev(
         unisolvent_nodes,
         exponents,
     )
