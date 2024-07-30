@@ -1,6 +1,10 @@
 """
 LagrangePolynomial class
 """
+from __future__ import annotations
+
+from copy import deepcopy
+
 import numpy as np
 
 from typing import Optional
@@ -9,12 +13,9 @@ import minterpy as mp
 
 from minterpy.core import Grid, MultiIndexSet
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
+from minterpy.utils.polynomials.lagrange import integrate_monomials_lagrange
 from minterpy.utils.verification import dummy, verify_domain
 from minterpy.global_settings import ARRAY
-from minterpy.polynomials.canonical_polynomial import (
-    _match_dims,
-)
-from minterpy.polynomials.interface import compute_quad_weights_lagrange
 
 __all__ = ["LagrangePolynomial"]
 
@@ -241,3 +242,71 @@ class LagrangePolynomial(MultivariatePolynomialSingleABC):
 
     generate_internal_domain = staticmethod(lagrange_generate_internal_domain)
     generate_user_domain = staticmethod(lagrange_generate_user_domain)
+
+
+def _match_dims(poly1, poly2, copy=None):
+    """Dimensional expansion of two polynomial in order to match their spatial_dimensions.
+
+    Parameters
+    ----------
+    poly1 : CanonicalPolynomial
+        First polynomial in canonical basis
+    poly2 : CanonicalPolynomial
+        Second polynomial in canonical basis
+    copy : bool
+        If True, work on deepcopies of the passed polynomials (doesn't change the input).
+        If False, inplace expansion of the passed polynomials
+
+    Returns
+    -------
+    (poly1,poly2) : (CanonicalPolynomial,CanonicalPolynomial)
+        Dimensionally matched polynomials in the same order as input.
+
+    Notes
+    -----
+    - Maybe move this to the MultivariatePolynomialSingleABC since it shall be avialable for all poly bases
+    """
+    if copy is None:
+        copy = True
+
+    if copy:
+        p1 = deepcopy(poly1)
+        p2 = deepcopy(poly2)
+    else:
+        p1 = poly1
+        p2 = poly2
+
+    dim1 = p1.multi_index.spatial_dimension
+    dim2 = p2.multi_index.spatial_dimension
+    if dim1 >= dim2:
+        p2 = p2.expand_dim(dim1)
+    else:
+        p1 = p1.expand_dim(dim2)
+    return p1, p2
+
+
+def compute_quad_weights_lagrange(
+    poly: LagrangePolynomial,
+    bounds: np.ndarray,
+) -> np.ndarray:
+    """Compute the quadrature weights of a polynomial in the Lagrange basis.
+    """
+    # Get the relevant data from the polynomial instance
+    exponents = poly.multi_index.exponents
+    generating_points = poly.grid.generating_points
+    # ...from the MultiIndexTree
+    tree = poly.grid.tree
+    split_positions = tree.split_positions
+    subtree_sizes = tree.subtree_sizes
+    masks = tree.stored_masks
+
+    quad_weights = integrate_monomials_lagrange(
+        exponents,
+        generating_points,
+        split_positions,
+        subtree_sizes,
+        masks,
+        bounds,
+    )
+
+    return quad_weights

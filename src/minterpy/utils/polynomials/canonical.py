@@ -2,11 +2,12 @@
 This module provides computational routines relevant to polynomials
 in the canonical basis.
 """
-
 import numpy as np
 
+from minterpy.utils.multi_index import find_match_between
 
-def integrate_monomials_canonical(
+
+def integrate_monomials(
     exponents: np.ndarray,
     bounds: np.ndarray,
 ) -> np.ndarray:
@@ -28,13 +29,6 @@ def integrate_monomials_canonical(
     :class:`numpy:numpy.ndarray`
         The integrated Canonical monomials, an ``(N,)`` array, where ``N`` is
         the number of monomials (exponents).
-
-    TODO
-    ----
-    - The whole integration domain is assumed to be :math:`[-1, 1]^M` where
-      :math:`M` is the number of spatial dimensions because the polynomial
-      itself is defined in that domain. This condition may be relaxed in
-      the future and the implementation below should be modified.
     """
     bounds_diff = np.diff(bounds)
 
@@ -57,4 +51,84 @@ def integrate_monomials_canonical(
 
     monomials_integrals = np.prod(bounds_diff / (exponents + 1), axis=1)
 
+    # TODO: The whole integration domain is assumed to be :math:`[-1, 1]^M`
+    #       where :math:`M` is the number of spatial dimensions because
+    #       the polynomial itself is defined in that domain. Polynomials in
+    #       the canonical basis, however, are defined on the reals.
+    #       The restriction may be relaxed in the future
+    #       and the implementation should be modified.
+
     return monomials_integrals
+
+
+def compute_coeffs_poly_sum(
+    exponents_1: np.ndarray,
+    coeffs_1: np.ndarray,
+    exponents_2: np.ndarray,
+    coeffs_2: np.ndarray,
+    exponents_sum: np.ndarray,
+):
+    r"""Compute the coefficients of polynomial sum in the canonical basis.
+
+    For example, suppose: :math:`A = \{ (0, 0) , (1, 0), (0, 1) \}` with
+    coefficients :math:`c_A = (1.0 , 2.0, 3.0)` is summed with
+    :math:`B = \{ (0, 0), (1, 0), (2, 0) \}` with coefficients
+    :math:`c_B = (1.0, 5.0, 3.0)`. The union/sum multi-index set is
+    :math:`A \times B = \{ (0, 0), (1, 0), (2, 0), (0, 1) \}`.
+
+    The corresponding coefficients of the sum are:
+
+    - :math:`(0, 0)` appears in both operands, so the coefficient
+      is :math:`1.0 + 1.0 = 2.0`
+    - :math:`(1, 0)` appears in both operands, so the coefficient is
+      :math:`2.0 + 5.0 = 7.0`
+    - :math:`(2, 0)` only appears in the second operand, so the coefficient
+      is :math:`3.0`
+    - :math:`(0, 1)` only appears in the first operand, so the coefficient
+      is :math:`3.0`
+
+    or :math:`c_{A | B} = (2.0, 7.0, 3.0, 3.0)`.
+
+    Parameters
+    ----------
+    exponents_1 : :class:`numpy:numpy.ndarray`
+        The multi-indices exponents of the first multidimensional polynomial
+        operand in the addition expression.
+    coeffs_1 : :class:`numpy:numpy.ndarray`
+        The coefficients of the first multidimensional polynomial operand.
+    exponents_2 : :class:`numpy:numpy.ndarray`
+        The multi-indices exponents of the second multidimensional polynomial.
+    coeffs_2 : :class:`numpy:numpy.ndarray`
+        The coefficients of the second multidimensional polynomial operand.
+    exponents_sum : :class:`numpy:numpy.ndarray`
+        The multi-indices exponents that are the sum between
+        ``exponents_1`` and ``exponents_2`` (i.e., the union of both).
+
+    Notes
+    -----
+    - ``exponents_1``, ``exponents_2``, ``exponents_prod`` are assumed to be
+      two-dimensional integer arrays that are sorted lexicographically.
+    - ``exponents_sum`` is assumed to be the result of unionizing
+      ``exponents_1`` and ``exponents_2`` as multi-indices.
+    - ``coeffs_1`` and ``coeffs_2`` are assumed to be two-dimensional float
+      arrays. Their number of columns must be the same.
+    - ``coeffs_sum`` is a placeholder array to store the results; it must
+      be initialized with zeros.
+    - The function does not check whether the above assumptions are fulfilled;
+      the caller is responsible to make sure of that. If the assumptions are
+      not fulfilled, the function may not raise any exception but produce
+      the wrong results.
+    """
+    # Create the output array
+    num_monomials = exponents_sum.shape[0]
+    num_polynomials = coeffs_1.shape[1]
+    coeffs_sum = np.zeros((num_monomials, num_polynomials))
+
+    # Get the matching indices
+    idx_1 = find_match_between(exponents_1, exponents_sum)
+    idx_2 = find_match_between(exponents_2, exponents_sum)
+
+    coeffs_sum[idx_1, :] += coeffs_1[:, :]
+    coeffs_sum[idx_2, :] += coeffs_2[:, :]
+
+    return coeffs_sum

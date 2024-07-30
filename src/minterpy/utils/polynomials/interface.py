@@ -9,60 +9,22 @@ inside the concrete polynomial modules.
 """
 import numpy as np
 
-from typing import TYPE_CHECKING, Tuple
+from typing import NamedTuple, Tuple
 
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
 from minterpy.core import Grid, MultiIndexSet
 
-if TYPE_CHECKING:
-    from minterpy.polynomials.chebyshev_polynomial import ChebyshevPolynomial
 
-from minterpy.utils.polynomials.chebyshev import (
-    compute_poly_sum_coeffs_chebyshev,
-)
-
-
-# --- Polynomial arithmetics
-def compute_poly_sum_data_chebyshev(
-    poly_1: "ChebyshevPolynomial",
-    poly_2: "ChebyshevPolynomial",
-) -> Tuple[Grid, MultiIndexSet, np.ndarray]:
-    """Compute the data to create a summed polynomial in the Chebyshev basis.
-
-    Parameters
-    ----------
-    poly_1 : ChebyshevPolynomial
-        Left operand of the addition expression.
-    poly_2 : ChebyshevPolynomial
-        Right operand of the addition expression.
-
-    Returns
-    -------
-    Tuple[Grid, MultiIndexSet, :class:`numpy:numpy.ndarray`]
-        A tuple with the main ingredients to construct a summed polynomial
-        in the Chebyshev basis.
-    """
-    # --- Get the grid and multi-index set of the summed polynomial
-    grd_sum, mi_sum = _get_grid_and_multi_index_poly_sum(poly_1, poly_2)
-
-    # --- Process the coefficients
-    # Shape the coefficients; ensure they have the same dimension
-    coeffs_1, coeffs_2 = _shape_coeffs(poly_1, poly_2)
-
-    # Compute the coefficients of the summed polynomial
-    coeffs_sum = compute_poly_sum_coeffs_chebyshev(
-        poly_1.multi_index.exponents,
-        coeffs_1,
-        poly_2.multi_index.exponents,
-        coeffs_2,
-        mi_sum.exponents,
-    )
-
-    return grd_sum, mi_sum, coeffs_sum
+class PolyData(NamedTuple):
+    """Container for complete inputs to create a polynomial in any basis."""
+    multi_index: MultiIndexSet
+    coeffs: np.ndarray
+    internal_domain: np.ndarray
+    user_domain: np.ndarray
+    grid: Grid
 
 
-# --- Internal functions
-def _shape_coeffs(
+def shape_coeffs(
     poly_1: MultivariatePolynomialSingleABC,
     poly_2: MultivariatePolynomialSingleABC,
 ) -> Tuple[np.ndarray, np.ndarray]:
@@ -99,7 +61,7 @@ def _shape_coeffs(
     return coeffs_1, coeffs_2
 
 
-def _get_grid_and_multi_index_poly_sum(
+def get_grid_and_multi_index_poly_sum(
     poly_1: MultivariatePolynomialSingleABC,
     poly_2: MultivariatePolynomialSingleABC,
 ) -> Tuple[Grid, MultiIndexSet]:
@@ -128,3 +90,34 @@ def _get_grid_and_multi_index_poly_sum(
         mi_sum = grd_sum.multi_index
 
     return grd_sum, mi_sum
+
+
+def get_grid_and_multi_index_poly_prod(
+    poly_1: MultivariatePolynomialSingleABC,
+    poly_2: MultivariatePolynomialSingleABC,
+) -> Tuple[Grid, MultiIndexSet]:
+    """Get the grid and multi-index set of a summed polynomial.
+
+    Parameters
+    ----------
+    poly_1 : MultivariatePolynomialSingleABC
+        The first operand in the addition expression.
+    poly_2 : MultivariatePolynomialSingleABC
+        The second operand in the addition expression.
+
+    Returns
+    -------
+    Tuple[Grid, MultiIndexSet]
+        The instances of `Grid` and `MultiIndexSet` of the product polynomial.
+    """
+    # --- Compute the union of the grid instances
+    grd_prod = poly_1.grid * poly_2.grid
+
+    # --- Compute union of the multi-index sets if they are separate
+    if poly_1.indices_are_separate or poly_2.indices_are_separate:
+        mi_prod = poly_1.multi_index * poly_2.multi_index
+    else:
+        # Otherwise use the one attached to the grid instance
+        mi_prod = grd_prod.multi_index
+
+    return grd_prod, mi_prod

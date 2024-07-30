@@ -1735,6 +1735,12 @@ def _create_constant_poly(
 
     Parameters
     ----------
+    poly : MultivariatePolynomialSingleABC
+        An instance of polynomial from which a constant polynomial will be
+        created.
+    scalar : Union[SCALAR, np.ndarray]
+        Real scalar numbers for the coefficient value of the constant
+        polynomial.
 
     Returns
     -------

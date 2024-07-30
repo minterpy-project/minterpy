@@ -7,14 +7,11 @@ import numpy as np
 from scipy.special import eval_chebyt
 
 from minterpy.utils.polynomials.canonical import (
-    compute_poly_sum_coeffs_canonical,
+    compute_coeffs_poly_sum as compute_poly_sum_coeffs_canonical,
 )
 
 
-def evaluate_chebyshev_monomials(
-    xx: np.ndarray,
-    exponents: np.ndarray,
-) -> np.ndarray:
+def evaluate_monomials(xx: np.ndarray, exponents: np.ndarray) -> np.ndarray:
     """Evaluate the Chebyshev monomials at all query points.
 
     Parameters
@@ -41,12 +38,12 @@ def evaluate_chebyshev_monomials(
     return monomials
 
 
-def evaluate_chebyshev_polynomials(
+def evaluate_polynomials(
     xx: np.ndarray,
     exponents: np.ndarray,
     coefficients: np.ndarray,
 ) -> np.ndarray:
-    """Evaluate polynomial(s) in the Chebyshev bases.
+    """Evaluate polynomial(s) in the Chebyshev basis at all query points.
 
     Parameters
     ----------
@@ -66,7 +63,7 @@ def evaluate_chebyshev_polynomials(
     - The Chebyshev Polynomial has domain :math:`[-1, 1]^m`.
     """
     # Evaluate the monomials
-    monomials = evaluate_chebyshev_monomials(xx, exponents)
+    monomials = evaluate_monomials(xx, exponents)
 
     # Multiply with the coefficients
     results = monomials @ coefficients
@@ -76,4 +73,4 @@ def evaluate_chebyshev_polynomials(
 
 # NOTE: The logic behind polynomial-polynomial addition in the Chebyshev basis
 # is the same as the logic behind the canonical basis
-compute_poly_sum_coeffs_chebyshev = compute_poly_sum_coeffs_canonical
+compute_poly_sum_coeffs = compute_poly_sum_coeffs_canonical
