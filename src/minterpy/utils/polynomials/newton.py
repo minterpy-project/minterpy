@@ -4,7 +4,6 @@ in the Newton basis.
 """
 import itertools
 import math
-
 import numpy as np
 
 from minterpy.utils.quad import gauss_leg

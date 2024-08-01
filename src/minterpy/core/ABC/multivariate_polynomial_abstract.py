@@ -542,7 +542,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         self.grid: Grid = grid
         # weather or not the indices are independent from the grid ("basis")
         # TODO this could be enconded by .active_monomials being None
-        self.indices_are_separate: bool = self.grid.multi_index is not self.multi_index
+        self.indices_are_separate: bool = self.grid.multi_index != self.multi_index
         self.active_monomials: Optional[ARRAY] = None  # 1:1 correspondence
         if self.indices_are_separate:
             # store the position of the active Lagrange polynomials with respect to the basis indices:
@@ -1584,7 +1584,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         self,
         other: "MultivariatePolynomialSingleABC",
     ) -> bool:
-        """Return ``True`` if the poly. instances have matching dimensions.
+        """Return ``True`` if the polynomials have matching dimensions.
 
         Parameters
         ----------
@@ -1603,7 +1603,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         other: "MultivariatePolynomialSingleABC",
         tol: float = 1e-16,
     ) -> bool:
-        """Return ``True``if the poly. instances have matching domains.
+        """Return ``True`` if the polynomials have matching domains.
 
         Parameters
         ----------
