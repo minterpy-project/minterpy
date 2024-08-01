@@ -13,6 +13,7 @@ from typing import NamedTuple, Tuple
 
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
 from minterpy.core import Grid, MultiIndexSet
+from minterpy.utils.multi_index import find_match_between
 
 
 class PolyData(NamedTuple):
@@ -96,7 +97,7 @@ def get_grid_and_multi_index_poly_prod(
     poly_1: MultivariatePolynomialSingleABC,
     poly_2: MultivariatePolynomialSingleABC,
 ) -> Tuple[Grid, MultiIndexSet]:
-    """Get the grid and multi-index set of a summed polynomial.
+    """Get the grid and multi-index set of a product polynomial.
 
     Parameters
     ----------
@@ -121,3 +122,39 @@ def get_grid_and_multi_index_poly_prod(
         mi_prod = grd_prod.multi_index
 
     return grd_prod, mi_prod
+
+
+def select_active_monomials(
+    coeffs: np.ndarray,
+    grid: Grid,
+    active_multi_index: MultiIndexSet,
+) -> np.ndarray:
+    """Get the coefficients that corresponds to the active monomials.
+
+    Parameters
+    ----------
+    coeffs : :class:`numpy:numpy.ndarray`
+        The coefficients of a polynomial associated with the multi-index set
+        of the grid on which the polynomial lives. They are stored in an array
+        whose length is the same as the length of ``grid.multi_index``.
+    grid : Grid
+        The grid on which the polynomial lives.
+    active_multi_index : MultiIndexSet
+        The multi-index set of active monomials; the coefficients will be
+        picked according to this multi-index set.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        The coefficients of a polynomial associated with the active monomials
+        as specified by ``multi_index``.
+
+    Notes
+    -----
+    - ``active_multi_index`` must be a subset of ``grid.multi_index``.
+    """
+    exponents_multi_index = active_multi_index.exponents
+    exponents_grid = grid.multi_index.exponents
+    active_idx = find_match_between(exponents_multi_index, exponents_grid)
+
+    return coeffs[active_idx]

@@ -56,7 +56,7 @@ def add_canonical(
     Returns
     -------
     CanonicalPolynomial
-        The sum of two polynomials in the canonical basis; a new instance
+        The sum of two polynomials in the canonical basis as a new instance
         of polynomial.
 
     Notes
@@ -326,9 +326,9 @@ def _compute_poly_prod_data_canonical(
     Parameters
     ----------
     poly_1 : CanonicalPolynomial
-        Left operand of the addition expression.
+        Left operand of the multiplication expression.
     poly_2 : CanonicalPolynomial
-        Right operand of the addition expression.
+        Right operand of the multiplication expression.
 
     Returns
     -------
@@ -348,25 +348,30 @@ def _compute_poly_prod_data_canonical(
     # Shape the coefficients; ensure they have the same dimension
     coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
 
-    # Create output array placeholder
+    # Pre-allocate output array placeholder
     num_monomials = len(mi_prod)
     num_polys = len(poly_1)
     coeffs_prod = np.zeros((num_monomials, num_polys))
 
     # Compute the coefficients (use pre-allocated placeholder as output)
+    # NOTE: indices may or may not be separate,
+    # use the multi-index instead of the one attached to grid
+    exponents_1 = poly_1.multi_index.exponents
+    exponents_2 = poly_2.multi_index.exponents
+    exponents_prod = mi_prod.exponents
     compute_coeffs_poly_prod(
-        poly_1.multi_index.exponents,
+        exponents_1,
         coeffs_1,
-        poly_2.multi_index.exponents,
+        exponents_2,
         coeffs_2,
-        mi_prod.exponents,
+        exponents_prod,
         coeffs_prod,
     )
 
     # --- Process the domains
     # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
     # matching domains, it does not matter which one to use
-    internal_domain_prod= poly_1.internal_domain
+    internal_domain_prod = poly_1.internal_domain
     user_domain_prod = poly_1.user_domain
 
     return PolyData(

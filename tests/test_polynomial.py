@@ -25,7 +25,7 @@ from minterpy import (
     CanonicalPolynomial,
     ChebyshevPolynomial,
     MultiIndexSet,
-    Grid,
+    Grid, NewtonPolynomial,
 )
 
 
@@ -947,7 +947,7 @@ class TestPolyMultiplication:
         # Get the polynomial pairs
         poly_1, poly_2 = rand_polys_mnp_pair
 
-        if not isinstance(poly_1, CanonicalPolynomial):
+        if isinstance(poly_1, (LagrangePolynomial, ChebyshevPolynomial)):
             pytest.skip(
                 "Skipping multiplication between "
                 f"{type(poly_1)}, {type(poly_2)}"
@@ -998,6 +998,52 @@ class TestPolyMultiplication:
         assert poly_prod_2 == poly_prod_1
         assert np.all(poly_prod_1.coeffs == poly.coeffs * coeffs)
         assert np.all(poly_prod_2.coeffs == poly.coeffs * coeffs)
+
+    @pytest.mark.parametrize("lp_degree", [1.0, 2.0])
+    def test_separate_indices(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        lp_degree,
+    ):
+        """Test the multiplication of polynomials with separate indices."""
+        if (polynomial_class is LagrangePolynomial
+                or polynomial_class is ChebyshevPolynomial
+        ):
+            pytest.skip(
+                f"Skipping test between for {polynomial_class}"
+            )
+
+        # Create multi-indices
+        n_1 = PolyDegree
+        mi_1 = MultiIndexSet.from_degree(SpatialDimension, n_1, lp_degree)
+        n_2 = PolyDegree + 1
+        mi_2 = MultiIndexSet.from_degree(SpatialDimension, n_2, lp_degree)
+
+        # Create Grid instances
+        grd_1 = Grid.from_degree(SpatialDimension, n_1, np.inf)
+        grd_2 = Grid.from_degree(SpatialDimension, n_2, np.inf)
+
+        # Create a random coefficient
+        coeffs_1 = np.random.rand(len(mi_1))
+        coeffs_2 = np.random.rand(len(mi_2))
+
+        # Create polynomial_instances
+        poly_1 = polynomial_class(mi_1, coeffs_1, grid=grd_1)
+        poly_2 = polynomial_class(mi_2, coeffs_2, grid=grd_2)
+
+        # Multiply the polynomials
+        poly_prod = poly_1 * poly_2
+
+        # Evaluation
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension)
+        yy_test = poly_1(xx_test) * poly_2(xx_test)
+        yy_prod = (poly_1 * poly_2)(xx_test)
+
+        # Assertions
+        assert poly_prod.indices_are_separate
+        assert np.allclose(yy_test, yy_prod)
 
 
 class TestPolyAdditionSubtraction:
@@ -1119,7 +1165,7 @@ class TestPolyAddition:
         # Get the polynomial pairs
         poly_1, poly_2 = rand_polys_mnp_pair
 
-        if not isinstance(poly_1, (CanonicalPolynomial, ChebyshevPolynomial)):
+        if isinstance(poly_1, (LagrangePolynomial, NewtonPolynomial)):
             pytest.skip(
                 "Skipping addition between "
                 f"{type(poly_1)}, {type(poly_2)}"
@@ -1155,7 +1201,7 @@ class TestPolyAddition:
         # Get the polynomial
         poly = rand_polys_mnp
 
-        if not isinstance(poly, (CanonicalPolynomial, ChebyshevPolynomial)):
+        if isinstance(poly, (LagrangePolynomial, NewtonPolynomial)):
             pytest.skip(
                f"Skipping addition of {type(poly)}"
             )

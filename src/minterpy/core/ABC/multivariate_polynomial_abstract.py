@@ -1584,7 +1584,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         self,
         other: "MultivariatePolynomialSingleABC",
     ) -> bool:
-        """Return ``True`` if the poly. instances have matching dimensions.
+        """Return ``True`` if the polynomials have matching dimensions.
 
         Parameters
         ----------
@@ -1603,7 +1603,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         other: "MultivariatePolynomialSingleABC",
         tol: float = 1e-16,
     ) -> bool:
-        """Return ``True``if the poly. instances have matching domains.
+        """Return ``True`` if the polynomials have matching domains.
 
         Parameters
         ----------

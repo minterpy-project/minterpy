@@ -12,17 +12,23 @@ from minterpy.global_settings import DEBUG
 from minterpy.core.ABC.multivariate_polynomial_abstract import (
     MultivariatePolynomialSingleABC,
 )
-from minterpy.core.grid import Grid
+from minterpy.core import Grid, MultiIndexSet
 from minterpy.dds import dds
 from minterpy.utils.verification import dummy, verify_domain
 from minterpy.utils.polynomials.newton import (
     eval_newton_polynomials,
-    deriv_newt_eval as eval_diff_numpy, integrate_monomials_newton,
+    deriv_newt_eval as eval_diff_numpy,
+    integrate_monomials_newton,
 )
 from minterpy.jit_compiled.newton.diff import (
     eval_multiple_query as eval_diff_numba,
     eval_multiple_query_par as eval_diff_numba_par,
 )
+from minterpy.utils.polynomials.interface import (
+    get_grid_and_multi_index_poly_prod,
+    PolyData, select_active_monomials,
+)
+
 
 __all__ = ["NewtonPolynomial"]
 
@@ -96,6 +102,7 @@ def newton_eval(poly: "NewtonPolynomial", xx: np.ndarray) -> np.ndarray:
         verify_input=DEBUG,
     )
 
+
 def _newton_add(
     poly_1: "NewtonPolynomial",
     poly_2: "NewtonPolynomial",
@@ -157,77 +164,42 @@ def _newton_add(
     return nwt_poly_sum
 
 
-def _newton_mul(
+def mul_newton(
     poly_1: "NewtonPolynomial",
     poly_2: "NewtonPolynomial",
 ) -> "NewtonPolynomial":
-    """Multiply two Newton polynomials.
+    """Multiply two polynomial instances in the Newton basis.
+
+    This is the concrete implementation of ``_mul()`` method in the
+    ``MultivariatePolynomialSingleABC`` abstract class specifically for
+    polynomials in the Newton basis.
 
     Parameters
     ----------
     poly_1 : NewtonPolynomial
-        The first (left operand) polynomial in the Newton basis to multiply.
+        Left operand of the multiplication expression.
     poly_2 : NewtonPolynomial
-        The second (right operand) polynomial in the Newton basis to multiply.
+        Right operand of the multiplication expression.
 
     Returns
     -------
     NewtonPolynomial
-        The product polynomial in the Newton basis.
-
-    Raises
-    ------
-    ValueError
-        If the resulting multi-index product is not downward-closed.
+        The product of two polynomials in the Newton basis as a new instance
+        of polynomial.
 
     Notes
     -----
-    - The multi-index set of the product polynomial must be downward-closed
-      because DDS is used to transform the Lagrange coefficients to the
-      Newton coefficients.
+    - This function assumes: both polynomials must be in the Newton basis,
+      they must be initialized (coefficients are not ``None``),
+      have the same dimension and their domains are matching,
+      and the number of polynomials per instance are the same.
+      These conditions are not explicitly checked in this function.
     """
-    # MultiIndexSet operation
-    mi_1 = poly_1.multi_index
-    mi_2 = poly_2.multi_index
-    mi_prod = mi_1 * mi_2
+    # --- Get the ingredients of the product polynomial in the Newton basis
+    poly_prod_data = _compute_poly_prod_data_newton(poly_1, poly_2)
 
-    # Grid operation
-    # TODO: both polynomial must have the same generating function
-    #       Otherwise the unisolvent nodes are inconsistent
-    grd_prod = Grid(mi_prod)
-
-    if _is_constant_poly(poly_1):
-        nwt_coeffs_prod = poly_1.coeffs[0] * poly_2.coeffs
-    elif _is_constant_poly(poly_2):
-        nwt_coeffs_prod = poly_2.coeffs[0] * poly_1.coeffs
-    else:
-        # Do a DDS for general poly-poly multiplication
-        if not mi_prod.is_downward_closed:
-            raise ValueError(
-                "The resulting multi-index product must be downward-closed."
-            )
-        unisolvent_nodes = grd_prod.unisolvent_nodes
-
-        # Compute the values at the unisolvent nodes
-        dim_1 = poly_1.spatial_dimension
-        dim_2 = poly_2.spatial_dimension
-        lag_coeffs_1 = poly_1(unisolvent_nodes[:, :dim_1])
-        lag_coeffs_2 = poly_2(unisolvent_nodes[:, :dim_2])
-        lag_coeffs_prod = lag_coeffs_1 * lag_coeffs_2
-
-        # Transform the coefficients
-        # TODO: DDS returns at least 2D array even if there's only one set of
-        #       coefficients
-        if poly_1.coeffs.ndim > 1:
-            num_polys = poly_1.coeffs.shape[1]
-            shape = (len(mi_prod), num_polys)
-        else:
-            shape = (len(mi_prod),)
-        nwt_coeffs_prod = dds(lag_coeffs_prod, grd_prod.tree).reshape(shape)
-
-    nwt_poly_prod = NewtonPolynomial(mi_prod, nwt_coeffs_prod, grid=grd_prod)
-
-    return nwt_poly_prod
+    # --- Return a new instance
+    return NewtonPolynomial(**poly_prod_data._asdict())
 
 
 def newton_diff(
@@ -429,7 +401,7 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     # Arithmetics
     _add = staticmethod(_newton_add)
     _sub = staticmethod(dummy)
-    _mul = staticmethod(_newton_mul)
+    _mul = staticmethod(mul_newton)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
     _iadd = staticmethod(dummy)
@@ -446,12 +418,56 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
 
 
 # --- Internal utility functions
+def _compute_poly_prod_data_newton(
+    poly_1: NewtonPolynomial,
+    poly_2: NewtonPolynomial,
+) -> PolyData:
+    """Compute the data to create a product polynomial in the Newton basis.
+
+    Parameters
+    ----------
+    poly_1 : NewtonPolynomial
+        Left operand of the multiplication expression.
+    poly_2 : CanonicalPolynomial
+        Right operand of the multiplication expression.
+
+    Returns
+    -------
+    PolyData
+        A tuple with all the ingredients to construct a product polynomial
+        in the Newton basis.
+
+    Notes
+    -----
+    - Both polynomials are assumed to have the same dimension
+      and matching domains.
+    """
+    # --- Get the grid and multi-index set of the summed polynomial
+    grd_prod, mi_prod = get_grid_and_multi_index_poly_prod(poly_1, poly_2)
+
+    # --- Process the coefficients
+    coeffs_prod = _compute_coeffs_poly_prod(poly_1, poly_2, grd_prod, mi_prod)
+
+    # --- Process the domains
+    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
+    # matching domains, it does not matter which one to use
+    internal_domain_prod = poly_1.internal_domain
+    user_domain_prod = poly_1.user_domain
+
+    return PolyData(
+        multi_index=mi_prod,
+        coeffs=coeffs_prod,
+        internal_domain=internal_domain_prod,
+        user_domain=user_domain_prod,
+        grid=grd_prod,
+    )
+
+
 def _compute_quad_weights_newton(
     poly: NewtonPolynomial,
     bounds: np.ndarray,
 ) -> np.ndarray:
-    """Compute the quadrature weights of a polynomial in the Newton basis.
-    """
+    """Compute the quadrature weights of a polynomial in the Newton basis."""
     # Get the relevant data from the polynomial instance
     exponents = poly.multi_index.exponents
     generating_points = poly.grid.generating_points
@@ -461,3 +477,32 @@ def _compute_quad_weights_newton(
     )
 
     return quad_weights
+
+
+def _compute_coeffs_poly_prod(
+    poly_1: NewtonPolynomial,
+    poly_2: NewtonPolynomial,
+    grid_prod: Grid,
+    multi_index_prod: MultiIndexSet,
+) -> np.ndarray:
+    """Compute the coefficients of polynomial sum in the Newton basis."""
+    # Compute the values of the operands at the unisolvent nodes
+    lag_coeffs_1 = grid_prod(poly_1)
+    lag_coeffs_2 = grid_prod(poly_2)
+    lag_coeffs_prod = lag_coeffs_1 * lag_coeffs_2
+
+    # Transform the Lagrange coefficients into Newton coefficients
+    # NOTE: Via DDS not barycentric transformation due to circular import issue
+    # TODO: Try to solve the circular import issues by better organization and
+    #       or using interface functions
+    nwt_coeffs_prod = dds(lag_coeffs_prod, grid_prod.tree)
+
+    # Deal with separate indices, select only w.r.t the active monomials
+    if poly_1.indices_are_separate or poly_2.indices_are_separate:
+        nwt_coeffs_prod = select_active_monomials(
+            nwt_coeffs_prod,
+            grid_prod,
+            multi_index_prod,
+        )
+
+    return nwt_coeffs_prod
