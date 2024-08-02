@@ -485,7 +485,7 @@ def _compute_coeffs_poly_prod(
     grid_prod: Grid,
     multi_index_prod: MultiIndexSet,
 ) -> np.ndarray:
-    """Compute the coefficients of polynomial sum in the Newton basis."""
+    """Compute the coefficients of polynomial product in the Newton basis."""
     # Compute the values of the operands at the unisolvent nodes
     lag_coeffs_1 = grid_prod(poly_1)
     lag_coeffs_2 = grid_prod(poly_2)
