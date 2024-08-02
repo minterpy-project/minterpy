@@ -123,6 +123,8 @@
   to the underlying multi-index set of a `Grid` instance.
 - Polynomial coefficients will now be stored as an array of `numpy.float64`
   as expected by Numba. Conversion will always be attempted.
+- Polynomial-polynomial addition and multiplication of polynomials in the 
+  Chebyshev basis are now supported.
 
 ### Removed
 

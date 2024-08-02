@@ -947,7 +947,7 @@ class TestPolyMultiplication:
         # Get the polynomial pairs
         poly_1, poly_2 = rand_polys_mnp_pair
 
-        if isinstance(poly_1, (LagrangePolynomial, ChebyshevPolynomial)):
+        if isinstance(poly_1, LagrangePolynomial):
             pytest.skip(
                 "Skipping multiplication between "
                 f"{type(poly_1)}, {type(poly_2)}"
@@ -1008,9 +1008,7 @@ class TestPolyMultiplication:
         lp_degree,
     ):
         """Test the multiplication of polynomials with separate indices."""
-        if (polynomial_class is LagrangePolynomial
-                or polynomial_class is ChebyshevPolynomial
-        ):
+        if polynomial_class is LagrangePolynomial:
             pytest.skip(
                 f"Skipping test between for {polynomial_class}"
             )
