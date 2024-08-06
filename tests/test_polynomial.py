@@ -1026,6 +1026,8 @@ class TestPolyMultiplication:
         mi_2 = MultiIndexSet.from_degree(SpatialDimension, n_2, lp_degree)
 
         # Create Grid instances
+        # NOTE: All w.r.t lp-degree inf as it is the superset
+        #       of the indices above
         grd_1 = Grid.from_degree(SpatialDimension, n_1, np.inf)
         grd_2 = Grid.from_degree(SpatialDimension, n_2, np.inf)
 
@@ -1155,8 +1157,8 @@ class TestPolyAddition:
         # Get the polynomial
         poly = rand_polys_mnp
 
-        if not isinstance(poly, (CanonicalPolynomial, ChebyshevPolynomial)):
-            pytest.skip(f"Skipping addition of {type(poly)}")
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(f"Skipping addition of {type(poly)} with itself.")
 
         # Self addition
         poly_sum = poly + poly
@@ -1169,11 +1171,8 @@ class TestPolyAddition:
         # Get the polynomial pairs
         poly_1, poly_2 = rand_polys_mnp_pair
 
-        if isinstance(poly_1, (LagrangePolynomial, NewtonPolynomial)):
-            pytest.skip(
-                "Skipping addition between "
-                f"{type(poly_1)}, {type(poly_2)}"
-            )
+        if isinstance(poly_1, LagrangePolynomial):
+            pytest.skip(f"Skipping evaluation of a summed {type(poly_1)}.")
 
         # Get the maximum dimension
         dim_1 = poly_1.spatial_dimension
@@ -1205,9 +1204,9 @@ class TestPolyAddition:
         # Get the polynomial
         poly = rand_polys_mnp
 
-        if isinstance(poly, (LagrangePolynomial, NewtonPolynomial)):
+        if isinstance(poly, LagrangePolynomial):
             pytest.skip(
-               f"Skipping addition of {type(poly)}"
+               f"Skipping addition of {type(poly)} with a constant polynomial."
             )
 
         # Create a constant polynomial
@@ -1232,6 +1231,134 @@ class TestPolyAddition:
         assert np.all(poly_prod_1.coeffs == coeffs_ref)
         assert np.all(poly_prod_2.coeffs == coeffs_ref)
 
+    @pytest.mark.parametrize("lp_degree", [1.0, 2.0])
+    def test_separate_indices(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        lp_degree,
+    ):
+        """Test the addition of polynomials with separate indices."""
+        if polynomial_class is LagrangePolynomial:
+            pytest.skip(f"Skipping test between for {polynomial_class}.")
+
+        # Create multi-indices
+        n_1 = PolyDegree
+        mi_1 = MultiIndexSet.from_degree(SpatialDimension, n_1, lp_degree)
+        n_2 = PolyDegree + 1
+        mi_2 = MultiIndexSet.from_degree(SpatialDimension, n_2, lp_degree)
+
+        # Create Grid instances
+        # NOTE: All w.r.t lp-degree inf as it is the superset
+        #       of the indices above
+        grd_1 = Grid.from_degree(SpatialDimension, n_1, np.inf)
+        grd_2 = Grid.from_degree(SpatialDimension, n_2, np.inf)
+
+        # Create a random coefficient
+        coeffs_1 = np.random.rand(len(mi_1))
+        coeffs_2 = np.random.rand(len(mi_2))
+
+        # Create polynomial_instances
+        poly_1 = polynomial_class(mi_1, coeffs_1, grid=grd_1)
+        poly_2 = polynomial_class(mi_2, coeffs_2, grid=grd_2)
+
+        # Add the polynomials
+        poly_add = poly_1 + poly_2
+
+        # Evaluation
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension)
+        yy_test = poly_1(xx_test) + poly_2(xx_test)
+        yy_add = (poly_1 + poly_2)(xx_test)
+
+        # Assertions
+        assert poly_add.indices_are_separate
+        assert np.allclose(yy_test, yy_add)
+
+
+class TestScalarAddition:
+    """All tests related to polynomial-scalar addition."""
+    def test_sanity(self, rand_polys_mnp):
+        """Test adding additive identity."""
+        # Get the polynomial
+        poly = rand_polys_mnp
+
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(f"Skipping addition of {type(poly)} with identity.")
+
+        # Addition with additive identity
+        poly_sum_1 = poly + 0
+        poly_sum_2 = 0 + poly  # Commutativity holds
+
+        # Assertions
+        assert poly == poly_sum_1
+        assert poly == poly_sum_2
+
+    def test_radd(self, rand_polys_mnp):
+        """Test right-sided addition of a polynomial."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(
+                f"Skipping addition of {type(poly)} with a scalar."
+            )
+
+        # Right-sided subtraction
+        poly_sub = 5 + poly
+
+        # Reference
+        yy_ref = poly.coeffs.copy()
+        yy_ref[0] += 5
+        poly_ref = poly.__class__(
+            poly.multi_index,
+            yy_ref,
+            user_domain=poly.user_domain,
+            internal_domain=poly.internal_domain,
+            grid=poly.grid,
+        )
+
+        # Assertion
+        assert poly_ref == poly_sub
+
+    def test_inplace(self, rand_polys_mnp):
+        """Test inplace scalar addition (not implemented)."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(
+                f"Skipping addition of {type(poly)} with a scalar."
+            )
+
+        # In-place addition
+        with pytest.raises(NotImplementedError):
+            poly += 5
+
+    def test_eval(self, rand_polys_mnp):
+        """Test the evaluation of a polynomial summed with a scalar."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(
+                f"Skipping addition of {type(poly)} with a scalar."
+            )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, poly.spatial_dimension)
+
+        # Compute reference results
+        yy_ref = poly(xx_test) + 5
+
+        # Summed a polynomial
+        yy_1 = (poly + 5)(xx_test)
+        yy_2 = (5 + poly)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
+
 
 class TestPolySubtraction:
     """All tests related to polynomial-polynomial subtraction for all concrete
@@ -1242,8 +1369,8 @@ class TestPolySubtraction:
         # Get the polynomial
         poly = rand_polys_mnp
 
-        if not isinstance(poly, (CanonicalPolynomial, ChebyshevPolynomial)):
-            pytest.skip(f"Skipping subtraction of {type(poly)} with itself")
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(f"Skipping subtraction of {type(poly)} with identity.")
 
         # Self subtraction
         poly_sub_1 = poly - poly
@@ -1259,10 +1386,8 @@ class TestPolySubtraction:
         # Get the polynomial pairs
         poly_1, poly_2 = rand_polys_mnp_pair
 
-        if not isinstance(poly_1, (CanonicalPolynomial, ChebyshevPolynomial)):
-            pytest.skip(
-                f"Skipping evaluation of subtracted {type(poly_1)}"
-            )
+        if isinstance(poly_1, LagrangePolynomial):
+            pytest.skip(f"Skipping evaluation of a subtracted {type(poly_1)}.")
 
         # Get the maximum dimension
         dim_1 = poly_1.spatial_dimension
@@ -1290,9 +1415,9 @@ class TestPolySubtraction:
         # Get the polynomial
         poly = rand_polys_mnp
 
-        if not isinstance(poly, (CanonicalPolynomial, ChebyshevPolynomial)):
+        if isinstance(poly, LagrangePolynomial):
             pytest.skip(
-               f"Skipping subtraction of {type(poly)} with a constant poly"
+                f"Skipping subtraction of {type(poly)} with a constant poly."
             )
 
         # Create a constant polynomial
@@ -1316,6 +1441,50 @@ class TestPolySubtraction:
         assert poly_prod_2 == poly_prod_1
         assert np.all(poly_prod_1.coeffs == coeffs_ref)
         assert np.all(poly_prod_2.coeffs == coeffs_ref)
+
+    @pytest.mark.parametrize("lp_degree", [1.0, 2.0])
+    def test_separate_indices(
+        self,
+        polynomial_class,
+        SpatialDimension,
+        PolyDegree,
+        lp_degree,
+    ):
+        """Test the subtraction of polynomials with separate indices."""
+        if polynomial_class is LagrangePolynomial:
+            pytest.skip(f"Skipping test between for {polynomial_class}.")
+
+        # Create multi-indices
+        n_1 = PolyDegree
+        mi_1 = MultiIndexSet.from_degree(SpatialDimension, n_1, lp_degree)
+        n_2 = PolyDegree + 1
+        mi_2 = MultiIndexSet.from_degree(SpatialDimension, n_2, lp_degree)
+
+        # Create Grid instances
+        # NOTE: All w.r.t lp-degree inf as it is the superset
+        #       of the indices above
+        grd_1 = Grid.from_degree(SpatialDimension, n_1, np.inf)
+        grd_2 = Grid.from_degree(SpatialDimension, n_2, np.inf)
+
+        # Create a random coefficient
+        coeffs_1 = np.random.rand(len(mi_1))
+        coeffs_2 = np.random.rand(len(mi_2))
+
+        # Create polynomial_instances
+        poly_1 = polynomial_class(mi_1, coeffs_1, grid=grd_1)
+        poly_2 = polynomial_class(mi_2, coeffs_2, grid=grd_2)
+
+        # Multiply the polynomials
+        poly_sub = poly_1 - poly_2
+
+        # Evaluation
+        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension)
+        yy_test = poly_1(xx_test) - poly_2(xx_test)
+        yy_sub = (poly_1 - poly_2)(xx_test)
+
+        # Assertions
+        assert poly_sub.indices_are_separate
+        assert np.allclose(yy_test, yy_sub)
 
 
 class TestPolyAdditionSubtractionAugmented:
@@ -1403,3 +1572,84 @@ class TestPolyAdditionSubtractionAugmented:
         with pytest.raises(ValueError):
             # Subtraction
             poly_1 -= poly_2
+
+
+class TestScalarSubtraction:
+    """All tests related to polynomial-scalar subtraction."""
+    def test_sanity(self, rand_polys_mnp):
+        """Test adding additive identity."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(
+                f"Skipping subtraction of {type(poly)} with identity."
+            )
+
+        # Addition with additive identity
+        poly_sum_1 = poly - 0
+        poly_sum_2 = -0 + poly  # Commutativity holds
+
+        # Assertions
+        assert poly == poly_sum_1
+        assert poly == poly_sum_2
+
+    def test_rsub(self, rand_polys_mnp):
+        """Test right-sided subtraction of a polynomial."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(
+                f"Skipping subtraction of {type(poly)} with a scalar."
+            )
+
+        # Right-sided subtraction
+        poly_sub = 5 - poly
+
+        # Reference
+        yy_ref = -1 * poly.coeffs.copy()
+        yy_ref[0] += 5
+        poly_ref = poly.__class__(
+            poly.multi_index,
+            yy_ref,
+            user_domain=poly.user_domain,
+            internal_domain=poly.internal_domain,
+            grid=poly.grid,
+        )
+
+        # Assertion
+        assert poly_ref == poly_sub
+
+    def test_inplace(self, rand_polys_mnp):
+        """Test inplace scalar addition (not implemented)."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        # In-place addition
+        with pytest.raises(NotImplementedError):
+            poly -= 5
+
+    def test_eval(self, rand_polys_mnp):
+        """Test the evaluation of a polynomial subtracted by a scalar."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(
+                f"Skipping subtraction of {type(poly)} with a scalar."
+            )
+
+        # Generate a random set of test points
+        xx_test = -1 + 2 * np.random.rand(1000, poly.spatial_dimension)
+
+        # Compute reference results
+        yy_ref = poly(xx_test) - 5
+
+        # Summed a polynomial
+        yy_1 = (poly - 5)(xx_test)
+        yy_2 = (-5 + poly)(xx_test)
+
+        # Assertions
+        assert np.allclose(yy_ref, yy_1)
+        assert np.allclose(yy_ref, yy_2)
