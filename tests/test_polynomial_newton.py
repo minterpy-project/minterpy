@@ -65,6 +65,8 @@ def test_eval_batch(MultiIndices, num_polynomials, BatchSizes):
     yy_newton = eval_newton_polynomials(
         xx, newton_coeffs, exponents, generating_points, batch_size=BatchSizes
     )
+    if num_polynomials == 1:
+        yy_newton = yy_newton.reshape(-1)
 
     # Create a reference results from canonical polynomial evaluation
     newton_poly = NewtonPolynomial(MultiIndices, newton_coeffs)

@@ -27,7 +27,7 @@ from minterpy.utils.polynomials.newton import (
     eval_newton_monomials,
     eval_newton_polynomials,
 )
-
+from minterpy.utils.verification import verify_query_points
 from .regression_abc import RegressionABC
 
 __all__ = ["OrdinaryRegression"]
@@ -329,6 +329,9 @@ class OrdinaryRegression(RegressionABC):
                 f"Got instead {type(compute_loocv)!r} ."
             )
 
+        # Verify the training points
+        xx = verify_query_points(xx, self.multi_index.spatial_dimension)
+
         # Get the regression matrix on the data points
         self._regression_matrix = self.get_regression_matrix(xx)
 
@@ -460,14 +463,6 @@ def compute_regression_matrix(
         regression_matrix = eval_newton_polynomials(
             xx, newton_coeffs, exponents, generating_points
         )
-
-        # Edge case: only a single training point is given
-        if xx.shape[0] == 1:
-            regression_matrix = regression_matrix[np.newaxis, :]
-
-        # Edge case: only a single Lagrange basis is given
-        if regression_matrix.ndim == 1:
-            regression_matrix = regression_matrix[:, np.newaxis]
 
     elif isinstance(basis_poly, NewtonPolynomial):
         regression_matrix = eval_newton_monomials(

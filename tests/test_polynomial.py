@@ -594,9 +594,15 @@ class TestEvaluation:
             with pytest.raises(NotImplementedError):
                 poly(xx_test)
         else:
-            yy_test = poly(xx_test)
             if num_polynomials == 1:
                 pytest.skip("Only applies for multiple coefficient sets.")
+
+            # Single evaluation point
+            yy_test = poly(xx_test[0:1])
+            assert yy_test.shape == (1, num_polynomials)
+
+            # Multiple evaluation points
+            yy_test = poly(xx_test)
             for i in range(num_polynomials):
                 # Due to identical coefficients, results are identical
                 assert np.all(yy_test[:, i] == yy_test[:, 0])

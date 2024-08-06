@@ -36,124 +36,6 @@ def verify_domain(domain, spatial_dimension):
     return domain
 
 
-def rectify_query_points(x, m):
-    """Rectify input arguments.
-
-    This function checks if a given input has the correct shape, or if the correct shape can be inferred. For the latter it returns a version of the input with the correct shape. Correct shape means here ``(N,m)``, where ``N`` is the number of points and ``m`` the dimension of the domain space.
-
-    :param x: Array of arguemnts passed to a function.
-    :type x: np.ndarray
-
-    :param m: Dimension of the domain space.
-    :type m: int
-
-    :raise ValueError: If the input array has not the expected dimensionality.
-
-    :return: ``(nr_points,x)`` where ``nr_points`` is the number of points and ``x`` is a version of the input array with the correct shape. If ``x`` already had the right shape, it is passed without copying.
-    :rtype: tuple(int,np.ndarray)
-
-    """
-    # TODO simplify. always require an unambiguous input shape!
-    query_point_shape = x.shape
-    if x.ndim == 1:
-        if m == 1:  # -> every entry is a query point
-            nr_points = query_point_shape[0]
-        else:  # m > 1, interpret input as a single point -> dimensions must match!
-            if len(x) != m:
-                raise ValueError(
-                    f"points x given as vector of shape {query_point_shape} (1D). "
-                    f"detected dimensionality of the exponents however is {m}"
-                )
-            nr_points = 1
-        x = x.reshape(nr_points, m)  # reshape to 2D
-    else:
-        nr_points, m_points = x.shape
-        if m != m_points:
-            raise ValueError(
-                f"the dimensionality of the input points {m_points} "
-                f"does not match the polynomial dimensionality {m}"
-            )
-    return nr_points, x
-
-
-def rectify_eval_input(x, coefficients, exponents, verify_input):
-    """Rectify input for evaluation.
-
-    .. todo::
-        - refac this based on the respective datatypes, e.g. :class:`MultiIndex` etc.
-        - function signature if somewhat misleading.
-
-    :param x:
-    :type x: np.ndarray
-    :param coefficients: The coefficients of the Newton polynomials. Note, format fixed such that 'lagrange2newton' conversion matrices can be passed as the Newton coefficients of all Lagrange monomials of a polynomial without prior transponation
-    :type coefficients: np.ndarray
-    :param exponents: a multi index ``alpha`` for every Newton polynomial corresponding to the exponents of this ``monomial``
-    :type exponents: np.ndarray
-    :param verify_input: weather the data types of the input should be checked.
-    :type verify_input: bool
-
-    :raise ValueError: If the number of coefficients does not match the number of monomials.
-    :raise TypeError: if the input hasn't the expected dtype.
-
-    :return: ``( N, coefficients, m, nr_points, nr_polynomials, x)`` with the rectifyed versions of the ``coefficients`` and the input array ``x``. Furthermore, return the number of exponents ``N``, the dimentsion of the domain space ``m``, the number of passed points ``nr_points`` and the number of polynomials ``nr_polynomials``.
-    :rtype: (int, np.ndarray, int, int, int, np.ndarray)
-    """
-    N, m = exponents.shape
-    if N == 0:
-        raise ValueError("at least 1 monomial must be given")
-    # NOTE: silently reshaping the input is dangerous,
-    # because the value order could be changed without being noticed by the user -> unexpected results!
-    nr_points, x = rectify_query_points(x, m)
-    coeff_shape = coefficients.shape
-    if len(coeff_shape) == 1:  # 1D: a single query polynomial
-        nr_polynomials = 1
-        coefficients = coefficients.reshape(N, nr_polynomials)  # reshape to 2D
-    else:
-        N_coeffs, nr_polynomials = coefficients.shape
-        if N != N_coeffs:
-            raise ValueError(
-                f"the coefficient amount {N_coeffs} does not match the amount of monomials {N}"
-            )
-
-    if verify_input:
-        expected_types = {
-            "x": (x, FLOAT_DTYPE),
-            "coefficients": (coefficients, FLOAT_DTYPE),
-            "exponents": (exponents, INT_DTYPE),
-        }
-        for name, (value, exp_type) in expected_types.items():
-            if value.dtype != exp_type:
-                raise TypeError(
-                    f"expected dtype {exp_type} for {name} but the dtype is {value.dtype}"
-                )
-
-    return N, coefficients, m, nr_points, nr_polynomials, x
-
-
-def convert_eval_output(results_placeholder):
-    """Converts an array to its squeezed version.
-
-    The input array is copyed if necessary and the result is at least 1D.
-
-    :param results_placeholder: Array to be converted.
-    :type results_placeholder: np.ndarray
-
-    :return: A (at least 1D) squeezed version of the input array.
-    :rtype: np.ndarray
-
-    .. todo::
-        - use ``np.atleast_1D`` instead of the size check.
-
-
-    """
-    # TODO
-    # convert into the expected shape
-    out = results_placeholder.squeeze()
-    if out.size == 1:  # do not return 0D but rather 1D array:
-        out = out.reshape(1)
-    return out
-
-
 def check_type(obj: Any, expected_type: Type[Any]):
     """Check if the given input is of expected type.
     
@@ -446,6 +328,51 @@ def is_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
     False
     """
     return isinstance(x, (int, float, np.integer, np.floating))
+
+
+def shape_eval_output(eval_output: np.ndarray) -> np.ndarray:
+    """Shape the output of polynomial evaluation according to the convention.
+
+    Parameters
+    ----------
+    eval_output : :class:`numpy:numpy.ndarray`
+        The output of polynomial evaluation as a one- or two-dimensional array
+        to be shaped. The length of the array is ``N``, i.e., the number of
+        query points.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        The shaped array, a one-dimensional array for a polynomial with
+        a single set of coefficients or a two-dimensional array for
+        a polynomial with a multiple sets. The number of columns in the latter
+        is the number of coefficient sets. Both have length of the number
+        of query points.
+
+    Notes
+    ------
+    - The output array is at least one-dimensional.
+
+    Examples
+    --------
+    >>> shape_eval_output(np.array([[1.0], [2.0], [3.0], [4.0]]))
+    array([1., 2., 3., 4.])
+    >>> shape_eval_output(np.array([[1.0, 2.0, 3.0, 4.0]]))
+    array([[1., 2., 3., 4.]])
+    >>> shape_eval_output(np.array([[1.0, 2.0], [3.0, 4.0]]))
+    array([[1., 2.],
+           [3., 4.]])
+    """
+    # Handle case of single point evaluation with multiple coefficient sets
+    if eval_output.ndim == 2:
+        if eval_output.shape[1] == 1:
+            # Has a single coefficient set (as a column vector)
+            return np.atleast_1d(eval_output.squeeze())
+        else:
+            # Multiple coefficient sets (as a matrix)
+            return eval_output
+
+    return np.atleast_1d(eval_output)
 
 
 # --- Verifications of Minterpy Value Objects
@@ -766,6 +693,105 @@ def verify_poly_domain(
         raise err
 
     return domain
+
+
+def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:
+    r"""Verify if the values of the query points for evaluation are valid.
+
+    Parameters
+    ----------
+    xx : :class:`numpy:numpy.ndarray`
+        A one- or two-dimensional array of query points at which a polynomial
+        is evaluated. The length of the array is ``N``, i.e., the number
+        of query points.
+    spatial_dimension : int
+        The spatial dimension of the polynomial (``m``).
+        The shape of the query points array must be consistent with this.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        A two-dimensional array of ``numpy.float64`` with a length of ``N``
+        and a number of columns of ``m``. If the dtype of the array is not of
+        `numpy.float64`, the function does a type conversion if possible.
+
+    Raises
+    ------
+    TypeError
+        If ``xx`` is not of a correct type.
+    ValueError
+        If ``xx`` is, for example, has an inconsistent number of columns or
+        it contains nan's.
+
+    Examples
+    --------
+    >>> verify_query_points(1, 1)  # a scalar integer
+    array([[1.]])
+    >>> verify_query_points([3., 4., 5.], 1)  # a list
+    array([[3.],
+           [4.],
+           [5.]])
+    >>> verify_query_points([[3, 4, 5]], 3)  # a list of lists of integers
+    array([[3., 4., 5.]])
+    >>> verify_query_points(np.array([1., 2., 3.]), 1)  # 1 dimension
+    array([[1.],
+           [2.],
+           [3.]])
+    >>> verify_query_points(np.array([[1., 2.], [3., 4.]]), 2)  # 2 dimensions
+    array([[1., 2.],
+           [3., 4.]])
+    >>> verify_query_points(np.array([1, 2, 3]), 1)  # integer
+    array([[1.],
+           [2.],
+           [3.]])
+    >>> verify_query_points(np.array(["a", "b"]), 1)
+    Traceback (most recent call last):
+    ...
+    ValueError: could not convert string to float: 'a' Invalid values in query points array!
+
+    Notes
+    -----
+    - The conversion to ``numpy.float64`` is required because some evaluation
+      routines rely on Numba whose input types are pre-determined.
+    """
+    try:
+        # Attempt to convert to a NumPy array of the correct dtype
+        # NOTE: Use np.asarray instead of np.array to avoid unnecessary copy
+        xx = np.atleast_1d(np.asarray(xx, dtype=FLOAT_DTYPE))
+
+        # Check dimensionality
+        check_dimensionality(xx, dimensionality=[1, 2])
+
+        # Check spatial dimension
+        if xx.ndim == 1:
+            dim = 1
+        else:
+            dim = xx.shape[1]
+        dim_is_consistent = dim == spatial_dimension
+        if not dim_is_consistent:
+            raise ValueError(
+                "Inconsistent dimension of query points "
+                f"(got {dim}, expected {spatial_dimension})."
+            )
+
+        # Check the values inside (allow inf but not nan)
+        check_values(xx, nan=False, inf=True, zero=True, negative=True)
+
+        # Make sure the array has a correct shape
+        num_points = len(xx)
+        xx = np.reshape(xx, (num_points, spatial_dimension))
+
+    except TypeError as err:
+        custom_message = "Invalid type for query points array!"
+        err.args = _add_custom_exception_message(err.args, custom_message)
+        raise err
+
+    except ValueError as err:
+        custom_message = f"Invalid values in query points array!"
+        err.args = _add_custom_exception_message(err.args, custom_message)
+        raise err
+
+    return xx
 
 
 def _add_custom_exception_message(
