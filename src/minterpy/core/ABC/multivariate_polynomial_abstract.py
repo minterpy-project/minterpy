@@ -19,9 +19,11 @@ from minterpy.utils.verification import (
     check_values,
     is_scalar,
     check_shape,
+    shape_eval_output,
     verify_domain,
     verify_poly_coeffs,
     verify_poly_domain,
+    verify_query_points,
 )
 from minterpy.utils.multi_index import find_match_between
 
@@ -83,11 +85,18 @@ class MultivariatePolynomialABC(abc.ABC):
 
     @staticmethod
     @abc.abstractmethod
-    def _eval(self, xx: np.ndarray, **kwargs) -> np.ndarray:  # pragma: no cover
+    def _eval(
+        poly: "MultivariatePolynomialABC",
+        xx: np.ndarray,
+        **kwargs,
+    ) -> np.ndarray:  # pragma: no cover
         """Abstract method to the polynomial evaluation function.
 
         Parameters
         ----------
+        poly : MultivariatePolynomialABC
+            A concrete instance of a polynomial class that can be evaluated
+            on a set of query points.
         xx : :class:`numpy:numpy.ndarray`
             The set of query points to evaluate as a two-dimensional array
             of shape ``(k, m)`` where ``k`` is the number of query points and
@@ -167,13 +176,18 @@ class MultivariatePolynomialABC(abc.ABC):
 
         TODO
         ----
-        - Introduce input validation for xx as it is common across concrete
-          implementations.
         - Possibly built-in rescaling between ``user_domain`` and
           ``internal_domain``. An idea: use sklearn min max scaler
           (``transform()`` and ``inverse_transform()``)
         """
-        return self._eval(self, xx, **kwargs)
+        # Verify query points
+        xx = verify_query_points(xx, self.spatial_dimension)
+
+        # Evaluate using concrete static method
+        yy = self._eval(self, xx, **kwargs)
+
+        # Follow the convention of output shape from an evaluation
+        return shape_eval_output(yy)
 
     # anything else any polynomial must support
     # TODO mathematical operations? abstract

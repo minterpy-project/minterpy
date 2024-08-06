@@ -7,12 +7,7 @@ import math
 import numpy as np
 
 from minterpy.utils.quad import gauss_leg
-from minterpy.utils.verification import (
-    rectify_query_points,
-    check_dtype,
-    rectify_eval_input,
-    convert_eval_output,
-)
+from minterpy.utils.verification import check_dtype
 from minterpy.global_settings import FLOAT_DTYPE, INT_DTYPE, DEBUG
 from minterpy.jit_compiled.newton.eval import eval_newton_monomials_multiple
 
@@ -55,10 +50,9 @@ def eval_newton_monomials(
     --------
     eval_all_newt_polys : concrete ``numba`` accelerated implementation of polynomial evaluation in Newton base.
     """
-    N, m = exponents.shape
-    nr_points, x = rectify_query_points(
-        x, m
-    )  # also working for 1D array, reshape into required shape
+    # Assumption: query points array has been verified
+    num_monomials, m = exponents.shape
+    num_points = len(x)
     if verify_input:
         check_dtype(x, FLOAT_DTYPE)
         check_dtype(exponents, INT_DTYPE)
@@ -68,9 +62,13 @@ def eval_newton_monomials(
     max_exponents = np.max(exponents, axis=0)
 
     # Create placeholders for the final and intermediate results
-    result_placeholder = np.empty((nr_points, N), dtype=FLOAT_DTYPE)
+    result_placeholder = np.empty(
+        shape=(num_points, num_monomials),
+        dtype=FLOAT_DTYPE,
+    )
     prod_placeholder = np.empty(
-        (np.max(max_exponents) + 1, m), dtype=FLOAT_DTYPE
+        shape=(np.max(max_exponents) + 1, m),
+        dtype=FLOAT_DTYPE,
     )
 
     # Compute the Newton monomials on all the query points
@@ -155,16 +153,13 @@ def eval_newton_polynomials(
     evaluate_multiple : ``numba`` accelerated implementation which is called internally by this function.
     convert_eval_output: ``numba`` accelerated implementation of the output converter.
     """
-
-    # Rectify the inputs
-    # TODO: Refactor this rectify function
+    # Get the relevant data
     verify_input = verify_input or DEBUG
-    _, coefficients, _, n_points, _, xx = \
-        rectify_eval_input(xx, coefficients, exponents, verify_input)
+    num_points = len(xx)
 
     # Get batch size
     # TODO: Verify the batch size
-    if batch_size is None or batch_size >= n_points:
+    if batch_size is None or batch_size >= num_points:
         newton_monomials = eval_newton_monomials(
             xx,
             exponents,
@@ -183,7 +178,7 @@ def eval_newton_polynomials(
             batch_size
         )
 
-    return convert_eval_output(results)
+    return results
 
 
 def eval_newton_polynomials_batch(
@@ -199,33 +194,36 @@ def eval_newton_polynomials_batch(
     -----
     - It is assumed that the inputs have all been verified and rectified.
     - It would be more expensive to evaluate smaller batch sizes
-      but with a less smaller memory footprint in any given iteration.
+      but with a smaller memory footprint in any given iteration.
     - If memory does not permit whole evaluation of query points,
       consider using smaller but not the smallest batch size (i.e., not 1).
     """
 
     # Get some important numbers
-    n_points = xx.shape[0]
-    n_polynomials = coefficients.shape[1]
-
-    # Create a placeholder for the results
+    num_points = xx.shape[0]
+    if coefficients.ndim == 1:
+        num_polynomials = 1
+    else:
+        num_polynomials = coefficients.shape[1]
+    # Create an output placeholder
     results_placeholder = np.empty(
-        (n_points, n_polynomials), dtype=FLOAT_DTYPE
+        shape=(num_points, num_polynomials),
+        dtype=FLOAT_DTYPE,
     )
 
     # Batch processing: evaluate the polynomials at a batch of query points
-    n_batches = n_points // batch_size + 1
+    n_batches, remainder = divmod(num_points, batch_size)
+    if remainder != 0:
+        n_batches += 1
     for idx in range(n_batches):
         start_idx = idx * batch_size
-
-        if idx == n_batches - 1:
-            end_idx = idx * batch_size + n_points % batch_size
+        if idx == n_batches - 1 and remainder != 0:
+            end_idx = idx * batch_size + remainder
         else:
             end_idx = (idx + 1) * batch_size
 
         # Get the current batch of query points
         xx_batch = xx[start_idx:end_idx, :]
-
         # Compute the Newton monomials for the batch
         newton_monomials = eval_newton_monomials(
             xx_batch,
@@ -236,7 +234,7 @@ def eval_newton_polynomials_batch(
         )
 
         # Compute the polynomial values for the batch
-        results_placeholder[start_idx:end_idx, :] = \
+        results_placeholder[start_idx:end_idx] = \
             newton_monomials @ coefficients
 
     return results_placeholder
@@ -281,25 +279,30 @@ def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarr
     - Refactor this initial implementation of polynomial differentiation
       in the Newton basis.
     """
-
-    N, coefficients, m, nr_points, nr_polynomials, x = \
-        rectify_eval_input(x, coefficients, exponents, False)
-
+    # Get relevant data
+    # N, coefficients, m, nr_points, nr_polynomials, x = \
+    #     rectify_eval_input(x, coefficients, exponents, False)
+    num_monomials, m = exponents.shape
+    num_points = x.shape[0]
+    if coefficients.ndim == 1:
+        num_polynomials = 1
+    else:
+        num_polynomials = coefficients.shape[1]
     max_exponents = np.max(exponents, axis=0)
 
     # Result of the derivative evaluation
-    results = np.empty((nr_points, nr_polynomials), dtype=FLOAT_DTYPE)
+    results = np.empty((num_points, num_polynomials), dtype=FLOAT_DTYPE)
 
     # Array to store individual basis monomial evaluations
-    monomial_vals= np.empty(N, dtype=FLOAT_DTYPE)
+    monomial_vals= np.empty(num_monomials, dtype=FLOAT_DTYPE)
 
     num_prods = np.max(max_exponents) + 1
     # Array to store products in basis monomial along each dimension
     products = np.empty((num_prods, m), dtype=FLOAT_DTYPE)
 
     # Newton monomials have to be evaluated at each input point separately
-    for point_nr in range(nr_points):
-        x_single = x[point_nr, :]
+    for point_idx in range(num_points):
+        x_single = x[point_idx, :]
 
         # Constructing the products array
         for i in range(m):
@@ -339,7 +342,7 @@ def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarr
                     products[q, i] = res
 
         # evaluate all Newton polynomials. O(Nm)
-        for j in range(N):
+        for j in range(num_monomials):
             # the exponents of each monomial ("alpha")
             # are the indices of the products which need to be multiplied
             newt_mon_val = 1.0  # required as multiplicative identity
@@ -354,7 +357,7 @@ def deriv_newt_eval(x: np.ndarray, coefficients: np.ndarray, exponents: np.ndarr
                         newt_mon_val = 0.0
             monomial_vals[j] = newt_mon_val
 
-        results[point_nr] = np.sum(monomial_vals[:,None] * coefficients, axis=0)
+        results[point_idx] = np.sum(monomial_vals[:,None] * coefficients, axis=0)
 
     return results
 
@@ -402,9 +405,10 @@ def integrate_monomials_newton(
         quad_num_points = np.ceil((max_exp_in_dim + 1) / 2)
 
         # Compute the integrals
+        # NOTE: 'eval_newton_monomials()' expects a two-dimensional array
         one_dim_integrals[: max_exp_in_dim + 1, j] = gauss_leg(
             lambda x: eval_newton_monomials(
-                x, exponents_1d, generating_points_in_dim
+                x[:, np.newaxis], exponents_1d, generating_points_in_dim
             ),
             num_points=quad_num_points,
             bounds=bounds[j],

@@ -2,6 +2,8 @@
 This module provides computational routines relevant to polynomials
 in the canonical basis.
 """
+from __future__ import annotations
+
 import numpy as np
 
 from minterpy.utils.multi_index import find_match_between
@@ -132,3 +134,49 @@ def compute_coeffs_poly_sum(
     coeffs_sum[idx_2, :] += coeffs_2[:, :]
 
     return coeffs_sum
+
+
+def eval_polynomials(
+    xx: np.ndarray,
+    coeffs: np.ndarray,
+    exponents: np.ndarray,
+) -> np.ndarray:
+    """Evaluate polynomial in the canonical basis.
+
+    Parameters
+    ----------
+    xx : :class:`numpy:numpy.ndarray`
+        Array of query points in the at which the polynomial(s) is evaluated.
+        The array is of shape ``(N, m)`` where ``N`` is the number of points
+        and ``m`` is the spatial dimension of the polynomial.
+    coeffs : :class:`numpy:numpy.ndarray`
+        The coefficients of the polynomial in the canonical basis. A single set
+        of coefficients is given as a one-dimensional array while multiple sets
+        are given as a two-dimensional array.
+    exponents : :class:`numpy:numpy.ndarray`
+        The exponents of the polynomial as multi-indices, a two-dimensional
+        positive integer array.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        The output of the polynomial evaluation. If the polynomial consists
+        of a single coefficient set, the output array is one-dimensional with
+        a length of ``N``. If the polynomial consists of multiple coefficients
+        sets, the output array is two-dimensional with a shape of
+        ``(N, n_poly)`` where ``n_poly`` is the number of coefficient sets.
+
+    Notes
+    -----
+    - This implementation is considered unsafe and may fail spectacularly
+      for polynomials of moderate degrees. Consider a more advanced
+      implementation in the future.
+
+    """
+    monomials = np.prod(
+        np.power(xx[:, None, :], exponents[None, :, :]),
+        axis=-1,
+    )
+    yy = np.dot(monomials, coeffs)
+
+    return yy

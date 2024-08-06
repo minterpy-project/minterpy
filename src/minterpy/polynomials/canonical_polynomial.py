@@ -15,6 +15,7 @@ from minterpy.jit_compiled.canonical import (
 )
 from minterpy.utils.polynomials.canonical import (
     compute_coeffs_poly_sum,
+    eval_polynomials,
     integrate_monomials,
 )
 from minterpy.utils.polynomials.interface import (
@@ -24,7 +25,6 @@ from minterpy.utils.polynomials.interface import (
     shape_coeffs,
 )
 from minterpy.utils.verification import (
-    convert_eval_output,
     dummy,
     verify_domain,
 )
@@ -33,6 +33,40 @@ from minterpy.utils.multi_index import find_match_between
 from minterpy.jit_compiled.multi_index import all_indices_are_contained
 
 __all__ = ["CanonicalPolynomial"]
+
+
+# --- Evaluation
+def eval_canonical(poly: "CanonicalPolynomial", xx: np.ndarray) -> np.ndarray:
+    """Evaluate polynomial(s) in the canonical basis on a set of query points.
+
+    Parameters
+    ----------
+    poly : CanonicalPolynomial
+        The instance of polynomial in the canonical basis to be evaluated.
+    xx : :class:`numpy:numpy.ndarray`
+        Array of query points in the at which the polynomial(s) is evaluated.
+        The array is of shape ``(N, m)`` where ``N`` is the number of points
+        and ``m`` is the spatial dimension of the polynomial.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        The output of the polynomial evaluation. If the polynomial consists
+        of a single coefficient set, the output array is one-dimensional with
+        a length of ``N``. If the polynomial consists of multiple coefficients
+        sets, the output array is two-dimensional with a shape of
+        ``(N, n_poly)`` where ``n_poly`` is the number of coefficient sets.
+
+    See Also
+    --------
+    minterpy.utils.polynomials.canonical.eval_polynomials
+        The actual implementation of the evaluation of polynomials in
+        the canonical basis.
+    """
+    coeffs = poly.coeffs
+    exponents = poly.multi_index.exponents
+
+    return eval_polynomials(xx, coeffs, exponents)
 
 
 # --- Arithmetics (Addition, Multiplication)
@@ -108,55 +142,6 @@ def mul_canonical(
 
     # --- Return a new instance
     return CanonicalPolynomial(**poly_prod_data._asdict())
-
-
-def _canonical_eval(pts: np.ndarray,exponents: np.ndarray, coeffs: np.ndarray):
-    """
-    Unsafe version of naive canonical evaluation
-
-    :param pts: List of points, the polynomial must be evaluated on. Assumed shape: `(number_of_points,spatial_dimension)`.
-    :type pts: np.ndarray
-
-    :param exponents: Exponents from a multi-index set. Assumed shape:` (number_of_monomials, spatial_dimension)`.
-    :type exponents: np.ndarray
-
-    :param coeffs: List of coefficients. Assumed shape: `(number_of_monomials,)`
-    :type coeffs: np.ndarray
-
-    :return: result of the canonical evaluation.
-    :rtype: np.ndarray
-    
-    """
-    yy = np.dot(np.prod(np.power(pts[:, None, :], exponents[None, :, :]), axis=-1), coeffs)
-
-    return convert_eval_output(yy)
-
-
-def _verify_eval_input(pts, spatial_dimension):
-    """
-    verification of the input of the canonical evaluation. 
-    """
-    assert(isinstance(pts,np.ndarray))
-    assert(pts.ndim==2)
-    assert(pts.shape[-1]==spatial_dimension)
-
-
-def canonical_eval(canonical_poly, pts: np.ndarray):
-    """
-    Navie canonical evaluation
-
-    :param canonical_poly: Polynomial in canonical form to be evaluated.
-    :type canonical_poly: CanonicalPolynomial
-
-    :param pts: List of points, the polynomial must be evaluated on. Assumed shape: `(number_of_points,spatial_dimension)`.
-    :type pts: np.ndarray
-
-    :return: result of the canonical evaluation. 
-    :rtype: np.ndarray
-
-    """
-    _verify_eval_input(pts,canonical_poly.spatial_dimension)
-    return _canonical_eval(pts,canonical_poly.multi_index.exponents,canonical_poly.coeffs)
 
 
 # TODO redundant
@@ -249,7 +234,7 @@ class CanonicalPolynomial(MultivariatePolynomialSingleABC):
     _mul = staticmethod(mul_canonical)
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
-    _eval = staticmethod(canonical_eval)
+    _eval = staticmethod(eval_canonical)
     _iadd = staticmethod(dummy)
 
     _partial_diff = staticmethod(_canonical_partial_diff)

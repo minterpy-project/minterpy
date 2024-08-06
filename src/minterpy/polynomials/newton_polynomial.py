@@ -70,7 +70,8 @@ def _is_constant_poly(poly: MultivariatePolynomialSingleABC) -> bool:
     return has_one_element and has_zero and has_one_coeff
 
 
-def newton_eval(poly: "NewtonPolynomial", xx: np.ndarray) -> np.ndarray:
+# --- Evaluation
+def eval_newton(poly: "NewtonPolynomial", xx: np.ndarray) -> np.ndarray:
     """Evaluate polynomial(s) in the Newton basis on a set of query points.
 
     This is a wrapper for the evaluation function in the Newton basis.
@@ -78,27 +79,28 @@ def newton_eval(poly: "NewtonPolynomial", xx: np.ndarray) -> np.ndarray:
     Parameters
     ----------
     poly : NewtonPolynomial
-        The instance of polynomial in Newton form to evaluate.
+        The instance of polynomial in the Newton basis to evaluate.
     xx : :class:`numpy:numpy.ndarray`
         Array of query points in the at which the polynomial(s) is evaluated.
-        The array is of shape ``(n,m)`` where ``n`` is the number of points
+        The array is of shape ``(N, m)`` where ``N`` is the number of points
         and ``m`` is the spatial dimension of the polynomial.
 
     See Also
     --------
-    minterpy.utils.eval_newton_polynomials
+    minterpy.utils.polynomials.newton.eval_newton_polynomials
         The actual implementation of the evaluation of polynomials in
         the Newton basis.
-
-    TODO
-    ----
-    - check right order of axes for ``x``.
     """
+    # Get relevant data
+    coeffs = poly.coeffs
+    exponents = poly.multi_index.exponents
+    gen_points = poly.grid.generating_points
+
     return eval_newton_polynomials(
         xx,
-        poly.coeffs,
-        poly.multi_index.exponents,
-        poly.grid.generating_points,
+        coeffs,
+        exponents,
+        gen_points,
         verify_input=DEBUG,
     )
 
@@ -405,7 +407,7 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     _div = staticmethod(dummy)
     _pow = staticmethod(dummy)
     _iadd = staticmethod(dummy)
-    _eval = staticmethod(newton_eval)
+    _eval = staticmethod(eval_newton)
 
     # Calculus
     _partial_diff = staticmethod(newton_partial_diff)
