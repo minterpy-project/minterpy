@@ -229,7 +229,7 @@ class LagrangePolynomial(MultivariatePolynomialSingleABC):
     # Virtual Functions
     _add = staticmethod(_lagrange_add)
     _sub = staticmethod(_lagrange_sub)
-    _mul = staticmethod(_lagrange_mul)
+    _mul = staticmethod(dummy)
     _div = staticmethod(dummy)  # type: ignore
     _pow = staticmethod(dummy)  # type: ignore
     _eval = staticmethod(dummy)  # type: ignore

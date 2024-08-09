@@ -79,31 +79,6 @@ def test_sub_poly(Mi1, Mi2):
     assert_polynomial_almost_equal(can_poly_res, groundtruth_res_poly)
 
 
-def test_mul():
-    mi = MultiIndexSet.from_degree(2, 1, 2.0)
-    canonical_coeffs1 = np.array([0, 1, 1])
-    canonical_coeffs2 = np.array([0, 1, -1])
-
-    can_poly_1 = CanonicalPolynomial(mi, canonical_coeffs1)
-    can_poly_2 = CanonicalPolynomial(mi, canonical_coeffs2)
-
-    c2l_transformation = CanonicalToLagrange(can_poly_1)
-
-    lagrange_poly1 = c2l_transformation(can_poly_1)
-    lagrange_poly2 = c2l_transformation(can_poly_2)
-
-    res_lagrange_poly = lagrange_poly1 * lagrange_poly2
-
-    l2c_transformation = LagrangeToCanonical(res_lagrange_poly)
-    res_canonical_poly = l2c_transformation()
-
-    groundtruth_product_coeffs = np.array([0, 0, 1, 0, 0, -1])
-    groundtruth_mi = MultiIndexSet.from_degree(2, 2, 4.0)
-    groundtruth = CanonicalPolynomial(groundtruth_mi, groundtruth_product_coeffs)
-
-    assert_polynomial_almost_equal(groundtruth, res_canonical_poly)
-
-
 def test_add_different_poly():
     mi1 = MultiIndexSet.from_degree(3, 2, 2.0)
     coeffs1 = np.array([1, 2, 0, 4, 3, 0, 5, 0, 0, 0, 0])
