@@ -131,6 +131,10 @@
 - The method `apply_func()` of the `Grid` class previously not implemented
   (calling it raises an exception) is now removed completely
   in favor of `__call__()`.
+- General polynomial-polynomial addition/subtraction and multiplication
+  for polynomials in the Lagrange basis is now removed to avoid unnecessary
+  coupling with the Newton polynomial class and the corresponding
+  transformation class.
 
 # Version 0.2.0-alpha
 This is the next alpha release of `minterpy`, which adds several
