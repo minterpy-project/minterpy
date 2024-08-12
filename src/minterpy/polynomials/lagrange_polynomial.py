@@ -1,189 +1,96 @@
 """
-LagrangePolynomial class
+This module contains the `LagrangePolynomial` class.
+
+The `LagrangePolynomial` class is a concrete implementation of the abstract
+base class :py:class:`MultivariatePolynomialSingleABC
+<.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC>`
+for polynomials in the Lagrange basis.
+
+Background information
+----------------------
+
+The relevant section of the
+:ref:`fundamentals/polynomial-bases:Lagrange polynomials` contains a more
+detailed explanation regarding the polynomials in the Lagrange form.
+
+Implementation details
+----------------------
+
+`LagrangePolynomial` is currently designed to be a bare concrete
+implementation of the abstract base class
+:py:class:`MultivariatePolynomialSingleABC
+<.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC>`.
+In other words, most (if not all) concrete implementation of the abstract
+methods are left undefined and will raise an exception when called or invoked.
+
+`LagrangePolynomial` serves as an entry point to Minterpy polynomials
+especially in the context of function approximations because the intuitiveness
+of the corresponding coefficients (i.e., they are the function values at
+the grid points). However, the polynomial itself is not fully featured
+(e.g., no addition, multiplication, etc.) as compared to polynomials in
+the other basis.
+
+----
+
 """
 from __future__ import annotations
 
-from copy import deepcopy
-
 import numpy as np
 
-from typing import Optional
-
-import minterpy as mp
-
-from minterpy.core import Grid, MultiIndexSet
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
+from minterpy.services import is_constant
+from minterpy.utils.polynomials.interface import (
+    get_grid_and_multi_index_poly_sum,
+    PolyData,
+    shape_coeffs,
+)
 from minterpy.utils.polynomials.lagrange import integrate_monomials_lagrange
 from minterpy.utils.verification import dummy, verify_domain
-from minterpy.global_settings import ARRAY
 
 __all__ = ["LagrangePolynomial"]
 
 
-# TODO : poly2 can be of a different basis?
-def _lagrange_add(
-    poly1: MultivariatePolynomialSingleABC, poly2: MultivariatePolynomialSingleABC
-) -> MultivariatePolynomialSingleABC:
-    """Addition of two polynomials in Lagrange basis.
+def add_lagrange(
+    poly_1: "LagrangePolynomial",
+    poly_2: "LagrangePolynomial",
+) -> "LagrangePolynomial":
+    """Add two instances of polynomials in the Lagrange basis.
 
+    This is the concrete implementation of ``_add()`` method in the
+    ``MultivariatePolynomialSingleABC`` abstract class specifically for
+    handling polynomials in the Lagrange basis.
 
-    :param poly1: First polynomial to be added.
-    :type poly1: LagrangePolynomial
-    :param poly2: Second polynomial to be added.
-    :type poly2: LagrangePolynomial
+    Parameters
+    ----------
+    poly_1 : LagrangePolynomial
+        Left operand of the addition/subtraction expression.
+    poly_2 : LagrangePolynomial
+        Right operand of the addition/subtraction expression.
 
-    :return: The result of ``poly1 + poly2``
-    :rtype: LagrangePolynomial
+    Returns
+    -------
+    LagrangePolynomial
+        The sum of two polynomials in the Lagrange basis as a new instance
+        of polynomial, also in the Lagrange basis.
 
+    Notes
+    -----
+    - This function assumes: both polynomials must be in the Lagrange basis,
+      they must be initialized (coefficients are not ``None``),
+      have the same dimension and their domains are matching,
+      and the number of polynomials per instance are the same.
+      These conditions are not explicitly checked in this function.
     """
-    p1, p2 = _match_dims(poly1, poly2)
-    if p1.has_matching_domain(p2):
-        l2n_p1 = mp.LagrangeToNewton(p1)
-        newt_p1 = l2n_p1()
-        l2n_p2 = mp.LagrangeToNewton(p2)
-        newt_p2 = l2n_p2()
+    # --- Get the ingredients of the summed polynomial in the Lagrange basis
+    poly_sum_data = _compute_poly_sum_data_lagrange(poly_1, poly_2)
 
-        max_poly_degree = np.max(
-            np.array([p1.multi_index.poly_degree, p2.multi_index.poly_degree])
-        )
-        max_lp_degree = np.max(
-            np.array([p1.multi_index.lp_degree, p2.multi_index.lp_degree])
-        )
-
-        dim = p1.spatial_dimension  # must be the same for p2
-
-        res_mi = MultiIndexSet.from_degree(dim, int(max_poly_degree), max_lp_degree)
-        res_grid = Grid(res_mi)
-
-        un = res_grid.unisolvent_nodes
-
-        eval_p1 = newt_p1(un)
-        eval_p2 = newt_p2(un)
-
-        res_coeffs = eval_p1 + eval_p2
-
-        return LagrangePolynomial(
-            res_mi,
-            res_coeffs,
-            grid=res_grid,
-            internal_domain=p1.internal_domain,
-            user_domain=p1.user_domain,
-        )
-    else:
-        raise NotImplementedError(
-            "Addition is not implemented for lagrange polynomials with different domains"
-        )
+    # --- Return a new instance
+    return LagrangePolynomial(**poly_sum_data._asdict())
 
 
-def _lagrange_sub(
-    poly1: MultivariatePolynomialSingleABC, poly2: MultivariatePolynomialSingleABC
-) -> MultivariatePolynomialSingleABC:
-    """Subtraction of two polynomials in Lagrange basis.
-
-
-    :param poly1: First polynomial from which will be substracted.
-    :type poly1: LagrangePolynomial
-    :param poly2: Second polynomial which is substracted.
-    :type poly2: LagrangePolynomial
-
-    :return: The result of ``poly1 - poly2``
-    :rtype: LagrangePolynomial
-    """
-    p1, p2 = _match_dims(poly1, poly2)
-    if p1.has_matching_domain(p2):
-        l2n_p1 = mp.LagrangeToNewton(p1)
-        newt_p1 = l2n_p1()
-        l2n_p2 = mp.LagrangeToNewton(p2)
-        newt_p2 = l2n_p2()
-
-        max_poly_degree = np.max(
-            np.array([p1.multi_index.poly_degree, p2.multi_index.poly_degree])
-        )
-        max_lp_degree = np.max(
-            np.array([p1.multi_index.lp_degree, p2.multi_index.lp_degree])
-        )
-
-        dim = p1.spatial_dimension  # must be the same for p2
-
-        res_mi = MultiIndexSet.from_degree(dim, int(max_poly_degree), max_lp_degree)
-        res_grid = Grid(res_mi)
-
-        un = res_grid.unisolvent_nodes
-
-        eval_p1 = newt_p1(un)
-        eval_p2 = newt_p2(un)
-
-        res_coeffs = eval_p1 - eval_p2
-
-        return LagrangePolynomial(
-            res_mi,
-            res_coeffs,
-            grid=res_grid,
-            internal_domain=p1.internal_domain,
-            user_domain=p1.user_domain,
-        )
-    else:
-        raise NotImplementedError(
-            "Subtraction is not implemented for lagrange polynomials with different domains"
-        )
-
-
-def _lagrange_mul(
-    poly1: MultivariatePolynomialSingleABC, poly2: MultivariatePolynomialSingleABC
-) -> MultivariatePolynomialSingleABC:
-    """Multiplication of two polynomials in Lagrange basis.
-
-
-    :param poly1: First polynomial to be multiplied.
-    :type poly1: LagrangePolynomial
-    :param poly2: Second polynomial to be multiplied.
-    :type poly2: LagrangePolynomial
-
-    :return: The result of ``poly1 * poly2``
-    :rtype: LagrangePolynomial
-    """
-    p1, p2 = _match_dims(poly1, poly2)
-    if p1.has_matching_domain(p2):
-        l2n_p1 = mp.LagrangeToNewton(p1)
-        newt_p1 = l2n_p1()
-        l2n_p2 = mp.LagrangeToNewton(p2)
-        newt_p2 = l2n_p2()
-
-        degree_poly1 = p1.multi_index.poly_degree
-        degree_poly2 = p2.multi_index.poly_degree
-        lpdegree_poly1 = p1.multi_index.lp_degree
-        lpdegree_poly2 = p2.multi_index.lp_degree
-
-        res_degree = int(degree_poly1 + degree_poly2)
-        res_lpdegree = lpdegree_poly1 + lpdegree_poly2
-
-        res_mi = MultiIndexSet.from_degree(
-            p1.spatial_dimension, res_degree, res_lpdegree
-        )
-        res_grid = Grid(res_mi)
-
-        un = res_grid.unisolvent_nodes
-
-        eval_p1 = newt_p1(un)
-        eval_p2 = newt_p2(un)
-
-        res_coeffs = eval_p1 * eval_p2
-
-        return LagrangePolynomial(
-            res_mi,
-            res_coeffs,
-            grid=res_grid,
-            internal_domain=p1.internal_domain,
-            user_domain=p1.user_domain,
-        )
-    else:
-        raise NotImplementedError(
-            "Multiplication is not implemented for Lagrange polynomials with different domains"
-        )
-
-
-def _lagrange_integrate_over(
-    poly: "LagrangePolynomial", bounds: np.ndarray
+def integrate_over_lagrange(
+    poly: "LagrangePolynomial",
+    bounds: np.ndarray,
 ) -> np.ndarray:
     """Compute the definite integral of a polynomial in the Lagrange basis.
 
@@ -200,7 +107,7 @@ def _lagrange_integrate_over(
     :class:`numpy:numpy.ndarray`
         The integral value of the polynomial over the given domain.
     """
-    quad_weights = compute_quad_weights_lagrange(poly, bounds)
+    quad_weights = _compute_quad_weights_lagrange(poly, bounds)
 
     return quad_weights @ poly.coeffs
 
@@ -211,25 +118,31 @@ lagrange_generate_user_domain = verify_domain
 
 
 class LagrangePolynomial(MultivariatePolynomialSingleABC):
-    """Datatype to discribe polynomials in Lagrange base.
+    """Concrete implementation of polynomials in the Lagrange basis.
 
-    A polynomial in Lagrange basis is the sum of so called Lagrange polynomials (each multiplied with a coefficient).
-    A `single` Lagrange monomial is per definition 1 on one of the grid points and 0 on all others.
+    A polynomial in the Lagrange basis is the sum of so-called Lagrange
+    polynomials, each of which is multiplied with a coefficient.
+
+    The value a *single* Lagrange monomial is per definition :math:`1`
+    at one of the grid points and :math:`0` on all the other points.
 
     Notes
     -----
-    A polynomial in Lagrange basis is well defined also for multi indices which are lexicographically incomplete. This means that the corresponding Lagrange polynomials also form a basis in such cases. These Lagrange polynomials however will possess their special property of being 1 on a single grid point and 0 on all others, with respect to the given grid! This allows defining very "sparse" polynomials (few multi indices -> few coefficients), but which still fulfill additional constraints (vanish on additional grid points). Practically this can be achieved by storing a "larger" grid (defined on a larger set of multi indices). In this case the transformation matrices become non-square, since there are fewer Lagrange polynomials than there are grid points (<-> only some of the Lagrange polynomials of this basis are "active"). Conceptually this is equal to fix the "inactivate" coefficients to always be 0.
-
-    .. todo::
-        - provide a short definition of this base here.
+    - The Lagrange polynomials commonly appear in the Wikipedia article is
+      in Minterpy considered the "monomial". In other words, a polynomial in
+      the Lagrange basis is the sum of Lagrange monomials each of which is
+      multiplied with a coefficient.
+    - A polynomial in the Lagrange basis may also be defined also
+      for multi-indices of exponents which are not downward-closed.
+      In such cases, the corresponding Lagrange monomials also form a basis.
+      These mononomials still possess their special property of being :math:`1`
+      at a single grid point and :math:`0` at all the other points,
+      with respect to the given grid.
     """
-
-    _newt_coeffs_lagr_monomials: Optional[ARRAY] = None
-
     # Virtual Functions
-    _add = staticmethod(_lagrange_add)
-    _sub = staticmethod(_lagrange_sub)
-    _mul = staticmethod(dummy)
+    _add = staticmethod(add_lagrange)
+    _sub = staticmethod(dummy)  # type: ignore
+    _mul = staticmethod(dummy)  # type: ignore
     _div = staticmethod(dummy)  # type: ignore
     _pow = staticmethod(dummy)  # type: ignore
     _eval = staticmethod(dummy)  # type: ignore
@@ -238,54 +151,66 @@ class LagrangePolynomial(MultivariatePolynomialSingleABC):
     _partial_diff = staticmethod(dummy)
     _diff = staticmethod(dummy)
 
-    _integrate_over = staticmethod(_lagrange_integrate_over)
+    _integrate_over = staticmethod(integrate_over_lagrange)
 
     generate_internal_domain = staticmethod(lagrange_generate_internal_domain)
     generate_user_domain = staticmethod(lagrange_generate_user_domain)
 
 
-def _match_dims(poly1, poly2, copy=None):
-    """Dimensional expansion of two polynomial in order to match their spatial_dimensions.
+def _compute_poly_sum_data_lagrange(
+    poly_1: LagrangePolynomial,
+    poly_2: LagrangePolynomial,
+) -> PolyData:
+    """Compute the data to create a summed polynomial in the Lagrange basis.
 
     Parameters
     ----------
-    poly1 : CanonicalPolynomial
-        First polynomial in canonical basis
-    poly2 : CanonicalPolynomial
-        Second polynomial in canonical basis
-    copy : bool
-        If True, work on deepcopies of the passed polynomials (doesn't change the input).
-        If False, inplace expansion of the passed polynomials
+    poly_1 : LagrangePolynomial
+        Left operand of the addition/subtraction expression.
+    poly_2 : LagrangePolynomial
+        Right operand of the addition/subtraction expression.
 
     Returns
     -------
-    (poly1,poly2) : (CanonicalPolynomial,CanonicalPolynomial)
-        Dimensionally matched polynomials in the same order as input.
+    PolyData
+        The ingredients to construct a summed polynomial in the Lagrange basis.
 
     Notes
     -----
-    - Maybe move this to the MultivariatePolynomialSingleABC since it shall be avialable for all poly bases
+    - Only addition with or between constant polynomials is supported.
+    - Both polynomials are assumed to have the same type, spatial dimension,
+      and matching domains. This has been made sure by the abstract base class.
     """
-    if copy is None:
-        copy = True
+    # --- Get the grid and multi-index set of the summed polynomial
+    grd_sum, mi_sum = get_grid_and_multi_index_poly_sum(poly_1, poly_2)
 
-    if copy:
-        p1 = deepcopy(poly1)
-        p2 = deepcopy(poly2)
+    # --- Process the coefficients
+    if is_constant(poly_1) or is_constant(poly_2):
+        # Shape the coefficients; ensure they have the same dimension
+        coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
+        coeffs_sum = coeffs_1 + coeffs_2
     else:
-        p1 = poly1
-        p2 = poly2
+        raise NotImplementedError(
+            "General polynomial-polynomial addition/subtraction "
+            f"for {type(poly_1)} is not supported."
+        )
 
-    dim1 = p1.multi_index.spatial_dimension
-    dim2 = p2.multi_index.spatial_dimension
-    if dim1 >= dim2:
-        p2 = p2.expand_dim(dim1)
-    else:
-        p1 = p1.expand_dim(dim2)
-    return p1, p2
+    # --- Process the domains
+    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
+    # matching domains, it does not matter which one to use
+    internal_domain_sum = poly_1.internal_domain
+    user_domain_sum = poly_1.user_domain
+
+    return PolyData(
+        multi_index=mi_sum,
+        coeffs=coeffs_sum,
+        internal_domain=internal_domain_sum,
+        user_domain=user_domain_sum,
+        grid=grd_sum,
+    )
 
 
-def compute_quad_weights_lagrange(
+def _compute_quad_weights_lagrange(
     poly: LagrangePolynomial,
     bounds: np.ndarray,
 ) -> np.ndarray:

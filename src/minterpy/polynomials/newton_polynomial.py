@@ -379,7 +379,7 @@ def _compute_poly_sum_data_newton(
     ----------
     poly_1 : NewtonPolynomial
         Left operand of the addition/subtraction expression.
-    poly_2 : CanonicalPolynomial
+    poly_2 : NewtonPolynomial
         Right operand of the addition/subtraction expression.
 
     Returns
