@@ -953,11 +953,9 @@ class TestPolyMultiplication:
         # Get the polynomial pairs
         poly_1, poly_2 = rand_polys_mnp_pair
 
+        # General Lagrange poly-poly multiplication is unsupported -> skip it
         if isinstance(poly_1, LagrangePolynomial):
-            pytest.skip(
-                "Skipping multiplication between "
-                f"{type(poly_1)}, {type(poly_2)}"
-            )
+            pytest.skip(f"Skipping evaluation of a product {type(poly_1)}.")
 
         # Get the maximum dimension
         dim_1 = poly_1.spatial_dimension
@@ -1015,9 +1013,7 @@ class TestPolyMultiplication:
     ):
         """Test the multiplication of polynomials with separate indices."""
         if polynomial_class is LagrangePolynomial:
-            pytest.skip(
-                f"Skipping test between for {polynomial_class}"
-            )
+            pytest.skip(f"Skipping test between for {polynomial_class}")
 
         # Create multi-indices
         n_1 = PolyDegree
