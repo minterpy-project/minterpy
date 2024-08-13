@@ -30,7 +30,7 @@ from minterpy.utils.polynomials.interface import (
 from minterpy.utils.polynomials.canonical import (
     compute_coeffs_poly_sum as compute_coeffs_poly_sum_canonical,
 )
-from minterpy.services import is_constant
+from minterpy.services import is_scalar
 
 
 __all__ = ["NewtonPolynomial"]
@@ -444,8 +444,8 @@ def _compute_coeffs_poly_sum(
       a subset of the former (no need to check for that here).
     """
     # Deal with a constant polynomial to avoid doing any transformation
-    if is_constant(poly_1) or is_constant(poly_2):
-        return _compute_coeffs_constant_poly_sum(poly_1, poly_2, multi_index_sum)
+    if is_scalar(poly_1) or is_scalar(poly_2):
+        return _compute_coeffs_scalar_poly_sum(poly_1, poly_2, multi_index_sum)
 
     # Compute the values of the operands at the unisolvent nodes
     lag_coeffs_1 = grid_sum(poly_1)
@@ -463,7 +463,7 @@ def _compute_coeffs_poly_sum(
     return nwt_coeffs_sum
 
 
-def _compute_coeffs_constant_poly_sum(
+def _compute_coeffs_scalar_poly_sum(
     poly_1: NewtonPolynomial,
     poly_2: NewtonPolynomial,
     multi_index_sum: MultiIndexSet,

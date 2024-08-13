@@ -19,13 +19,10 @@ from conftest import (
     create_mi_pair_distinct,
     POLY_CLASSES,
 )
-
 from minterpy import (
+    Grid,
     LagrangePolynomial,
-    CanonicalPolynomial,
-    ChebyshevPolynomial,
     MultiIndexSet,
-    Grid, NewtonPolynomial,
 )
 
 
@@ -1644,3 +1641,116 @@ class TestScalarSubtraction:
         # Assertions
         assert np.allclose(yy_ref, yy_1)
         assert np.allclose(yy_ref, yy_2)
+
+
+class TestExponentiation:
+    """All tests related to the exponentiation of a polynomial."""
+
+    @pytest.mark.parametrize("invalid_value", [-1, 1.1, 0.5])
+    def test_by_invalid_value(self, rand_polys_mnp, invalid_value):
+        """Test polynomial exponentiation by an invalid value."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        # Exponentiation
+        with pytest.raises(ValueError):
+            _ = poly**invalid_value
+
+    @pytest.mark.parametrize("invalid_type", ["ab", 1+1j, np.array([1, 2, 3])])
+    def test_by_invalid_type(self, rand_polys_mnp, invalid_type):
+        """Test polynomial exponentiation by an invalid type."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        # Exponentiation
+        with pytest.raises(TypeError):
+            _ = poly ** invalid_type
+
+    def test_by_one(self, rand_polys_mnp):
+        """Test polynomial exponentiation by one."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        # Exponentation
+        poly_exp = poly**1
+
+        # Assertion
+        assert poly_exp == poly
+
+    def test_by_three(self, rand_polys_mnp):
+        """Test polynomial exponentation by three."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(f"Skipping general exponentiation of {type(poly)}.")
+
+        # Exponentation
+        poly_exp = poly ** 3.0
+
+        # Assertion
+        assert poly_exp == poly * poly * poly
+
+    def test_by_zero(self, rand_polys_mnp):
+        """Test polynomial exponentation by zero."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        # Exponentiation
+        poly_exp = poly**0
+
+        # Assertions
+        assert poly_exp == poly * 0 + 1
+
+    def test_by_two_eval(self, rand_polys_mnp):
+        """Test the evaluation of an exponentiated polynomial (by two)."""
+        # Get a random polynomial instance
+        poly = rand_polys_mnp
+
+        if isinstance(poly, LagrangePolynomial):
+            pytest.skip(f"Skipping general exponentiation of {type(poly)}.")
+
+        # Exponentiation
+        poly_exp = poly**2
+
+        # Generate random test points
+        xx_test = -1 + 2 * np.random.rand(5, poly.spatial_dimension)
+        yy_test = poly_exp(xx_test)
+        yy_ref = poly(xx_test) * poly(xx_test)
+
+        # Assertion
+        assert np.allclose(yy_ref, yy_test)
+
+    def test_non_downward_closed(
+        self,
+        polynomial_class,
+        multi_index_non_downward_closed,
+    ):
+        """Test exponentiation by 0 and 1 of non-downward-closed polynomial.
+
+        Notes
+        -----
+        - Regardless of the downward-closedness of the underlying multi-index
+          set, all polynomials may be exponentiated by 0 or 1. Beyond that,
+          it depends whether the basis allows it.
+        """
+        # Get a non-downward closed multi-index set
+        mi = multi_index_non_downward_closed
+
+        # Create random coefficients
+        coeffs = np.random.rand(len(mi))
+
+        # Create a random polynomial
+        poly = polynomial_class(mi, coeffs)
+
+        # Exponentiation by 0
+        poly_exp = poly**0
+
+        # Assertion
+        assert poly_exp == poly * 0 + 1
+
+        # Exponentiation by 1
+        poly_exp = poly**1
+
+        # Assertion
+        assert poly_exp == poly

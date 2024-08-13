@@ -298,7 +298,7 @@ def check_domain_fit(points: np.ndarray):
             )
 
 
-def is_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
+def is_real_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
     """Check if a given value is a real scalar number.
 
     Parameters
@@ -314,17 +314,17 @@ def is_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
 
     Examples
     --------
-    >>> is_scalar(1)  # int
+    >>> is_real_scalar(1)  # int
     True
-    >>> is_scalar(10.0)  # float
+    >>> is_real_scalar(10.0)  # float
     True
-    >>> is_scalar(np.array([1])[0])  # numpy.int64
+    >>> is_real_scalar(np.array([1])[0])  # numpy.int64
     True
-    >>> is_scalar(np.array([1]))  # numpy.ndarray
+    >>> is_real_scalar(np.array([1]))  # numpy.ndarray
     False
-    >>> is_scalar(np.array([123.0])[0])  # numpy.float64
+    >>> is_real_scalar(np.array([123.0])[0])  # numpy.float64
     True
-    >>> is_scalar(1+5j)  # complex
+    >>> is_real_scalar(1+5j)  # complex
     False
     """
     return isinstance(x, (int, float, np.integer, np.floating))
@@ -792,6 +792,72 @@ def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:
         raise err
 
     return xx
+
+
+def verify_poly_power(power: int) -> int:
+    """Verify if the value of a given polynomial power is valid.
+
+    This function verify the value of ``power`` in the expression
+    ``poly**power``.
+
+    Parameters
+    ----------
+    power : int
+        Polynomial power to verify; the value of a polynomial power must be
+        a scalar non-negative (>= 0). ``poly_power`` may not necessarily be
+        an `int` but it must be a single whole number.
+
+    Returns
+    -------
+    int
+        Verified polynomial power. If the input is not an `int`,
+        the function does a type conversion to an `int` if possible.
+
+    Raises
+    ------
+    TypeError
+        If ``poly_power`` is not of a correct type, e.g., it's not a real
+        scalar, or its non-negativeness cannot be verified,
+        or the conversion to `int` cannot be carried out.
+    ValueError
+        If ``poly_degree`` is, for example, not a positive
+        or a whole number.
+
+    Examples
+    --------
+    >>> verify_poly_power(0)  # int
+    0
+    >>> verify_poly_power(1.0)  # float but whole
+    1
+    >>> verify_poly_power(np.array([2])[0])  # numpy.int64
+    2
+    """
+    try:
+        # Must be a real scalar
+        if not is_real_scalar(power):
+            raise TypeError("Polynomial power must be a scalar.")
+
+        # Must be positive
+        check_values(power, negative=False)
+
+        # Other type than int may be acceptable if it's a whole number
+        if power % 1 != 0:
+            raise ValueError("Polynomial power must be a whole number.")
+
+        # Make sure that it's an int (whole number checked must come first!)
+        power = int(power)
+
+    except TypeError as err:
+        custom_message = f"Invalid type for polynomial power (got {power})!"
+        err.args = _add_custom_exception_message(err.args, custom_message)
+        raise err
+
+    except ValueError as err:
+        custom_message = f"{power} is invalid for polynomial power!"
+        err.args = _add_custom_exception_message(err.args, custom_message)
+        raise err
+
+    return power
 
 
 def _add_custom_exception_message(

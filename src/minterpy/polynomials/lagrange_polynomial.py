@@ -35,15 +35,12 @@ the other basis.
 """
 from __future__ import annotations
 
+import copy
 import numpy as np
 
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
-from minterpy.services import is_constant
-from minterpy.utils.polynomials.interface import (
-    get_grid_and_multi_index_poly_sum,
-    PolyData,
-    shape_coeffs,
-)
+from minterpy.services import is_scalar
+from minterpy.utils.polynomials.interface import PolyData, shape_coeffs
 from minterpy.utils.polynomials.lagrange import integrate_monomials_lagrange
 from minterpy.utils.verification import dummy, verify_domain
 
@@ -177,23 +174,34 @@ def _compute_poly_sum_data_lagrange(
 
     Notes
     -----
-    - Only addition with or between constant polynomials is supported.
+    - Only addition with or between constant scalar polynomials is supported.
+      In other words, one of the polynomials must be a scalar polynomial.
     - Both polynomials are assumed to have the same type, spatial dimension,
       and matching domains. This has been made sure by the abstract base class.
     """
-    # --- Get the grid and multi-index set of the summed polynomial
-    grd_sum, mi_sum = get_grid_and_multi_index_poly_sum(poly_1, poly_2)
-
-    # --- Process the coefficients
-    if is_constant(poly_1) or is_constant(poly_2):
-        # Shape the coefficients; ensure they have the same dimension
-        coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
-        coeffs_sum = coeffs_1 + coeffs_2
-    else:
+    # --- Only if one of the operands is a constant scalar polynomial
+    if not is_scalar(poly_1) and not is_scalar(poly_2):
         raise NotImplementedError(
             "General polynomial-polynomial addition/subtraction "
             f"for {type(poly_1)} is not supported."
-        )
+    )
+
+    # --- Get the grid and multi-index set of the summed polynomial
+    # NOTE: Simply take the one with the largest multi-index set
+    # (i.e., the non-scalar polynomial)
+    non_scalar_poly = poly_1 if not is_scalar(poly_1) else poly_2
+    grd_sum = copy.copy(non_scalar_poly.grid)
+    if non_scalar_poly.indices_are_separate:
+        mi_sum = copy.copy(non_scalar_poly.multi_index)
+    else:
+        mi_sum = grd_sum.multi_index
+
+    # --- Process the coefficients
+    # NOTE: In the Lagrange basis, adding a scalar applies to all coefficients
+    # because there is no "constant" term in the multi-index set.
+    # Shape the coefficients; ensure they have the same dimension
+    coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
+    coeffs_sum = coeffs_1 + coeffs_2
 
     # --- Process the domains
     # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
