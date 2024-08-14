@@ -11,14 +11,14 @@ from minterpy.global_settings import INT_DTYPE
 if TYPE_CHECKING:
     from minterpy.core.ABC import MultivariatePolynomialSingleABC
 
-__all__ = ["is_constant"]
+__all__ = ["is_scalar"]
 
 
-def is_constant(poly: "MultivariatePolynomialSingleABC") -> bool:
-    """Check if a polynomial instance is a constant.
+def is_scalar(poly: "MultivariatePolynomialSingleABC") -> bool:
+    """Check if a polynomial instance is a constant scalar polynomial.
 
-    Constant multidimensional polynomial consists of a single multi-index set
-    element of :math:`(0, \ldots, 0)`.
+    A constant scalar multidimensional polynomial consists of a single
+    multi-index set element of :math:`(0, \ldots, 0)`.
 
     Parameters
     ----------
@@ -28,24 +28,32 @@ def is_constant(poly: "MultivariatePolynomialSingleABC") -> bool:
     Returns
     -------
     bool
-        ``True`` if the polynomial is a constant polynomial,
+        ``True`` if the polynomial is a constant scalar polynomial,
         ``False`` otherwise.
-    """
-    # Check the multi-index set with early exit strategy
-    mi = poly.multi_index
-    # ...it has only one element
-    has_one_element = len(mi) == 1
-    if not has_one_element:
-        return False
-    # ...with zeros
-    has_zero = np.zeros(mi.spatial_dimension, dtype=INT_DTYPE) in mi
-    if not has_zero:
-        return False
 
+    Notes
+    -----
+    - A constant scalar polynomial is more specific than simply a constant
+      polynomial. A constant polynomial may have a large multi-index set but
+      with the coefficients that corresponds to the non-constant terms have
+      zero value (for non-Lagrange polynomial). In the case of a Lagrange
+      polynomial, a constant polynomial means that all the coefficients have
+      a single unique value.
+    """
     # Check if the polynomial is initialized
     try:
         _ = poly.coeffs
     except ValueError:
+        return False
+
+    # Check the multi-index set with early exit strategy
+    mi = poly.multi_index
+    # ...with zeros
+    has_zero = np.zeros(mi.spatial_dimension, dtype=INT_DTYPE) in mi
+    if not has_zero:
+        return False
+    # only a single element
+    if len(mi) != 1:
         return False
 
     return True

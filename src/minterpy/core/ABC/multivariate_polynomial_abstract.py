@@ -13,16 +13,17 @@ from typing import List, Optional, Tuple, Union
 from minterpy.global_settings import ARRAY, SCALAR
 from minterpy.core.grid import Grid
 from minterpy.core.multi_index import MultiIndexSet
-from minterpy.services import is_constant
+from minterpy.services import is_scalar
 from minterpy.utils.verification import (
     check_type,
     check_values,
-    is_scalar,
+    is_real_scalar,
     check_shape,
     shape_eval_output,
     verify_domain,
     verify_poly_coeffs,
     verify_poly_domain,
+    verify_poly_power,
     verify_query_points,
 )
 from minterpy.utils.multi_index import find_match_between
@@ -851,7 +852,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
           is delegated to the respective polynomial concrete class.
         """
         # Handle scalar addition
-        if is_scalar(other):
+        if is_real_scalar(other):
             return self._scalar_add(self, other, inplace=False)
 
         # Verify the operands before conducting addition
@@ -901,7 +902,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
           operand on the right; no separate concrete implementation is used.
         """
         # Handle scalar addition
-        if is_scalar(other):
+        if is_real_scalar(other):
             return self._scalar_add(self, -other, inplace=False)
 
         return self.__add__(-other)
@@ -938,20 +939,59 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
           is delegated to the respective polynomial concrete class.
         """
         # Multiplication by a real scalar number
-        if is_scalar(other):
+        if is_real_scalar(other):
             return self._scalar_mul(self, other, inplace=False)
 
         # Verify the operands before conducting multiplication
         poly_1, poly_2 = self._verify_operands(other, operation="*")
 
         # If one of the operands is constant, avoid multi-index set operation
-        if is_constant(poly_1):
+        if is_scalar(poly_1):
             return self._scalar_mul(poly_2, poly_1.coeffs, inplace=False)
-        elif is_constant(poly_2):
+        elif is_scalar(poly_2):
             return self._scalar_mul(poly_1, poly_2.coeffs, inplace=False)
         else:
             # Rely on the subclass concrete implementation (static method)
             return self._mul(poly_1, poly_2)
+
+    def __pow__(self, power: int):
+        """Take the polynomial instance to the given power.
+
+        Parameters
+        ----------
+        power : int
+            The power in the exponentiation expression; the value must
+            be a non-negative real scalar whole number. The value may not
+            strictly be an integer as long as it is a whole number
+            (e.g., :math:`2.0` is acceptable).
+
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            The result of exponentiation, an instance of a concrete polynomial
+            class.
+
+        Notes
+        -----
+        - Exponentiation by zero returns a constant polynomial whose
+          coefficients are zero except for the constant term with respect to
+          the multi-index set which is given a value of :math:`1.0`.
+          In the case of polynomials in the Lagrange basis whose no constant
+          term with respect to the multi-index set, all coefficients are set to
+          :math:`1.0`.
+        """
+        # Check if power is valid
+        power = verify_poly_power(power)
+
+        # Iterative exponentiation
+        if power == 0:
+            return self * 0 + 1
+
+        result = copy(self)
+        for _ in range(power - 1):
+            result = result * self
+
+        return result
 
     # --- Special methods: Reversed arithmetic operation
     def __radd__(self, other: SCALAR):
@@ -979,7 +1019,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
           the `__add__()` method of the left operand.
         """
         # Addition of a real scalar number by a polynomial
-        if is_scalar(other):
+        if is_real_scalar(other):
             return self._scalar_add(self, other, inplace=False)
 
         # Right-sided addition with other types is not explicitly supported;
@@ -1013,7 +1053,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
           addition
         """
         # Subtraction of a real scalar number by a polynomial
-        if is_scalar(other):
+        if is_real_scalar(other):
             return self._scalar_add(-self, other, inplace=False)
 
         # Right-sided subtraction with other types is not explicitly supported;
@@ -1039,7 +1079,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             polynomial.
         """
         # Multiplication by a real scalar number
-        if is_scalar(other):
+        if is_real_scalar(other):
             return self._scalar_mul(self, other, inplace=False)
 
         # Right-sided multiplication with other types is not explicitly
@@ -1075,7 +1115,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         ----
         - Add support for polynomial-polynomial multiplication in-place.
         """
-        if is_scalar(other):
+        if is_real_scalar(other):
             self._scalar_mul(self, other, inplace=True)
             return self
 
@@ -1118,7 +1158,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
           addition is delegated to the respective polynomial concrete class.
         """
         # Handle in-place addition by a scalar
-        if is_scalar(other):
+        if is_real_scalar(other):
             return self._scalar_add(self, other, inplace=True)
 
         # Verify the operands before conducting multiplication
@@ -1159,7 +1199,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
           used.
         """
         # Handle in-place subtraction by a scalar
-        if is_scalar(other):
+        if is_real_scalar(other):
             return self._scalar_add(self, -other, inplace=True)
 
         return self.__iadd__(-other)
@@ -1776,13 +1816,16 @@ def _create_constant_poly(
             dtype=poly.coeffs.dtype,
         )
 
+    # Create a grid
+    grid = Grid(mi, poly.grid.generating_function, poly.grid.generating_points)
+
     # Return a polynomial instance
     return poly.__class__(
         multi_index=mi,
         coeffs=coeffs,
         internal_domain=poly.internal_domain,
         user_domain=poly.user_domain,
-        grid=poly.grid,
+        grid=grid,
     )
 
 

@@ -81,6 +81,11 @@
   of coefficient sets the instance has.
 - Polynomial-polynomial multiplication is now supported for polynomials in the
   canonical basis.
+- Instances of all polynomial bases may now be exponentiated by a non-negative
+  scalar whole number. Exponentiation by zero returns a constant polynomial
+  whose constant term is `1`. Because the underlying implementation relies on
+  the polynomial-polynomial multiplication, polynomials in the Lagrange basis
+  may only be exponentiated with either `0` or `1`.
 
 ### Fixed
 

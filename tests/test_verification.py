@@ -8,7 +8,7 @@ from minterpy.utils.verification import (
     verify_poly_degree,
     verify_lp_degree,
     check_dimensionality,
-    is_scalar,
+    is_real_scalar,
     check_shape,
     check_values,
 )
@@ -23,7 +23,7 @@ class TestCheckScalar:
     )
     def test_scalar(self, valid_value):
         """Test checking a valid real scalar number."""
-        assert is_scalar(valid_value)
+        assert is_real_scalar(valid_value)
 
     @pytest.mark.parametrize(
         "invalid_value",
@@ -31,7 +31,7 @@ class TestCheckScalar:
     )
     def test_scalar(self, invalid_value):
         """Test checking a valid real scalar number."""
-        assert not is_scalar(invalid_value)
+        assert not is_real_scalar(invalid_value)
 
 
 class TestCheckValues:
