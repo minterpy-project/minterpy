@@ -1124,8 +1124,12 @@ def _have_compatible_gen_points(grid_1: "Grid", grid_2: "Grid") -> bool:
     dim_2 = grid_2.spatial_dimension
     dim = np.min([dim_1, dim_2])
 
-    gen_points_1 = grid_1.generating_points[:, :dim]
-    gen_points_2 = grid_2.generating_points[:, :dim]
+    row_1 = grid_1.generating_points.shape[0]
+    row_2 = grid_2.generating_points.shape[0]
+    row = np.min([row_1, row_2])
+
+    gen_points_1 = grid_1.generating_points[:row, :dim]
+    gen_points_2 = grid_2.generating_points[:row, :dim]
 
     return np.array_equal(gen_points_1, gen_points_2)
 

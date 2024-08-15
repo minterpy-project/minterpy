@@ -18,7 +18,8 @@ def is_scalar(poly: "MultivariatePolynomialSingleABC") -> bool:
     """Check if a polynomial instance is a constant scalar polynomial.
 
     A constant scalar multidimensional polynomial consists of a single
-    multi-index set element of :math:`(0, \ldots, 0)`.
+    multi-index set element of :math:`(0, \ldots, 0)` both as defined in
+    the polynomial and the underlying multi-index set.
 
     Parameters
     ----------
@@ -49,11 +50,21 @@ def is_scalar(poly: "MultivariatePolynomialSingleABC") -> bool:
     # Check the multi-index set with early exit strategy
     mi = poly.multi_index
     # ...with zeros
-    has_zero = np.zeros(mi.spatial_dimension, dtype=INT_DTYPE) in mi
+    exp_zero = np.zeros(mi.spatial_dimension, dtype=INT_DTYPE)
+    has_zero = exp_zero in mi
     if not has_zero:
         return False
     # only a single element
     if len(mi) != 1:
         return False
+
+    if poly.indices_are_separate:
+        # If indices are separate, the multi-index must be checked separately
+        mi_grid = poly.grid.multi_index
+        has_zero = exp_zero in mi_grid
+        if has_zero:
+            return False
+        if len(mi_grid) != 1:
+            return False
 
     return True

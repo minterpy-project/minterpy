@@ -15,10 +15,19 @@ from minterpy.transformations import LagrangeToCanonical, LagrangeToNewton
 from minterpy.utils.multi_index import make_complete
 
 
-class TestScalarAddition:
+class TestAddition:
     """All tests related to scalar addition for Lagrange polynomial instances.
     """
-    def test_add(self, rand_poly_mnp_lag):
+    def test_poly_add(self, rand_poly_mnp_lag):
+        """Test adding two Lagrange polynomial."""
+        # Get a random Lagrange polynomial instance
+        poly = rand_poly_mnp_lag
+
+        # Self addition
+        with pytest.raises(NotImplementedError):
+            _ = poly + poly
+
+    def test_scalar_add(self, rand_poly_mnp_lag):
         """Test adding a Lagrange polynomial w/ an arbitrary real scalar.
 
         Notes
@@ -44,9 +53,18 @@ class TestScalarAddition:
         assert np.all(coeffs_ref == poly_sum_2.coeffs)
 
 
-class TestScalarSubtraction:
+class TestSubtraction:
     """All tests related to scalar subtraction for Lagrange polynomials."""
-    def test_sub(self, rand_poly_mnp_lag):
+    def test_poly_sub(self, rand_poly_mnp_lag):
+        """Test subtracting a Lagrange polynomial with itself."""
+        # Get a random Lagrange polynomial instance
+        poly = rand_poly_mnp_lag
+
+        # Self subtraction
+        with pytest.raises(NotImplementedError):
+            _ = poly - poly
+
+    def test_scalar_sub(self, rand_poly_mnp_lag):
         """Test subtracting a Lagrange polynomial w/ an arbitrary real scalar.
 
         Notes
@@ -71,7 +89,7 @@ class TestScalarSubtraction:
         assert np.all(coeffs_ref == poly_sum_1.coeffs)
         assert np.all(coeffs_ref == poly_sum_2.coeffs)
 
-    def test_rsub(self, rand_poly_mnp_lag):
+    def test_scalar_rsub(self, rand_poly_mnp_lag):
         """Test right-sided subtraction of a scalar with a Lagrange polynomial.
 
         Notes

@@ -4,9 +4,10 @@ This is the conftest module of minterpy.
 Within a pytest run, this module is loaded first. That means here all global fixutes shall be defined.
 """
 import inspect
-
+import itertools
 import numpy as np
 import pytest
+
 from numpy.testing import assert_, assert_almost_equal, assert_equal
 
 from minterpy import (
@@ -356,6 +357,52 @@ def poly_domain(request):
     return request.param
 
 
+# --- Pair of elementary fixtures
+def _pair_m_id(pair_m):
+    return f"m=({pair_m[0]}, {pair_m[1]})"
+
+
+@pytest.fixture(
+    params=list(
+        itertools.combinations_with_replacement(SPATIAL_DIMENSIONS, r=2)
+    ),
+    ids=_pair_m_id,
+)
+def spatial_dim_pair(request):
+    """Return a pair of spatial dimension values."""
+    return request.param
+
+
+def _pair_n_id(pair_n):
+    return f"n=({pair_n[0]}, {pair_n[1]})"
+
+
+@pytest.fixture(
+    params=list(
+        itertools.combinations_with_replacement(POLY_DEGREES, r=2)
+    ),
+    ids=_pair_n_id,
+)
+def poly_degree_pair(request):
+    """Return a pair of polynomial degree values."""
+    return request.param
+
+
+def _pair_p_id(pair_p):
+    return f"p=({pair_p[0]:>3}, {pair_p[1]:>3})"
+
+
+@pytest.fixture(
+    params=list(
+        itertools.combinations_with_replacement(LP_DEGREES, r=2)
+    ),
+    ids=_pair_p_id,
+)
+def lp_degree_pair(request):
+    """Return a pair of lp-degree values."""
+    return request.param
+
+
 # --- Composite fixtures
 @pytest.fixture
 def multi_index_mnp(SpatialDimension, PolyDegree, LpDegree):
@@ -439,6 +486,47 @@ def poly_mnp_non_unif_domain(poly_class_all, multi_index_mnp, poly_domain):
         return poly_class_all(multi_index_mnp, internal_domain=domain)
     else:
         raise ValueError
+
+
+# --- Pair of composite fixtures
+@pytest.fixture
+def multi_index_mnp_pair(spatial_dim_pair, poly_degree_pair, lp_degree_pair):
+    """Create a pair of complete multi-index sets with different combinations
+    of spatial dimension, polynomial degree, and lp-degree.
+    """
+    # Get the pairs
+    m_1, m_2 = spatial_dim_pair
+    n_1, n_2 = poly_degree_pair
+    p_1, p_2 = lp_degree_pair
+
+    # Create a pair of complete multi-index sets
+    mi_1 = MultiIndexSet.from_degree(m_1, n_1, p_1)
+    mi_2 = MultiIndexSet.from_degree(m_2, n_2, p_2)
+
+    return mi_1, mi_2
+
+
+@pytest.fixture
+def rand_poly_mnp_no_lag_pair(
+    poly_class_no_lag,
+    multi_index_mnp_pair,
+    num_polynomials,
+):
+    """Create a random polynomial instances of each concrete class except
+    Lagrange with a complete multi-index set.
+    """
+    # Get the multi-index sets
+    mi_1, mi_2 = multi_index_mnp_pair
+
+    # Generate random coefficients
+    coeffs_1 = np.random.rand(len(mi_1), num_polynomials)
+    coeffs_2 = np.random.rand(len(mi_2), num_polynomials)
+
+    # Create a pair of polynomial instances
+    poly_1 = poly_class_no_lag(mi_1, coeffs_1)
+    poly_2 = poly_class_no_lag(mi_2, coeffs_2)
+
+    return poly_1, poly_2
 
 
 @pytest.fixture
