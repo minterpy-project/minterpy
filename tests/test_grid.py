@@ -320,7 +320,6 @@ class TestInitFrom:
         assert grd_1 == grd_2
         assert grd_2 == grd_1
 
-    #@pytest.mark.skipif(multi_index_mnp.poly_degree == 0, reason="Generating point of length 1 is always unique")
     def test_from_gen_function_invalid_non_unique(self, multi_index_mnp):
         """Test the `from_function()` method."""
         # Get the complete multi-index set
@@ -1054,3 +1053,81 @@ class TestMakeDownwardClosed:
         # Assertions
         assert not grd.is_downward_closed
         assert grd_downward_closed.is_downward_closed
+
+
+class TestIsCompatible:
+    """All tests related to compatibility check of Grid instances."""
+    def test_compatible(self, multi_index_mnp):
+        """Test compatible instances; equal instances are compatible."""
+        # Get a common multi-index set
+        mi = multi_index_mnp
+
+        # Create two Grid instances equal in value
+        grd_1 = Grid(mi)
+        grd_2 = Grid(mi)
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_1.is_compatible(grd_2)
+        assert grd_2.is_compatible(grd_1)  # Commutativity must hold
+
+    def test_unequal_multi_index(self, multi_index_mnp_pair):
+        """Test that different multi-index with the same generating points
+        are compatible.
+        """
+        # Get a pair of multi-index sets
+        mi_1, mi_2 = multi_index_mnp_pair
+
+        # Create a common generating values
+        poly_degree = np.max([mi_1.poly_degree, mi_2.poly_degree]) + 10
+        gen_points = np.linspace(-0.99, 0.99, poly_degree)[:, np.newaxis]
+
+        # Create two instances of Grid
+        grd_1 = Grid.from_value_set(mi_1, gen_points)
+        grd_2 = Grid.from_value_set(mi_2, gen_points)
+
+        # Assertions
+        assert grd_1.is_compatible(grd_2)
+        assert grd_2.is_compatible(grd_1)
+
+    def test_unequal_gen_points(self, multi_index_mnp):
+        """Test that different generating points cause incompatible grid."""
+        # Get a common multi-index set
+        mi = multi_index_mnp
+
+        # Create two Grid instances with different generating points
+        # Chebyshev points
+        grd_1 = Grid(mi)
+        # Equidistant points
+        grd_2 = Grid.from_value_set(
+            mi,
+            np.linspace(-0.99, 0.99, mi.poly_degree + 1)[:, np.newaxis],
+        )
+
+        # Assertions
+        assert grd_1 != grd_2  # Not equal in values
+        assert not grd_1.is_compatible(grd_2)
+        assert not grd_2.is_compatible(grd_1)  # Commutativity must hold
+
+    def test_unequal_gen_function(self, multi_index_mnp):
+        """Test that having different generating function is incompatible."""
+        # Get a common multi-index set
+        mi = multi_index_mnp
+
+        # Create a generating function
+        def _custom_gen_function(poly_degree, spatial_dimension):
+            xx = np.linspace(-1.0, 1.0, poly_degree + 1)[:, np.newaxis]
+            if xx.ndim == 1:
+                xx = xx[:, np.newaxis]
+            generating_points = np.tile(xx, (1, spatial_dimension))
+            generating_points[:, ::2] *= -1
+
+            return generating_points
+
+        # Create two instances of Grid
+        grd_1 = Grid(mi)
+        grd_2 = Grid.from_function(mi, _custom_gen_function)
+
+        # Assertion
+        assert not grd_1.is_compatible(grd_2)
+        assert not grd_2.is_compatible(grd_1)  # Commutativity must hold

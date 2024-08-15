@@ -521,6 +521,35 @@ class Grid:
         # Expand to the target dimension
         return _expand_dim_to_target_dim(self, target_dimension)
 
+    def is_compatible(self, other: "Grid") -> bool:
+        """Return ``True`` if the instance is compatible with another.
+
+        Two grids are compatible if they have the same generating function
+        (if exists) and the generating points up to a common dimension.
+
+        Parameters
+        ----------
+        other : Grid
+            The other instance to check its compatibility with the current
+            instance.
+
+        Returns
+        -------
+        bool
+            ``True`` if the current instance is compatible with the given
+            instance; ``False`` otherwise.
+        """
+        if _have_gen_functions(self, other):
+            # Check if the Grid instances have compatible generating functions
+            if not _have_compatible_gen_functions(self, other):
+                return False
+
+        # Check if the Grid instances have compatible generating points
+        if _have_compatible_gen_points(self, other):
+            return True
+
+        return False
+
     def make_complete(self) -> "Grid":
         """Complete the underlying multi-index set of the `Grid` instance.
 
