@@ -9,8 +9,9 @@ inside the concrete polynomial modules.
 """
 import numpy as np
 
-from typing import NamedTuple, Tuple
+from typing import NamedTuple, Tuple, Union
 
+from minterpy.global_settings import SCALAR
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
 from minterpy.core import Grid, MultiIndexSet
 from minterpy.utils.multi_index import find_match_between
@@ -158,3 +159,91 @@ def select_active_monomials(
     active_idx = find_match_between(exponents_multi_index, exponents_grid)
 
     return coeffs[active_idx]
+
+
+def scalar_add_monomial_based(
+    poly: MultivariatePolynomialSingleABC,
+    scalar: SCALAR,
+) -> MultivariatePolynomialSingleABC:
+    """Add an instance of polynomial with a real scalar based on the monomial.
+
+    Monomial-based scalar addition add the scalar to the polynomial coefficient
+    that corresponds to the multi-index set element of :math:`(0, \ldots, 0)`
+    (if exists). If the element does not exist, meaning that the polynomial
+    does not have a constant term, then the multi-index set is extended.
+
+    Parameters
+    ----------
+    poly : MultivariatePolynomialSingleABC
+        A polynomial instance to be added with a scalar.
+    scalar : SCALAR
+        The real scalar number to be added to the polynomial instance.
+
+    Returns
+    -------
+    MultivariatePolynomialSingleABC
+        The summed polynomial; the polynomial is a new instance.
+
+    Notes
+    -----
+    - Currently ``NewtonPolynomial``, ``CanonicalPolynomial``, and
+      ``ChebyshevPolynomial`` follow monomial-based scalar addition, while
+      ``LagrangePolynomial`` does not.
+    """
+    # Create a constant polynomial
+    poly_scalar = _create_scalar_poly(poly, scalar)
+
+    # Rely on the `__add__()` method implemented upstream
+    return poly + poly_scalar
+
+
+def _create_scalar_poly(
+    poly: MultivariatePolynomialSingleABC,
+    scalar: Union[SCALAR, np.ndarray],
+) -> MultivariatePolynomialSingleABC:
+    """Create a constant scalar polynomial from a given polynomial.
+
+    Parameters
+    ----------
+    poly : MultivariatePolynomialSingleABC
+        An instance of polynomial from which a constant polynomial will be
+        created.
+    scalar : Union[SCALAR, np.ndarray]
+        Real numbers for the coefficient value of the constant polynomial.
+        Multiple real numbers (as an array) indicates multiple set of
+        coefficients.
+
+    Returns
+    -------
+    MultivariatePolynomialSingleABC
+        A polynomial of the same instance as ``poly`` having the same grid and
+        domains but with a single element multi-index set. If the grid does
+        not include the element (0, ..., 0) then the grid will be extended.
+    """
+    # Create a single-element multi-index set of (0, ..., 0)
+    dim = poly.spatial_dimension
+    lp_degree = poly.multi_index.lp_degree
+    mi = MultiIndexSet.from_degree(dim, poly_degree=0, lp_degree=lp_degree)
+
+    # Create a Grid
+    # The grid of the polynomial may not include the multi-index set element
+    # (0, ..., 0) (i.e., it's non-downward-closed) so create a new one.
+    grd = Grid(mi, poly.grid.generating_function, poly.grid.generating_points)
+
+    # Create the coefficient
+    if len(poly) == 1:
+        coeffs = np.array([scalar])
+    else:
+        coeffs = scalar * np.ones(
+            shape=(1, len(poly)),
+            dtype=poly.coeffs.dtype,
+        )
+
+    # Return a polynomial instance of the same class as input
+    return poly.__class__(
+        multi_index=mi,
+        coeffs=coeffs,
+        internal_domain=poly.internal_domain,
+        user_domain=poly.user_domain,
+        grid=grd,
+    )

@@ -388,6 +388,17 @@ def rand_poly_mnp_no_lag(poly_class_no_lag, multi_index_mnp, num_polynomials):
 
 
 @pytest.fixture
+def rand_poly_mnp_lag(multi_index_mnp, num_polynomials):
+    """Create a random Lagrange polynomial instance having a complete
+    multi-index set.
+    """
+    # Generate random coefficients
+    coefficients = np.random.rand(len(multi_index_mnp), num_polynomials)
+
+    return LagrangePolynomial(multi_index_mnp, coefficients)
+
+
+@pytest.fixture
 def rand_polys_mnp(poly_class_all, multi_index_mnp, num_polynomials):
     """Create a random polynomial instance of each concrete class having
     a complete multi-index set with possibly multiple sets of coefficients.

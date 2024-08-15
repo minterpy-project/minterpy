@@ -1194,48 +1194,20 @@ class TestPolyAddition:
         assert np.allclose(yy_ref, yy_1)
         assert np.allclose(yy_ref, yy_2)
 
-    def test_constant_poly(self, rand_poly_mnp_all):
-        """Test the addition with an arbitrary constant polynomial.
-
-        A polynomial added with a constant polynomial should return
-        a polynomial whose coefficients are added with the scalar coefficient.
-        """
-        # Get the polynomial
-        poly = rand_poly_mnp_all
-
-        # Create a constant polynomial
-        exponents = np.zeros((1, poly.spatial_dimension), dtype=np.int_)
-        mi = MultiIndexSet(exponents, poly.multi_index.lp_degree)
-        coeffs = np.random.rand(1, len(poly))
-        poly_constant = poly.__class__(mi, coeffs)
-
-        # Addition
-        poly_sum_1 = poly + poly_constant
-        poly_sum_2 = poly_constant + poly  # switch operands
-        # Reference polynomial coefficients
-        coeffs_ref = poly.coeffs.copy()
-        if isinstance(poly, LagrangePolynomial):
-            # LagrangePolynomial special addition rule: apply to all coeffs.
-            coeffs_ref += poly_constant.coeffs
-        else:
-            # Add only the constant (first monomial in downward-close set)
-            coeffs_ref[[0]] += poly_constant.coeffs
-
-        # Assertions
-        assert poly_sum_1 == poly_sum_2
-        assert poly_sum_2 == poly_sum_1
-        assert np.all(poly_sum_1.coeffs == coeffs_ref)
-        assert np.all(poly_sum_2.coeffs == coeffs_ref)
-
     @pytest.mark.parametrize("lp_degree", [1.0, 2.0])
     def test_separate_indices(
         self,
-            poly_class_all,
+        poly_class_no_lag,
         SpatialDimension,
         PolyDegree,
         lp_degree,
     ):
-        """Test the addition of polynomials with separate indices."""
+        """Test the addition of polynomials with separate indices.
+
+        Notes
+        -----
+        - Instances of `LagrangePolynomials` are excluded.
+        """
         # Create multi-indices
         n_1 = PolyDegree
         mi_1 = MultiIndexSet.from_degree(SpatialDimension, n_1, lp_degree)
@@ -1253,19 +1225,8 @@ class TestPolyAddition:
         coeffs_2 = np.random.rand(len(mi_2))
 
         # Create polynomial_instances
-        poly_1 = poly_class_all(mi_1, coeffs_1, grid=grd_1)
-        poly_2 = poly_class_all(mi_2, coeffs_2, grid=grd_2)
-
-        # LagrangePolynomial is a special case: only supports constant poly
-        if poly_class_all is LagrangePolynomial:
-            if n_1 == 0:
-                poly_sum = poly_1 + poly_2
-                assert np.all(poly_sum.coeffs == coeffs_1 + coeffs_2)
-                return
-            else:
-                with pytest.raises(NotImplementedError):
-                    _ = poly_1 + poly_2
-                return
+        poly_1 = poly_class_no_lag(mi_1, coeffs_1, grid=grd_1)
+        poly_2 = poly_class_no_lag(mi_2, coeffs_2, grid=grd_2)
 
         # Add the polynomials
         poly_add = poly_1 + poly_2
@@ -1287,47 +1248,75 @@ class TestScalarAddition:
         # Get the polynomial
         poly = rand_poly_mnp_all
 
-        # Addition with additive identity
-        poly_sum_1 = poly + 0
-        poly_sum_2 = 0 + poly  # Commutativity holds
+        # Assertions (addition with additive identity)
+        assert poly == poly + 0
+        assert poly == 0 + poly  # Commutativity must hold
 
-        # Assertions
-        assert poly == poly_sum_1
-        assert poly == poly_sum_2
+    def test_add(self, rand_poly_mnp_no_lag):
+        """Test adding a polynomial with an arbitrary real scalar.
 
-    def test_radd(self, rand_poly_mnp_all):
-        """Test right-sided addition of a polynomial with a constant."""
+        Notes
+        -----
+        - Polynomials in the Lagrange basis are excluded from this test as
+          it follows different logic that results in a different outcome.
+        """
         # Get a random polynomial instance
-        poly = rand_poly_mnp_all
+        poly = rand_poly_mnp_no_lag
 
-        # Right-sided subtraction
-        poly_sub = 5 + poly
+        # Generate a random scalar
+        scalar = np.random.rand(1)[0]
 
-        # Reference
-        yy_ref = poly.coeffs.copy()
-        if isinstance(poly, LagrangePolynomial):
-            yy_ref += 5
-        else:
-            yy_ref[0] += 5
-        poly_ref = poly.__class__(
-            poly.multi_index,
-            yy_ref,
-            user_domain=poly.user_domain,
-            internal_domain=poly.internal_domain,
-            grid=poly.grid,
-        )
+        # Add the scalar
+        poly_sum_1 = poly + scalar
+        poly_sum_2 = scalar + poly  # right-sided addition (commutative)
+
+        # Compute the reference
+        coeffs_ref = poly.coeffs.copy()
+        coeffs_ref[0] += scalar  # only apply to the first coefficient
 
         # Assertion
-        assert poly_ref == poly_sub
+        assert np.all(coeffs_ref == poly_sum_1.coeffs)
+        assert np.all(coeffs_ref == poly_sum_2.coeffs)
 
     def test_inplace(self, rand_poly_mnp_all):
-        """Test inplace scalar addition (not implemented)."""
+        """Test in-place scalar addition: ``poly += scalar``.
+
+        Notes
+        -----
+        - This operation is not explicitly supported via `__iadd__()` so
+          it will fall back to `__add__()`.
+        """
         # Get a random polynomial instance
         poly = rand_poly_mnp_all
+        poly_init = poly
 
         # In-place addition
-        with pytest.raises(NotImplementedError):
-            poly += 5
+        poly += 5
+
+        #  Assertions
+        assert poly is not poly_init   # A new instance has been created
+        assert poly == poly_init + 5
+
+    def test_inplace_right(self, rand_poly_mnp_all):
+        """Test in-place scalar addition from the right side.
+
+        This is to verify: ``scalar += poly``.
+
+        Notes
+        -----
+        - This operation will fall back to `__radd__()`.
+        """
+        # Get a random polynomial instance
+        poly = rand_poly_mnp_all
+        poly_init = poly
+        scalar = 5
+
+        # In-place addition
+        scalar += poly
+
+        #  Assertions
+        assert scalar is not poly_init   # The scalar becomes a polynomial
+        assert scalar == poly_init + 5
 
     def test_eval(self, rand_poly_mnp_no_lag):
         """Test the evaluation of a polynomial summed with a scalar.
@@ -1401,39 +1390,10 @@ class TestPolySubtraction:
         assert np.allclose(yy_ref, yy_1)
         assert np.allclose(yy_ref, yy_2)
 
-    def test_constant_poly(self, rand_poly_mnp_all):
-        """Test the subtraction with an arbitrary constant polynomial."""
-        # Get the polynomial
-        poly = rand_poly_mnp_all
-
-        # Create a constant polynomial
-        exponents = np.zeros((1, poly.spatial_dimension), dtype=np.int_)
-        mi = MultiIndexSet(exponents, poly.multi_index.lp_degree)
-        coeffs = np.random.rand(1, len(poly))
-        poly_constant = poly.__class__(mi, coeffs)
-
-        # Addition
-        poly_prod_1 = poly - poly_constant
-        poly_prod_2 = -poly_constant + poly
-        # Reference polynomial coefficients
-        coeffs_ref = poly.coeffs.copy()
-        if isinstance(poly, LagrangePolynomial):
-            # LagrangePolynomial special subtraction rule: apply to all coeffs.
-            coeffs_ref -= poly_constant.coeffs
-        else:
-            # Subtract only the constant (first monomial in downward-close set)
-            coeffs_ref[[0]] -= poly_constant.coeffs
-
-        # Assertions
-        assert poly_prod_1 == poly_prod_2
-        assert poly_prod_2 == poly_prod_1
-        assert np.all(poly_prod_1.coeffs == coeffs_ref)
-        assert np.all(poly_prod_2.coeffs == coeffs_ref)
-
     @pytest.mark.parametrize("lp_degree", [1.0, 2.0])
     def test_separate_indices(
         self,
-            poly_class_all,
+        poly_class_no_lag,
         SpatialDimension,
         PolyDegree,
         lp_degree,
@@ -1446,8 +1406,8 @@ class TestPolySubtraction:
         mi_2 = MultiIndexSet.from_degree(SpatialDimension, n_2, lp_degree)
 
         # Create Grid instances
-        # NOTE: All w.r.t lp-degree inf as it is the superset
-        #       of the indices above
+        # NOTE: w.r.t lp-degree inf as it is the superset of the index sets
+        #       defined above
         grd_1 = Grid.from_degree(SpatialDimension, n_1, np.inf)
         grd_2 = Grid.from_degree(SpatialDimension, n_2, np.inf)
 
@@ -1456,20 +1416,8 @@ class TestPolySubtraction:
         coeffs_2 = np.random.rand(len(mi_2))
 
         # Create polynomial_instances
-        poly_1 = poly_class_all(mi_1, coeffs_1, grid=grd_1)
-        poly_2 = poly_class_all(mi_2, coeffs_2, grid=grd_2)
-
-        # LagrangePolynomial is a special case: only supports constant poly
-        if poly_class_all is LagrangePolynomial:
-            if n_1 == 0:
-                poly_sub = poly_1 - poly_2
-                assert np.all(poly_sub.coeffs == coeffs_1 - coeffs_2)
-                return
-            else:
-                pytest.skip(
-                    "Skipping the addition test between non-constant "
-                    f"{poly_class_all} of separate indices."
-                )
+        poly_1 = poly_class_no_lag(mi_1, coeffs_1, grid=grd_1)
+        poly_2 = poly_class_no_lag(mi_2, coeffs_2, grid=grd_2)
 
         # Multiply the polynomials
         poly_sub = poly_1 - poly_2
@@ -1508,7 +1456,7 @@ class TestPolyAdditionSubtractionAugmented:
 
     def test_inconsistent_num_polys(
         self,
-            poly_class_all,
+        poly_class_all,
         SpatialDimension,
         PolyDegree,
         LpDegree,
@@ -1538,7 +1486,7 @@ class TestPolyAdditionSubtractionAugmented:
 
     def test_non_matching_domain(
         self,
-            poly_class_all,
+        poly_class_all,
         SpatialDimension,
         PolyDegree,
         LpDegree,
@@ -1578,49 +1526,103 @@ class TestScalarSubtraction:
         # Get a random polynomial instance
         poly = rand_poly_mnp_all
 
-        # Addition with additive identity
-        poly_sum_1 = poly - 0
-        poly_sum_2 = -0 + poly  # Commutativity holds
+        # Assertions (subtraction with additive identity)
+        assert poly == poly - 0
+        assert poly == -0 + poly  # commutativity must hold
 
-        # Assertions
-        assert poly == poly_sum_1
-        assert poly == poly_sum_2
+    def test_sub(self, rand_poly_mnp_no_lag):
+        """Test subtracting a polynomial with an arbitrary real scalar.
 
-    def test_rsub(self, rand_poly_mnp_all):
-        """Test right-sided subtraction of a polynomial."""
+        This tests the expression: ``poly - scalar``
+        Notes
+        -----
+        - Polynomials in the Lagrange basis are excluded from this test as
+          it follows different logic that results in a different outcome.
+        """
         # Get a random polynomial instance
-        poly = rand_poly_mnp_all
+        poly = rand_poly_mnp_no_lag
 
-        # Right-sided subtraction
-        poly_sub = 5 - poly
+        # Generate a random scalar
+        scalar = np.random.rand(1)[0]
 
-        # Reference
-        coeffs_ref = -1 * poly.coeffs.copy()
-        if isinstance(poly, LagrangePolynomial):
-            # LagrangePolynomial special addition rule: apply to all coeffs.
-            coeffs_ref += 5
-        else:
-            # Add only the constant (first monomial in downward-close set)
-            coeffs_ref[0] += 5
-        poly_ref = poly.__class__(
-            poly.multi_index,
-            coeffs_ref,
-            user_domain=poly.user_domain,
-            internal_domain=poly.internal_domain,
-            grid=poly.grid,
-        )
+        # Subtract with the scalar
+        poly_sum_1 = poly - scalar
+        poly_sum_2 = -scalar + poly  # Commutativity must hold
+
+        # Compute the reference
+        coeffs_ref = poly.coeffs.copy()
+        coeffs_ref[0] -= scalar  # only apply to the first coefficient
 
         # Assertion
-        assert poly_ref == poly_sub
+        assert np.all(coeffs_ref == poly_sum_1.coeffs)
+        assert np.all(coeffs_ref == poly_sum_2.coeffs)
+
+    def test_rsub(self, rand_poly_mnp_no_lag):
+        """Test right-sided subtraction of a scalar with a polynomial.
+
+        Notes
+        -----
+        - The test verifies the expression: ``scalar - poly``.
+        - Polynomials in the Lagrange basis are excluded from this test as
+          it follows different logic that results in a different outcome.
+        """
+        # Get a random polynomial instance
+        poly = rand_poly_mnp_no_lag
+
+        # Generate a random scalar
+        scalar = np.random.rand(1)[0]
+
+        # Subtract with the scalar
+        poly_sum_1 = scalar - poly
+        poly_sum_2 = -poly + scalar  # Commutativity must hold
+
+        # Compute the reference
+        coeffs_ref = -1 * poly.coeffs.copy()
+        coeffs_ref[0] += scalar  # only apply to the first coefficient
+
+        # Assertion
+        assert np.all(coeffs_ref == poly_sum_1.coeffs)
+        assert np.all(coeffs_ref == poly_sum_2.coeffs)
 
     def test_inplace(self, rand_poly_mnp_all):
-        """Test inplace scalar addition (not implemented)."""
+        """Test in-place scalar subtraction.
+
+         Notes
+        -----
+        - This operation is not explicitly supported via `__isub__()` so
+          it will fall back to `__add__()` with negated scalar operand.
+        """
         # Get a random polynomial instance
         poly = rand_poly_mnp_all
+        poly_init = poly
+
+        # In-place subtraction
+        poly -= 5
+
+        # Assertions
+        assert poly is not poly_init  # A new instance has been created
+        assert poly == poly_init - 5
+
+    def test_inplace_right(self, rand_poly_mnp_all):
+        """Test in-place scalar subtraction from the right side.
+
+        Notes
+        -----
+        - This test verifies the statement: ``scalar -= poly``.
+        - This operation will fall back to `__radd__()` with a negated
+          scalar operand.
+        """
+        # Get a random polynomial instance
+        poly = rand_poly_mnp_all
+        poly_init = poly
+        scalar = 5
 
         # In-place addition
-        with pytest.raises(NotImplementedError):
-            poly -= 5
+        scalar -= poly
+
+        #  Assertions
+        assert scalar is not poly_init   # The scalar becomes a polynomial
+        assert scalar == -poly_init + 5
 
     def test_eval(self, rand_poly_mnp_no_lag):
         """Test the evaluation of a polynomial subtracted by a scalar.
@@ -1681,20 +1683,6 @@ class TestExponentiation:
         # Assertion
         assert poly_exp == poly
 
-    def test_by_three(self, rand_poly_mnp_all):
-        """Test polynomial exponentation by three."""
-        # Get a random polynomial instance
-        poly = rand_poly_mnp_all
-
-        if isinstance(poly, LagrangePolynomial):
-            pytest.skip(f"Skipping general exponentiation of {type(poly)}.")
-
-        # Exponentation
-        poly_exp = poly ** 3.0
-
-        # Assertion
-        assert poly_exp == poly * poly * poly
-
     def test_by_zero(self, rand_poly_mnp_all):
         """Test polynomial exponentation by zero."""
         # Get a random polynomial instance
@@ -1706,13 +1694,33 @@ class TestExponentiation:
         # Assertions
         assert poly_exp == poly * 0 + 1
 
-    def test_by_two_eval(self, rand_poly_mnp_all):
-        """Test the evaluation of an exponentiated polynomial (by two)."""
-        # Get a random polynomial instance
-        poly = rand_poly_mnp_all
+    def test_by_three(self, rand_poly_mnp_no_lag):
+        """Test polynomial exponentation by three.
 
-        if isinstance(poly, LagrangePolynomial):
-            pytest.skip(f"Skipping general exponentiation of {type(poly)}.")
+        Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded because the class
+          does not support general polynomial-polynomial multiplication.
+        """
+        # Get a random polynomial instance
+        poly = rand_poly_mnp_no_lag
+
+        # Exponentation
+        poly_exp = poly ** 3.0
+
+        # Assertion
+        assert poly_exp == poly * poly * poly
+
+    def test_by_two_eval(self, rand_poly_mnp_no_lag):
+        """Test the evaluation of an exponentiated polynomial (by two).
+
+         Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded because the class
+          does not support general polynomial-polynomial multiplication.
+        """
+        # Get a random polynomial instance
+        poly = rand_poly_mnp_no_lag
 
         # Exponentiation
         poly_exp = poly**2
@@ -1736,7 +1744,7 @@ class TestExponentiation:
         -----
         - Regardless of the downward-closedness of the underlying multi-index
           set, all polynomials may be exponentiated by 0 or 1. Beyond that,
-          it depends whether the basis allows it.
+          it depends on whether the basis allows it.
         """
         # Get a non-downward closed multi-index set
         mi = multi_index_non_downward_closed

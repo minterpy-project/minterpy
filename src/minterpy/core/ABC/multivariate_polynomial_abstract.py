@@ -271,9 +271,44 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
     @staticmethod
     @abc.abstractmethod
-    def _iadd(poly_1, poly_2):  # pragma: no cover
-        # no docstring here, since it is given in the concrete implementation
+    def _scalar_add(poly, scalar):  # pragma: no cover
+        """Add the polynomial with a real scalar value.
+
+        Parameters
+        ----------
+        poly : MultivariatePolynomialSingleABC
+            ss
+        scalar : SCALAR
+            The real scalar value to add the polynomial with.
+        inplace : bool, optional
+            ``True`` if the addition should be done in-place,
+            ``False`` otherwise. The default is ``False``.
+
+        Returns
+        -------
+        Optional[MultivariatePolynomialSingleABC]
+            The summed polynomial if ``inplace`` is ``False`` (the
+            default), otherwise ``None`` (the instance is modified in-place).
+
+        Notes
+        -----
+        - Adding a real scalar value to a polynomial is equivalent to
+          adding a constant polynomial whose coefficient value is the scalar
+          value to the polynomial. The concrete implementation called by
+          ``__add__()`` or ``__iadd__()`` is responsible for handling
+          the polynomial-polynomial addition.
+        """
         pass
+        # # Create a constant polynomial from the given polynomial
+        # poly_constant = _create_constant_poly(poly, scalar)
+        #
+        # # Call the relevant method
+        # if inplace:
+        #     # Call back `__iadd__()` because it contains verification routines
+        #     return poly.__iadd__(poly_constant)
+        # else:
+        #     # Call back `__add__()` because it contains verification routines
+        #     return poly.__add__(poly_constant)
 
     @staticmethod
     def _gen_grid_default(multi_index):
@@ -461,49 +496,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             self_copy._coeffs *= scalar
 
             return self_copy
-
-    @staticmethod
-    def _scalar_add(
-        poly: "MultivariatePolynomialSingleABC",
-        scalar: SCALAR,
-        inplace=False,
-    ) -> Optional["MultivariatePolynomialSingleABC"]:
-        """Add the polynomial with a real scalar value.
-
-        Parameters
-        ----------
-        poly : MultivariatePolynomialSingleABC
-            ss
-        scalar : SCALAR
-            The real scalar value to add the polynomial with.
-        inplace : bool, optional
-            ``True`` if the addition should be done in-place,
-            ``False`` otherwise. The default is ``False``.
-
-        Returns
-        -------
-        Optional[MultivariatePolynomialSingleABC]
-            The summed polynomial if ``inplace`` is ``False`` (the
-            default), otherwise ``None`` (the instance is modified in-place).
-
-        Notes
-        -----
-        - Adding a real scalar value to a polynomial is equivalent to
-          adding a constant polynomial whose coefficient value is the scalar
-          value to the polynomial. The concrete implementation called by
-          ``__add__()`` or ``__iadd__()`` is responsible for handling
-          the polynomial-polynomial addition.
-        """
-        # Create a constant polynomial from the given polynomial
-        poly_constant = _create_constant_poly(poly, scalar)
-
-        # Call the relevant method
-        if inplace:
-            # Call back `__iadd__()` because it contains verification routines
-            return poly.__iadd__(poly_constant)
-        else:
-            # Call back `__add__()` because it contains verification routines
-            return poly.__add__(poly_constant)
 
     # --- Constructors
 
@@ -853,7 +845,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         # Handle scalar addition
         if is_real_scalar(other):
-            return self._scalar_add(self, other, inplace=False)
+            return self._scalar_add(self, other)
 
         # Verify the operands before conducting addition
         poly_1, poly_2 = self._verify_operands(other, operation="+ or -")
@@ -903,7 +895,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         # Handle scalar addition
         if is_real_scalar(other):
-            return self._scalar_add(self, -other, inplace=False)
+            return self._scalar_add(self, -other)
 
         return self.__add__(-other)
 
@@ -1020,7 +1012,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         # Addition of a real scalar number by a polynomial
         if is_real_scalar(other):
-            return self._scalar_add(self, other, inplace=False)
+            return self._scalar_add(self, other)
 
         # Right-sided addition with other types is not explicitly supported;
         # it will rely on the left operand '__add__()' method
@@ -1054,7 +1046,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         # Subtraction of a real scalar number by a polynomial
         if is_real_scalar(other):
-            return self._scalar_add(-self, other, inplace=False)
+            return self._scalar_add(-self, other)
 
         # Right-sided subtraction with other types is not explicitly supported;
         # it will rely on the left operand '__sub__()' method
@@ -1124,85 +1116,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             raise NotImplementedError
 
         return NotImplemented
-
-    def __iadd__(
-        self,
-        other: Union["MultivariatePolynomialSingleABC", SCALAR],
-    ):
-        """Add a polynomial with a poly. or a real scalar in-place.
-
-        This function is called when a polynomial is added in-place,
-        specifically when:
-
-        - a polynomial is added with another polynomial like ``P1 += P2`` where
-          ``P1`` and ``P2`` are both polynomial instances of the same concrete
-          class.
-        - a polynomial is added with a real scalar number like ``P1 += a``
-          where ``a`` is a real scalar number.
-
-        Parameters
-        ----------
-        other : Union[MultivariatePolynomialSingleABC, SCALAR]
-            The right operand, a polynomial instance of the same concrete class
-            or a real scalar number.
-
-        Returns
-        -------
-        MultivariatePolynomialSingleABC
-            The result of the addition, an updated instance of summed
-            polynomial.
-
-        Notes
-        -----
-        - The concrete implementation of augmented polynomial-polynomial
-          addition is delegated to the respective polynomial concrete class.
-        """
-        # Handle in-place addition by a scalar
-        if is_real_scalar(other):
-            return self._scalar_add(self, other, inplace=True)
-
-        # Verify the operands before conducting multiplication
-        poly_1, poly_2 = self._verify_operands(other, operation="+= or -=")
-
-        return self._iadd(poly_1, poly_2)
-
-    def __isub__(
-        self,
-        other: Union["MultivariatePolynomialSingleABC", SCALAR],
-    ):
-        """Subtract a polynomial with a poly. or a real scalar in-place.
-
-        This function is called when a polynomial is subtracted in-place,
-        specifically when:
-
-        - a polynomial is subtracted with another polynomial like ``P1 += P2``
-          where ``P1`` and ``P2`` are both polynomial instances of the same
-          concrete class.
-        - a polynomial is subtracted with a real scalar number like ``P1 += a``
-          where ``a`` is a real scalar number.
-
-        Parameters
-        ----------
-        other : Union[MultivariatePolynomialSingleABC, SCALAR]
-            The right operand, a polynomial instance of the same concrete class
-            or a real scalar number.
-
-        Returns
-        -------
-        MultivariatePolynomialSingleABC
-            The result of the addition, an instance of subtracted polynomial.
-
-        Notes
-        -----
-        - Under the hood subtraction is an addition operation with a negated
-          operand on the right; no separate concrete implementation is
-          used.
-        """
-        # Handle in-place subtraction by a scalar
-        if is_real_scalar(other):
-            return self._scalar_add(self, -other, inplace=True)
-
-        return self.__iadd__(-other)
 
     # --- Special methods: copies
     def __copy__(self):
@@ -1779,54 +1692,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         poly_1, poly_2 = self._match_dims(other)
 
         return poly_1, poly_2
-
-
-def _create_constant_poly(
-    poly: "MultivariatePolynomialSingleABC",
-    scalar: Union[SCALAR, np.ndarray],
-) -> "MultivariatePolynomialSingleABC":
-    """Create a constant polynomial from a given polynomial.
-
-    Parameters
-    ----------
-    poly : MultivariatePolynomialSingleABC
-        An instance of polynomial from which a constant polynomial will be
-        created.
-    scalar : Union[SCALAR, np.ndarray]
-        Real scalar numbers for the coefficient value of the constant
-        polynomial.
-
-    Returns
-    -------
-    MultivariatePolynomialSingleABC
-        A polynomial of the same instance as ``poly`` having the same grid and
-        domains but with a single element multi-index set.
-    """
-    # Create a multi-index set
-    dim = poly.spatial_dimension
-    lp_degree = poly.multi_index.lp_degree
-    mi = MultiIndexSet.from_degree(dim, poly_degree=0, lp_degree=lp_degree)
-
-    # Create the coefficient
-    if len(poly) == 1:
-        coeffs = np.array([scalar])
-    else:
-        coeffs = scalar * np.ones(
-            shape=(1, len(poly)),
-            dtype=poly.coeffs.dtype,
-        )
-
-    # Create a grid
-    grid = Grid(mi, poly.grid.generating_function, poly.grid.generating_points)
-
-    # Return a polynomial instance
-    return poly.__class__(
-        multi_index=mi,
-        coeffs=coeffs,
-        internal_domain=poly.internal_domain,
-        user_domain=poly.user_domain,
-        grid=grid,
-    )
 
 
 def _has_consistent_number_of_polys(

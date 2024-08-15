@@ -22,6 +22,7 @@ from minterpy.utils.polynomials.interface import (
     get_grid_and_multi_index_poly_prod,
     get_grid_and_multi_index_poly_sum,
     PolyData,
+    scalar_add_monomial_based,
     shape_coeffs,
 )
 from minterpy.utils.verification import (
@@ -219,29 +220,28 @@ def _canonical_integrate_over(
 
 
 class CanonicalPolynomial(MultivariatePolynomialSingleABC):
-    """
-    Polynomial type in the canonical base.
-    """
+    """Concrete implementation of polynomials in the canonical basis."""
+    # --- Virtual Functions
 
-    __doc__ = """
-    This is the docstring of the canonical base class.
-    """
-
-    # __doc__ += MultivariatePolynomialSingleABC.__doc_attrs__
-    # Virtual Functions
-    _add = staticmethod(add_canonical)
-    _sub = staticmethod(dummy)
-    _mul = staticmethod(mul_canonical)
-    _div = staticmethod(dummy)
-    _pow = staticmethod(dummy)
+    # Evaluation
     _eval = staticmethod(eval_canonical)
-    _iadd = staticmethod(dummy)
 
+    # Arithmetics (polynomial-polynomial)
+    _add = staticmethod(add_canonical)
+    _sub = staticmethod(dummy)  # type: ignore
+    _mul = staticmethod(mul_canonical)
+    _div = staticmethod(dummy)  # type: ignore
+    _pow = staticmethod(dummy)  # type: ignore
+
+    # Arithmetics (polynomial-scalar)
+    _scalar_add = staticmethod(scalar_add_monomial_based)
+
+    # Calculus
     _partial_diff = staticmethod(_canonical_partial_diff)
     _diff = staticmethod(_canonical_diff)
-
     _integrate_over = staticmethod(_canonical_integrate_over)
 
+    # Domain generation
     generate_internal_domain = staticmethod(canonical_generate_internal_domain)
     generate_user_domain = staticmethod(canonical_generate_user_domain)
 

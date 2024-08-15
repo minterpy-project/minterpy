@@ -24,6 +24,7 @@ from minterpy.utils.polynomials.interface import (
     get_grid_and_multi_index_poly_prod,
     get_grid_and_multi_index_poly_sum,
     PolyData,
+    scalar_add_monomial_based,
     select_active_monomials,
     shape_coeffs,
 )
@@ -141,22 +142,28 @@ def eval_chebyshev(
 
 
 class ChebyshevPolynomial(MultivariatePolynomialSingleABC):
-    """Datatype to describe polynomials in Chebyshev bases."""
+    """Concrete implementation of polynomials in the Chebyshev bases."""
+    # --- Virtual Functions
 
-    # Virtual Functions
+    # Evaluation
+    _eval = staticmethod(eval_chebyshev)
+
+    # Arithmetics (polynomial-polynomial)
     _add = staticmethod(add_chebyshev)
     _sub = staticmethod(dummy)
     _mul = staticmethod(mul_chebyshev)
     _div = staticmethod(dummy)  # type: ignore
     _pow = staticmethod(dummy)  # type: ignore
-    _eval = staticmethod(eval_chebyshev)
-    _iadd = staticmethod(dummy)
 
-    _partial_diff = staticmethod(dummy)
-    _diff = staticmethod(dummy)
+    # Arithmetics (polynomial-scalar)
+    _scalar_add = staticmethod(scalar_add_monomial_based)
 
-    _integrate_over = staticmethod(dummy)
+    # Calculus
+    _partial_diff = staticmethod(dummy)  # type: ignore
+    _diff = staticmethod(dummy)  # type: ignore
+    _integrate_over = staticmethod(dummy)  # type: ignore
 
+    # Domain generation
     generate_internal_domain = staticmethod(verify_domain)
     generate_user_domain = staticmethod(verify_domain)
 
