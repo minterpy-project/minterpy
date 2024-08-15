@@ -32,13 +32,23 @@ from minterpy import (
 from minterpy.core.ABC.transformation_abstract import TransformationABC
 from minterpy.utils.multi_index import get_exponent_matrix
 
+# Global seed
+SEED = 12345678
+
+# Global settings
+MIN_POLY_DEG = 0
+MAX_POLY_DEG = 25
+
+# --- Parameters to be tested
 # Supported polynomial classes
-POLY_CLASSES = [
-    LagrangePolynomial,
+POLY_CLASSES_NO_LAG = [
     NewtonPolynomial,
     CanonicalPolynomial,
     ChebyshevPolynomial,
 ]
+
+# All
+POLY_CLASSES = [LagrangePolynomial] + POLY_CLASSES_NO_LAG
 
 # Supported polynomial transformation classes
 TRANSFORMATION_CLASSES = [
@@ -56,12 +66,13 @@ TRANSFORMATION_CLASSES = [
     ChebyshevToCanonical,
 ]
 
-# Global seed
-SEED = 12345678
+# Primary parameters to create complete multi-index sets, grids, & polynomials
+SPATIAL_DIMENSIONS = [1, 3]
+POLY_DEGREES = [0, 1, 4]  # NOTE: Include test for poly_degree 0 (Issue #27)
+LP_DEGREES = [0.5, 1.0, 2.0, np.inf]
 
-# Global settings
-MIN_POLY_DEG = 0
-MAX_POLY_DEG = 25
+# Number of coefficient sets in a single polynomial instance
+NUM_POLYS = [1, 2, 5]
 
 
 # asserts that a call runs as expected
@@ -218,37 +229,67 @@ def assert_interpolant_almost_equal(interpolant1, interpolant2):
             f"The two instances of {interpolant1.__class__.__name__} are not almost equal:\n\n {a}"
         )
 
+
 # --- Elementary fixtures
+# Spatial dimension (`m`)
+def _id_m(spatial_dimension):
+    return f"m={spatial_dimension}"
 
 
-spatial_dimensions = [1, 3]
-
-
-@pytest.fixture(params=spatial_dimensions)
+@pytest.fixture(params=SPATIAL_DIMENSIONS, ids=_id_m)
 def SpatialDimension(request):
-    """Return spatial dimension fixture."""
+    """Return spatial dimension (`m`) fixture."""
     return request.param
 
 
-# fixture for polynomial degree
-# NOTE: Include test for poly_degree 0 (Issue #27)
-polynomial_degree = [0, 1, 4]
+# Polynomial degree (`n`)
+def _id_n(poly_degree):
+    return f"n={poly_degree}"
 
 
-@pytest.fixture(params=polynomial_degree)
+@pytest.fixture(params=POLY_DEGREES, ids=_id_n)
 def PolyDegree(request):
+    """Return polynomial degree (`n`) fixture."""
     return request.param
 
 
-# fixture for lp degree
+# Lp-degree (`p`)
+def _id_p(lp_degree):
+    return f"p={lp_degree:<3}"
 
-lp_degrees = [0.5, 1, 2, np.inf]
 
-
-@pytest.fixture(params=lp_degrees)
+@pytest.fixture(params=LP_DEGREES, ids=_id_p)
 def LpDegree(request):
+    """Return lp-degree fixture."""
     return request.param
 
+
+# Polynomial classes
+def _id_poly_class(poly_class):
+    return f"{poly_class.__name__:>19}"
+
+
+@pytest.fixture(params=POLY_CLASSES, ids=_id_poly_class)
+def poly_class_all(request):
+    """Fixture for the supported concrete polynomial classes (all)."""
+    return request.param
+
+
+@pytest.fixture(params=POLY_CLASSES_NO_LAG, ids=_id_poly_class)
+def poly_class_no_lag(request):
+    """Fixture for the supported concrete polynomial classes (w/o Lagrange)."""
+    return request.param
+
+
+# Number of coefficient sets in a single polynomial instance
+def _id_num_polys(num_polys):
+    return f"num_polys={num_polys}"
+
+
+@pytest.fixture(params=NUM_POLYS, ids=_id_num_polys)
+def num_polynomials(request):
+    """Fixture for the number of polynomials."""
+    return request.param
 
 # fixtures for number of similar polynomials
 
@@ -270,10 +311,7 @@ def NrPoints(request):
     return request.param
 
 
-@pytest.fixture(params=[1, 2, 5])
-def num_polynomials(request):
-    """Fixture for the number of polynomials."""
-    return request.param
+
 
 
 # Fixture for the number
@@ -285,10 +323,7 @@ def BatchSizes(request):
     return request.param
 
 
-@pytest.fixture(params=POLY_CLASSES)
-def polynomial_class(request):
-    """Fixture for the supported polynomial classes."""
-    return request.param
+
 
 
 @pytest.fixture(params=TRANSFORMATION_CLASSES)
@@ -297,8 +332,8 @@ def transformation_class(request) -> TransformationABC:
     return request.param
 
 
-origin_type = polynomial_class
-target_type = polynomial_class
+origin_type = poly_class_all
+target_type = poly_class_all
 
 # Fixture for pair
 @pytest.fixture(
@@ -322,54 +357,68 @@ def poly_domain(request):
 
 
 # --- Composite fixtures
-@pytest.fixture()
-def MultiIndices(SpatialDimension, PolyDegree, LpDegree):
-    return MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-
-
 @pytest.fixture
 def multi_index_mnp(SpatialDimension, PolyDegree, LpDegree):
-    """Create a complete multi-index set given spatial dimension (m),
-    polynomial degree (n), and lp-degree (p).
-
-    TODO
-    ----
-    - Refactor the fixture `MultiIndices` above as the multi-index created
-      by the fixture is a specific one.
+    """Create a complete multi-index set given spatial dimension (``m``),
+    polynomial degree (``n``), and lp-degree (``p``).
     """
     return MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
 
 
 @pytest.fixture
-def rand_poly_mnp(polynomial_class, multi_index_mnp):
+def rand_poly_mnp_all(poly_class_all, multi_index_mnp, num_polynomials):
     """Create a random polynomial instance of each concrete class having
     a complete multi-index set.
     """
-    coefficients = np.random.rand(len(multi_index_mnp))
-
-    return polynomial_class(multi_index_mnp, coefficients)
-
-
-@pytest.fixture
-def rand_polys_mnp(polynomial_class, multi_index_mnp, num_polynomials):
-    """Create a random polynomial instance of each concrete class with multiple
-    sets of coefficients having a complete multi-index set.
-    """
+    # Generate random coefficients
     coefficients = np.random.rand(len(multi_index_mnp), num_polynomials)
 
-    return polynomial_class(multi_index_mnp, coefficients)
+    return poly_class_all(multi_index_mnp, coefficients)
 
 
 @pytest.fixture
-def poly_mnp_uninit(polynomial_class, multi_index_mnp):
+def rand_poly_mnp_no_lag(poly_class_no_lag, multi_index_mnp, num_polynomials):
+    """Create a random polynomial instance of each concrete class (but not
+    LagrangePolynomial) having a complete multi-index set.
+    """
+    # Generate random coefficients
+    coefficients = np.random.rand(len(multi_index_mnp), num_polynomials)
+
+    return poly_class_no_lag(multi_index_mnp, coefficients)
+
+
+@pytest.fixture
+def rand_poly_mnp_lag(multi_index_mnp, num_polynomials):
+    """Create a random Lagrange polynomial instance having a complete
+    multi-index set.
+    """
+    # Generate random coefficients
+    coefficients = np.random.rand(len(multi_index_mnp), num_polynomials)
+
+    return LagrangePolynomial(multi_index_mnp, coefficients)
+
+
+@pytest.fixture
+def rand_polys_mnp(poly_class_all, multi_index_mnp, num_polynomials):
+    """Create a random polynomial instance of each concrete class having
+    a complete multi-index set with possibly multiple sets of coefficients.
+    """
+    # Generate random coefficients
+    coefficients = np.random.rand(len(multi_index_mnp), num_polynomials)
+
+    return poly_class_all(multi_index_mnp, coefficients)
+
+
+@pytest.fixture
+def poly_mnp_uninit(poly_class_all, multi_index_mnp):
     """Create an uninitialized polynomial instance of each concrete class
     having a complete multi-index set.
     """
-    return polynomial_class(multi_index_mnp)
+    return poly_class_all(multi_index_mnp)
 
 
 @pytest.fixture
-def poly_mnp_non_unif_domain(polynomial_class, multi_index_mnp, poly_domain):
+def poly_mnp_non_unif_domain(poly_class_all, multi_index_mnp, poly_domain):
     """Create an uninitialized polynomial instance of each concrete class
     having a complete multi-index set with non-uniform polynomial domain.
     """
@@ -385,16 +434,16 @@ def poly_mnp_non_unif_domain(polynomial_class, multi_index_mnp, poly_domain):
     domain[1, 0] = 2
 
     if poly_domain == "user":
-        return polynomial_class(multi_index_mnp, user_domain=domain)
+        return poly_class_all(multi_index_mnp, user_domain=domain)
     elif poly_domain == "internal":
-        return polynomial_class(multi_index_mnp, internal_domain=domain)
+        return poly_class_all(multi_index_mnp, internal_domain=domain)
     else:
         raise ValueError
 
 
 @pytest.fixture
 def poly_mnp_pair_diff_dim(
-    polynomial_class,
+        poly_class_all,
     SpatialDimension,
     PolyDegree,
     LpDegree,
@@ -403,12 +452,12 @@ def poly_mnp_pair_diff_dim(
     class having a complete multi-index set but with different dimension.
     """
     # Create polynomial instances
-    poly_1 = polynomial_class.from_degree(
+    poly_1 = poly_class_all.from_degree(
         SpatialDimension,
         PolyDegree,
         LpDegree,
     )
-    poly_2 = polynomial_class.from_degree(
+    poly_2 = poly_class_all.from_degree(
         SpatialDimension + 1,
         PolyDegree,
         LpDegree,
@@ -418,7 +467,7 @@ def poly_mnp_pair_diff_dim(
 
 
 @pytest.fixture
-def poly_mnp_pair_diff_domain(polynomial_class, multi_index_mnp, poly_domain):
+def poly_mnp_pair_diff_domain(poly_class_all, multi_index_mnp, poly_domain):
     """Create a pair of un-initialized polynomial instances of each concrete
     class having a complete multi-index set but with a different domain.
     """
@@ -428,11 +477,11 @@ def poly_mnp_pair_diff_domain(polynomial_class, multi_index_mnp, poly_domain):
     domain[1, 0] = 2
 
     # Create polynomial instances
-    poly_1 = polynomial_class(multi_index_mnp)
+    poly_1 = poly_class_all(multi_index_mnp)
     if poly_domain == "user":
-        poly_2 = polynomial_class(multi_index_mnp, user_domain=domain)
+        poly_2 = poly_class_all(multi_index_mnp, user_domain=domain)
     elif poly_domain == "internal":
-        poly_2 = polynomial_class(multi_index_mnp, internal_domain=domain)
+        poly_2 = poly_class_all(multi_index_mnp, internal_domain=domain)
     else:
         raise ValueError
 
@@ -440,7 +489,7 @@ def poly_mnp_pair_diff_domain(polynomial_class, multi_index_mnp, poly_domain):
 
 
 @pytest.fixture
-def rand_poly_mnp_pair(polynomial_class, mi_pair):
+def rand_poly_mnp_pair(poly_class_all, mi_pair):
     """Create a pair of randomly initialized polynomial instances of each
     concrete class having a complete multi-index sets.
     """
@@ -451,16 +500,16 @@ def rand_poly_mnp_pair(polynomial_class, mi_pair):
 
     # Create polynomial instances
     coeffs_1 = np.random.rand(len(mi_1))
-    poly_1 = polynomial_class(mi_1, coeffs_1)
+    poly_1 = poly_class_all(mi_1, coeffs_1)
 
     coeffs_2 = np.random.rand(len(mi_2))
-    poly_2 = polynomial_class(mi_2, coeffs_2)
+    poly_2 = poly_class_all(mi_2, coeffs_2)
 
     return poly_1, poly_2
 
 
 @pytest.fixture
-def rand_polys_mnp_pair(polynomial_class, mi_pair, num_polynomials):
+def rand_polys_mnp_pair(poly_class_all, mi_pair, num_polynomials):
     """Create a pair of randomly initialized polynomial instances of each
     concrete class having a complete multi-index sets and multiple sets of
     coefficients.
@@ -472,10 +521,10 @@ def rand_polys_mnp_pair(polynomial_class, mi_pair, num_polynomials):
 
     # Create polynomial instances
     coeffs_1 = np.random.rand(len(mi_1), num_polynomials)
-    poly_1 = polynomial_class(mi_1, coeffs_1)
+    poly_1 = poly_class_all(mi_1, coeffs_1)
 
     coeffs_2 = np.random.rand(len(mi_2), num_polynomials)
-    poly_2 = polynomial_class(mi_2, coeffs_2)
+    poly_2 = poly_class_all(mi_2, coeffs_2)
 
     return poly_1, poly_2
 

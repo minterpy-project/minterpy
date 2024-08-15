@@ -38,51 +38,45 @@ from __future__ import annotations
 import copy
 import numpy as np
 
+from minterpy.global_settings import SCALAR
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
-from minterpy.services import is_scalar
-from minterpy.utils.polynomials.interface import PolyData, shape_coeffs
 from minterpy.utils.polynomials.lagrange import integrate_monomials_lagrange
 from minterpy.utils.verification import dummy, verify_domain
 
 __all__ = ["LagrangePolynomial"]
 
 
-def add_lagrange(
-    poly_1: "LagrangePolynomial",
-    poly_2: "LagrangePolynomial",
+def scalar_add_lagrange(
+    poly: "LagrangePolynomial",
+    scalar: SCALAR,
 ) -> "LagrangePolynomial":
-    """Add two instances of polynomials in the Lagrange basis.
+    """Add an instance of polynomial in the Lagrange basis with a real scalar.
 
-    This is the concrete implementation of ``_add()`` method in the
-    ``MultivariatePolynomialSingleABC`` abstract class specifically for
-    handling polynomials in the Lagrange basis.
+    This is the concrete implementation of ``_scalar_add`` method in the
+    ``MultivariatePolynomialSingleABC`` for handling expressions like
+    ``poly + x``, where ``x`` is a real scalar number and ``poly`` is
+    an instance of ``LagrangePolynomial``.
 
     Parameters
     ----------
-    poly_1 : LagrangePolynomial
-        Left operand of the addition/subtraction expression.
-    poly_2 : LagrangePolynomial
-        Right operand of the addition/subtraction expression.
+    poly : LagrangePolynomial
+        A polynomial instance in the Lagrange basis to be added with a scalar.
+    scalar : SCALAR
+        The real scalar number to be added to the polynomial instance.
 
     Returns
     -------
     LagrangePolynomial
-        The sum of two polynomials in the Lagrange basis as a new instance
-        of polynomial, also in the Lagrange basis.
-
-    Notes
-    -----
-    - This function assumes: both polynomials must be in the Lagrange basis,
-      they must be initialized (coefficients are not ``None``),
-      have the same dimension and their domains are matching,
-      and the number of polynomials per instance are the same.
-      These conditions are not explicitly checked in this function.
+        The summed polynomial in the Lagrange basis; the polynomial is a new
+        instance.
     """
-    # --- Get the ingredients of the summed polynomial in the Lagrange basis
-    poly_sum_data = _compute_poly_sum_data_lagrange(poly_1, poly_2)
+    # Create a copy of the polynomial
+    poly_sum = copy.deepcopy(poly)
 
-    # --- Return a new instance
-    return LagrangePolynomial(**poly_sum_data._asdict())
+    # Add **all** the coefficients with the real scalar number
+    poly_sum.coeffs += scalar
+
+    return poly_sum
 
 
 def integrate_over_lagrange(
@@ -136,86 +130,29 @@ class LagrangePolynomial(MultivariatePolynomialSingleABC):
       at a single grid point and :math:`0` at all the other points,
       with respect to the given grid.
     """
-    # Virtual Functions
-    _add = staticmethod(add_lagrange)
+    # --- Virtual Functions
+
+    # Evaluation
+    _eval = staticmethod(dummy)  # type: ignore
+
+    # Arithmetics (polynomial-polynomial)
+    _add = staticmethod(dummy)  # type: ignore
     _sub = staticmethod(dummy)  # type: ignore
     _mul = staticmethod(dummy)  # type: ignore
     _div = staticmethod(dummy)  # type: ignore
     _pow = staticmethod(dummy)  # type: ignore
-    _eval = staticmethod(dummy)  # type: ignore
-    _iadd = staticmethod(dummy)
 
-    _partial_diff = staticmethod(dummy)
-    _diff = staticmethod(dummy)
+    # Arithmetics (polynomial-scalar)
+    _scalar_add = staticmethod(scalar_add_lagrange)  # type: ignore
 
+    # Calculus
+    _partial_diff = staticmethod(dummy)  # type: ignore
+    _diff = staticmethod(dummy)  # type: ignore
     _integrate_over = staticmethod(integrate_over_lagrange)
 
+    # Domain generation
     generate_internal_domain = staticmethod(lagrange_generate_internal_domain)
     generate_user_domain = staticmethod(lagrange_generate_user_domain)
-
-
-def _compute_poly_sum_data_lagrange(
-    poly_1: LagrangePolynomial,
-    poly_2: LagrangePolynomial,
-) -> PolyData:
-    """Compute the data to create a summed polynomial in the Lagrange basis.
-
-    Parameters
-    ----------
-    poly_1 : LagrangePolynomial
-        Left operand of the addition/subtraction expression.
-    poly_2 : LagrangePolynomial
-        Right operand of the addition/subtraction expression.
-
-    Returns
-    -------
-    PolyData
-        The ingredients to construct a summed polynomial in the Lagrange basis.
-
-    Notes
-    -----
-    - Only addition with or between constant scalar polynomials is supported.
-      In other words, one of the polynomials must be a scalar polynomial.
-    - Both polynomials are assumed to have the same type, spatial dimension,
-      and matching domains. This has been made sure by the abstract base class.
-    """
-    # --- Only if one of the operands is a constant scalar polynomial
-    if not is_scalar(poly_1) and not is_scalar(poly_2):
-        raise NotImplementedError(
-            "General polynomial-polynomial addition/subtraction "
-            f"for {type(poly_1)} is not supported."
-    )
-
-    # --- Get the grid and multi-index set of the summed polynomial
-    # NOTE: Simply take the one with the largest multi-index set
-    # (i.e., the non-scalar polynomial)
-    non_scalar_poly = poly_1 if not is_scalar(poly_1) else poly_2
-    grd_sum = copy.copy(non_scalar_poly.grid)
-    if non_scalar_poly.indices_are_separate:
-        mi_sum = copy.copy(non_scalar_poly.multi_index)
-    else:
-        mi_sum = grd_sum.multi_index
-
-    # --- Process the coefficients
-    # NOTE: In the Lagrange basis, adding a scalar applies to all coefficients
-    # because there is no "constant" term in the multi-index set.
-    # Shape the coefficients; ensure they have the same dimension
-    coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
-    coeffs_sum = coeffs_1 + coeffs_2
-
-    # --- Process the domains
-    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
-    # matching domains, it does not matter which one to use
-    internal_domain_sum = poly_1.internal_domain
-    user_domain_sum = poly_1.user_domain
-
-    return PolyData(
-        multi_index=mi_sum,
-        coeffs=coeffs_sum,
-        internal_domain=internal_domain_sum,
-        user_domain=user_domain_sum,
-        grid=grd_sum,
-    )
 
 
 def _compute_quad_weights_lagrange(

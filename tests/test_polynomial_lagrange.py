@@ -15,6 +15,108 @@ from minterpy.transformations import LagrangeToCanonical, LagrangeToNewton
 from minterpy.utils.multi_index import make_complete
 
 
+class TestScalarAddition:
+    """All tests related to scalar addition for Lagrange polynomial instances.
+    """
+    def test_add(self, rand_poly_mnp_lag):
+        """Test adding a Lagrange polynomial w/ an arbitrary real scalar.
+
+        Notes
+        -----
+        - The test verifies the expression: ``poly + scalar``.
+        """
+        # Get a random Lagrange polynomial instance
+        poly = rand_poly_mnp_lag
+
+        # Generate a random scalar
+        scalar = np.random.rand(1)[0]
+
+        # Subtract with the scalar
+        poly_sum_1 = poly + scalar
+        poly_sum_2 = scalar + poly  # Commutativity must hold
+
+        # Compute the reference
+        coeffs_ref = poly.coeffs.copy()
+        coeffs_ref += scalar  # apply to all the coefficients
+
+        # Assertion
+        assert np.all(coeffs_ref == poly_sum_1.coeffs)
+        assert np.all(coeffs_ref == poly_sum_2.coeffs)
+
+
+class TestScalarSubtraction:
+    """All tests related to scalar subtraction for Lagrange polynomials."""
+    def test_sub(self, rand_poly_mnp_lag):
+        """Test subtracting a Lagrange polynomial w/ an arbitrary real scalar.
+
+        Notes
+        -----
+        - The test verifies the expression: ``poly - scalar``.
+        """
+        # Get a random Lagrange polynomial instance
+        poly = rand_poly_mnp_lag
+
+        # Generate a random scalar
+        scalar = np.random.rand(1)[0]
+
+        # Subtract with the scalar
+        poly_sum_1 = poly - scalar
+        poly_sum_2 = -scalar + poly  # Commutativity must hold
+
+        # Compute the reference
+        coeffs_ref = poly.coeffs.copy()
+        coeffs_ref -= scalar  # only apply to all the coefficients
+
+        # Assertion
+        assert np.all(coeffs_ref == poly_sum_1.coeffs)
+        assert np.all(coeffs_ref == poly_sum_2.coeffs)
+
+    def test_rsub(self, rand_poly_mnp_lag):
+        """Test right-sided subtraction of a scalar with a Lagrange polynomial.
+
+        Notes
+        -----
+        - The test verifies the expression: ``scalar - poly``.
+        """
+        # Get a random Lagrange polynomial instance
+        poly = rand_poly_mnp_lag
+
+        # Generate a random scalar
+        scalar = np.random.rand(1)[0]
+
+        # Subtract with the scalar
+        poly_sum_1 = scalar - poly
+        poly_sum_2 = -poly + scalar  # Commutativity must hold
+
+        # Compute the reference
+        coeffs_ref = -1 * poly.coeffs.copy()
+        coeffs_ref += scalar  # only apply to all the coefficients
+
+        # Assertion
+        assert np.all(coeffs_ref == poly_sum_1.coeffs)
+        assert np.all(coeffs_ref == poly_sum_2.coeffs)
+
+
+def test_exponentiation(rand_poly_mnp_lag):
+    """Test general exponentiation.
+
+    Notes
+    -----
+    - Lagrange polynomials of degree 0 is a constant scalar polynomial and
+      exponentiation is allowed. TODO: this should not be allowed in the
+      future.
+    """
+    # Get a random Lagrange polynomial instance
+    poly = rand_poly_mnp_lag
+
+    if poly.multi_index.poly_degree == 0:
+        poly_exp = poly**3
+        assert poly_exp == poly * poly * poly
+    else:
+       with pytest.raises(NotImplementedError):
+           _ = poly**3
+
+
 def test_integrate_over_bounds_invalid_shape(
     SpatialDimension, PolyDegree, LpDegree
 ):

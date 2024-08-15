@@ -24,7 +24,9 @@ from minterpy.jit_compiled.newton.diff import (
 from minterpy.utils.polynomials.interface import (
     get_grid_and_multi_index_poly_prod,
     get_grid_and_multi_index_poly_sum,
-    PolyData, select_active_monomials,
+    PolyData,
+    scalar_add_monomial_based,
+    select_active_monomials,
     shape_coeffs,
 )
 from minterpy.utils.polynomials.canonical import (
@@ -346,24 +348,27 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     For a definition of the Newton basis, see
     :ref:`fundamentals/polynomial-bases:Newton polynomials`.
     """
-
     # --- Virtual Functions
 
-    # Arithmetics
-    _add = staticmethod(add_newton)
-    _sub = staticmethod(dummy)
-    _mul = staticmethod(mul_newton)
-    _div = staticmethod(dummy)
-    _pow = staticmethod(dummy)
-    _iadd = staticmethod(dummy)
+    # Evaluation
     _eval = staticmethod(eval_newton)
+
+    # Arithmetics (polynomial-polynomial)
+    _add = staticmethod(add_newton)
+    _sub = staticmethod(dummy)  # type: ignore
+    _mul = staticmethod(mul_newton)
+    _div = staticmethod(dummy)  # type: ignore
+    _pow = staticmethod(dummy)  # type: ignore
+
+    # Arithmetics (polynomial-scalar)
+    _scalar_add = staticmethod(scalar_add_monomial_based)
 
     # Calculus
     _partial_diff = staticmethod(newton_partial_diff)
     _diff = staticmethod(newton_diff)
     _integrate_over = staticmethod(newton_integrate_over)
 
-    # Utility
+    # Domain generation
     generate_internal_domain = staticmethod(newton_generate_internal_domain)
     generate_user_domain = staticmethod(newton_generate_user_domain)
 
