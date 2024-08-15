@@ -10,7 +10,6 @@ import pytest
 from conftest import (
     SEED,
     LpDegree,
-    MultiIndices,
     NrPoints,
     NrSimilarPolynomials,
     PolyDegree,
@@ -32,19 +31,19 @@ from minterpy import (
 # tests with a single polynomial
 
 
-def test_neg(MultiIndices, NrSimilarPolynomials):
-    coeffs = build_rnd_coeffs(MultiIndices, NrSimilarPolynomials)
-    poly = CanonicalPolynomial(MultiIndices, coeffs)
+def test_neg(multi_index_mnp, NrSimilarPolynomials):
+    coeffs = build_rnd_coeffs(multi_index_mnp, NrSimilarPolynomials)
+    poly = CanonicalPolynomial(multi_index_mnp, coeffs)
     res = -poly
     groundtruth_coeffs = (-1) * coeffs
-    groundtruth = poly.__class__(MultiIndices, groundtruth_coeffs)
+    groundtruth = poly.__class__(multi_index_mnp, groundtruth_coeffs)
     assert_polynomial_almost_equal(res, groundtruth)
 
 
-def test_eval(MultiIndices, NrPoints):
-    coeffs = build_rnd_coeffs(MultiIndices)
-    poly = CanonicalPolynomial(MultiIndices, coeffs)
-    pts = build_rnd_points(NrPoints, MultiIndices.spatial_dimension)
+def test_eval(multi_index_mnp, NrPoints):
+    coeffs = build_rnd_coeffs(multi_index_mnp)
+    poly = CanonicalPolynomial(multi_index_mnp, coeffs)
+    pts = build_rnd_points(NrPoints, multi_index_mnp.spatial_dimension)
     res = poly(pts)
 
     # navie impementation of canonical eval
@@ -52,7 +51,7 @@ def test_eval(MultiIndices, NrPoints):
     groundtruth = np.zeros(NrPoints)
     for k,pt in enumerate(pts):
         single_groundtruth = 0.0
-        for i,exponents in enumerate(MultiIndices.exponents):
+        for i,exponents in enumerate(multi_index_mnp.exponents):
             term = 1.0
             for j, expo in enumerate(exponents):
                 term *= pt[j]**expo

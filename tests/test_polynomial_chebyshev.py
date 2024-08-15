@@ -5,11 +5,7 @@ Testing module for the Chebyshev polynomial implementation.
 import numpy as np
 
 from scipy.special import eval_chebyt
-from conftest import (
-    SEED,
-    MultiIndices,
-    build_rnd_coeffs,
-)
+from conftest import SEED, build_rnd_coeffs
 
 from minterpy import ChebyshevPolynomial, MultiIndexSet
 from minterpy.utils.multi_index import get_exponent_matrix
@@ -17,18 +13,21 @@ from minterpy.utils.multi_index import get_exponent_matrix
 
 class TestEvaluation:
     """All tests related to the evaluation of Chebyshev polynomials."""
-    def test_downward_closed(self, MultiIndices):
+    def test_downward_closed(self, multi_index_mnp):
         """Test evaluating a poly. having a downward-closed multi-index."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
         # Create a random polynomial in the Chebyshev bases
-        cheb_coeffs = build_rnd_coeffs(MultiIndices)
-        cheb_poly = ChebyshevPolynomial(MultiIndices, cheb_coeffs)
+        cheb_coeffs = build_rnd_coeffs(mi)
+        cheb_poly = ChebyshevPolynomial(mi, cheb_coeffs)
 
         # Create random test points
-        xx_test = -1 + 2 * np.random.rand(100, MultiIndices.spatial_dimension)
+        xx_test = -1 + 2 * np.random.rand(100, mi.spatial_dimension)
         yy_poly = cheb_poly(xx_test)
 
         # Compute reference (the same internal implementation)
-        exponents = MultiIndices.exponents
+        exponents = mi.exponents
         yy_ref = eval_chebyt(exponents[None, :, :], xx_test[:, None, :])
         yy_ref = np.prod(yy_ref, axis=-1) @ cheb_coeffs
 

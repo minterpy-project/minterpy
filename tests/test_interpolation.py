@@ -8,7 +8,6 @@ import numpy as np
 import pytest
 from conftest import (
     LpDegree,
-    MultiIndices,
     NrPoints,
     PolyDegree,
     SpatialDimension,

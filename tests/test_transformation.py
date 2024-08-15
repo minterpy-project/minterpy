@@ -142,13 +142,13 @@ class TestTransformation:
         SpatialDimension,
         PolyDegree,
         LpDegree,
-        polynomial_class,
+            poly_class_all,
     ):
         """Test the identity transformation."""
         # Create a polynomial
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
         coeffs = build_rnd_coeffs(mi)
-        origin_poly = polynomial_class(mi, coeffs)
+        origin_poly = poly_class_all(mi, coeffs)
 
         # Create an identity transformer
         transformer = Identity(origin_poly)

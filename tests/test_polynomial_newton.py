@@ -30,12 +30,12 @@ def diff_backend(request):
     return request.param
 
 
-def test_eval(MultiIndices, NrPoints, num_polynomials):
+def test_eval(multi_index_mnp, NrPoints, num_polynomials):
     """Test the evaluation of Newton polynomials."""
 
-    coeffs = build_rnd_coeffs(MultiIndices, num_polynomials)
-    poly = NewtonPolynomial(MultiIndices, coeffs)
-    pts = build_rnd_points(NrPoints, MultiIndices.spatial_dimension)
+    coeffs = build_rnd_coeffs(multi_index_mnp, num_polynomials)
+    poly = NewtonPolynomial(multi_index_mnp, coeffs)
+    pts = build_rnd_points(NrPoints, multi_index_mnp.spatial_dimension)
 
     # Evaluate
     res = poly(pts)
@@ -46,20 +46,20 @@ def test_eval(MultiIndices, NrPoints, num_polynomials):
     assert_almost_equal(res, groundtruth)
 
 
-def test_eval_batch(MultiIndices, num_polynomials, BatchSizes):
+def test_eval_batch(multi_index_mnp, num_polynomials, BatchSizes):
     """Test the evaluation on Newton polynomials in batches of query points."""
 
     #TODO: This is a temporary test as the 'batch_size' parameter is not
     #      opened in the higher-level interface, i.e., 'newton_poly(xx)'
 
     # Create a random coefficient values
-    newton_coeffs = build_rnd_coeffs(MultiIndices, num_polynomials)
-    grid = Grid(MultiIndices)
+    newton_coeffs = build_rnd_coeffs(multi_index_mnp, num_polynomials)
+    grid = Grid(multi_index_mnp)
     generating_points = grid.generating_points
-    exponents = MultiIndices.exponents
+    exponents = multi_index_mnp.exponents
 
     # Create test query points
-    xx = build_rnd_points(421, MultiIndices.spatial_dimension)
+    xx = build_rnd_points(421, multi_index_mnp.spatial_dimension)
 
     # Evaluate the polynomial in batches
     yy_newton = eval_newton_polynomials(
@@ -69,7 +69,7 @@ def test_eval_batch(MultiIndices, num_polynomials, BatchSizes):
         yy_newton = yy_newton.reshape(-1)
 
     # Create a reference results from canonical polynomial evaluation
-    newton_poly = NewtonPolynomial(MultiIndices, newton_coeffs)
+    newton_poly = NewtonPolynomial(multi_index_mnp, newton_coeffs)
     canonical_poly = NewtonToCanonical(newton_poly)()
     yy_canonical = canonical_poly(xx)
 
