@@ -32,6 +32,9 @@ from minterpy.utils.polynomials.interface import (
 from minterpy.utils.polynomials.canonical import (
     compute_coeffs_poly_sum as compute_coeffs_poly_sum_canonical,
 )
+from minterpy.jit_compiled.canonical import (
+    compute_coeffs_poly_prod as compute_coeffs_poly_prod_canonical,
+)
 from minterpy.services import is_scalar
 
 __all__ = ["NewtonPolynomial"]
@@ -451,8 +454,10 @@ def _compute_coeffs_poly_sum(
     is_common_grid_1 = poly_1.grid.is_compatible(grid_sum)
     is_common_grid_2 = poly_2.grid.is_compatible(grid_sum)
     is_common_grid = is_common_grid_1 and is_common_grid_2
-    is_scalar_poly = is_scalar(poly_1) or is_scalar(poly_2)
-    if is_scalar_poly or is_common_grid:
+    is_scalar_poly_grid_1 = is_scalar(poly_1) and is_scalar(poly_1.grid)
+    is_scalar_poly_grid_2 = is_scalar(poly_2) and is_scalar(poly_2.grid)
+    is_scalar_poly_grid = is_scalar_poly_grid_1 or is_scalar_poly_grid_2
+    if is_scalar_poly_grid or is_common_grid:
         return _compute_coeffs_scalar_poly_sum(poly_1, poly_2, multi_index_sum)
 
     # Compute the values of the operands at the unisolvent nodes
@@ -595,6 +600,26 @@ def _compute_coeffs_poly_prod(
       differs from ``multi_index_sum``. The latter, however, must be
       a subset of the former (no need to check for that here).
     """
+    # --- Handle case of scalar polynomial (no transformation required)
+    # Both polynomials and the underlying grids are scalar
+    is_scalar_poly_grid_1 = is_scalar(poly_1) and is_scalar(poly_1.grid)
+    is_scalar_poly_grid_2 = is_scalar(poly_2) and is_scalar(poly_2.grid)
+    is_scalar_poly_grid = is_scalar_poly_grid_1 or is_scalar_poly_grid_2
+    # Some non-scalar grids may still be compatible with the product grid
+    is_common_grid_1 = poly_1.grid.is_compatible(grid_prod)
+    is_common_grid_2 = poly_2.grid.is_compatible(grid_prod)
+    is_common_grid = is_common_grid_1 and is_common_grid_2
+    # the grid may not be scalar but the polynomial must still be
+    is_scalar_poly = is_scalar(poly_1) or is_scalar(poly_2)
+    is_scalar_poly_common_grid = is_scalar_poly and is_common_grid
+
+    if is_scalar_poly_grid or is_scalar_poly_common_grid:
+        return _compute_coeffs_scalar_poly_prod(
+            poly_1,
+            poly_2,
+            multi_index_prod,
+        )
+
     # Compute the values of the operands at the unisolvent nodes
     lag_coeffs_1 = grid_prod(poly_1)
     lag_coeffs_2 = grid_prod(poly_2)
@@ -609,6 +634,62 @@ def _compute_coeffs_poly_prod(
     )
 
     return nwt_coeffs_prod
+
+
+def _compute_coeffs_scalar_poly_prod(
+    poly_1: NewtonPolynomial,
+    poly_2: NewtonPolynomial,
+    multi_index_prod: MultiIndexSet,
+) -> np.ndarray:
+    """Compute the coefficients of a summed constant polynomial.
+
+    Parameters
+    ----------
+    poly_1 : NewtonPolynomial
+        Left operand of the addition/subtraction expression.
+    poly_2 : NewtonPolynomial
+        Right operand of the addition/subtraction expression.
+    multi_index_prod : MultiIndexSet
+        The multi-index set of the product polynomial.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        The coefficients of the summed polynomial in the Newton basis.
+
+    Notes
+    -----
+    - The function is used when at least one of ``poly_1`` and ``poly_2`` is
+      a constant polynomial.
+    - For addition/subtraction involving a constant polynomial, the procedure
+      to compute the coefficients of a polynomial sum in the canonical basis
+      is used, i.e., find matching index term and add the coefficients and
+      therefore, avoid the use of transformation (a special case).
+    """
+    # Shape the coefficients; ensure they have the same dimension
+    coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
+
+    # Pre-allocate output array placeholder
+    num_monomials = len(multi_index_prod)
+    num_polys = len(poly_1)
+    coeffs_prod = np.zeros((num_monomials, num_polys))
+
+    # Compute the coefficients (use pre-allocated placeholder as output)
+    # NOTE: indices may or may not be separate,
+    # use the multi-index instead of the one attached to grid
+    exponents_1 = poly_1.multi_index.exponents
+    exponents_2 = poly_2.multi_index.exponents
+    exponents_prod = multi_index_prod.exponents
+    compute_coeffs_poly_prod_canonical(
+        exponents_1,
+        coeffs_1,
+        exponents_2,
+        coeffs_2,
+        exponents_prod,
+        coeffs_prod,
+    )
+
+    return coeffs_prod
 
 
 def _transform_lag2nwt(

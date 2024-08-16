@@ -3,9 +3,11 @@ Common public high-level utility functions of the Minterpy package.
 """
 import numpy as np
 
-from typing import TYPE_CHECKING
+import minterpy as mp
+from typing import TYPE_CHECKING, Union
 
 from minterpy.global_settings import INT_DTYPE
+from minterpy.core.grid import Grid
 
 # To avoid circular import in the type hints
 if TYPE_CHECKING:
@@ -14,23 +16,23 @@ if TYPE_CHECKING:
 __all__ = ["is_scalar"]
 
 
-def is_scalar(poly: "MultivariatePolynomialSingleABC") -> bool:
-    """Check if a polynomial instance is a constant scalar polynomial.
+def is_scalar(obj: Union["MultivariatePolynomialSingleABC", Grid]) -> bool:
+    """Check if a Minterpy object is a scalar.
 
-    A constant scalar multidimensional polynomial consists of a single
-    multi-index set element of :math:`(0, \ldots, 0)` both as defined in
-    the polynomial and the underlying multi-index set.
+    This check applies to both polynomial and grid objects.
+    A scalar multidimensional polynomial (resp. grid) consists of a single
+    multi-index set element of :math:`(0, \ldots, 0)`.
 
     Parameters
     ----------
-    poly : MultivariatePolynomialSingleABC
-        A given polynomial to check.
+    obj : Union[MultivariatePolynomialSingleABC, Grid]
+        A given polynomial or Grid to check.
 
     Returns
     -------
     bool
-        ``True`` if the polynomial is a constant scalar polynomial,
-        ``False`` otherwise.
+        ``True`` if the polynomial (resp. grid) is a constant scalar
+        polynomial (resp. grid); ``False`` otherwise.
 
     Notes
     -----
@@ -41,6 +43,31 @@ def is_scalar(poly: "MultivariatePolynomialSingleABC") -> bool:
       polynomial, a constant polynomial means that all the coefficients have
       a single unique value.
     """
+    if isinstance(obj, Grid):
+        return _is_scalar_grid(obj)
+
+    if isinstance(obj, mp.core.ABC.MultivariatePolynomialSingleABC):
+        return _is_scalar_poly(obj)
+
+    raise TypeError(f"Not recognized type of object ({type(obj)}).")
+
+
+def _is_scalar_grid(grid: Grid) -> bool:
+    """Check if a grid instance is a scalar."""
+    # If indices are separate, the multi-index must be checked separately
+    mi_grid = grid.multi_index
+    exp_zero = np.zeros(mi_grid.spatial_dimension, dtype=INT_DTYPE)
+    has_zero = exp_zero in mi_grid
+    if not has_zero:
+        return False
+    if len(mi_grid) != 1:
+        return False
+
+    return True
+
+
+def _is_scalar_poly(poly: "MultivariatePolynomialSingleABC") -> bool:
+    """Check if a polynomial instance is a scalar polynomial."""
     # Check if the polynomial is initialized
     try:
         _ = poly.coeffs
@@ -57,14 +84,5 @@ def is_scalar(poly: "MultivariatePolynomialSingleABC") -> bool:
     # only a single element
     if len(mi) != 1:
         return False
-
-    if poly.indices_are_separate:
-        # If indices are separate, the multi-index must be checked separately
-        mi_grid = poly.grid.multi_index
-        has_zero = exp_zero in mi_grid
-        if has_zero:
-            return False
-        if len(mi_grid) != 1:
-            return False
 
     return True

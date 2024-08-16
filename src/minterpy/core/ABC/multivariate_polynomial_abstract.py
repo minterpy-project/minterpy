@@ -13,7 +13,6 @@ from typing import List, Optional, Tuple, Union
 from minterpy.global_settings import ARRAY, SCALAR
 from minterpy.core.grid import Grid
 from minterpy.core.multi_index import MultiIndexSet
-from minterpy.services import is_scalar
 from minterpy.utils.verification import (
     check_type,
     check_values,
@@ -422,8 +421,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     def _scalar_mul(
         poly: "MultivariatePolynomialSingleABC",
         scalar: Union[SCALAR, np.ndarray],
-        inplace=False,
-    ) -> Optional["MultivariatePolynomialSingleABC"]:
+    ) -> "MultivariatePolynomialSingleABC":
         """Multiply the polynomial by a (real) scalar value.
 
         Parameters
@@ -432,38 +430,25 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             The real scalar value to multiply the polynomial by.
             Multiple scalars may be specified as an array as long as the length
             is consistent with the length of the polynomial instance.
-        inplace : bool, optional
-            ``True`` if the multiplication should be done in-place,
-            ``False`` otherwise. The default is ``False``.
 
         Returns
         -------
-        Optional[MultivariatePolynomialSingleABC]
-            The multiplied polynomial if ``inplace`` is ``False`` (the
-            default), otherwise ``None`` (the instance is modified in-place).
+        MultivariatePolynomialSingleABC
+            The multiplied polynomial.
 
         Notes
         -----
-        - If inplace is ``False``, a deep copy of the polynomial will be
-          created whose coefficients are multiplied by the scalar,
-          and then returned.
         - This is a concrete implementation applicable to all concrete
           implementations of polynomial due to the universal rule of
           scalar-polynomial multiplication.
         """
-        if inplace:
-            # Don't do 'self._coeffs *= other' because external coeffs
-            # will change and cause a side effect.
-            poly._coeffs = poly._coeffs * scalar
-        else:
-            self_copy = deepcopy(poly)
-            # inplace is safe due to deepcopy above
-            self_copy._coeffs *= scalar
+        self_copy = deepcopy(poly)
+        # inplace is safe due to deepcopy above
+        self_copy._coeffs *= scalar
 
-            return self_copy
+        return self_copy
 
     # --- Constructors
-
     def __init__(
         self,
         multi_index: Union[MultiIndexSet, ARRAY],
@@ -888,19 +873,19 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         # Multiplication by a real scalar number
         if is_real_scalar(other):
-            return self._scalar_mul(self, other, inplace=False)
+            return self._scalar_mul(self, other)
 
         # Verify the operands before conducting multiplication
         poly_1, poly_2 = self._verify_operands(other, operation="*")
 
         # If one of the operands is constant, avoid multi-index set operation
-        if is_scalar(poly_1):
-            return self._scalar_mul(poly_2, poly_1.coeffs, inplace=False)
-        elif is_scalar(poly_2):
-            return self._scalar_mul(poly_1, poly_2.coeffs, inplace=False)
-        else:
-            # Rely on the subclass concrete implementation (static method)
-            return self._mul(poly_1, poly_2)
+        # if is_scalar(poly_1):
+        #     return self._scalar_mul(poly_2, poly_1.coeffs)
+        # elif is_scalar(poly_2):
+        #     return self._scalar_mul(poly_1, poly_2.coeffs)
+        # else:
+        # Rely on the subclass concrete implementation (static method)
+        return self._mul(poly_1, poly_2)
 
     def __pow__(self, power: int):
         """Take the polynomial instance to the given power.
@@ -1028,49 +1013,10 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         # Multiplication by a real scalar number
         if is_real_scalar(other):
-            return self._scalar_mul(self, other, inplace=False)
+            return self._scalar_mul(self, other)
 
         # Right-sided multiplication with other types is not explicitly
         # supported; it will rely on the left operand '__mul__()' method
-        return NotImplemented
-
-    # --- Special methods: Augmented assignment arithmetic operators
-    def __imul__(self, other: SCALAR):
-        """Multiply a polynomial with a real scalar in-place.
-
-        This function is called when a polynomial is multiplied with a real
-        scalar number in-place like ``P *= a`` where ``P`` ``a`` are
-        a polynomial instance and a scalar, respectively.
-
-        Parameters
-        ----------
-        other : SCALAR
-            The right operand, a real scalar number.
-
-        Returns
-        -------
-        MultivariatePolynomialSingleABC
-            The result of the multiplication, an instance of multiplied
-            polynomial.
-
-        See Also
-        --------
-        _scalar_mul
-            Concrete implementation of ``__mul__`` when the right operand
-            is a real scalar number.
-
-        TODO
-        ----
-        - Add support for polynomial-polynomial multiplication in-place.
-        """
-        if is_real_scalar(other):
-            self._scalar_mul(self, other, inplace=True)
-            return self
-
-        # TODO: Currently only multiplication with scalar is supported inplace
-        if isinstance(self, type(other)):
-            raise NotImplementedError
-
         return NotImplemented
 
     # --- Special methods: copies
