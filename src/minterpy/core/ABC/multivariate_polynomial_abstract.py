@@ -272,43 +272,8 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     @staticmethod
     @abc.abstractmethod
     def _scalar_add(poly, scalar):  # pragma: no cover
-        """Add the polynomial with a real scalar value.
-
-        Parameters
-        ----------
-        poly : MultivariatePolynomialSingleABC
-            ss
-        scalar : SCALAR
-            The real scalar value to add the polynomial with.
-        inplace : bool, optional
-            ``True`` if the addition should be done in-place,
-            ``False`` otherwise. The default is ``False``.
-
-        Returns
-        -------
-        Optional[MultivariatePolynomialSingleABC]
-            The summed polynomial if ``inplace`` is ``False`` (the
-            default), otherwise ``None`` (the instance is modified in-place).
-
-        Notes
-        -----
-        - Adding a real scalar value to a polynomial is equivalent to
-          adding a constant polynomial whose coefficient value is the scalar
-          value to the polynomial. The concrete implementation called by
-          ``__add__()`` or ``__iadd__()`` is responsible for handling
-          the polynomial-polynomial addition.
-        """
+        # no docstring here, since it is given in the concrete implementation
         pass
-        # # Create a constant polynomial from the given polynomial
-        # poly_constant = _create_constant_poly(poly, scalar)
-        #
-        # # Call the relevant method
-        # if inplace:
-        #     # Call back `__iadd__()` because it contains verification routines
-        #     return poly.__iadd__(poly_constant)
-        # else:
-        #     # Call back `__add__()` because it contains verification routines
-        #     return poly.__add__(poly_constant)
 
     @staticmethod
     def _gen_grid_default(multi_index):
@@ -840,8 +805,9 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         Notes
         -----
-        - The concrete implementation of polynomial-polynomial addition
-          is delegated to the respective polynomial concrete class.
+        - The concrete implementation of polynomial-polynomial and polynomial-
+          scalar addition is delegated to the respective polynomial concrete
+          class.
         """
         # Handle scalar addition
         if is_real_scalar(other):
@@ -850,17 +816,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # Verify the operands before conducting addition
         poly_1, poly_2 = self._verify_operands(other, operation="+ or -")
 
-        # Handle equal value
-        if poly_1 == poly_2:
-            return self._scalar_mul(poly_1, scalar=2.0, inplace=False)
-
-        # Handle equal but negated value
-        if poly_1 == -poly_2:
-            return self._scalar_mul(poly_1, scalar=0.0, inplace=False)
-
-        result = self._add(poly_1, poly_2)
-
-        return result
+        return self._add(poly_1, poly_2)
 
     def __sub__(self, other: Union["MultivariatePolynomialSingleABC", SCALAR]):
         """Subtract the polynomial(s) with another poly. or a real scalar.

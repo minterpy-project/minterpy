@@ -521,6 +521,35 @@ class Grid:
         # Expand to the target dimension
         return _expand_dim_to_target_dim(self, target_dimension)
 
+    def is_compatible(self, other: "Grid") -> bool:
+        """Return ``True`` if the instance is compatible with another.
+
+        Two grids are compatible if they have the same generating function
+        (if exists) and the generating points up to a common dimension.
+
+        Parameters
+        ----------
+        other : Grid
+            The other instance to check its compatibility with the current
+            instance.
+
+        Returns
+        -------
+        bool
+            ``True`` if the current instance is compatible with the given
+            instance; ``False`` otherwise.
+        """
+        if _have_gen_functions(self, other):
+            # Check if the Grid instances have compatible generating functions
+            if not _have_compatible_gen_functions(self, other):
+                return False
+
+        # Check if the Grid instances have compatible generating points
+        if _have_compatible_gen_points(self, other):
+            return True
+
+        return False
+
     def make_complete(self) -> "Grid":
         """Complete the underlying multi-index set of the `Grid` instance.
 
@@ -1095,8 +1124,12 @@ def _have_compatible_gen_points(grid_1: "Grid", grid_2: "Grid") -> bool:
     dim_2 = grid_2.spatial_dimension
     dim = np.min([dim_1, dim_2])
 
-    gen_points_1 = grid_1.generating_points[:, :dim]
-    gen_points_2 = grid_2.generating_points[:, :dim]
+    row_1 = grid_1.generating_points.shape[0]
+    row_2 = grid_2.generating_points.shape[0]
+    row = np.min([row_1, row_2])
+
+    gen_points_1 = grid_1.generating_points[:row, :dim]
+    gen_points_2 = grid_2.generating_points[:row, :dim]
 
     return np.array_equal(gen_points_1, gen_points_2)
 

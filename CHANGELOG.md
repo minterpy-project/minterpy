@@ -86,6 +86,9 @@
   whose constant term is `1`. Because the underlying implementation relies on
   the polynomial-polynomial multiplication, polynomials in the Lagrange basis
   may only be exponentiated with either `0` or `1`.
+- A new public method `is_compatible()` is introduced in the `Grid`
+  class to verify compatibility between two grid instances
+  based on their generating functions and points.
 
 ### Fixed
 

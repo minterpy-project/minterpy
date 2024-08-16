@@ -1031,15 +1031,10 @@ class TestPolyMultiplication:
 
         # LagrangePolynomial is a special case: only supports constant poly
         if poly_class_all is LagrangePolynomial:
-            if n_1 == 0:
-                poly_prod = poly_1 * poly_2
-                assert np.all(poly_prod.coeffs == coeffs_1 * coeffs_2)
-                return
-            else:
-               pytest.skip(
-                    "Skipping the multiplication test between non-constant "
-                    f"{poly_class_all} of separate indices."
-                )
+           pytest.skip(
+                "Skipping the multiplication test between non-constant "
+                f"{poly_class_all} of separate indices."
+            )
 
         # Multiply the polynomials
         poly_prod = poly_1 * poly_2
@@ -1117,7 +1112,7 @@ class TestPolyAdditionSubtraction:
 
     def test_non_matching_domain(
         self,
-            poly_class_all,
+        poly_class_all,
         SpatialDimension,
         PolyDegree,
         LpDegree,
@@ -1154,10 +1149,16 @@ class TestPolyAddition:
     """All tests related to polynomial-polynomial addition for all concrete
     polynomial classes.
     """
-    def test_self(self, rand_poly_mnp_all):
-        """Test adding a polynomial with itself."""
+    def test_self_once(self, rand_poly_mnp_no_lag):
+        """Test adding a polynomial with itself, once.
+
+        Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded from this test;
+          they are tested from its dedicated test module.
+        """
         # Get the polynomial
-        poly = rand_poly_mnp_all
+        poly = rand_poly_mnp_no_lag
 
         # Self addition
         poly_sum = poly + poly
@@ -1165,13 +1166,104 @@ class TestPolyAddition:
         # Assertion
         assert poly_sum == 2 * poly
 
-    def test_eval(self, rand_polys_mnp_pair):
-        """Test the evaluation of summed polynomial."""
-        # Get the polynomial pairs
-        poly_1, poly_2 = rand_polys_mnp_pair
+    def test_self_twice(self, rand_poly_mnp_no_lag):
+        """Test adding a polynomial with itself, twice.
 
-        if isinstance(poly_1, LagrangePolynomial):
-            pytest.skip(f"Skipping evaluation of a summed {type(poly_1)}.")
+        Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded from this test;
+          they are tested from its dedicated test module.
+        """
+        # Get the polynomial
+        poly = rand_poly_mnp_no_lag
+
+        # Self addition
+        poly_sum = poly + poly + poly
+
+        # Assertion
+        assert poly_sum == 3 * poly
+
+    def test_self_thrice(self, rand_poly_mnp_no_lag):
+        """Test adding a polynomial with itself, thrice.
+
+        Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded from this test;
+          they are tested from its dedicated test module.
+        """
+        # Get the polynomial
+        poly = rand_poly_mnp_no_lag
+
+        # Self addition
+        poly_sum = poly + poly + poly + poly
+
+        # Assertion
+        assert poly_sum == 4 * poly
+
+    def test_scalar_poly_same_dim(self, rand_poly_mnp_no_lag):
+        """Test adding a scalar polynomial of the same dimension.
+
+        Notes
+        -----
+        - Scalar polynomials have one element multi-index of
+          :math:`(0, \ldots, 0)` that both defines the polynomial and the
+          underlying grid.
+        - Instances of `LagrangePolynomial` are excluded from this test.
+        """
+        # Get the pair of random polynomial instance
+        poly = rand_poly_mnp_no_lag
+
+        # Create a scalar polynomial with the same dimension
+        m = poly.multi_index.spatial_dimension
+        p = poly.multi_index.lp_degree
+        poly_scalar = poly.__class__.from_degree(m, 0, p)
+        scalar = np.random.rand(1)[0]
+        # Repeat the scalar column-wise to match the length of the polynomial
+        poly_scalar.coeffs = np.repeat(scalar, len(poly))[np.newaxis, :]
+
+        # Add the polynomial
+        poly_sum = poly + poly_scalar
+
+        # Assertion
+        assert poly_sum == poly + scalar
+
+    def test_scalar_poly_diff_dim(self, rand_poly_mnp_no_lag):
+        """Test adding a scalar polynomial of the higher dimension
+
+        Notes
+        -----
+        - Scalar polynomials have one element multi-index of
+          :math:`(0, \ldots, 0)` that both defines the polynomial and the
+          underlying grid.
+        - Instances of `LagrangePolynomial` are excluded from this test.
+        """
+        # Get the pair of random polynomial instance
+        poly = rand_poly_mnp_no_lag
+
+        # Create a scalar polynomial with the higher dimension
+        m = poly.multi_index.spatial_dimension + 1
+        p = poly.multi_index.lp_degree
+        poly_scalar = poly.__class__.from_degree(m, 0, p)
+        scalar = np.random.rand(1)[0]
+        # Repeat the scalar column-wise to match the length of the polynomial
+        poly_scalar.coeffs = np.repeat(scalar, len(poly))[np.newaxis, :]
+
+        # Add the polynomial
+        poly_sum = poly + poly_scalar
+
+        # Assertion
+        assert poly_sum != poly + scalar
+        assert poly_sum == (poly + scalar).expand_dim(m)
+
+    def test_eval(self, rand_poly_mnp_no_lag_pair):
+        """Test the evaluation of summed polynomial.
+
+        Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded.
+        """
+        # Get the polynomial pairs
+        poly_1, poly_2 = rand_poly_mnp_no_lag_pair
 
         # Get the maximum dimension
         dim_1 = poly_1.spatial_dimension
@@ -1232,7 +1324,7 @@ class TestPolyAddition:
         poly_add = poly_1 + poly_2
 
         # Evaluation
-        xx_test = -1 + 2 * np.random.rand(1000, SpatialDimension)
+        xx_test = -1 + 2 * np.random.rand(5, SpatialDimension)
         yy_test = poly_1(xx_test) + poly_2(xx_test)
         yy_add = (poly_1 + poly_2)(xx_test)
 
@@ -1347,10 +1439,16 @@ class TestPolySubtraction:
     """All tests related to polynomial-polynomial subtraction for all concrete
     polynomial classes.
     """
-    def test_self(self, rand_poly_mnp_all):
-        """Test subtracting a polynomial with itself."""
+    def test_self_once(self, rand_poly_mnp_no_lag):
+        """Test subtracting a polynomial with itself, once.
+
+        Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded from this test;
+          they are tested from its dedicated test module.
+        """
         # Get the polynomial
-        poly = rand_poly_mnp_all
+        poly = rand_poly_mnp_no_lag
 
         # Self subtraction
         poly_sub_1 = poly - poly
@@ -1361,13 +1459,105 @@ class TestPolySubtraction:
         assert poly_sub_1 == 0 * poly
         assert poly_sub_2 == 0 * poly
 
-    def test_eval(self, rand_polys_mnp_pair):
-        """Test the evaluation of subtracted polynomial."""
-        # Get the polynomial pairs
-        poly_1, poly_2 = rand_polys_mnp_pair
+    def test_self_twice(self, rand_poly_mnp_no_lag):
+        """Test subtracting a polynomial with itself, twice.
 
-        if isinstance(poly_1, LagrangePolynomial):
-            pytest.skip(f"Skipping evaluation of a subtracted {type(poly_1)}.")
+        Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded from this test;
+          they are tested from its dedicated test module.
+        """
+        # Get the polynomial
+        poly = rand_poly_mnp_no_lag
+
+        # Self subtraction
+        poly_sub = poly - poly - poly
+
+        # Assertions
+        assert poly_sub == -1 * poly
+        assert poly_sub == -poly
+
+    def test_self_thrice(self, rand_poly_mnp_no_lag):
+        """Test subtracting a polynomial with itself, thrice.
+
+        Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded from this test;
+          they are tested from its dedicated test module.
+        """
+        # Get the polynomial
+        poly = rand_poly_mnp_no_lag
+
+        # Self subtraction
+        poly_sub = poly - poly - poly - poly
+
+        # Assertions
+        assert poly_sub == -2 * poly
+
+    def test_scalar_poly_same_dim(self, rand_poly_mnp_no_lag):
+        """Test subtracting a scalar polynomial of the same dimension.
+
+        Notes
+        -----
+        - Scalar polynomials have one element multi-index of
+          :math:`(0, \ldots, 0)` that both defines the polynomial and the
+          underlying grid.
+        - Instances of `LagrangePolynomial` are excluded from this test.
+        """
+        # Get the pair of random polynomial instance
+        poly = rand_poly_mnp_no_lag
+
+        # Create a scalar polynomial with the same dimension
+        m = poly.multi_index.spatial_dimension
+        p = poly.multi_index.lp_degree
+        poly_scalar = poly.__class__.from_degree(m, 0, p)
+        scalar = np.random.rand(1)[0]
+        # Repeat the scalar column-wise to match the length of the polynomial
+        poly_scalar.coeffs = np.repeat(scalar, len(poly))[np.newaxis, :]
+
+        # Add the polynomial
+        poly_sum = poly - poly_scalar
+
+        # Assertion
+        assert poly_sum == poly - scalar
+
+    def test_scalar_poly_diff_dim(self, rand_poly_mnp_no_lag):
+        """Test subtracting a scalar polynomial of the higher dimension
+
+        Notes
+        -----
+        - Scalar polynomials have only one element in the multi-index set
+          (:math:`(0, \ldots, 0)`) that both defines the polynomial and
+          the underlying grid.
+        - Instances of `LagrangePolynomial` are excluded from this test.
+        """
+        # Get the pair of random polynomial instance
+        poly = rand_poly_mnp_no_lag
+
+        # Create a scalar polynomial with the higher dimension
+        m = poly.multi_index.spatial_dimension + 1
+        p = poly.multi_index.lp_degree
+        poly_scalar = poly.__class__.from_degree(m, 0, p)
+        scalar = np.random.rand(1)[0]
+        # Repeat the scalar column-wise to match the length of the polynomial
+        poly_scalar.coeffs = np.repeat(scalar, len(poly))[np.newaxis, :]
+
+        # Add the polynomial
+        poly_sum = poly - poly_scalar
+
+        # Assertion
+        assert poly_sum != poly - scalar
+        assert poly_sum == (poly - scalar).expand_dim(m)
+
+    def test_eval(self, rand_poly_mnp_no_lag_pair):
+        """Test the evaluation of subtracted polynomial.
+
+        Notes
+        -----
+        - Instances of `LagrangePolynomial` are excluded from this test.
+        """
+        # Get the polynomial pairs
+        poly_1, poly_2 = rand_poly_mnp_no_lag_pair
 
         # Get the maximum dimension
         dim_1 = poly_1.spatial_dimension

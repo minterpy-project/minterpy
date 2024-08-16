@@ -34,7 +34,6 @@ from minterpy.utils.polynomials.canonical import (
 )
 from minterpy.services import is_scalar
 
-
 __all__ = ["NewtonPolynomial"]
 
 SUPPORTED_BACKENDS = {
@@ -448,8 +447,12 @@ def _compute_coeffs_poly_sum(
       differs from ``multi_index_sum``. The latter, however, must be
       a subset of the former (no need to check for that here).
     """
-    # Deal with a constant polynomial to avoid doing any transformation
-    if is_scalar(poly_1) or is_scalar(poly_2):
+    # Handle the case of compatible grid where no transformation is required
+    is_common_grid_1 = poly_1.grid.is_compatible(grid_sum)
+    is_common_grid_2 = poly_2.grid.is_compatible(grid_sum)
+    is_common_grid = is_common_grid_1 and is_common_grid_2
+    is_scalar_poly = is_scalar(poly_1) or is_scalar(poly_2)
+    if is_scalar_poly or is_common_grid:
         return _compute_coeffs_scalar_poly_sum(poly_1, poly_2, multi_index_sum)
 
     # Compute the values of the operands at the unisolvent nodes
