@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Union
 
 from minterpy.global_settings import INT_DTYPE
 from minterpy.core.grid import Grid
+from minterpy.core.multi_index import MultiIndexSet
 
 # To avoid circular import in the type hints
 if TYPE_CHECKING:
@@ -16,7 +17,9 @@ if TYPE_CHECKING:
 __all__ = ["is_scalar"]
 
 
-def is_scalar(obj: Union["MultivariatePolynomialSingleABC", Grid]) -> bool:
+def is_scalar(
+    obj: Union["MultivariatePolynomialSingleABC", Grid, MultiIndexSet],
+) -> bool:
     """Check if a Minterpy object is a scalar.
 
     This check applies to both polynomial and grid objects.
@@ -25,8 +28,8 @@ def is_scalar(obj: Union["MultivariatePolynomialSingleABC", Grid]) -> bool:
 
     Parameters
     ----------
-    obj : Union[MultivariatePolynomialSingleABC, Grid]
-        A given polynomial or Grid to check.
+    obj : Union[MultivariatePolynomialSingleABC, Grid, MultiIndexSet]
+        A given polynomial, Grid, or MultiIndexSet to check.
 
     Returns
     -------
@@ -43,6 +46,9 @@ def is_scalar(obj: Union["MultivariatePolynomialSingleABC", Grid]) -> bool:
       polynomial, a constant polynomial means that all the coefficients have
       a single unique value.
     """
+    if isinstance(obj, MultiIndexSet):
+        return _is_scalar_multi_index(obj)
+
     if isinstance(obj, Grid):
         return _is_scalar_grid(obj)
 
@@ -52,9 +58,20 @@ def is_scalar(obj: Union["MultivariatePolynomialSingleABC", Grid]) -> bool:
     raise TypeError(f"Not recognized type of object ({type(obj)}).")
 
 
+def _is_scalar_multi_index(multi_index: MultiIndexSet) -> bool:
+    """Check if a MultiIndexSet instance is a scalar."""
+    exp_zero = np.zeros(multi_index.spatial_dimension, dtype=INT_DTYPE)
+    has_zero = exp_zero in multi_index
+    if not has_zero:
+        return False
+    if len(multi_index) != 1:
+        return False
+
+    return True
+
+
 def _is_scalar_grid(grid: Grid) -> bool:
     """Check if a grid instance is a scalar."""
-    # If indices are separate, the multi-index must be checked separately
     mi_grid = grid.multi_index
     exp_zero = np.zeros(mi_grid.spatial_dimension, dtype=INT_DTYPE)
     has_zero = exp_zero in mi_grid
@@ -84,5 +101,8 @@ def _is_scalar_poly(poly: "MultivariatePolynomialSingleABC") -> bool:
     # only a single element
     if len(mi) != 1:
         return False
+
+    if poly.indices_are_separate:
+        return _is_scalar_grid(poly.grid)
 
     return True

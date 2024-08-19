@@ -15,6 +15,7 @@ from minterpy.global_settings import SCALAR
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
 from minterpy.core import Grid, MultiIndexSet
 from minterpy.utils.multi_index import find_match_between
+from minterpy.jit_compiled.canonical import compute_coeffs_poly_prod
 
 
 class PolyData(NamedTuple):
@@ -161,7 +162,7 @@ def select_active_monomials(
     return coeffs[active_idx]
 
 
-def scalar_add_monomial_based(
+def scalar_add_via_monomials(
     poly: MultivariatePolynomialSingleABC,
     scalar: SCALAR,
 ) -> MultivariatePolynomialSingleABC:
@@ -195,6 +196,148 @@ def scalar_add_monomial_based(
 
     # Rely on the `__add__()` method implemented upstream
     return poly + poly_scalar
+
+
+def compute_coeffs_poly_sum_via_monomials(
+    poly_1: MultivariatePolynomialSingleABC,
+    poly_2: MultivariatePolynomialSingleABC,
+    multi_index_sum: MultiIndexSet,
+) -> np.ndarray:
+    r"""Compute the coefficients of a summed polynomial via the monomials.
+
+    For example, suppose: :math:`A = \{ (0, 0) , (1, 0), (0, 1) \}` with
+    coefficients :math:`c_A = (1.0 , 2.0, 3.0)` is summed with
+    :math:`B = \{ (0, 0), (1, 0), (2, 0) \}` with coefficients
+    :math:`c_B = (1.0, 5.0, 3.0)`. The union/sum multi-index set is
+    :math:`A \times B = \{ (0, 0), (1, 0), (2, 0), (0, 1) \}`.
+
+    The corresponding coefficients of the sum are:
+
+    - :math:`(0, 0)` appears in both operands, so the coefficient
+      is :math:`1.0 + 1.0 = 2.0`
+    - :math:`(1, 0)` appears in both operands, so the coefficient is
+      :math:`2.0 + 5.0 = 7.0`
+    - :math:`(2, 0)` only appears in the second operand, so the coefficient
+      is :math:`3.0`
+    - :math:`(0, 1)` only appears in the first operand, so the coefficient
+      is :math:`3.0`
+
+    or :math:`c_{A | B} = (2.0, 7.0, 3.0, 3.0)`.
+
+    Parameters
+    ----------
+    poly_1 : MultivariatePolynomialSingleABC
+        Left operand of the polynomial-polynomial addition expression.
+    poly_2 : MultivariatePolynomialSingleABC
+        Right operand of the polynomial-polynomial addition expression.
+    multi_index_sum : MultiIndexSet
+        The multi-index set of the summed polynomial.
+
+    Notes
+    -----
+    - ``multi_index_sum`` is assumed to be the result of unionizing
+      ``poly_1.multi_index`` and ``poly_2.multi_index``.
+    - The lengths of ``poly_1`` and ``poly_2`` are assumed to be the same.
+    - The function does not check whether the above assumptions are fulfilled;
+      the caller is responsible to make sure of that. If the assumptions are
+      not fulfilled, the function may not raise any exception but produce
+      the wrong results.
+    """
+    # Shape the coefficients; ensure they have the same dimension
+    coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
+
+    # Get the exponents
+    exponents_1 = poly_1.multi_index.exponents
+    exponents_2 = poly_2.multi_index.exponents
+    exponents_sum = multi_index_sum.exponents
+
+    # Create the output array
+    num_monomials = len(multi_index_sum)
+    num_polynomials = len(poly_1)
+    coeffs_poly_sum = np.zeros((num_monomials, num_polynomials))
+
+    # Get the matching indices
+    idx_1 = find_match_between(exponents_1, exponents_sum)
+    idx_2 = find_match_between(exponents_2, exponents_sum)
+
+    coeffs_poly_sum[idx_1, :] += coeffs_1[:, :]
+    coeffs_poly_sum[idx_2, :] += coeffs_2[:, :]
+
+    return coeffs_poly_sum
+
+
+def compute_coeffs_poly_prod_via_monomials(
+    poly_1: MultivariatePolynomialSingleABC,
+    poly_2: MultivariatePolynomialSingleABC,
+    multi_index_prod: MultiIndexSet,
+) -> np.ndarray:
+    r"""Compute the coefficients of a product polynomial via the monomials.
+
+    For example, suppose: :math:`A = \{ (0, 0) , (1, 0), (0, 1) \}` with
+    coefficients :math:`c_A = (1.0 , 2.0, 3.0)` is multiplied with
+    :math:`B = \{ (0, 0) , (1, 0) \}` with coefficients
+    :math:`c_B = (1.0 , 5.0)`. The product multi-index set is
+    :math:`A \times B = \{ (0, 0) , (1, 0), (2, 0), (0, 1), (1, 1) \}`.
+
+    The corresponding coefficients of the product are:
+
+    - :math:`(0, 0)` is coming from :math:`(0, 0) + (0, 0)`, the coefficient
+      is :math:`1.0 \times 1.0 = 1.0`
+    - :math:`(1, 0)` is coming from :math:`(0, 0) + (1, 0)` and
+      :math:`(1, 0) + (0, 0)`, the coefficient is
+      :math:`1.0 \times 5.0 + 2.0 \times 1.0 = 7.0`
+    - :math:`(2, 0)` is coming from :math:`(1, 0) + (1, 0)`, the coefficient
+      is :math:`2.0 \times 5.0 = 10.0`
+    - :math:`(0, 1)` is coming from :math:`(0, 1) + (0, 0)`, the coefficient
+      is :math:`3.0 \times 1.0 = 3.0`
+    - :math:`(1, 1)` is coming from :math:`(0, 1) + (1, 0)`, the coefficient
+      is :math:`3.0 \times 5.0 = 15.0`
+
+    or :math:`c_{A \times B} = (1.0, 7.0, 10.0, 3.0, 15.0)`.
+
+    Parameters
+    ----------
+    poly_1 : MultivariatePolynomialSingleABC
+        Left operand of the polynomial-polynomial multiplication expression.
+    poly_2 : MultivariatePolynomialSingleABC
+        Right operand of the polynomial-polynomial multiplication expression.
+    multi_index_prod : MultiIndexSet
+        The multi-index set of the product polynomial.
+
+    Notes
+    -----
+    - ``multi_index_prod`` is assumed to be the result of multiplying
+      ``poly_1.multi_index`` and ``poly_2.multi_index``.
+    - The lengths of ``poly_1`` and ``poly_2`` are assumed to be the same.
+    - The function does not check whether the above assumptions are fulfilled;
+      the caller is responsible to make sure of that. If the assumptions are
+      not fulfilled, the function may not raise any exception but produce
+      the wrong results.
+    """
+    # Shape the coefficients; ensure they have the same dimension
+    coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
+
+    # Pre-allocate output array placeholder
+    num_monomials = len(multi_index_prod)
+    num_polys = len(poly_1)
+    coeffs_prod = np.zeros((num_monomials, num_polys))
+
+    # Compute the coefficients (use pre-allocated placeholder as output)
+    # NOTE: indices may or may not be separate,
+    # use the multi-index instead of the one attached to grid
+    exponents_1 = poly_1.multi_index.exponents
+    exponents_2 = poly_2.multi_index.exponents
+    exponents_prod = multi_index_prod.exponents
+    compute_coeffs_poly_prod(
+        exponents_1,
+        coeffs_1,
+        exponents_2,
+        coeffs_2,
+        exponents_prod,
+        coeffs_prod,
+    )
+
+    return coeffs_prod
 
 
 def _create_scalar_poly(

@@ -9,7 +9,7 @@ for polynomials in the Lagrange basis.
 Background information
 ----------------------
 
-The relevant section of the
+The relevant section of the documentation on
 :ref:`fundamentals/polynomial-bases:Lagrange polynomials` contains a more
 detailed explanation regarding the polynomials in the Lagrange form.
 
@@ -98,7 +98,7 @@ def integrate_over_lagrange(
     :class:`numpy:numpy.ndarray`
         The integral value of the polynomial over the given domain.
     """
-    quad_weights = _compute_quad_weights_lagrange(poly, bounds)
+    quad_weights = _compute_quad_weights(poly, bounds)
 
     return quad_weights @ poly.coeffs
 
@@ -155,7 +155,8 @@ class LagrangePolynomial(MultivariatePolynomialSingleABC):
     generate_user_domain = staticmethod(lagrange_generate_user_domain)
 
 
-def _compute_quad_weights_lagrange(
+# --- Internal utility functions
+def _compute_quad_weights(
     poly: LagrangePolynomial,
     bounds: np.ndarray,
 ) -> np.ndarray:

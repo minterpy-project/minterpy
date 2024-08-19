@@ -18,18 +18,15 @@ from minterpy.core import Grid, MultiIndexSet
 from minterpy.utils.polynomials.chebyshev import (
     evaluate_monomials,
     evaluate_polynomials,
-    compute_poly_sum_coeffs,
 )
 from minterpy.utils.polynomials.interface import (
+    compute_coeffs_poly_sum_via_monomials,
+    compute_coeffs_poly_prod_via_monomials,
     get_grid_and_multi_index_poly_prod,
     get_grid_and_multi_index_poly_sum,
     PolyData,
-    scalar_add_monomial_based,
+    scalar_add_via_monomials,
     select_active_monomials,
-    shape_coeffs,
-)
-from minterpy.jit_compiled.canonical import (
-    compute_coeffs_poly_prod as compute_coeffs_poly_prod_canonical,
 )
 from minterpy.utils.verification import dummy, verify_domain
 from minterpy.services import is_scalar
@@ -38,80 +35,7 @@ from minterpy.services import is_scalar
 __all__ = ["ChebyshevPolynomial"]
 
 
-def add_chebyshev(
-    poly_1: "ChebyshevPolynomial",
-    poly_2: "ChebyshevPolynomial",
-) -> "ChebyshevPolynomial":
-    """Add two polynomial instances in the Chebyshev basis.
-
-    This is the concrete implementation of ``_add()`` method in the
-    ``MultivariatePolynomialSingleABC`` abstract base class specifically for
-    polynomials in the Chebyshev basis.
-
-    Parameters
-    ----------
-    poly_1 : ChebyshevPolynomial
-        Left operand of the addition expression.
-    poly_2 : ChebyshevPolynomial
-        Right operand of the addition expression.
-
-    Returns
-    -------
-    ChebyshevPolynomial
-        The sum of two polynomials in the Chebyshev basis; a new instance
-        of polynomial.
-
-    Notes
-    -----
-    - This function assumes: both polynomials must be in the Chebyshev basis,
-      they must be initialized, have the same dimension, their domains are
-      matching, and their length must be the same. These conditions are not
-      checked explicitly in this function.
-    """
-    # --- Get the ingredients of a summed polynomial in the Chebyshev basis
-    poly_data = _compute_poly_sum_data_chebyshev(poly_1, poly_2)
-
-    # --- Return a new instance
-    return ChebyshevPolynomial(**poly_data._asdict())
-
-
-def mul_chebyshev(
-    poly_1: "ChebyshevPolynomial",
-    poly_2: "ChebyshevPolynomial",
-) -> "ChebyshevPolynomial":
-    """Multiply two polynomial instances in the canonical basis.
-
-    This is the concrete implementation of ``_mul()`` method in the
-    ``MultivariatePolynomialSingleABC`` abstract class specifically for
-    polynomials in the canonical basis.
-
-    Parameters
-    ----------
-    poly_1 : CanonicalPolynomial
-        Left operand of the multiplication expression.
-    poly_2 : CanonicalPolynomial
-        Right operand of the multiplication expression.
-
-    Returns
-    -------
-    CanonicalPolynomial
-        The product of two polynomials in the canonical basis; a new instance
-        of polynomial.
-
-    Notes
-    -----
-    - This function assumes: both polynomials must be in canonical basis,
-      they must be initialized, have the same dimension and their domains
-      are matching, and the number of polynomials per instance are the same.
-      These conditions are not explicitly checked in this function.
-    """
-    # --- Get the ingredients of the product polynomial in the canonical basis
-    poly_prod_data = _compute_poly_prod_data_chebyshev(poly_1, poly_2)
-
-    # --- Return a new instance
-    return ChebyshevPolynomial(**poly_prod_data._asdict())
-
-
+# --- Evaluation
 def eval_chebyshev(
     chebyshev_polynomials: "ChebyshevPolynomial",
     xx: np.ndarray,
@@ -146,6 +70,85 @@ def eval_chebyshev(
     return results
 
 
+# --- Arithmetics (Addition, Multiplication)
+def add_chebyshev(
+    poly_1: "ChebyshevPolynomial",
+    poly_2: "ChebyshevPolynomial",
+) -> "ChebyshevPolynomial":
+    """Add two polynomial instances in the Chebyshev basis.
+
+    This is the concrete implementation of ``_add()`` method in the
+    ``MultivariatePolynomialSingleABC`` abstract base class specifically for
+    polynomials in the Chebyshev basis.
+
+    Parameters
+    ----------
+    poly_1 : ChebyshevPolynomial
+        Left operand of the addition expression.
+    poly_2 : ChebyshevPolynomial
+        Right operand of the addition expression.
+
+    Returns
+    -------
+    ChebyshevPolynomial
+        The product of two polynomials in the Chebyshev basis as a new instance
+        of polynomial in the Chebyshev basis.
+
+    Notes
+    -----
+    - This function assumes: both polynomials must be in the Chebyshev basis,
+      they must be initialized (coefficients are not ``None``),
+      have the same dimension and their domains are matching,
+      and the number of polynomials per instance are the same.
+      These conditions are not explicitly checked in this function; the caller
+      is responsible for the verification.
+    """
+    # --- Get the ingredients of a summed polynomial in the Chebyshev basis
+    poly_data = _compute_data_poly_sum(poly_1, poly_2)
+
+    # --- Return a new instance
+    return ChebyshevPolynomial(**poly_data._asdict())
+
+
+def mul_chebyshev(
+    poly_1: "ChebyshevPolynomial",
+    poly_2: "ChebyshevPolynomial",
+) -> "ChebyshevPolynomial":
+    """Multiply two polynomial instances in the Chebyshev basis.
+
+    This is the concrete implementation of ``_mul()`` method in the
+    ``MultivariatePolynomialSingleABC`` abstract class specifically for
+    polynomials in the Chebyshev basis.
+
+    Parameters
+    ----------
+    poly_1 : ChebyshevPolynomial
+        Left operand of the multiplication expression.
+    poly_2 : ChebyshevPolynomial
+        Right operand of the multiplication expression.
+
+    Returns
+    -------
+    ChebyshevPolynomial
+        The product of two polynomials in the Chebyshev basis as a new instance
+        of polynomial in the Chebyshev basis.
+
+    Notes
+    -----
+    - This function assumes: both polynomials must be in the Chebyshev basis,
+      they must be initialized (coefficients are not ``None``),
+      have the same dimension and their domains are matching,
+      and the number of polynomials per instance are the same.
+      These conditions are not explicitly checked in this function; the caller
+      is responsible for the verification.
+    """
+    # --- Get the ingredients of the product polynomial in the Chebyshev basis
+    poly_prod_data = _compute_data_poly_prod(poly_1, poly_2)
+
+    # --- Return a new instance
+    return ChebyshevPolynomial(**poly_prod_data._asdict())
+
+
 class ChebyshevPolynomial(MultivariatePolynomialSingleABC):
     """Concrete implementation of polynomials in the Chebyshev bases."""
     # --- Virtual Functions
@@ -161,7 +164,7 @@ class ChebyshevPolynomial(MultivariatePolynomialSingleABC):
     _pow = staticmethod(dummy)  # type: ignore
 
     # Arithmetics (polynomial-scalar)
-    _scalar_add = staticmethod(scalar_add_monomial_based)
+    _scalar_add = staticmethod(scalar_add_via_monomials)
 
     # Calculus
     _partial_diff = staticmethod(dummy)  # type: ignore
@@ -174,45 +177,44 @@ class ChebyshevPolynomial(MultivariatePolynomialSingleABC):
 
 
 # --- Internal utility functions
-def _compute_poly_sum_data_chebyshev(
+def _compute_data_poly_sum(
     poly_1: "ChebyshevPolynomial",
     poly_2: "ChebyshevPolynomial",
 ) -> PolyData:
     """Compute the data to create a summed polynomial in the Chebyshev basis.
 
+    Addition or subtraction of polynomials in the Chebyshev basis is based
+    on adding (resp. subtracting) the coefficients of the matching monomials
+    of the two polynomial operands (i.e., the matching elements of the two
+    multi-index sets). This procedure is the same as that of the canonical
+    polynomial.
+
     Parameters
     ----------
     poly_1 : ChebyshevPolynomial
-        Left operand of the addition expression.
+        Left operand of the addition/subtraction expression.
     poly_2 : ChebyshevPolynomial
-        Right operand of the addition expression.
+        Right operand of the addition/subtraction expression.
 
     Returns
     -------
     PolyData
-        A tuple with the main ingredients to construct a summed polynomial
-        in the Chebyshev basis.
+        The ingredients to construct a summed polynomial in the Chebyshev
+        basis.
 
     Notes
     -----
-    - Both polynomials are assumed to have the same dimension
-      and matching domains.
+    - Both polynomials are assumed to have the same type, the same spatial
+      dimension, and matching domains. These conditions have been made sure
+      upstream.
     """
     # --- Get the grid and multi-index set of the summed polynomial
     grd_sum, mi_sum = get_grid_and_multi_index_poly_sum(poly_1, poly_2)
 
     # --- Process the coefficients
-    # Shape the coefficients; ensure they have the same dimension
-    coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
-
-    # Compute the coefficients of the summed polynomial
-    coeffs_sum = compute_poly_sum_coeffs(
-        poly_1.multi_index.exponents,
-        coeffs_1,
-        poly_2.multi_index.exponents,
-        coeffs_2,
-        mi_sum.exponents,
-    )
+    # NOTE: indices may or may not be separate, use the summed multi-index set
+    #       instead of the one attached to grid
+    coeffs_sum = compute_coeffs_poly_sum_via_monomials(poly_1, poly_2, mi_sum)
 
     # --- Process the domains
     # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
@@ -229,7 +231,7 @@ def _compute_poly_sum_data_chebyshev(
     )
 
 
-def _compute_poly_prod_data_chebyshev(
+def _compute_data_poly_prod(
     poly_1: ChebyshevPolynomial,
     poly_2: ChebyshevPolynomial,
 ) -> PolyData:
@@ -250,13 +252,15 @@ def _compute_poly_prod_data_chebyshev(
 
     Notes
     -----
-    - Both polynomials are assumed to have the same dimension
-      and matching domains.
+    - Both polynomials are assumed to have the same spatial dimension and
+      matching domains. These conditions have been made sure upstream.
     """
     # --- Get the grid and multi-index set of the summed polynomial
     grd_prod, mi_prod = get_grid_and_multi_index_poly_prod(poly_1, poly_2)
 
     # --- Process the coefficients
+    # NOTE: indices may or may not be separate, use the summed multi-index set
+    #       instead of the one attached to grid
     coeffs_prod = _compute_coeffs_poly_prod(poly_1, poly_2, grd_prod, mi_prod)
 
     # --- Process the domains
@@ -282,6 +286,23 @@ def _compute_coeffs_poly_prod(
 ) -> np.ndarray:
     """Compute the coefficients of the product polynomial in Chebyshev basis.
 
+    In general, the coefficients of a product polynomial in the Chebyshev basis
+    are obtained by going through the Lagrange basis first.
+    Specifically, the Lagrange coefficients are computed by multiplying
+    the evaluation results of the Chebyshev polynomial operands on the product
+    Grid. Afterward, these coefficients are transformed to the Chebyshev
+    coefficients.
+
+    This is because the multiplication of two Chebyshev monomial does not
+    return the monomial of a higher degree. For instance, the Chebyshev
+    monomial of degree :math:`3` is not the result of multiplying Chebyshev
+    monomials of degree :math:`1` and :math:`2`.
+
+    However, if one of the polynomial operands has a scalar multi-index set
+    regardless of the grid, then the coefficients is obtained by multiplying
+    the coefficients of the non-scalar polynomial with the coefficient of
+    the scalar polynomial.
+
     Parameters
     ----------
     poly_1 : ChebyshevPolynomial
@@ -296,18 +317,54 @@ def _compute_coeffs_poly_prod(
     Returns
     -------
     :class:`numpy:numpy.ndarray`
-        The coefficients of the product polynomial between two polynomials.
+        The coefficients of the product between two polynomials.
     """
-    # --- Handle case of scalar polynomial (no transformation required)
-    # NOTE: Whether the underlying grids are scalar is irrelevant
-    is_scalar_poly = is_scalar(poly_1) or is_scalar(poly_2)
-    if is_scalar_poly:
-        return _compute_coeffs_scalar_poly_prod(
+    # --- Handle the case where no transformation is required
+    # If one of the operands has a scalar multi-index set
+    if is_scalar(poly_1.multi_index) or is_scalar(poly_2.multi_index):
+        return compute_coeffs_poly_prod_via_monomials(
             poly_1,
             poly_2,
             multi_index_prod,
         )
 
+    return _compute_coeffs_poly_prod_via_lagrange(
+        poly_1,
+        poly_2,
+        grid_prod,
+        multi_index_prod,
+    )
+
+
+def _compute_coeffs_poly_prod_via_lagrange(
+    poly_1: ChebyshevPolynomial,
+    poly_2: ChebyshevPolynomial,
+    grid_prod: Grid,
+    multi_index_prod: MultiIndexSet,
+) -> np.ndarray:
+    """Compute the coefficients of a product Chebyshev polynomial via Lagrange.
+
+    Parameters
+    ----------
+    poly_1 : ChebyshevPolynomial
+        Left operand of the multiplication expression.
+    poly_2 : ChebyshevPolynomial
+        Right operand of the multiplication expression.
+    grid_prod : Grid
+        The Grid associated with the product polynomial.
+    multi_index_prod : MultiIndexSet
+        The multi-index set of the product polynomial.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        The coefficients of the product polynomial in the Chebyshev basis.
+
+    Notes
+    -----
+    - Both polynomials are assumed to have the same spatial dimension and
+      matching domains. These conditions have been made sure upstream.
+    """
     # Compute the values of the operands at the unisolvent nodes
     lag_coeffs_1 = grid_prod(poly_1)
     lag_coeffs_2 = grid_prod(poly_2)
@@ -331,59 +388,3 @@ def _compute_coeffs_poly_prod(
         )
 
     return cheb_coeffs_prod
-
-
-def _compute_coeffs_scalar_poly_prod(
-    poly_1: ChebyshevPolynomial,
-    poly_2: ChebyshevPolynomial,
-    multi_index_prod: MultiIndexSet,
-) -> np.ndarray:
-    """Compute the coefficients of a summed constant polynomial.
-
-    Parameters
-    ----------
-    poly_1 : ChebyshevPolynomial
-        Left operand of the addition/subtraction expression.
-    poly_2 : ChebyshevPolynomial
-        Right operand of the addition/subtraction expression.
-    multi_index_prod : MultiIndexSet
-        The multi-index set of the product polynomial.
-
-    Returns
-    -------
-    :class:`numpy:numpy.ndarray`
-        The coefficients of the summed polynomial in the Newton basis.
-
-    Notes
-    -----
-    - The function is used when at least one of ``poly_1`` and ``poly_2`` is
-      a constant polynomial.
-    - For addition/subtraction involving a constant polynomial, the procedure
-      to compute the coefficients of a polynomial sum in the canonical basis
-      is used, i.e., find matching index term and add the coefficients and
-      therefore, avoid the use of transformation (a special case).
-    """
-    # Shape the coefficients; ensure they have the same dimension
-    coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
-
-    # Pre-allocate output array placeholder
-    num_monomials = len(multi_index_prod)
-    num_polys = len(poly_1)
-    coeffs_prod = np.zeros((num_monomials, num_polys))
-
-    # Compute the coefficients (use pre-allocated placeholder as output)
-    # NOTE: indices may or may not be separate,
-    # use the multi-index instead of the one attached to grid
-    exponents_1 = poly_1.multi_index.exponents
-    exponents_2 = poly_2.multi_index.exponents
-    exponents_prod = multi_index_prod.exponents
-    compute_coeffs_poly_prod_canonical(
-        exponents_1,
-        coeffs_1,
-        exponents_2,
-        coeffs_2,
-        exponents_prod,
-        coeffs_prod,
-    )
-
-    return coeffs_prod
