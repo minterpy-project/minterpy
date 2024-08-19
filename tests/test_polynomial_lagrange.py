@@ -115,24 +115,22 @@ class TestSubtraction:
         assert np.all(coeffs_ref == poly_sum_2.coeffs)
 
 
-def test_exponentiation(rand_poly_mnp_lag):
-    """Test general exponentiation.
-
-    Notes
-    -----
-    - Lagrange polynomials of degree 0 is a constant scalar polynomial and
-      exponentiation is allowed. TODO: this should not be allowed in the
-      future.
-    """
+def test_mul_poly(rand_poly_mnp_lag):
+    """Test general polynomial multiplication; not implemented."""
     # Get a random Lagrange polynomial instance
     poly = rand_poly_mnp_lag
 
-    if poly.multi_index.poly_degree == 0:
-        poly_exp = poly**3
-        assert poly_exp == poly * poly * poly
-    else:
-       with pytest.raises(NotImplementedError):
-           _ = poly**3
+    with pytest.raises(NotImplementedError):
+        _ = poly * poly
+
+
+def test_exponentiation(rand_poly_mnp_lag):
+    """Test general exponentiation."""
+    # Get a random Lagrange polynomial instance
+    poly = rand_poly_mnp_lag
+
+    with pytest.raises(NotImplementedError):
+        _ = poly**3
 
 
 def test_integrate_over_bounds_invalid_shape(
