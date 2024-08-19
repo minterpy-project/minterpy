@@ -15,6 +15,15 @@ from minterpy.transformations import LagrangeToCanonical, LagrangeToNewton
 from minterpy.utils.multi_index import make_complete
 
 
+def test_evaluation(rand_poly_mnp_lag):
+    """Test the evaluation of an instance of Lagrange polynomial."""
+    # Generate random query points
+    xx = -1 + 2 * np.random.rand(100, rand_poly_mnp_lag.spatial_dimension)
+
+    with pytest.raises(NotImplementedError):
+        _ = rand_poly_mnp_lag(xx)
+
+
 class TestAddition:
     """All tests related to scalar addition for Lagrange polynomial instances.
     """

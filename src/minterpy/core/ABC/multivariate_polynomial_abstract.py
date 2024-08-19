@@ -416,38 +416,6 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         pass
 
-    # --- Concrete implementations of operations
-    @staticmethod
-    def _scalar_mul(
-        poly: "MultivariatePolynomialSingleABC",
-        scalar: Union[SCALAR, np.ndarray],
-    ) -> "MultivariatePolynomialSingleABC":
-        """Multiply the polynomial by a (real) scalar value.
-
-        Parameters
-        ----------
-        scalar : Union[SCALAR, np.ndarray]
-            The real scalar value to multiply the polynomial by.
-            Multiple scalars may be specified as an array as long as the length
-            is consistent with the length of the polynomial instance.
-
-        Returns
-        -------
-        MultivariatePolynomialSingleABC
-            The multiplied polynomial.
-
-        Notes
-        -----
-        - This is a concrete implementation applicable to all concrete
-          implementations of polynomial due to the universal rule of
-          scalar-polynomial multiplication.
-        """
-        self_copy = deepcopy(poly)
-        # inplace is safe due to deepcopy above
-        self_copy._coeffs *= scalar
-
-        return self_copy
-
     # --- Constructors
     def __init__(
         self,
@@ -873,19 +841,52 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         # Multiplication by a real scalar number
         if is_real_scalar(other):
-            return self._scalar_mul(self, other)
+            return _scalar_mul(self, other)
 
         # Verify the operands before conducting multiplication
         poly_1, poly_2 = self._verify_operands(other, operation="*")
 
-        # If one of the operands is constant, avoid multi-index set operation
-        # if is_scalar(poly_1):
-        #     return self._scalar_mul(poly_2, poly_1.coeffs)
-        # elif is_scalar(poly_2):
-        #     return self._scalar_mul(poly_1, poly_2.coeffs)
-        # else:
-        # Rely on the subclass concrete implementation (static method)
         return self._mul(poly_1, poly_2)
+
+    def __truediv__(self, other: SCALAR) -> "MultivariatePolynomialSingleABC":
+        """Divide an instance of polynomial with a real scalar number (``/``).
+
+        Parameters
+        ----------
+        other : Union[MultivariatePolynomialSingleABC, SCALAR]
+            The right operand of the (true) division expression,
+            a real scalar number.
+
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            An instance of polynomial, the result of (true) scalar division
+            of a polynomial.
+        """
+        if is_real_scalar(other):
+            return _scalar_truediv(self, other)
+
+        return self._div(self, other)
+
+    def __floordiv__(self, other: SCALAR) -> "MultivariatePolynomialSingleABC":
+        """Divide an instance of polynomial with a real scalar number (``//``).
+
+        Parameters
+        ----------
+        other : Union[MultivariatePolynomialSingleABC, SCALAR]
+            The right operand of the (floor) division expression,
+            a real scalar number.
+
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            An instance of polynomial, the result of (floor) scalar division
+            of a polynomial.
+        """
+        if is_real_scalar(other):
+            return _scalar_floordiv(self, other)
+
+        return self._div(self, other)
 
     def __pow__(self, power: int):
         """Take the polynomial instance to the given power.
@@ -1013,7 +1014,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         """
         # Multiplication by a real scalar number
         if is_real_scalar(other):
-            return self._scalar_mul(self, other)
+            return _scalar_mul(self, other)
 
         # Right-sided multiplication with other types is not explicitly
         # supported; it will rely on the left operand '__mul__()' method
@@ -1594,6 +1595,102 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         poly_1, poly_2 = self._match_dims(other)
 
         return poly_1, poly_2
+
+
+def _scalar_mul(
+    poly: MultivariatePolynomialSingleABC,
+    scalar: Union[SCALAR, np.ndarray],
+) -> MultivariatePolynomialSingleABC:
+    """Multiply the polynomial by a (real) scalar value.
+
+    Parameters
+    ----------
+    poly : MultivariatePolynomialSingleABC
+        The polynomial instance to be multiplied.
+    scalar : Union[SCALAR, np.ndarray]
+        The real scalar value to multiply the polynomial by.
+        Multiple scalars may be specified as an array as long as the length
+        is consistent with the length of the polynomial instance.
+
+    Returns
+    -------
+    MultivariatePolynomialSingleABC
+        The multiplied polynomial.
+
+    Notes
+    -----
+    - This is a concrete implementation applicable to all concrete
+      implementations of polynomial due to the universal rule of
+      scalar-polynomial multiplication.
+    """
+    poly_copy = deepcopy(poly)
+    poly_copy.coeffs *= scalar
+
+    return poly_copy
+
+
+def _scalar_truediv(
+    poly: MultivariatePolynomialSingleABC,
+    other: Union[SCALAR, np.ndarray],
+) -> MultivariatePolynomialSingleABC:
+    """True divide the polynomial by a real scalar value.
+
+    Parameters
+    ----------
+    poly : MultivariatePolynomialSingleABC
+        The polynomial instance to be divided.
+    scalar : Union[SCALAR, np.ndarray]
+        The real scalar value to divide the polynomial by.
+        Multiple scalars may be specified as an array as long as the length
+        is consistent with the length of the polynomial instance.
+
+    Returns
+    -------
+    MultivariatePolynomialSingleABC
+        The divided polynomial.
+
+    Notes
+    -----
+    - This is a concrete implementation applicable to all concrete
+      implementations of polynomial due to the universal rule of
+      polynomial-scalar division.
+    """
+    poly_copy = deepcopy(poly)
+    poly_copy.coeffs /= other
+
+    return poly_copy
+
+
+def _scalar_floordiv(
+    poly: MultivariatePolynomialSingleABC,
+    other: Union[SCALAR, np.ndarray],
+) -> MultivariatePolynomialSingleABC:
+    """Floor divide the polynomial by a real scalar value.
+
+    Parameters
+    ----------
+    poly : MultivariatePolynomialSingleABC
+        The polynomial instance to be divided.
+    scalar : Union[SCALAR, np.ndarray]
+        The real scalar value to divide the polynomial by.
+        Multiple scalars may be specified as an array as long as the length
+        is consistent with the length of the polynomial instance.
+
+    Returns
+    -------
+    MultivariatePolynomialSingleABC
+        The divided polynomial.
+
+    Notes
+    -----
+    - This is a concrete implementation applicable to all concrete
+      implementations of polynomial due to the universal rule of
+      polynomial-scalar division.
+    """
+    poly_copy = deepcopy(poly)
+    poly_copy.coeffs //= other
+
+    return poly_copy
 
 
 def _has_consistent_number_of_polys(
