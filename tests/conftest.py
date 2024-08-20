@@ -507,6 +507,29 @@ def multi_index_mnp_pair(spatial_dim_pair, poly_degree_pair, lp_degree_pair):
 
 
 @pytest.fixture
+def rand_poly_mnp_all_pair(
+    poly_class_all,
+    multi_index_mnp_pair,
+    num_polynomials,
+):
+    """Create a random polynomial instances of each concrete class except
+    Lagrange with a complete multi-index set.
+    """
+    # Get the multi-index sets
+    mi_1, mi_2 = multi_index_mnp_pair
+
+    # Generate random coefficients
+    coeffs_1 = np.random.rand(len(mi_1), num_polynomials)
+    coeffs_2 = np.random.rand(len(mi_2), num_polynomials)
+
+    # Create a pair of polynomial instances
+    poly_1 = poly_class_all(mi_1, coeffs_1)
+    poly_2 = poly_class_all(mi_2, coeffs_2)
+
+    return poly_1, poly_2
+
+
+@pytest.fixture
 def rand_poly_mnp_no_lag_pair(
     poly_class_no_lag,
     multi_index_mnp_pair,
@@ -531,7 +554,7 @@ def rand_poly_mnp_no_lag_pair(
 
 @pytest.fixture
 def poly_mnp_pair_diff_dim(
-        poly_class_all,
+    poly_class_all,
     SpatialDimension,
     PolyDegree,
     LpDegree,

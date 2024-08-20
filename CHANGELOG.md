@@ -26,8 +26,8 @@
   As coefficients are of floating type, the comparison is carried out exactly
   without any tolerance specifications.
 - Polynomial-(real)scalar multiplication is now supported for polynomial
-  instances of all concrete classes. The implementation includes left-side,
-  right-side, and in-place multiplication.
+  instances of all concrete classes. The implementation includes left-side and
+  right-side multiplication
 - All polynomial instances now has the method `has_matching_domain()` method
   to check if a given instance has matching internal and user domains with
   another instance. The two polynomials do not have to be on the same basis.
@@ -89,6 +89,9 @@
 - A new public method `is_compatible()` is introduced in the `Grid`
   class to verify compatibility between two grid instances
   based on their generating functions and points.
+- Instances of all polynomial bases may now be divided by a real scalar number.
+  Both the `/` (true division) and `//` (floor division) operators are
+  supported. 
 
 ### Fixed
 
