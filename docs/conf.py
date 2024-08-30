@@ -40,6 +40,7 @@ extensions = [
     "sphinx.ext.autosectionlabel",
     "sphinxcontrib.bibtex",
     "myst_nb",
+    "sphinx_design",
 ]
 
 
@@ -103,6 +104,8 @@ myst_enable_extensions = [
    "amsmath",
    "dollarmath",  # Enable LaTeX-style dollar syntax for math.
 ]
+# Allow the notebook-based documentation to be built a bit longer
+nb_execution_timeout = 120
 
 # -- Options for HTML output -------------------------------------------------
 
