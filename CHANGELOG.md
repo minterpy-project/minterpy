@@ -92,6 +92,11 @@
 - Instances of all polynomial bases may now be divided by a real scalar number.
   Both the `/` (true division) and `//` (floor division) operators are
   supported. 
+- Overhauled the "Getting Started" section in the documentation to include
+  a Quickstart Guide for Minterpy and six in-depth tutorials.
+  The tutorials cater to both beginner and advanced levels,
+  starting from scratch and gradually introducing sophisticated
+  Minterpy features.
 
 ### Fixed
 
