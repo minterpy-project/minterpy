@@ -19,8 +19,8 @@ from sphinx.util.inspect import safe_getattr
 # -- Project information -----------------------------------------------------
 
 project = "minterpy"
-copyright = "2022, Minterpy development team"
-author = "Uwe Hernandez Acosta"
+copyright = "2022, Minterpy Development Team"
+author = "Minterpy Development Team"
 
 version = get_distribution(project).version
 
@@ -73,17 +73,17 @@ default_role = "autolink"
 autosectionlabel_prefix_document = True
 
 # Math configurations
-math_eqref_format = 'Eq. ({number})'
+math_eqref_format = "Eq. ({number})"
 
 # --- ToDo  options
 
-# Display todos by setting to True
-todo_include_todos = True
+# Display todos (don't display for public)
+todo_include_todos = False
 
 # --- Autodoc customization
 
 # Don't sort the API elements alphabetically; instead, follow the source
-autodoc_member_order = 'bysource'
+autodoc_member_order = "bysource"
 
 # Don't expand/evaluate the default value in function signatures
 autodoc_preserve_defaults = True
@@ -101,8 +101,8 @@ autosummary_imported_members = True
 
 # --- MyST-NB options
 myst_enable_extensions = [
-   "amsmath",
-   "dollarmath",  # Enable LaTeX-style dollar syntax for math.
+    "amsmath",
+    "dollarmath",  # Enable LaTeX-style dollar syntax for math.
 ]
 # Allow the notebook-based documentation to be built a bit longer
 nb_execution_timeout = 120
@@ -118,17 +118,17 @@ html_title = f"Minterpy {version[0:3]}"
 
 html_baseurl = "https://minterpy.readthedocs.io/en/latest/"
 
-
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path: List[str] = []
+html_static_path: List[str] = ["assets/supported-by"]
 
-html_favicon = './assets/favicon.ico'
-html_logo = './assets/minterpy-logo.png'
+html_favicon = "./assets/favicon.ico"
+html_logo = "./assets/Wordmark-color.png"
 
 
 # --- Custom directives -------------------------------------------------------
+
 
 class ClassAutosummary(Autosummary):
     """Create a summary of class attributes, properties, and methods.
@@ -165,9 +165,7 @@ class ClassAutosummary(Autosummary):
                 continue
             if documenter.objtype == typ:
                 items.append(name)
-        public = [
-            x for x in items if x in include_public or not x.startswith("_")
-        ]
+        public = [x for x in items if x in include_public or not x.startswith("_")]
 
         return public, items
 
@@ -189,18 +187,14 @@ class ClassAutosummary(Autosummary):
             _, methods = self.get_members(app, c, "method", ["__init__"])
 
             self.content = [
-                f"~{cls}.{method}"
-                for method in methods
-                if not method.startswith("_")
+                f"~{cls}.{method}" for method in methods if not method.startswith("_")
             ]
 
         if "attributes" in self.options:
             _, attribs = self.get_members(app, c, "attribute")
 
             self.content = [
-                f"~{cls}.{attrib}"
-                for attrib in attribs
-                if not attrib.startswith("_")
+                f"~{cls}.{attrib}" for attrib in attribs if not attrib.startswith("_")
             ]
 
         if "properties" in self.options:
