@@ -92,7 +92,6 @@ pages:
     - rm -rf public
     - mkdir public
     - pip install -e .[docs]
-    - pip install jupyter
     - cd docs ; make html
     - cd ..
     - cp -r docs/build/html/* public/

@@ -42,7 +42,6 @@ to a broad field of computational challenges, including but not limited to:
 ``minterpy`` is an open-source Python package that makes it easily accessible
 and allows for further development and improvement by the Python community.
 
-
 Full table of contents
 ######################
 
@@ -54,8 +53,6 @@ Full table of contents
    Fundamentals <fundamentals/index>
    API Reference <api/index>
    Contributors <contributors/index>
-   Glossary <glossary>
-   Todo list <TODO>
 
 References
 ##########

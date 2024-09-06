@@ -1,53 +1,56 @@
-#############################
-Writing reStructuredText Docs
-#############################
+==================================
+Writing reStructuredText Documents
+==================================
 
-reStructuredText (reST) is the default markup language used by Sphinx,
-the documentation generator for the ``minterpy`` docs.
-Most content of the ``minterpy`` docs is written in reST.
+reStructuredText (reST) is the default markup language used by Sphinx for
+generating the documentation of the Minterpy project.
+The majority of content within the Minterpy documentation is composed of reST.
 
-This section docs the particularities of working
-with the reST-based docs in the ``minterpy`` documentation.
-It covers various features of the Sphinx documentation generator used
-in the docs and how they should be used.
+This page delves into the specifics of working with reST-based documents
+within the Minterpy project.
+It covers various features of the Sphinx documentation generator employed
+in the documentation and demonstrates their proper usage.
 
 .. seealso::
 
-   - Code-heavy documentation such as the ones found in :doc:`Getting Started </getting-started/index>`
-     and :doc:`/how-to/index` are written as `Jupyter notebooks`_.
-     The particularities of creating such documentation for the ``minterpy``
-     documentation can be found in :doc:`/contributors/contrib-docs/guidelines/ipynb-based-docs`.
-   - This section does not cover every single aspect and syntax of reST,
-     see `reStructuredText Primer`_ if you don't find what you need here.
-
-..
-    Page structure
-    ##############
-  - API (in-code) documentation, while also uses reST markup,
-     have its own particularities and styling.
-     Refer to the :doc:`/contributors/contrib-docs/guidelines/py-based-docs`
-     section for details.
+   - Documentation rich with code--akin to what is found in
+     :doc:`Getting Started </getting-started/index>`
+     and :doc:`/how-to/index` is written as `Jupyter notebooks`_.
+     The particularities of creating such documentation for the Minterpy
+     project are covered in :doc:`/contributors/contrib-docs/docs-ipynb`.
+   - Minterpy API documentation is authored directly into the Python source
+     code using docstrings. Although docstrings employ the reST markup
+     language, they possess distinct trains and stylistic conventions.
+     These specific aspects are discussed in detain in
+     :doc:`/contributors/contrib-docs/docs-docstrings`.
+   - This page does not exhaustively cover reST syntax and usage.
+     If you don't find what you need here,
+     please refer to the `reStructuredText Primer`_.
 
 80-Character width rule
-#######################
+=======================
 
-This rule might seem archaic as computer displays have no problem displaying
-more than 80 characters in a single line.
-However, long lines of text tend to be harder to read
-and limiting a line to 80 characters does improve readability.
-Besides, a lot of people prefer to work with half-screen windows.
+While it may appear updated to have a rule related to line length,
+given that modern computer screens can effectively display well over 80
+characters in a single line, there are still valid reasons for this guideline.
+Indeed, lines of text beyond 80 characters can become more challenging to read,
+and enforcing such a limit can enhance overall readability.
+Furthermore, many developers prefer to work within the confines of half-screen
+windows, thereby reinforcing the utility of this constraint.
 
-Consider the following best-practice recommendations:
+----
+
+The following are some best-practice recommendations to consider.
 
 .. tip::
 
-   - Try to maintain this rule when adding content to the documentation.
-     Set a vertical ruler line at the 80-character width in your text editor of choice;
-     this setting is almost universally available in any text editors.
-   - Like any rules, there are exceptions. For instance, code blocks, URLs, and
-     Sphinx roles and directives may extend beyond 80 characters
-     (otherwise, Sphinx can't parse them).
-     When in doubt, use common sense.
+   - Aim to comply with the 80-character rule when contributing to
+     the documentation.
+     Utilize the internal ruler feature at the 80-character mark in your
+     preferred text editor--this option is widely available in most editors.
+   - Remember, rules have exceptions. Code blocks, URLs, and Sphinx roles and
+     directives may occasionally extend beyond 80 characters for Sphinx
+     to properly parse them. When in doubt, use common sense.
 
 .. seealso::
 
@@ -58,15 +61,14 @@ Consider the following best-practice recommendations:
    - `Semantic Linefeeds`_ by Brandon Rhodes
 
 Admonitions
-###########
+============
 
 Sphinx provides support for a whole class of built-in `admonitions`_
 as a set of directives to render text inside a highlighted box.
 
-Available admonitions
-=====================
+.. rubric:: Available admonitions
 
-There are several types of admonitions that may be used in the ``minterpy``
+There are several types of admonitions that may be used in the Minterpy
 documentation:
 
 .. note::
@@ -104,27 +106,32 @@ documentation:
 
    Use the ``.. seealso::`` directive to create a see-also block.
 
-Consider the following best-practice recommendation:
+----
+
+The following are some best-practice recommendations to consider.
 
 .. tip::
 
-   - Use admonitions sparingly and judiciously in the ``minterpy`` docs
+   - Use admonitions sparingly and judiciously in the Minterpy documentation
      as they tend to obstruct the reading flow.
-     Besides, if used too often, readers may become immune to notes and warnings
-     and would simply ignore them.
+     Besides, if used too often, readers may become immune to notes
+     and warnings and would simply ignore them.
 
 Bibliographic citations
-#######################
+=======================
 
-A bibliographic citation is a special case of :ref:`cross-referencing <contributors/contrib-docs/guidelines/rest-based-docs:Cross-references>`.
-Specifically, it cross-references external scientific works
-such as articles, books, or reports.
-You need to include any relevant scientific works in the ``minterpy`` docs
-if and when applicable.
-This is typically the case when writing the :ref:`Fundamentals <fundamentals/index:Fundamentals of \`\`minterpy\`\`>` guide.
+A bibliographic citation is a special case of
+:ref:`cross-referencing <contributors/contrib-docs/docs-rest:Cross-references>`,
+aimed at cross-referencing external academic resources such as articles,
+books, or reports.
+It is crucial to incorporate relevant scientific works into the Minterpy
+documentation whenever suitable.
+This is predominantly applicable when writing the
+the :doc:`Fundamentals </fundamentals/index>`
+section of the documentation.
 
 Bibliography file
-=================
+-----------------
 
 The bibliographic entries are located in the bibliography file, a `BibTeX`_ file
 named ``refs.bib`` in the root ``docs`` directory.
@@ -145,7 +152,7 @@ For example, an article entry is written as follows:
     }
 
 Citations
-=========
+---------
 
 To cite an entry in a page, use ``:footcite:`` role followed by the entry key.
 For example:
@@ -177,15 +184,15 @@ will be rendered as:
    Spline-type interpolation is based on works of by Carl de Boor et al.\ :footcite:`DeBoor1972, DeBoor1977, DeBoor1978, DeBoor2010`.
 
 Displaying a list of references
-===============================
+-------------------------------
 
-In the ``minterpy`` documentation, a list of references is displayed
-for each page that contains bibliographic citations
-(as opposed to having a single page that lists everything).
-If a page contain bibliographic citations, the list of references
-should be displayed at the end of document
-using the ``.. footbibliography::`` directive.
-Use ``References`` as the first-level heading.
+In the minterpy documentation, each page that contains bibliographic citations
+should display its own list of references, rather than having a single page
+listing all references.
+If a page includes bibliographic citations, the list of references should be
+placed at the end of the document using the ``.. footbibliography::``
+directive.
+Use "References" as the second-level heading.
 
 For example:
 
@@ -194,35 +201,39 @@ For example:
    ...
 
    References
-   ##########
+   ==========
 
    .. footbibliography::
 
 
-which will be rendered as (``References`` heading is intentionally not displayed):
+which will be rendered as (``References`` heading is intentionally
+not displayed):
 
    .. footbibliography::
 
-Consider the following best-practice recommendations:
+----
+
+The following are some best-practice recommendations to consider.
 
 .. tip::
 
-   - When possible, always include the digital object identifier (`DOI`_) for each
-     entry in the bibliography file.
-   - Don't forget the backslash that precedes the space before ``:footcite:`` role;
-     It will suppress the space when rendered.
+   - When possible, always include the digital object identifier (`DOI`_)
+     for each entry in the bibliography file.
+   - Don't forget the backslash that precedes the space before
+     ``:footcite:`` role; it will suppress the space when rendered.
    - Display the list of references at the very end of each page that contains
      bibliographic citations.
    - Use ``References`` as the heading title of the list of references.
 
-Notes
-=====
+Implementation notes
+--------------------
 
-- Bibliographic citations in the ``minterpy`` documentation uses the `bibtex extension`_ for Sphinx.
+- Bibliographic citations in the Minterpy documentation uses
+  the `bibtex extension`_ for Sphinx.
 
 - The `bibtex extension documentation`_ recommends using ``footcite`` and
   ``footbibliography`` to create a *local* bibliography.
-  The ``minterpy`` documentation follows this recommendation.
+  The Minterpy documentation follows this recommendation.
 
   .. important::
 
@@ -230,18 +241,18 @@ Notes
      to avoid duplication issues.
 
 Code examples
-#############
+=============
 
-Use code examples to illustrate how ``minterpy`` programming elements might be
-used to achieve a certain goal. Depending on the length they might fall into
-different categories:
+Use code examples to illustrate how Minterpy programming elements can be used
+to achieve specific goals.
+Depending on their length, these examples can be categorized as follows:
 
-- Simple one-liner, in-line with the text (in-line code examples)
-- Short to long, self-contained examples used to illustrate a point or two
-  (code example blocks).
+- **In-line code examples**: Simple one-liners integrated into the text.
+- **Code example blocks**: Short to longer, self-contained examples used to
+  demonstrate a concept or solution.
 
 In-line code examples
-=====================
+---------------------
 
 Use the ``:code:`` role to put a code examples.
 For example:
@@ -255,7 +266,7 @@ will be rendered as:
     Load ``minterpy`` using :code:`import minterpy as mp`
 
 Code example blocks
-===================
+-------------------
 
 Code example blocks are written using the ``.. code-block::`` directive.
 For example:
@@ -276,12 +287,14 @@ will be rendered as:
 
        mi = mp.MultiIndexSet.from_degree(3, 2, 1)
 
+.. rubric:: Syntax highlighting
+
 Sphinx also supports syntax highlighting for various programming languages.
 Specify the language after the ``.. code-block::`` directive.
 Use the proper syntax highlighting when it is appropriate.
-Python code in the ``minterpy`` docs should be syntax-highlighted.
+Python code in the Minterpy docs should be syntax-highlighted.
 
-For example, the same code above should be written:
+For example, the same code above should have been written:
 
 .. code-block:: python
 
@@ -333,7 +346,7 @@ will be rendered as:
          [0 0 2]]
 
 Cross-referencing code blocks
-=============================
+-----------------------------
 
 Cross-referencing a code example block may be done via custom anchor (label).
 For instance, create an anchor for a code example to be cross-referenced later:
@@ -356,7 +369,7 @@ this will be rendered as:
       fx = lambda x: np.sin(x)
       fx_interpolator = mp.interpolate(fx, 1, 3)
 
-and can be cross-referenced using the ``:ref:`` directive.
+and can be cross-referenced using the ``:ref:`` role.
 For example:
 
 .. code-block:: rest
@@ -369,54 +382,56 @@ which will be rendered as:
 
 .. important::
 
-   Cross-referencing a code example block always requires a custom title.
+   Cross-referencing a code example block always requires a custom label.
 
-Consider the following best-practice recommendations:
+----
+
+The following are some best-practice recommendations to consider.
 
 .. tip::
 
-   - While double backticks and ``:code:`` role render the texts inside using
-     a fixed-width font, always use ``:code:`` role for displaying
-     inline code example for clarity.
-   - When available, always specify the language in the code example block for
-     syntax highlighting. Python code example in the ``minterpy`` docs
-     should be syntax highlighted.
-   - If you need to cross-reference a code example block, a custom label must be
-     defined and the label must be unique across the docs.
-     Always check for "duplicate labels" warning when building the docs.
-   - Assume people will copy and paste code blocks you write, perhaps with some
-     modifications, for their own use. Try to put code examples that make sense.
-   - Use common sense when it comes to the length of a code block.
-     A code block that is too long and doesn't have a narrative is hard to read
-     in the docs.
+   - Although double backticks and ``:code:`` role render text in a fixed-width
+     font, always use ``:code:`` role for displaying inline code example
+     for clarity.
+   - When possible, always specify the programming language in the code example
+     blocks to enable syntax highlighting. Python code examples in the Minterpy
+     documentation should always be syntax-highlighted.
+   - If you need to cross-reference a code example block, define a unique
+     custom label for it. Ensure that the label is unique across
+     the documentation, and check for "duplicate labels" warnings when building
+     the documentation.
+   - Keep in mind that users may copy and paste code blocks, potentially with
+     minor modifications. Make sure code examples are meaningful.
+   - Use common sense regarding the length of code blocks. Overly long code
+     blocks without accompanying narrative are difficult to read and understand
+     in the documentation.
 
 Cross-references
-################
+================
 
-The ``minterpy`` docs uses various types of cross-references (linking),
-including: external and internal cross-references, bibliographic citations, etc.
+The Minterpy documentation uses various types of cross-references, including
+external and internal links, bibliographic citations, and more.
 
 .. seealso::
 
-   There are various types of internal cross-references used in the ``minterpy``
-   documentation specific to documentation elements
-   (pages, section headings, images, equations, API elements, etc.).
-   This guideline covers pages, section headings, and API elements
-   cross-references;
-   other types of internal cross-referencing may be found in its own guideline.
+   The Minterpy documentation uses various types of internal cross-references
+   specific to documentation elements, such as pages, section headings, images,
+   equations, and API elements.
 
-External cross-references
-=========================
+   This guideline focuses on cross-references for pages, section headings, and
+   API elements; other types of internal cross-referencing are covered in
+   separate guidelines.
 
-External cross-references provide links to external resources,
-primarily to other pages on the web.
+External resources
+------------------
 
-The ``minterpy`` docs uses the `link-target`_ approach
-to cross-reference external resources.
-Using this approach, the link text that appears on a page is separated from
-the target that it points to.
-This allows for a cleaner documentation page source
-and target reuse (at least, within the same page).
+External cross-references link to external resources, typically other
+web pages.
+The Minterpy documentation uses the `link-target`_ approach for external
+cross-references.
+In this approach, the visible text link is separated from its target URL,
+resulting in cleaner source code and allowing for target reuse,
+at least within the same page.
 
 As an example:
 
@@ -433,11 +448,11 @@ which will be rendered as:
     The problem is well explained in this `Wikipedia article`_
     and also in a `DeepAI article`_.
 
-Page cross-references
-=====================
+Page
+----
 
-A whole documentation page (a single reST file) may be cross-referenced using
-the ``:doc:`` role.
+A whole documentation page (a single reST or Jupyter notebook file)
+may be cross-referenced using the ``:doc:`` role.
 The default syntax is:
 
 .. code-block:: rest
@@ -479,24 +494,26 @@ which will be rendered as:
 
 The target specification may be written in two different ways:
 
-- a document relative to the current document. For example.
-  ``:doc:ipynb-based-docs`` refers to the
-  :doc:`ipynb-based-docs` section of the docs contribution guidelines.
-- full path (relative to the root ``docs`` directory).
-  The example above is specified as a full path.
+- **Relative to the current document**: For example, ``:doc:docs-ipynb``
+  refers to the :doc:`docs-ipynb` section of the contribution guidelines.
+- **Full path** relative to the root ``docs`` directory: The same example above
+  can be specified using its full path relative to the ``docs`` directory.
 
 .. important::
 
     Don't forget to include the backslash in front of the directory name
     if it's specified in full path (relative to the root ``docs`` directory).
 
-Section headings cross-references
-=================================
+Section headings
+----------------
 
-Section headings within a page may be cross-referenced using the `:ref:` role.
-The ``minterpy`` documentation uses the `autosectionlabel`_ extension for Sphinx;
-this means that you don't need to explicitly label a heading before you can cross-reference it.
-Furthermore, all section heading labels are ensured to be unique.
+Section headings within a page may be cross-referenced using
+the ``:ref:`` role.
+The Mintepry documentation uses the `autosectionlabel`_ extension for Sphinx,
+which means that you don't need to manually label a heading before
+cross-referencing it.
+Additionally, all section heading labels are automatically ensured
+to be unique.
 
 The syntax to cross-reference a section heading is:
 
@@ -516,26 +533,26 @@ of the documentation contribution guidelines, type:
 
 .. code-block:: rest
 
-   To write math blocks in the ``minterpy`` documentation,
-   refer to :ref:`contributors/contrib-docs/guidelines/rest-based-docs:Mathematics blocks`.
+   To write math blocks in the Minterpy documentation,
+   refer to :ref:`contributors/contrib-docs/docs-rest:Mathematics blocks`.
 
 which will be rendered as:
 
-   To write math blocks in the ``minterpy`` documentation,
-   refer to :ref:`contributors/contrib-docs/guidelines/rest-based-docs:Mathematics blocks`.
+   To write math blocks in the Minterpy documentation,
+   refer to :ref:`contributors/contrib-docs/docs-rest:Mathematics blocks`.
 
 To replace the default title, type:
 
 .. code-block:: rest
 
-   To write math blocks in the ``minterpy`` documentation,
-   refer to the :ref:`relevant section <contributors/contrib-docs/guidelines/rest-based-docs:Mathematics blocks>`
+   To write math blocks in the Minterpy documentation,
+   refer to the :ref:`relevant section <contributors/contrib-docs/docs-rest:Mathematics blocks>`
    in the docs contribution guidelines.
 
 which will be rendered as:
 
-   To write math blocks in the ``minterpy`` documentation,
-   refer to the :ref:`relevant section <contributors/contrib-docs/guidelines/rest-based-docs:Mathematics blocks>`
+   To write math blocks in the Minterpy documentation,
+   refer to the :ref:`relevant section <contributors/contrib-docs/docs-rest:Mathematics blocks>`
    in the docs contribution guidelines.
 
 .. important::
@@ -544,16 +561,17 @@ which will be rendered as:
     specified using ``:ref:`` role. The path is always relative
     to the root ``docs`` directory.
 
-``minterpy`` API elements
-=========================
+Minterpy API elements
+---------------------
 
-Elements of the documented ``minterpy`` API (including modules, functions, classes,
-methods, attributes or properties) may be cross-referenced in the docs.
+Elements of the documented Minterpy API, including modules, functions, classes,
+methods, attributes or properties, may be cross-referenced within
+the documentation.
 The `Python domain`_ allows for cross-referencing most documented objects.
-Before you can cross-reference an API element,
-its documentation must be available in the :doc:`/api/index`.
+However, before an API element can be cross-referenced, its documentation
+must be available in the :doc:`/api/index`.
 
-Refer to the to the table below for some usages and examples.
+Refer to the table below for usage examples.
 
 =========  ==================  =========================================  =====================================
 Element    Role                Example                                    Rendered as
@@ -570,11 +588,11 @@ Attribute  :code:`py:attr:`    ``:py:attr:`.MultiIndexSet.exponents```    :py:at
     Precede the object identifier with a dot indicating that it is relative
     to the ``minterpy`` package.
 
-Other projects' documentation cross-references
-==============================================
+Other projects' documentation
+-----------------------------
 
-Documentation from other projects (say, ``NumPy``, ``Scipy``, or ``Matplolib``)
-may be cross-referenced in the ``minterpy`` documentation.
+Documentation from other projects (say, NumPy, SciPy, or Matplotlib)
+may be cross-referenced in the Minterpy documentation.
 
 To cross-reference a part or an API element from another project's docs,
 use the following syntax:
@@ -604,7 +622,9 @@ This functionality is provided by the `intersphinx`_ extension for Sphinx.
    Check the variable ``intersphinx_mapping`` inside the ``conf.py`` file
    of the Sphinx documentation for updated list of mappings.
 
-Consider the following best-practice recommendation:
+----
+
+The following are some best-practice recommendations to consider.
 
 .. tip::
 
@@ -613,158 +633,50 @@ Consider the following best-practice recommendation:
      of a page source. See the source of this page for example.
    - Try to be descriptive with what being cross-referenced; use custom link title
      if necessary.
+   - Limit the cross-references to the API elements from
+     the :doc:`Fundamentals </fundamentals/index>` section.
 
-..
-   - When you cross-reference a ``minterpy``  API element anywhere
-     in the documentation, try to provide a context on why the element
-     is being cross-referenced.
+Images
+======
 
-     For example, instead of writing:
-
-       Finally, we call the monomials :math:`x^\alpha = \prod_{i=1}^m x^{\alpha_i}_{i}`, :math:`\alpha \in A` the
-       *canonical basis* (see :py:class:`.CanonicalPolynomial`) of :math:`\Pi_{A}`.
-
-     use a :
-
-       Finally, we call the monomials :math:`x^\alpha = \prod_{i=1}^m x^{\alpha_i}_{i}`, :math:`\alpha \in A` the
-       *canonical basis* of :math:`\Pi_{A}`.
-
-       .. SEEALSO::
-
-          In ``minterpy``, the canonical polynomial basis is implemented as :py:class:`.CanonicalPolynomial` class.
-
-Glossary
-########
-
-The ``minterpy`` docs contains many specific terminologies coming
-from either mathematics, computer science, and the Python ecosystem.
-Moreover, ``minterpy`` also defines its own small set of terminologies related
-to its user interface and implementation.
-
-Glossary page
-=============
-
-The :doc:`/glossary` is a page within the ``minterpy`` docs that
-*briefly* defines all the terms that might be useful for users to know.
-Expanded definition, if any, may be cross-referenced in the definition.
-The Glossary page is accessible from all the pages of the ``minterpy``
-documentation.
-
-The ``minterpy`` docs uses the Sphinx `built-in Glossary`_ to create a glossary.
-A reST file named ``glossary.rst`` located in the root ``docs`` directory
-contains all the Glossary entries along with their brief definition.
-
-Glossary terms
-==============
-
-Add a new glossary entry in the ``glossary.rst``.
-
-For example, to add a glossary entry named *my term*, type:
-
-.. code-block:: rest
-
-    .. Glossary::
-       :sorted:
-
-       my term
-
-           Define the term briefly.
-           Create a cross-reference either internally or externally, if necessary.
-
-Cross-referencing glossary terms
-================================
-
-To cross-reference a glossary term used in the text, use the ``:term:`` role
-with the following syntax:
-
-.. code-block:: rest
-
-   :term:`a defined term`
-
-Replace ``a defined term``  with a term already defined in the Glossary.
-
-For example the entry *Chebyshev nodes* is already defined in the Glossary.
-To cross-reference this term in text, type:
-
-.. code-block:: rest
-
-   For :math:`\Omega = [-1, 1]`, a classic choice of sub-optimal nodes are the
-   :term:`Chebyshev nodes`.
-
-which will be rendered as:
-
-   For :math:`\Omega = [-1, 1]`, a classic choice of sub-optimal nodes are the
-   :term:`Chebyshev nodes`.
-
-By default, the text displayed is the term itself as defined in the Glossary.
-
-.. important::
-
-   The entry used in the cross-reference must match exactly with the one
-   in the Glossary.
-
-To replace the default title, use the following syntax:
-
-.. code-block::
-
-   :term:`custom term title <a defined term>`
+To add images to a reStructuredText document, use the ``.. image::`` directive.
 
 For example:
 
 .. code-block:: rest
 
-   For :math:`\Omega = [-1, 1]`, a classic choice of sub-optimal nodes are the
-   :term:`roots of Chebyshev polynomials <Chebyshev nodes>`.
+   .. image:: /assets/minterpy-logo.png
+      :width: 200
+      :alt: Minterpy Logo
 
 will be rendered as:
 
-   For :math:`\Omega = [-1, 1]`, a classic choice of sub-optimal nodes are the
-   :term:`roots of Chebyshev polynomials <Chebyshev nodes>`.
+.. image:: /assets/minterpy-logo.png
+   :width: 200
+   :alt: Minterpy Logo
 
-Consider the following best-practice recommendations:
+The path to the file is by default relative to the root source directory of
+the documentation (i.e., ``docs``).
 
-.. tip::
+Notice also the two options used in the snippet above:
 
-   Consider creating an entry in the :doc:`/glossary` page if a term you are using is:
-
-   - Specialized terms used in the general multivariate polynomial interpolation problems.
-   - Specialized terms used in the approach of ``minterpy``
-     (especially if they are related to its conventions).
-   - Other more general terms that would be useful to define so as to make
-     the docs more self-contained.
-
-   The following are the best-practice of writing an entry in the :doc:`/glossary`:
-
-   - One, two, or three sentences summary of what the entry is; don't be circular
-   - Use consistent capitalization
-   - Cross-reference other part of ``minterpy`` docs, when applicable,
-     to either:
-
-     - the :doc:`/getting-started/index` or :doc:`/how-to/index`
-       guides for usage examples of the term.
-     - the :doc:`Fundamentals </fundamentals/index>` guide for an expanded
-       definition or more theoretical explanation
-     - External resources (say, `Wikipedia`_) for a more general term
-       that is included for the sake of completeness.
-       Note that external resources may use different conventions
-       that without further explanation might lead to confusion.
-
-   - Put a new entry in the alphabetical order with the previous entries.
-     Though they all will be sorted when rendered,
-     it makes the documentation source code cleaner.
+- ``:width:``: This option is used to define image width in pixels.
+- ``:alt:``: This option is used to assign an alternative text
+  for screen readers.
 
 Mathematics
-###########
+===========
 
-In the ``minterpy`` docs,
-Sphinx is set to display mathematical notations using `MathJax`_.
-The MathJax library provides extensive support for LaTeX,
-*the* markup language for mathematics.
+In the Minterpy documentation,
+Sphinx is configured to display mathematical notations using `MathJax`_.
+The MathJax library offers comprehensive support for LaTeX,
+*the* markup language for writing mathematics.
 
 Inline mathematics
-==================
+------------------
 
 Inline mathematics can be written using the ``:math:`` role.
+
 For example:
 
 .. code-block:: rest
@@ -776,9 +688,10 @@ will be rendered as:
     :math:`A_{m,n,p} = \left\{\boldsymbol{\alpha} \in \mathbb{N}^m | \|\boldsymbol{\alpha}\|_p \leq n, m,n \in \mathbb{N}, p \geq 1 \right\}` is the multi-index set.
 
 Mathematics blocks
-==================
+------------------
 
 Mathematics blocks can be written using the ``.. math::`` directive.
+
 For example:
 
 .. code-block:: rest
@@ -795,10 +708,11 @@ will be rendered as:
        N_{\boldsymbol{\alpha}}(\boldsymbol{x}) = \prod_{i=1}^{M} \prod_{j=0}^{\alpha_i - 1} (x_i - p_{j,i}), \; \boldsymbol{\alpha} \in A
 
 Numbering and cross-referencing
-===============================
+-------------------------------
 
-A math block in a page may be numbered if they are labelled using the ``:label:`` option
-within the ``.. math::`` directive.
+A math block in a page may be numbered if they are labelled using
+the ``:label:`` option within the ``.. math::`` directive.
+
 For example:
 
 .. code-block:: rest
@@ -839,7 +753,9 @@ The rendered page will display the equation number as a hyperlink:
    Use instead the nearest or the most relevant heading to the equation
    as an anchor.
 
-Consider the following best-practice recommendations:
+----
+
+The following are some best-practice recommendations to consider.
 
 .. tip::
 
@@ -857,7 +773,7 @@ Consider the following best-practice recommendations:
      Use, instead, the nearest or the most relevant heading to the equation
      as an anchor.
      See the guidelines of
-     :ref:`section heading cross-references <contributors/contrib-docs/guidelines/rest-based-docs:Section headings cross-references>`
+     :ref:`section heading cross-references <contributors/contrib-docs/docs-rest:Section headings>`
      for details.
 
 .. important::
