@@ -26,7 +26,7 @@ Installation
 
        .. code-block:: bash
 
-          git clone https://gitlab.hzdr.de/interpol/minterpy.git
+          git clone -b dev https://github.com/casus/minterpy
 
        After moving inside the cloned directory, the package can be installed
        from source with ``pip``:
