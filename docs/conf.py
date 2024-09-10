@@ -43,7 +43,6 @@ extensions = [
     "sphinx_design",
 ]
 
-
 # Intersphinx configuration
 intersphinx_mapping = {
     "neps": ("https://numpy.org/neps", None),
@@ -121,14 +120,31 @@ html_baseurl = "https://minterpy.readthedocs.io/en/latest/"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path: List[str] = ["assets/supported-by"]
+html_static_path: List[str] = ["assets/supported-by", "assets/styles"]
 
 html_favicon = "./assets/favicon.ico"
 html_logo = "./assets/Wordmark-color.png"
 
+html_css_files = [
+    'styles.css',
+]
+
+# Hide the "Show Source" button
+html_show_sourcelink = False
+
+# Theme options
+html_theme_options = {
+    "icon_links": [
+            {
+                "name": "GitHub",
+                "url": "https://github.com/casus/minterpy",
+                "icon": "fa-brands fa-square-github",
+                "type": "fontawesome",
+            },
+    ],
+}
 
 # --- Custom directives -------------------------------------------------------
-
 
 class ClassAutosummary(Autosummary):
     """Create a summary of class attributes, properties, and methods.

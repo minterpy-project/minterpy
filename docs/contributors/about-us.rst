@@ -2,7 +2,12 @@
 About Us
 ========
 
-Minterpy is developed and maintained by a small team at the Center
+Minterpy is an optimized Python implementation of
+the multidimensional polynomial interpolation prototype algorithm called MIP,
+which was originally developed in MATLAB
+by Hecht et al.\ :footcite:`Hecht2020`.
+
+It is developed and maintained by a small team at the Center
 for Advanced Systems Understanding (`CASUS`_), an institute of the
 Helmholtz-Zentrum Dresden-Rossendorf (`HZDR`_).
 
@@ -137,6 +142,10 @@ by the Saxony State Parliament.
    </table>
 
    <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+.. rubric:: Reference
+
+.. footbibliography::
 
 .. _CASUS: https://www.casus.science
 .. _HZDR: https://www.hzdr.de/
