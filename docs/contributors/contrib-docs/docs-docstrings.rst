@@ -451,7 +451,7 @@ directly appear on the documentation page for that module.
 
 For instance the docstring written for
 the :py:mod:`minterpy.polynomials.lagrange_polynomial` is directly rendered
-into the built documentation :doc:`/api/polyBases/lagrange`. You can verify
+into the built documentation :doc:`/api/polynomials/lagrange`. You can verify
 that the docstrings of the module is the source of the rendered documentation.
 
 .. _Numpy Style Python Docstrings: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html

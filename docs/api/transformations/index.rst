@@ -2,7 +2,7 @@
 Polynomial Transformation Classes
 #################################
 
-An :doc:`abstract base class </api/core/ABC/trafoABC>` is provided
+An :doc:`abstract base class </api/core/ABC/abc-transformation>` is provided
 as the blueprint from which every implementation of a polynomial basis
 transformation class must be derived.
 

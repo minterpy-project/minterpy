@@ -1,6 +1,6 @@
-##################
-Transformation ABC
-##################
+=======================
+transformation_abstract
+=======================
 
 .. currentmodule:: minterpy.core.ABC.transformation_abstract
 

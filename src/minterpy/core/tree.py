@@ -1,8 +1,17 @@
 """
-Module defining the base class for MultiIndexTree.
+This module contains the `MultiIndexTree` class.
+
+The `MultiIndexTree` class encapsulates all the components
+(organized in a tree-like structure) necessary to perform a multidimensional
+(multivariate) divided difference scheme (DDS).
+This scheme is used to transform polynomial coefficients
+from the Lagrange basis to the Newton basis.
+
+For more details, see :doc:`/fundamentals/multivariate-dds`.
+
+----
+
 """
-
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

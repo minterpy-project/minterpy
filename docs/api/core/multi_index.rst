@@ -1,6 +1,6 @@
-################
-Multi-Index Sets
-################
+===========
+multi_index
+===========
 
 .. automodule:: minterpy.core.multi_index
 

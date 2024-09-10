@@ -1,7 +1,17 @@
 """
-The submodule `ABC` is part of `minterpy`.
+The ABC sub-package of Minterpy.
 
-It contains all AbstractBaseClasses used in `minterpy`.
+The sub-package contains all the important abstract base classes of Minterpy.
+
++----------------------------------------------+-----------------------------------------------------------------+
+| Module                                       | Description                                                     |
++==============================================+=================================================================+
+| :py:mod:`.multivariate_polynomial_abstract`  | Define all polynomial bases                                     |
++----------------------------------------------+-----------------------------------------------------------------+
+| :py:mod:`.transformation_abstract`           | Define all transformations from polynomial basis to another     |
++----------------------------------------------+-----------------------------------------------------------------+
+| :py:mod:`.operator_abstract`                 | Define all transformation operators between polynomial bases    |
++----------------------------------------------+-----------------------------------------------------------------+
 """
 
 __all__ = []

@@ -1,8 +1,14 @@
 """
-Abstract base class for defining transformations from one polynomial basis to another.
+This module contains the abstract base class for defining the transformation
+from one polynomial basis to another.
 
-This module provides the abstract base class for polynomial basis transformations (origin to target) from
-which all concrete implentations are derived.
+All transformation classes, each of which defines the transformation from
+one polynomial basis (the origin) to another (the target), must inherit
+from this abstract base class to ensure consistent behaviors across all
+instances.
+
+----
+
 """
 
 from abc import ABC, abstractmethod

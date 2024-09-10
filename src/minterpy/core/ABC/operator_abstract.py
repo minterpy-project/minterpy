@@ -1,8 +1,17 @@
 """
-Abstract base class for defining transformation operators from one polynomial basis to another.
+This module contains the abstract base class for defining the transformation
+operators between two polynomial bases.
 
-This module provides the abstract base class for polynomial basis transformation operators from which all concrete
-implentations are derived.
+All transformation operator classes, regardless of
+their implementation differences, must inherit from this abstract base class
+to ensure consistent behavior across them.
+
+An instance of :py:class:`.OperatorABC` is an attribute/property of
+the :py:class:`.TransformationABC` class; the instance is responsible
+for performing the actual transformation when applied
+to an array of coefficients.
+
+----
 
 .. todo::
     "inverse" property useful?

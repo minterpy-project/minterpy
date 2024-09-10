@@ -1,6 +1,6 @@
-############
-Operator ABC
-############
+=================
+operator_abstract
+=================
 
 .. currentmodule:: minterpy.core.ABC.operator_abstract
 

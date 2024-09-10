@@ -31,7 +31,7 @@ public modules, classes, methods, and functions.
    :hidden:
 
    interpolation
-   core/index
+   Core <core/index>
    polynomials/index
    transformations/index
    transformation-operators/index

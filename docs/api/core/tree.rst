@@ -1,6 +1,6 @@
-################
-Multi-index tree
-################
+====
+tree
+====
 
 .. currentmodule:: minterpy.core.tree
 
