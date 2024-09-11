@@ -1,6 +1,6 @@
-####################
-From Chebyshev Basis
-####################
+=========
+chebyshev
+=========
 
 .. currentmodule:: minterpy.transformations.chebyshev
 

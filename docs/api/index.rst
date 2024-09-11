@@ -8,23 +8,24 @@ API Reference
 This section of the documentation provides a comprehensive overview of the available Minterpy
 public modules, classes, methods, and functions.
 
-+-----------------------------------------------------------------------+-----------------------------------------------------------------+
-| Module / Sub-package                                                  | Description                                                     |
-+=======================================================================+=================================================================+
-| :doc:`/api/interpolation`                                             | A high-level interface to conveniently create interpolants      |
-+-----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :doc:`Core </api/core/index>`                                         | Top domain-specific classes and abstract classes                |
-+-----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :doc:`Polynomial Bases </api/polynomials/index>`                      | Concrete classes representing polynomial bases                  |
-+-----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :doc:`Transformations </api/transformations/index>`                   | Concrete classes for polynomial basis transformations           |
-+-----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :doc:`Transformation operators </api/transformation-operators/index>` | Concrete classes for polynomial basis transformation operators  |
-+-----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :doc:`Extras </api/extras/index>`                                     | Features that are not part of the core package                  |
-+-----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :doc:`Internal </api/core/index>`                                     | Utility modules and low-level numerical routines                |
-+-----------------------------------------------------------------------+-----------------------------------------------------------------+
++--------------------------------------------------------+-----------------------------------------------------------------+
+| Module / Sub-package                                   | Description                                                     |
++========================================================+=================================================================+
+| :py:mod:`Interpolation <minterpy.interpolation>`       | A high-level interface to conveniently create interpolants      |
++--------------------------------------------------------+-----------------------------------------------------------------+
+| :py:mod:`Core <minterpy.core>`                         | Top domain-specific classes and abstract classes                |
++--------------------------------------------------------+-----------------------------------------------------------------+
+| :py:mod:`Polynomial Bases <minterpy.polynomials>`      | Concrete classes representing polynomial bases                  |
++--------------------------------------------------------+-----------------------------------------------------------------+
+| :py:mod:`Transformations <minterpy.transformations>`   | Concrete classes for polynomial basis transformations           |
++--------------------------------------------------------+-----------------------------------------------------------------+
+| :py:mod:`Transformation operators <minterpy.schemes>`  | Concrete classes for polynomial basis transformation operators  |
++--------------------------------------------------------+-----------------------------------------------------------------+
+| :py:mod:`Extras <minterpy.extras>`                     | Features that are not part of the core package                  |
++--------------------------------------------------------+-----------------------------------------------------------------+
+| :doc:`Internal </api/internal/index>`                  | Utility modules and low-level numerical routines                |
++--------------------------------------------------------+-----------------------------------------------------------------+
+
 
 .. toctree::
    :maxdepth: 4
@@ -33,7 +34,7 @@ public modules, classes, methods, and functions.
    interpolation
    Core <core/index>
    Polynomials Bases <polynomials/index>
-   transformations/index
+   Basis Transformations <transformations/index>
    transformation-operators/index
    extras/index
    internal/index

@@ -1,6 +1,6 @@
-####################
-From Lagrange basis
-####################
+========
+lagrange
+========
 
 .. currentmodule:: minterpy.transformations.lagrange
 

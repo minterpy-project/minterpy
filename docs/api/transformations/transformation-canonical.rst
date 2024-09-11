@@ -1,6 +1,6 @@
-####################
-From Canonical Basis
-####################
+=========
+canonical
+=========
 
 .. currentmodule:: minterpy.transformations.canonical
 

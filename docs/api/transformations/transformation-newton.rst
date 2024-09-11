@@ -1,6 +1,6 @@
-#################
-From Newton Basis
-#################
+======
+newton
+======
 
 .. currentmodule:: minterpy.transformations.newton
 
