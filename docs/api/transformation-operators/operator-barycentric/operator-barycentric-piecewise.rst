@@ -1,6 +1,6 @@
-##############################
-Barycentric Piecewise Operator
-##############################
+============================
+BarycentricPiecewiseOperator
+============================
 
 .. currentmodule:: minterpy.schemes.barycentric.operators
 

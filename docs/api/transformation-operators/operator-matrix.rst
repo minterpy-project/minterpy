@@ -1,8 +1,10 @@
-###############
-Matrix Operator
-###############
+===============
+matrix_operator
+===============
 
 .. currentmodule:: minterpy.schemes.matrix_operator
+
+.. automodule:: minterpy.schemes.matrix_operator
 
 .. autoclass:: MatrixOperator
    :members:

@@ -11,6 +11,10 @@ the :py:class:`.TransformationABC` class; the instance is responsible
 for performing the actual transformation when applied
 to an array of coefficients.
 
+This abstraction layer ensures a uniform interface across all concrete classes.
+A key feature is the overloading of the matrix multiplication operator (``@``),
+which plays a central role in the transformation process.
+
 ----
 
 .. todo::
