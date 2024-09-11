@@ -1,6 +1,6 @@
-########################
-Lagrange Polynomial Base
-########################
+===================
+lagrange_polynomial
+===================
 
 .. currentmodule:: minterpy.polynomials.lagrange_polynomial
 

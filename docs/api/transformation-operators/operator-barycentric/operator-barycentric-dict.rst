@@ -1,6 +1,6 @@
-#########################
-Barycentric Dict Operator
-#########################
+=======================
+BarycentricDictOperator
+=======================
 
 .. currentmodule:: minterpy.schemes.barycentric.operators
 

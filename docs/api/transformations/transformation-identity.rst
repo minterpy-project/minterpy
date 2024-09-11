@@ -1,6 +1,6 @@
-#######################
-Identity Transformation
-#######################
+========
+identity
+========
 
 .. currentmodule:: minterpy.transformations.identity
 

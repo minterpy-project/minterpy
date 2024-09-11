@@ -1,6 +1,6 @@
-###########################
-Multivariate polynomial ABC
-###########################
+================================
+multivariate_polynomial_abstract
+================================
 
 .. currentmodule:: minterpy.core.ABC.multivariate_polynomial_abstract
 

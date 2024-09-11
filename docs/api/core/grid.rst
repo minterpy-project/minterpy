@@ -1,6 +1,6 @@
-####
-Grid
-####
+====
+grid
+====
 
 .. currentmodule::minterpy.core.grid
 

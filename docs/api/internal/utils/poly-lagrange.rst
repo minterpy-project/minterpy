@@ -1,6 +1,6 @@
-#######################################
-Polynomials: Lagrange Utility Functions
-#######################################
+====================
+polynomials.lagrange
+====================
 
 .. automodule:: minterpy.utils.polynomials.lagrange
    :members:

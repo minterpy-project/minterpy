@@ -1,8 +1,24 @@
 """
-Module for the generating points (which provides the unisolvent nodes).
+This module contains the implementation of the `Grid` class.
+
+The `Grid` class represents the interpolation grid on which interpolating
+polynomials live.
+
+Background information
+======================
+
+An interpolation grid is defined by its multi-index set, generating points,
+and generating function. The generating function, when provided,
+defines the generating points, which are the one-dimensional interpolation
+nodes in each dimension. The multi-index set, together with
+the generating points, specifies the unisolvent nodes---these are the points
+where the function to be interpolated is evaluated.
+
+More detailed background information can be found in
+:doc:`/fundamentals/interpolation-in-unisolvent-nodes`.
 
 How-To Guides
--------------
+=============
 
 The relevant section of the :doc:`docs </how-to/grid/index>`
 contains several how-to guides related to instances of the `Grid` class

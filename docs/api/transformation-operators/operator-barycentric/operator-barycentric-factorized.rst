@@ -1,10 +1,10 @@
-####################
-Barycentric Operator
-####################
+=============================
+BarycentricFactorisedOperator
+=============================
 
 .. currentmodule:: minterpy.schemes.barycentric.operators
 
-.. autoclass:: BarycentricOperator
+.. autoclass:: BarycentricFactorisedOperator
    :members:
    :show-inheritance:
    :private-members:

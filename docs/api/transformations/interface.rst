@@ -1,6 +1,6 @@
-################
-Helper functions
-################
+=========
+interface
+=========
 
 .. currentmodule:: minterpy.transformations.interface
 

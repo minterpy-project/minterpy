@@ -1,6 +1,6 @@
-######################
-Verification Functions
-######################
+============
+verification
+============
 
 .. automodule:: minterpy.utils.verification
    :members:

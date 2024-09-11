@@ -1,6 +1,6 @@
-#########################
-Canonical Polynomial Base
-#########################
+====================
+canonical_polynomial
+====================
 
 .. currentmodule:: minterpy.polynomials.canonical_polynomial
 

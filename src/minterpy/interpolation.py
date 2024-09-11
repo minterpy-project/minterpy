@@ -1,10 +1,24 @@
-"""
-The `interpolation` module is part of `minterpy`.
+"""A top-level module with interfaces to conveniently create interpolants.
 
-It contains:
-    - `interpolate`, the main interpolation function.
-    - `Interpolant`, data type which acts like the function which interpolates a given function.
-    - `Interpolator`, data type which builds all relevant parts for an interpolation and caches them.
+The main purpose of Minterpy is to interpolate given functions provided as
+Python Callables.
+This top-level module provides a convenient function named `interpolate`,
+which outputs a Callable of the type `Interpolant`.
+This represents the given function as a multidimensional (Newton) polynomial.
+
+Moreover, it is also possible to construct an `Interpolator` instance.
+This object precomputes and caches all the necessary ingredients
+for the interpolation of any functions.
+
++-------------------+---------------------------------------------------------+
+| Function / Class  | Description                                             |
++===================+=========================================================+
+| `interpolate`     | Interpolate a given function                            |
++-------------------+---------------------------------------------------------+
+| `Interpolant`     | Class that represents an interpolated function          |
++-------------------+---------------------------------------------------------+
+| `Interpolator`    | Class that represents interpolators for given functions |
++-------------------+---------------------------------------------------------+
 """
 from typing import Callable, Optional
 

@@ -1,6 +1,6 @@
-########################################
-JIT-Compiled Functions: Common Functions
-########################################
+======
+common
+======
 
 .. automodule:: minterpy.jit_compiled.common
    :members:

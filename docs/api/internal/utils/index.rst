@@ -1,14 +1,15 @@
-###############################
-Non-compiled Internal Functions
-###############################
+==============
+minterpy.utils
+==============
 
 .. automodule:: minterpy.utils
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
    Arrays <arrays>
-   Multi-Index exponents <multi-index>
+   Multi-Index Exponents <multi-index>
    Polynomials: Lagrange <poly-lagrange>
    Polynomials: Newton <poly-newton>
    Polynomials: Canonical <poly-canonical>

@@ -1,5 +1,5 @@
 """
-Module with implementation routines for manipulating multi-indices exponents.
+This module contains numerical routines for manipulating multi-indices.
 """
 from __future__ import annotations
 
@@ -824,9 +824,9 @@ def multiply_indices(
            [0, 1],
            [1, 1],
            [2, 1]])
-    >>> my_indices_4 = np.empty((0, 2))
+    >>> my_indices_4 = np.empty((0, 2), dtype=INT_DTYPE)
     >>> multiply_indices(my_indices_3, my_indices_4)  # empty set
-    array([], shape=(0, 2), dtype=int32)
+    array([], shape=(0, 2), dtype=int64)
     """
     # --- Adjust the dimension
     m_1 = indices_1.shape[1]

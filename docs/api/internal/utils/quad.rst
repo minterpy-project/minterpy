@@ -1,6 +1,6 @@
-####################
-Quadrature Functions
-####################
+====
+quad
+====
 
 .. automodule:: minterpy.utils.quad
    :members:

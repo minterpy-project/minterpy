@@ -1,10 +1,11 @@
 """
-Abstract base class for polynomial regression classes.
+This module contains the abstract base class for polynomial regression classes.
 
-This module contains the abstract base class from which all concrete
-implementations of polynomial regression classes should be created.
-Such an abstract class ensures all the polynomial regression classes shares a set of common interface,
-while their implementation may differs or additional methods or attributes may be defined.
+All concrete implementations of the polynomial regression classes must inherit
+from this abstract base class.
+This abstract class ensures that all polynomial regression classes share
+a common interface, while allowing for variations in their implementation
+and the addition of specific methods or attributes.
 """
 
 import abc

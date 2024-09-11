@@ -109,10 +109,10 @@ def eval_newton_monomials_multiple(
     -----
     - This is a Numba-accelerated function.
     - The memory footprint for evaluating the Newton monomials iteratively
-       with a single query point at a time is smaller than evaluating all
-       the Newton monomials on all query points.
-       However, when multiplied with multiple coefficient sets,
-       this approach will be faster.
+      with a single query point at a time is smaller than evaluating all
+      the Newton monomials on all query points.
+      However, when multiplied with multiple coefficient sets,
+      this approach will be faster.
     - Results are stored in the placeholder arrays. The function returns None.
     """
 

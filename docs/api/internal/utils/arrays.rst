@@ -1,6 +1,6 @@
-########################
-Arrays Utility Functions
-########################
+======
+arrays
+======
 
 .. automodule:: minterpy.utils.arrays
    :members:

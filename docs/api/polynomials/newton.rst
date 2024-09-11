@@ -1,6 +1,6 @@
-######################
-Newton Polynomial Base
-######################
+=================
+newton_polynomial
+=================
 
 .. currentmodule:: minterpy.polynomials.newton_polynomial
 

@@ -5,7 +5,7 @@ The `MultiIndexSet` class represents the multi-index sets of exponents that
 define the multivariate polynomials regardless of their chosen basis.
 
 Background information
-----------------------
+======================
 
 Multi-index sets :math:`A \subseteq \mathbb{N}^m` generalize the notion of
 polynomial degree to multiple dimensions :math:`m \in \mathbb{N}`.
@@ -13,7 +13,7 @@ More detailed background information can be found in
 :ref:`fundamentals/polynomial-bases:Multi-index sets and polynomial degree`.
 
 Implementation details
-----------------------
+======================
 
 An instance of `MultiIndexSet` class consists of two main properties:
 the set of exponents and the :math:`l_p`-degree (i.e., the :math:`p` in the
@@ -25,7 +25,7 @@ and ``m`` corresponds to the *spatial dimension* of the set.
 The :math:`l_p`-degree is always given as a scalar of type `float`.
 
 How-To Guides
--------------
+=============
 
 The relevant section of the :doc:`docs </how-to/multi-index-set/index>`
 contains several how-to guides related to instances of the `MultiIndexSet`

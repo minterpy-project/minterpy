@@ -1,8 +1,16 @@
 """
-Abstract base class for the various polynomial base classes.
+This module contains the abstract base classes for all polynomial base classes.
 
-This module contains the abstract base classes, from which all concrete implementations of polynomial classes shall subclass.
-This ensures that all polynomials work with the same interface, so futher features can be formulated without referencing the concrete polynomial implementation. See e.g. :PEP:`3119` for further explanations on that topic.
+All concrete implementations of polynomial bases must inherit from
+the abstract base class. This ensures a consistent interface across
+all polynomials. As a result, additional features can be developed without
+needing to reference specific polynomial classes,
+while allowing each concrete class to manage its own implementation details.
+
+See e.g. :PEP:`3119` for further explanations on the topic.
+
+----
+
 """
 import abc
 import numpy as np

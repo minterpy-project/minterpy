@@ -2,7 +2,7 @@
 
 .. raw:: html
 
-   <div style="visibility: hidden;margin:-30px">
+   <div style="visibility: hidden;margin:-2.5em">
 
 ======================
 Minterpy Documentation
@@ -21,7 +21,7 @@ lifting the curse of dimensionality from interpolation tasks.
 .. grid:: 3
    :margin: 0
    :padding: 0
-   :gutter: 0
+   :gutter: 2
 
    .. grid-item-card:: New to Minterpy?
       :columns: 12 6 6 4
@@ -30,6 +30,13 @@ lifting the curse of dimensionality from interpolation tasks.
 
       Discover what Minterpy and multidimensional polynomials can do for you
       through a series of practical tutorials.
+      +++
+      .. button-ref:: getting-started/index
+         :ref-type: myst
+         :class: landing-page-button
+         :expand:
+
+         :octicon:`rocket;2em` **Getting Started**
 
    .. grid-item-card:: Familiar with Minterpy?
       :columns: 12 6 6 4
@@ -37,6 +44,13 @@ lifting the curse of dimensionality from interpolation tasks.
       :shadow: None
 
       Learn how to accomplish specific tasks with Minterpy.
+      +++
+      .. button-ref:: how-to/index
+         :ref-type: myst
+         :class: landing-page-button
+         :expand:
+
+         :octicon:`book;2em` **How-To Guides**
 
    .. grid-item-card:: What's behind the scene?
       :columns: 12 6 6 4
@@ -44,74 +58,60 @@ lifting the curse of dimensionality from interpolation tasks.
       :shadow: None
 
       Gain a deeper understanding of the mathematics behind Minterpy.
+      +++
+      .. button-ref:: fundamentals/index
+         :ref-type: myst
+         :class: landing-page-button
+         :expand:
 
-.. grid:: 3
-
-    .. grid-item-card:: :octicon:`rocket;2em` Getting Started
-      :columns: 12 6 6 4
-      :link: getting-started/index
-      :link-type: doc
-      :link-alt: Getting started guides
-      :class-card: getting-started-docs, sd-border-0
-      :shadow: None
-
-    .. grid-item-card:: :octicon:`book;2em` How-To Guides
-      :columns: 12 6 6 4
-      :link: how-to/index
-      :link-type: doc
-      :class-card: how-to-docs, sd-border-0
-      :shadow: None
-
-    .. grid-item-card:: :octicon:`mortar-board;2em` Fundamentals
-      :columns: 12 6 6 4
-      :link: fundamentals/index
-      :link-type: doc
-      :class-card: fundamentals-docs, sd-border-0
-      :shadow: None
+         :octicon:`mortar-board;2em` **Fundamentals**
 
 .. grid:: 3
    :margin: 0
    :padding: 0
-   :gutter: 0
+   :gutter: 2
 
    .. grid-item-card:: Need API reference?
+      :columns: 12 6 6 4
       :class-card: sd-border-0
       :shadow: None
 
       Explore the public API documentation of Minterpy.
+      +++
+      .. button-ref:: api/index
+         :ref-type: myst
+         :class: landing-page-button
+         :expand:
+
+         :octicon:`gear;2em` **API Reference**
 
    .. grid-item-card:: Want to contribute?
+      :columns: 12 6 6 4
       :class-card: sd-border-0
       :shadow: None
 
       Get involved in the Minterpy development---contributions are
       always welcome!
+      +++
+      .. button-ref:: contributors/index
+         :ref-type: myst
+         :class: landing-page-button
+         :expand:
+
+         :octicon:`git-pull-request;2em` **Contributors Guide**
 
    .. grid-item-card::
+      :columns: 12 6 6 4
       :class-card: sd-border-0
       :shadow: None
 
-.. grid:: 3
-
-    .. grid-item-card:: :octicon:`gear;2em` API Reference
-      :link: api/index
-      :link-type: doc
-      :class-card: api-docs, sd-border-0
-      :shadow: None
-
-    .. grid-item-card:: :octicon:`git-pull-request;2em` Contributors Guide
-      :link: contributors/index
-      :link-type: doc
-      :class-card: contributors-docs, sd-border-0
-      :shadow: None
-
-    .. grid-item-card::
-       :class-card: sd-border-0
-       :shadow: None
+|
 
 Minterpy is continuously extended and improved, with new functionalities added
 to address the bottlenecks involving interpolations
 in various computational tasks.
+
+|
 
 .. toctree::
    :maxdepth: 3
