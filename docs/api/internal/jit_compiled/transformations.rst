@@ -1,6 +1,6 @@
-##################################################
-JIT-Compiled Functions: Polynomial Transformations
-##################################################
+===============
+transformations
+===============
 
 .. automodule:: minterpy.jit_compiled.transformations
    :members:

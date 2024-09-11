@@ -26,7 +26,6 @@ public modules, classes, methods, and functions.
 | :doc:`Internal </api/internal/index>`                  | Utility modules and low-level numerical routines                |
 +--------------------------------------------------------+-----------------------------------------------------------------+
 
-
 .. toctree::
    :maxdepth: 4
    :hidden:

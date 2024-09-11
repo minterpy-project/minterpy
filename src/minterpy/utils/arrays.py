@@ -1,3 +1,7 @@
+"""
+This module contains common numerical routines that operate on NumPy arrays.
+"""
+
 from __future__ import annotations
 
 from typing import Union

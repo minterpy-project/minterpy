@@ -1,3 +1,7 @@
+"""
+This module contains utility functions related to quadrature.
+"""
+
 from typing import Callable
 
 import numpy as np

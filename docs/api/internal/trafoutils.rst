@@ -1,6 +1,6 @@
-################################
-Transformation utility functions
-################################
+================================
+Transformation Utility Functions
+================================
 
 .. automodule:: minterpy.transformations.utils
    :members:

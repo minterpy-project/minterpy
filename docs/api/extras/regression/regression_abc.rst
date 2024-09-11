@@ -1,8 +1,8 @@
 .. currentmodule:: minterpy.extras.regression.regression_abc
 
-##############
-Regression ABC
-##############
+==============
+regression_abc
+==============
 
 .. automodule:: minterpy.extras.regression.regression_abc
 

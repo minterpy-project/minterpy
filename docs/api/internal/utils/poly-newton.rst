@@ -1,6 +1,6 @@
-#####################################
-Polynomials: Newton Utility Functions
-#####################################
+==================
+polynomials.newton
+==================
 
 .. automodule:: minterpy.utils.polynomials.newton
    :members:

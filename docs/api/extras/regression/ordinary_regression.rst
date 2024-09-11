@@ -1,6 +1,6 @@
-##############################
-Ordinary Polynomial Regression
-##############################
+===================
+ordinary_regression
+===================
 
 .. currentmodule:: minterpy.extras.regression.ordinary_regression
 

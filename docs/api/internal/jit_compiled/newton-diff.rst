@@ -1,6 +1,6 @@
-##############################################
-JIT-Compiled Functions: Newton Differentiation
-##############################################
+===========
+newton_diff
+===========
 
 .. currentmodule:: minterpy.jit_compiled.newton.diff
 

@@ -1,6 +1,6 @@
-#######################################
-Multi-Index Exponents Utility Functions
-#######################################
+===========
+multi_index
+===========
 
 .. automodule:: minterpy.utils.multi_index
    :members:

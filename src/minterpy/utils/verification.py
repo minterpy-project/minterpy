@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-""" functions for input verification
+"""
+This module contains functions to verify relevant Minterpy quantities.
 """
 
 from typing import Any, List, Optional, Sized, Tuple, Type, TypeVar, Union
