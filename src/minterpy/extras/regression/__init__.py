@@ -1,7 +1,13 @@
 """
-The submodule `regression` is part of `minterpy-extras`.
+This sub-package provides polynomial regressions as an extra to Minterpy.
 
-It contains functions and classes for multivariate polynomial regression.
++---------------------------------+--------------------------------------------------------------------+
+| Module                          | Description                                                        |
++=================================+====================================================================+
+| :py:mod:`.regression_abc`       | The abstract base class for all polynomial regression classes      |
++---------------------------------+--------------------------------------------------------------------+
+| :py:mod:`.ordinary_regression`  | The concrete implementation of the ordinary polynomial regression  |
++---------------------------------+--------------------------------------------------------------------+
 """
 
 __all__ = []

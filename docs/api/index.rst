@@ -21,7 +21,7 @@ public modules, classes, methods, and functions.
 +--------------------------------------------------------+-----------------------------------------------------------------+
 | :py:mod:`Transformation Operators <minterpy.schemes>`  | Concrete classes for polynomial basis transformation operators  |
 +--------------------------------------------------------+-----------------------------------------------------------------+
-| :py:mod:`Extras <minterpy.extras>`                     | Features that are not part of the core package                  |
+| :doc:`Extras </api/extras/index>`                      | Features that are not part of the core package                  |
 +--------------------------------------------------------+-----------------------------------------------------------------+
 | :doc:`Internal </api/internal/index>`                  | Utility modules and low-level numerical routines                |
 +--------------------------------------------------------+-----------------------------------------------------------------+
@@ -31,10 +31,10 @@ public modules, classes, methods, and functions.
    :maxdepth: 4
    :hidden:
 
-   interpolation
+   Interpolation <interpolation>
    Core <core/index>
    Polynomials Bases <polynomials/index>
    Basis Transformations <transformations/index>
    Transformation Operators <transformation-operators/index>
-   extras/index
+   Extras <extras/index>
    internal/index

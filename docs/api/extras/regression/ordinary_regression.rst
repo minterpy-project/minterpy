@@ -1,8 +1,8 @@
-.. currentmodule:: minterpy.extras.regression.ordinary_regression
-
 ##############################
 Ordinary Polynomial Regression
 ##############################
+
+.. currentmodule:: minterpy.extras.regression.ordinary_regression
 
 .. automodule:: minterpy.extras.regression.ordinary_regression
 
