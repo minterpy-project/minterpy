@@ -1,6 +1,6 @@
-#########################
-Chebyshev Polynomial Base
-#########################
+====================
+chebyshev_polynomial
+====================
 
 .. currentmodule:: minterpy.polynomials.chebyshev_polynomial
 

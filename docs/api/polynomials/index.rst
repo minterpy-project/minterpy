@@ -1,13 +1,14 @@
-#######################
-Polynomial Base classes
-#######################
+====================
+minterpy.polynomials
+====================
 
-As the most general case, minterpy provides an abstract base class as the blueprint on which every implementation of a polynomial class must be based on. Additionally, three concrete implementations are build-in to provide the underlying data types for the interpolation procedure.
+.. automodule:: minterpy.polynomials
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
-   lagrange
-   newton
-   canonical
-   chebyshev
+   Lagrange <lagrange>
+   Newton <newton>
+   Canonical <canonical>
+   Chebyshev <chebyshev>

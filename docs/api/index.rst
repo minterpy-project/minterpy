@@ -13,7 +13,7 @@ public modules, classes, methods, and functions.
 +=======================================================================+=================================================================+
 | :doc:`/api/interpolation`                                             | A high-level interface to conveniently create interpolants      |
 +-----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :doc:`Core </api/core/index>`                                         | Top Domain-specific classes and abstract classes                |
+| :doc:`Core </api/core/index>`                                         | Top domain-specific classes and abstract classes                |
 +-----------------------------------------------------------------------+-----------------------------------------------------------------+
 | :doc:`Polynomial Bases </api/polynomials/index>`                      | Concrete classes representing polynomial bases                  |
 +-----------------------------------------------------------------------+-----------------------------------------------------------------+
@@ -32,7 +32,7 @@ public modules, classes, methods, and functions.
 
    interpolation
    Core <core/index>
-   polynomials/index
+   Polynomials Bases <polynomials/index>
    transformations/index
    transformation-operators/index
    extras/index
