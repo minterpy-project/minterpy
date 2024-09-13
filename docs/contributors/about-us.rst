@@ -92,6 +92,9 @@ and code reviews.
         <td align="center"><a href="https://www.casus.science/team-members/daniel-kotik/"><img src="https://gitlab.hzdr.de/uploads/-/system/user/avatar/577/avatar.png" width="100px;" alt=""/><br /><sub><b>Daniel Kotik</b></sub></a><br />
             <a href="#infra-kotik79" title="Infrastructure">🚇</a>
         </td>
+        <td align="center"><a href="https://www.casus.science/de-de/team-members/1119-2/"><img src="https://www.casus.science/backend/wp-content/uploads/2020/10/Michal_Bajda_.jpg" width="68px;" alt=""/><br /><sub><b>Michał Bajda</b></sub></a><br />
+            <a href="#logo-michal" title="Logo design">🎨</a>
+        </td>
       </tr>
    </table>
 
@@ -113,7 +116,7 @@ who have left their mark on the project for its betterment.
             <a href="https://gitlab.hzdr.de/interpol/minterpy/-/issues?scope=all&state=all&author_username=thekke48" title="Bug reports">🐛</a>
             <a href="https://gitlab.hzdr.de/dashboard/merge_requests?scope=all&state=all&reviewer_username=thekke48" title="Reviewed Merge Requests">👀</a><br />
         </td>
-        <td align="center"><a href="https://gitlab.hzdr.de/MrMinimal64"><img src="https://gitlab.hzdr.de/assets/no_avatar-849f9c04a3a0d0cea2424ae97b27447dc64a7dbfae83c036c45b403392f0e8ba.png" width="100px;" alt=""/><br /><sub><b>Jannik Michelfeit</b></sub></a><br />
+        <td align="center"><a href="https://github.com/jannikmi"><img src="https://avatars.githubusercontent.com/u/15111305?v=4" width="100px;" alt=""/><br /><sub><b>Jannik Michelfeit</b></sub></a><br />
             <a href="https://gitlab.hzdr.de/interpol/minterpy/-/commits/dev?author=Jannik%20Michelfeit" title="Code">💻</a>
         </td>
       </tr>

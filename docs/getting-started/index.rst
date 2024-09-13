@@ -60,7 +60,7 @@ manipulation such arithmetic and calculus operations.
 To learn more about these features of Minterpy, follow the series of tutorials
 below. We recommend that you go through these tutorials in sequence.
 
-.. list-table:: Available Getting Started Guides (In-Depth qTutorials)
+.. list-table:: Available Getting Started Guides (In-Depth Tutorials)
    :header-rows: 1
 
    * - If you want to...

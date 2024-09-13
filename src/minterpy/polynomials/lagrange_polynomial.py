@@ -10,7 +10,7 @@ Background information
 ----------------------
 
 The relevant section of the documentation on
-:ref:`fundamentals/polynomial-bases:Lagrange polynomials` contains a more
+:ref:`fundamentals/polynomial-bases:Lagrange basis` contains a more
 detailed explanation regarding the polynomials in the Lagrange form.
 
 Implementation details
