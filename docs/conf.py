@@ -41,6 +41,7 @@ extensions = [
     "sphinxcontrib.bibtex",
     "myst_nb",
     "sphinx_design",
+    "sphinx.ext.viewcode",
 ]
 
 # Intersphinx configuration
@@ -73,6 +74,9 @@ autosectionlabel_prefix_document = True
 
 # Math configurations
 math_eqref_format = "Eq. ({number})"
+
+# Figure
+numfig = True
 
 # --- ToDo  options
 

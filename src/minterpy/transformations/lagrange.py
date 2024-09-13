@@ -1,15 +1,16 @@
 """
 Implementations of the transformation classes of **from**
 :py:class:`.LagrangePolynomial` (polynomials in the
-:ref:`Lagrange basis <fundamentals/polynomial-bases:Lagrange polynomials>`)
+:ref:`Lagrange basis <fundamentals/polynomial-bases:Lagrange basis>`)
 **to**:
 
 - :py:class:`.NewtonPolynomial` (polynomials in the
-  :ref:`Newton basis <fundamentals/polynomial-bases:Newton polynomials>`)
+  :ref:`Newton basis <fundamentals/polynomial-bases:Newton basis>`)
 - :py:class:`.CanonicalPolynomial` (polynomials in the
-  :ref:`canonical basis <fundamentals/polynomial-bases:Canonical polynomials>`)
-- :py:class:`.ChebyshevPolynomial` (polynomials in the Chebyshev basis of
-  the first kind)
+  :ref:`canonical basis <fundamentals/polynomial-bases:Canonical basis>`)
+- :py:class:`.ChebyshevPolynomial` (polynomials in the
+  :ref:`Chebyshev basis <fundamentals/polynomial-bases:Chebyshev basis>`
+  of the first kind)
 """
 from minterpy.core.ABC import TransformationABC
 from minterpy.polynomials import (

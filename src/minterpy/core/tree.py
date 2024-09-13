@@ -7,7 +7,7 @@ The `MultiIndexTree` class encapsulates all the components
 This scheme is used to transform polynomial coefficients
 from the Lagrange basis to the Newton basis.
 
-For more details, see :doc:`/fundamentals/multivariate-dds`.
+For more details, see :doc:`/fundamentals/dds`.
 
 ----
 

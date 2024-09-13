@@ -18,7 +18,7 @@ Minterpy is an open-source  Python package designed for constructing
 and manipulating multidimensional interpolating polynomials with the goal of
 lifting the curse of dimensionality from interpolation tasks.
 
-.. grid:: 3
+.. grid:: auto
    :margin: 0
    :padding: 0
    :gutter: 2
@@ -26,6 +26,7 @@ lifting the curse of dimensionality from interpolation tasks.
    .. grid-item-card:: New to Minterpy?
       :columns: 12 6 6 4
       :class-card: sd-border-0
+      :class-footer: sd-border-0
       :shadow: None
 
       Discover what Minterpy and multidimensional polynomials can do for you
@@ -41,6 +42,7 @@ lifting the curse of dimensionality from interpolation tasks.
    .. grid-item-card:: Familiar with Minterpy?
       :columns: 12 6 6 4
       :class-card: sd-border-0
+      :class-footer: sd-border-0
       :shadow: None
 
       Learn how to accomplish specific tasks with Minterpy.
@@ -55,6 +57,7 @@ lifting the curse of dimensionality from interpolation tasks.
    .. grid-item-card:: What's behind the scene?
       :columns: 12 6 6 4
       :class-card: sd-border-0
+      :class-footer: sd-border-0
       :shadow: None
 
       Gain a deeper understanding of the mathematics behind Minterpy.
@@ -66,14 +69,10 @@ lifting the curse of dimensionality from interpolation tasks.
 
          :octicon:`mortar-board;2em` **Fundamentals**
 
-.. grid:: 3
-   :margin: 0
-   :padding: 0
-   :gutter: 2
-
    .. grid-item-card:: Need API reference?
       :columns: 12 6 6 4
       :class-card: sd-border-0
+      :class-footer: sd-border-0
       :shadow: None
 
       Explore the public API documentation of Minterpy.
@@ -88,6 +87,7 @@ lifting the curse of dimensionality from interpolation tasks.
    .. grid-item-card:: Want to contribute?
       :columns: 12 6 6 4
       :class-card: sd-border-0
+      :class-footer: sd-border-0
       :shadow: None
 
       Get involved in the Minterpy development---contributions are
@@ -99,11 +99,6 @@ lifting the curse of dimensionality from interpolation tasks.
          :expand:
 
          :octicon:`git-pull-request;2em` **Contributors Guide**
-
-   .. grid-item-card::
-      :columns: 12 6 6 4
-      :class-card: sd-border-0
-      :shadow: None
 
 |
 

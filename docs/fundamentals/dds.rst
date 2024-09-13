@@ -1,6 +1,6 @@
-############################################
-Multivariate divided difference scheme (DDS)
-############################################
+================================================
+Multidimensional Divided Difference Scheme (DDS)
+================================================
 
 ..
     .. todo::
@@ -24,11 +24,9 @@ Multivariate divided difference scheme (DDS)
           - use latex label command for the Theorem enumeration etc
 
 Splitting Theorems
-##################
+==================
 
 The Multivariate DDS is based on two general splitting Theorems\ :footcite:`Hecht2020` that can be stated in a simplified version as:
-
-
 
 **Theorem 1 (Splitting of  unisolvent nodes)** Let :math:`A \subseteq \mathbb{N}^m` be a downward closed multi-index set,
 :math:`\Pi_A =\left<x^\alpha = x_1^{\alpha_1}\cdots x_m^{\alpha_m} : \alpha \in A\right>`
@@ -92,7 +90,7 @@ While in general the DDS requires :math:`\mathcal{O}(|A|^3)` runtime complexity,
 hyperplanes are chosen to be parallel and thereby the resulting **unisolvent nodes** are given as a sub-grid.
 
 1D Divided Difference Scheme
-############################
+============================
 
 We recapture the classic 1D DDS being the algorithmic solution of 1D Newton interpolation, see e.g.\ :footcite:`stoer2002,gautschi2012`.
 Given :math:`n+1` distinct nodes  :math:`p_0,\ldots, p_n\in [-1,1]` and a function :math:`f : [-1,1] \longrightarrow  \mathbb{R}` one recursively
@@ -159,7 +157,7 @@ In order to generalise the tree decomposition of the Newton interpolation to mul
 in a compactified way.
 
 Multi-index tree
-################
+================
 
 The multi-index tree provides the data structure that is needed to generalise
 the classic 1D Divided Difference Scheme of degree :math:`n \in \mathbb{N}` to downward closed multi-index sets :math:`A \subseteq \mathbb{N}^m`, e.g.
@@ -180,7 +178,7 @@ assigns multi-indices to the same sub-tree whenever all higher dimensional entri
 The  *split positions* and  *subtree sizes* are thereby stored when constucting the multi-index-tree.
 
 Splitting of the unisolvent nodes
-#################################
+=================================
 
 Each of the leafs of the multi-index tree induces an **unisolvent interpolation node** and the splitting reflects the parallel 1 \& 2 dimensional hyper-sub-planes(lines)
 :math:`H \subseteq \mathbb{R}^m` to which the nodes belong.
@@ -193,7 +191,7 @@ Each of the leafs of the multi-index tree induces an **unisolvent interpolation 
 
 
 Sub-tree recursion
-##################
+==================
 
 Indeed the node distributions on each hyperplane :math:`H` are subsetes of the projections of the prior (more occupied) plane.
 This fact is refleceted when fixing the highest dimension and treating the subtrees belonging to lower dimensional
@@ -209,9 +207,6 @@ The recursion step is thereby realised by using a precomputed *mask* that matche
 of each sub-problem/hyperplane to the next one, accordingly.
 The recursion is analogously repeated for each subtree independently as sketched (in grey) above.
 
-
-
-References
-##########
+.. rubric:: References
 
 .. footbibliography::

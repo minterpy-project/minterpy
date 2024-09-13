@@ -10,8 +10,8 @@ Background information
 ----------------------
 
 The relevant section of the documentation on
-:ref:`fundamentals/polynomial-bases:Newton polynomials` contains a more
-detailed explanation regarding the polynomials in the Lagrange form.
+:ref:`fundamentals/polynomial-bases:Newton basis` contains a more
+detailed explanation regarding the polynomials in the Newton basis.
 
 Implementation details
 ----------------------
@@ -380,7 +380,7 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     """Concrete implementations of polynomials in the Newton basis.
 
     For a definition of the Newton basis, see
-    :ref:`fundamentals/polynomial-bases:Newton polynomials`.
+    :ref:`fundamentals/polynomial-bases:Newton basis`.
     """
     # --- Virtual Functions
 

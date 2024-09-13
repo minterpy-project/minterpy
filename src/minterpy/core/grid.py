@@ -15,7 +15,7 @@ the generating points, specifies the unisolvent nodes---these are the points
 where the function to be interpolated is evaluated.
 
 More detailed background information can be found in
-:doc:`/fundamentals/interpolation-in-unisolvent-nodes`.
+:doc:`/fundamentals/interpolation-at-unisolvent-nodes`.
 
 How-To Guides
 =============
@@ -400,7 +400,8 @@ class Grid:
         """The array of unisolvent nodes.
 
         For a definition of unisolvent nodes, see
-        :ref:`fundamentals/introduction:The notion of unisolvence` in the docs.
+        :doc:`/fundamentals/unisolvence`
+        in the docs.
 
         Returns
         -------
