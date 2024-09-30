@@ -66,9 +66,9 @@ below. We recommend that you go through these tutorials in sequence.
    * - If you want to...
      - Go to...
    * - understand Minterpy polynomials through approximating a 1D function
-     - :doc:`one-dimensional-polynomial-interpolation`
+     - :doc:`1d-polynomial-interpolation`
    * - learn how to approximate mD function with polynomial interpolation
-     - :doc:`multi-dimensional-polynomial-interpolation`
+     - :doc:`md-polynomial-interpolation`
    * - know more about the supported *arithmetic operations*
        with Minterpy polynomials
      - :doc:`arithmetic-operations-with-polynomials`
@@ -89,8 +89,8 @@ a particular task, be sure to check out the :doc:`/how-to/index`!
    :hidden:
 
    Functions approximation <functions-approximation>
-   1D Polynomial Interpolation <one-dimensional-polynomial-interpolation>
-   mD Polynomial Interpolation <multi-dimensional-polynomial-interpolation>
+   1D Polynomial Interpolation <1d-polynomial-interpolation>
+   mD Polynomial Interpolation <md-polynomial-interpolation>
    Arithmetic with Polynomials <arithmetic-operations-with-polynomials>
    Calculus with Polynomials <calculus-operations-with-polynomials>
    Change of Basis <polynomial-bases-and-transformations>
