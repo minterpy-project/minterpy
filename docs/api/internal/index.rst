@@ -33,15 +33,15 @@ significantly accelerating runtime performance.
 +----------------------------------------------------------------------+-----------------------------------------------------------------+
 | Module / Sub-package                                                 | Description                                                     |
 +======================================================================+=================================================================+
-| :py:mod:`Non-Compiled <minterpy.utils>`                              | A high-level interface to conveniently create interpolants      |
+| :py:mod:`Non-Compiled <minterpy.utils>`                              | Utility sub-package used across Minterpy (without compilation)  |
 +----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :py:mod:`JIT-Compiled <minterpy.jit_compiled>`                       | Top domain-specific classes and abstract classes                |
+| :py:mod:`JIT-Compiled <minterpy.jit_compiled>`                       | Just-in-time compiled numerical routines                        |
 +----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :py:mod:`DDS <minterpy.dds>`                                         | Concrete classes representing polynomial bases                  |
+| :py:mod:`DDS <minterpy.dds>`                                         | Implementation of the multivariate divided difference scheme    |
 +----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :py:mod:`Transformation Utilities <minterpy.transformations.utils>`  | Concrete classes for polynomial basis transformations           |
+| :py:mod:`Transformation Utilities <minterpy.transformations.utils>`  | Utility module with routines to compute transformation matrices |
 +----------------------------------------------------------------------+-----------------------------------------------------------------+
-| :py:mod:`Generating Points <minterpy.gen_points>`                    | Concrete classes for polynomial basis transformation operators  |
+| :py:mod:`Generating Points <minterpy.gen_points>`                    | Utility module with routines to generate interpolation points   |
 +----------------------------------------------------------------------+-----------------------------------------------------------------+
 
 .. toctree::

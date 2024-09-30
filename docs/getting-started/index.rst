@@ -89,8 +89,8 @@ a particular task, be sure to check out the :doc:`/how-to/index`!
    :hidden:
 
    Functions approximation <functions-approximation>
-   1-D Polynomial Interpolation <one-dimensional-polynomial-interpolation>
-   m-D Polynomial Interpolation <multi-dimensional-polynomial-interpolation>
+   1D Polynomial Interpolation <one-dimensional-polynomial-interpolation>
+   mD Polynomial Interpolation <multi-dimensional-polynomial-interpolation>
    Arithmetic with Polynomials <arithmetic-operations-with-polynomials>
    Calculus with Polynomials <calculus-operations-with-polynomials>
    Change of Basis <polynomial-bases-and-transformations>
