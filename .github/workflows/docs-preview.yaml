@@ -1,3 +1,10 @@
+# This workflow builds and deploys Minterpy documentation for preview
+# whenever a pull request to the `dev` or `main` branches is created.
+# To save time, notebooks-based documentation are not executed;
+# the point of the preview is to give show how the overall documentation
+# looks like live.
+# Contributors are responsible to build the documentation locally to
+# verify everything.
 name: docs-preview
 
 on: 
@@ -12,11 +19,11 @@ permissions:
   pull-requests: write
 
 jobs:
-  docs_preview:
+  docs-preview:
     runs-on: ubuntu-latest
     if: github.event.action == 'opened' || github.event.action == 'synchronize' 
     steps:
-      - name: Check out repo
+      - name: Check out the repo
         uses: actions/checkout@v4
       - name: Install Minterpy with docs extras
         uses: ./.github/actions/install-minterpy

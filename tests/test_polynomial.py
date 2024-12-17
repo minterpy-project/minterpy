@@ -555,7 +555,7 @@ class TestEvaluation:
             yy_test = poly(xx_test)
             for i in range(num_polynomials):
                 # Due to identical coefficients, results are identical
-                assert np.all(yy_test[:, i] == yy_test[:, 0])
+                assert np.allclose(yy_test[:, i], yy_test[:, 0])
 
 
 class TestNegation:

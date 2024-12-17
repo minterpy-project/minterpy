@@ -1,3 +1,8 @@
+# This workflow builds and deploys Minterpy documentation as a GitHub page.
+# The workflow are triggered whenever there is a push to either
+# the `main` and `dev` branches. Two versions of the documentation are
+# maintained: "stable" from the `main` branch
+# and `latest` from the `dev` branch.
 name: docs
 
 on:

@@ -1,0 +1,27 @@
+name: nbmake
+description: Test the execution of notebook-based documentation located in a given directory.
+inputs:
+  dir:
+    required: true
+    description: 'Directory of the notebooks (relative to project root directory)'
+runs:
+  using: "composite"
+  steps:
+    - name: Check out the repo
+      uses: actions/checkout@v4
+    - name: Install Minterpy with docs extras
+      uses: ./.github/actions/install-minterpy
+      with:
+        extras_require: "[docs]"
+    - name: Run Pytest with nbmake
+      id: execute
+      shell: bash
+      run: |
+        string="${{ inputs.dir }}"
+        result=$(echo "$string" | sed 's|./docs/||; s|/|-|g')
+        pytest --junitxml=report-pytest-nbmake-$result.xml -vvv --nbmake "${{ inputs.dir }}"
+        echo "outfile=$result" >> $GITHUB_OUTPUT
+    - name: Upload the report
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./report-pytest-nbmake-${{ steps.execute.outputs.outfile }}.xml
