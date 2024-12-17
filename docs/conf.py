@@ -141,12 +141,31 @@ html_theme_options = {
     "icon_links": [
             {
                 "name": "GitHub",
-                "url": "https://github.com/casus/minterpy",
+                "url": "https://github.com/minterpy-project/minterpy",
                 "icon": "fa-brands fa-square-github",
+                "type": "fontawesome",
+            },
+            {
+                "name": "Latest Docs",
+                "url": "https://minterpy-project.github.io/minterpy/latest/",
+                "icon": "fa-brands fa-dev",
+                "type": "fontawesome",
+            },
+            {
+                "name": "Stable Docs",
+                "url": "https://minterpy-project.github.io/minterpy/stable/",
+                "icon": "fa-solid fa-box-open",
                 "type": "fontawesome",
             },
     ],
 }
+
+suppress_warnings = [
+    'autosummary.import_cycle',
+]
+
+# Flag to execute notebooks-based documentation during build
+nb_execution_mode = "auto"
 
 # --- Custom directives -------------------------------------------------------
 
