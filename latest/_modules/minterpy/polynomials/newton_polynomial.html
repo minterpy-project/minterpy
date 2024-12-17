@@ -1,0 +1,1412 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>minterpy.polynomials.newton_polynomial &#8212; Minterpy 0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles.css?v=a88e7498" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/minterpy/polynomials/newton_polynomial';</script>
+    <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/_modules/minterpy/polynomials/newton_polynomial.html" />
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+g7167eef" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">minterpy.polynomials.newton_polynomial</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for minterpy.polynomials.newton_polynomial</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the `NewtonPolynomial` class.</span>
+
+<span class="sd">The `NewtonPolynomial` class is a concrete implementation of the abstract</span>
+<span class="sd">base class :py:class:`MultivariatePolynomialSingleABC</span>
+<span class="sd">&lt;.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC&gt;`</span>
+<span class="sd">for polynomials in the Newton basis.</span>
+
+<span class="sd">Background information</span>
+<span class="sd">----------------------</span>
+
+<span class="sd">The relevant section of the documentation on</span>
+<span class="sd">:ref:`fundamentals/polynomial-bases:Newton basis` contains a more</span>
+<span class="sd">detailed explanation regarding the polynomials in the Newton basis.</span>
+
+<span class="sd">Implementation details</span>
+<span class="sd">----------------------</span>
+
+<span class="sd">`NewtonPolynomial` is currently the preferred polynomial basis in Minterpy</span>
+<span class="sd">for various operations. An instance of `NewtonPolynomial` can be evaluated</span>
+<span class="sd">on a set of query points (unlike :py:class:`LagrangePolynomial</span>
+<span class="sd">&lt;.polynomials.lagrange_polynomial.LagrangePolynomial&gt;`) and the evaluation</span>
+<span class="sd">is numerically stable (unlike :py:class:`CanonicalPolynomial</span>
+<span class="sd">&lt;.polynomials.canonical_polynomial.CanonicalPolynomial&gt;`).</span>
+
+<span class="sd">A wide range of arithmetic operations are supported for polynomials in</span>
+<span class="sd">the Lagrange basis, namely:</span>
+
+<span class="sd">- addition and subtraction by a scalar number</span>
+<span class="sd">- addition and subtraction by another Newton polynomial</span>
+<span class="sd">- multiplication by a scalar number</span>
+<span class="sd">- multiplication by another Newton polynomial</span>
+
+<span class="sd">Moreover, basic calculus operations are also supported, namely:</span>
+<span class="sd">differentiation and definite integration.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="n">DEBUG</span>
+<span class="kn">from</span> <span class="nn">minterpy.core.ABC.multivariate_polynomial_abstract</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MultivariatePolynomialSingleABC</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">minterpy.core</span> <span class="kn">import</span> <span class="n">Grid</span><span class="p">,</span> <span class="n">MultiIndexSet</span>
+<span class="kn">from</span> <span class="nn">minterpy.dds</span> <span class="kn">import</span> <span class="n">dds</span>
+<span class="kn">from</span> <span class="nn">minterpy.utils.verification</span> <span class="kn">import</span> <span class="n">dummy</span><span class="p">,</span> <span class="n">verify_domain</span>
+<span class="kn">from</span> <span class="nn">minterpy.utils.polynomials.newton</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">eval_newton_polynomials</span><span class="p">,</span>
+    <span class="n">deriv_newt_eval</span> <span class="k">as</span> <span class="n">eval_diff_numpy</span><span class="p">,</span>
+    <span class="n">integrate_monomials_newton</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">minterpy.jit_compiled.newton.diff</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">eval_multiple_query</span> <span class="k">as</span> <span class="n">eval_diff_numba</span><span class="p">,</span>
+    <span class="n">eval_multiple_query_par</span> <span class="k">as</span> <span class="n">eval_diff_numba_par</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">minterpy.utils.polynomials.interface</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">compute_coeffs_poly_sum_via_monomials</span><span class="p">,</span>
+    <span class="n">compute_coeffs_poly_prod_via_monomials</span><span class="p">,</span>
+    <span class="n">get_grid_and_multi_index_poly_prod</span><span class="p">,</span>
+    <span class="n">get_grid_and_multi_index_poly_sum</span><span class="p">,</span>
+    <span class="n">PolyData</span><span class="p">,</span>
+    <span class="n">scalar_add_via_monomials</span><span class="p">,</span>
+    <span class="n">select_active_monomials</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">minterpy.services</span> <span class="kn">import</span> <span class="n">is_scalar</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">]</span>
+
+<span class="n">SUPPORTED_BACKENDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;numpy&quot;</span><span class="p">:</span> <span class="n">eval_diff_numpy</span><span class="p">,</span>
+    <span class="s2">&quot;numba&quot;</span><span class="p">:</span> <span class="n">eval_diff_numba</span><span class="p">,</span>
+    <span class="s2">&quot;numba-par&quot;</span><span class="p">:</span> <span class="n">eval_diff_numba_par</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="c1"># --- Evaluation</span>
+<div class="viewcode-block" id="eval_newton">
+<a class="viewcode-back" href="../../../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.eval_newton">[docs]</a>
+<span class="k">def</span> <span class="nf">eval_newton</span><span class="p">(</span><span class="n">poly</span><span class="p">:</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate polynomial(s) in the Newton basis on a set of query points.</span>
+
+<span class="sd">    This is a wrapper for the evaluation function in the Newton basis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly : NewtonPolynomial</span>
+<span class="sd">        The instance of polynomial in the Newton basis to evaluate.</span>
+<span class="sd">    xx : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        Array of query points in the at which the polynomial(s) is evaluated.</span>
+<span class="sd">        The array is of shape ``(N, m)`` where ``N`` is the number of points</span>
+<span class="sd">        and ``m`` is the spatial dimension of the polynomial.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    minterpy.utils.polynomials.newton.eval_newton_polynomials</span>
+<span class="sd">        The actual implementation of the evaluation of polynomials in</span>
+<span class="sd">        the Newton basis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get relevant data</span>
+    <span class="n">coeffs</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">coeffs</span>
+    <span class="n">exponents</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">exponents</span>
+    <span class="n">gen_points</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">generating_points</span>
+
+    <span class="k">return</span> <span class="n">eval_newton_polynomials</span><span class="p">(</span>
+        <span class="n">xx</span><span class="p">,</span>
+        <span class="n">coeffs</span><span class="p">,</span>
+        <span class="n">exponents</span><span class="p">,</span>
+        <span class="n">gen_points</span><span class="p">,</span>
+        <span class="n">verify_input</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># --- Arithmetics (Addition, Multiplication)</span>
+<div class="viewcode-block" id="add_newton">
+<a class="viewcode-back" href="../../../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.add_newton">[docs]</a>
+<span class="k">def</span> <span class="nf">add_newton</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add two instances of polynomials in the Newton basis.</span>
+
+<span class="sd">    This is the concrete implementation of ``_add()`` method in the</span>
+<span class="sd">    ``MultivariatePolynomialSingleABC`` abstract class specifically for</span>
+<span class="sd">    handling polynomials in the Newton basis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the addition/subtraction expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the addition/subtraction expression.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NewtonPolynomial</span>
+<span class="sd">        The sum of two polynomials in the Newton basis as a new instance</span>
+<span class="sd">        of polynomial in the Newton basis.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - This function assumes: both polynomials must be in the Newton basis,</span>
+<span class="sd">      they must be initialized (coefficients are not ``None``),</span>
+<span class="sd">      have the same dimension and their domains are matching,</span>
+<span class="sd">      and the number of polynomials per instance are the same.</span>
+<span class="sd">      These conditions are not explicitly checked in this function; the caller</span>
+<span class="sd">      is responsible for the verification.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Get the ingredients of the summed polynomial in the Newton basis</span>
+    <span class="n">poly_sum_data</span> <span class="o">=</span> <span class="n">_compute_data_poly_sum</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">)</span>
+
+    <span class="c1"># --- Return a new instance</span>
+    <span class="k">return</span> <span class="n">NewtonPolynomial</span><span class="p">(</span><span class="o">**</span><span class="n">poly_sum_data</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="mul_newton">
+<a class="viewcode-back" href="../../../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.mul_newton">[docs]</a>
+<span class="k">def</span> <span class="nf">mul_newton</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply instances of polynomials in the Newton basis.</span>
+
+<span class="sd">    This is the concrete implementation of ``_mul()`` method in the</span>
+<span class="sd">    ``MultivariatePolynomialSingleABC`` abstract class specifically for</span>
+<span class="sd">    handling polynomials in the Newton basis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the multiplication expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the multiplication expression.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NewtonPolynomial</span>
+<span class="sd">        The product of two polynomials in the Newton basis as a new instance</span>
+<span class="sd">        of polynomial in the Newton basis.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - This function assumes: both polynomials must be in the Newton basis,</span>
+<span class="sd">      they must be initialized (coefficients are not ``None``),</span>
+<span class="sd">      have the same dimension and their domains are matching,</span>
+<span class="sd">      and the number of polynomials per instance are the same.</span>
+<span class="sd">      These conditions are not explicitly checked in this function; the caller</span>
+<span class="sd">      is responsible for the verification.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Get the ingredients of the product polynomial in the Newton basis</span>
+    <span class="n">poly_prod_data</span> <span class="o">=</span> <span class="n">_compute_data_poly_prod</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">)</span>
+
+    <span class="c1"># --- Return a new instance</span>
+    <span class="k">return</span> <span class="n">NewtonPolynomial</span><span class="p">(</span><span class="o">**</span><span class="n">poly_prod_data</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span></div>
+
+
+
+<span class="c1"># --- Calculus</span>
+<div class="viewcode-block" id="diff_newton">
+<a class="viewcode-back" href="../../../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.diff_newton">[docs]</a>
+<span class="k">def</span> <span class="nf">diff_newton</span><span class="p">(</span>
+    <span class="n">poly</span><span class="p">:</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">,</span>
+    <span class="n">order</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Differentiate polynomial(s) in the Newton basis of specified orders</span>
+<span class="sd">    of derivatives along each dimension.</span>
+
+<span class="sd">    The orders must be specified for each dimension.</span>
+<span class="sd">    This is a wrapper for the differentiation function in the Newton basis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly : NewtonPolynomial</span>
+<span class="sd">        The instance of polynomial in Newton form to differentiate.</span>
+<span class="sd">    order : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        A one-dimensional integer array specifying the orders of derivative</span>
+<span class="sd">        along each dimension. The length of the array must be ``m`` where</span>
+<span class="sd">        ``m`` is the spatial dimension of the polynomial.</span>
+<span class="sd">    backend : str</span>
+<span class="sd">        Computational backend to carry out the differentiation.</span>
+<span class="sd">        Supported values are:</span>
+
+<span class="sd">        - ``&quot;numpy&quot;``: implementation based on NumPy; not performant, only</span>
+<span class="sd">          applicable for a very small problem size (small degree,</span>
+<span class="sd">          low dimension).</span>
+<span class="sd">        - ``&quot;numba&quot;`` (default): implementation based on compiled code with</span>
+<span class="sd">          the help of Numba; for up to moderate problem size.</span>
+<span class="sd">        - ``&quot;numba-par&quot;``: parallelized (CPU) implementation based compiled</span>
+<span class="sd">          code with the help of Numba for relatively large problem sizes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NewtonPolynomial</span>
+<span class="sd">        A new instance of `NewtonPolynomial` that represents the partial</span>
+<span class="sd">        derivative of the original polynomial of the given order of derivative</span>
+<span class="sd">        with respect to the specified dimension.</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - The abstract class is responsible to validate ``order``; no additional</span>
+<span class="sd">      validation regarding that parameter is required here.</span>
+<span class="sd">    - The transformation of computed Lagrange coefficients of</span>
+<span class="sd">      the differentiated polynomial to the Newton coefficients is carried out</span>
+<span class="sd">      using multivariate divided-difference scheme (DDS).</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    NewtonPolynomial.diff</span>
+<span class="sd">        The public method to differentiate the polynomial instance of</span>
+<span class="sd">        the given orders of derivative along each dimension.</span>
+<span class="sd">    NewtonPolynomial.partial_diff</span>
+<span class="sd">        The public method to differentiate the polynomial instance of</span>
+<span class="sd">        a specified order of derivative with respect to a given dimension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Process the selected backend</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">backend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SUPPORTED_BACKENDS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend &lt;</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">&gt; is not supported&quot;</span><span class="p">)</span>
+    <span class="n">differentiator</span> <span class="o">=</span> <span class="n">SUPPORTED_BACKENDS</span><span class="p">[</span><span class="n">backend</span><span class="p">]</span>
+
+    <span class="c1"># Get relevant data from the polynomial</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">grid</span>
+    <span class="n">unisolvent_nodes</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">unisolvent_nodes</span>
+    <span class="n">generating_points</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">generating_points</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">tree</span>
+    <span class="n">multi_index</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">multi_index</span>
+    <span class="n">exponents</span> <span class="o">=</span> <span class="n">multi_index</span><span class="o">.</span><span class="n">exponents</span>
+    <span class="n">nwt_coeffs</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">coeffs</span>
+
+    <span class="c1"># Make sure the coefficients are in two-dimension to conform with</span>
+    <span class="c1"># the differentiator (esp. numba-based) requirement</span>
+    <span class="k">if</span> <span class="n">nwt_coeffs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">nwt_coeffs</span> <span class="o">=</span> <span class="n">nwt_coeffs</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+    <span class="c1"># Evaluation of the differentiated Newton polynomial at the unisolvent</span>
+    <span class="c1"># nodes yields the Lagrange coefficients of the differentiated polynomial.</span>
+    <span class="n">lag_diff_coeffs</span> <span class="o">=</span> <span class="n">differentiator</span><span class="p">(</span>
+        <span class="n">unisolvent_nodes</span><span class="p">,</span>
+        <span class="n">nwt_coeffs</span><span class="p">,</span>
+        <span class="n">exponents</span><span class="p">,</span>
+        <span class="n">generating_points</span><span class="p">,</span>
+        <span class="n">order</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># DDS returns a 2D array, reshaping it according to input coefficient array</span>
+    <span class="n">nwt_diff_coeffs</span> <span class="o">=</span> <span class="n">dds</span><span class="p">(</span><span class="n">lag_diff_coeffs</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">poly</span><span class="o">.</span><span class="n">coeffs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">NewtonPolynomial</span><span class="p">(</span>
+        <span class="n">coeffs</span><span class="o">=</span><span class="n">nwt_diff_coeffs</span><span class="p">,</span>
+        <span class="n">multi_index</span><span class="o">=</span><span class="n">multi_index</span><span class="p">,</span>
+        <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="partial_diff_newton">
+<a class="viewcode-back" href="../../../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.partial_diff_newton">[docs]</a>
+<span class="k">def</span> <span class="nf">partial_diff_newton</span><span class="p">(</span>
+    <span class="n">poly</span><span class="p">:</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">,</span>
+    <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Differentiate polynomial(s) in the Newton basis with respect to a given</span>
+<span class="sd">    dimension and order of derivative.</span>
+
+<span class="sd">    This is a wrapper for the partial differentiation function in</span>
+<span class="sd">    the Newton basis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly : NewtonPolynomial</span>
+<span class="sd">        The instance of polynomial in Newton form to differentiate.</span>
+<span class="sd">    dim : int</span>
+<span class="sd">        Spatial dimension with respect to which the differentiation</span>
+<span class="sd">        is taken. The dimension starts at 0 (i.e., the first dimension).</span>
+<span class="sd">    order : int</span>
+<span class="sd">        Order of partial derivative.</span>
+<span class="sd">    backend : str</span>
+<span class="sd">        Computational backend to carry out the differentiation.</span>
+<span class="sd">        Supported values are:</span>
+
+<span class="sd">        - ``&quot;numpy&quot;``: implementation based on NumPy; not performant, only</span>
+<span class="sd">          applicable for a very small problem size (small degree,</span>
+<span class="sd">          low dimension).</span>
+<span class="sd">        - ``&quot;numba&quot;`` (default): implementation based on compiled code with</span>
+<span class="sd">          the help of Numba; applicable up to moderate problem size.</span>
+<span class="sd">        - ``&quot;numba-par&quot;``: parallelized (CPU) implementation based on compiled</span>
+<span class="sd">          code with the help of Numba for relatively large problem sizes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NewtonPolynomial</span>
+<span class="sd">        A new instance of `NewtonPolynomial` that represents the partial</span>
+<span class="sd">        derivative of the original polynomial of the given order of derivative</span>
+<span class="sd">        with respect to the specified dimension.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - The abstract class is responsible to validate ``dim`` and ``order``; no</span>
+<span class="sd">      additional validation regarding those two parameters are required here.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    NewtonPolynomial.partial_diff</span>
+<span class="sd">        The public method to differentiate the polynomial instance of</span>
+<span class="sd">        a specified order of derivative with respect to a given dimension.</span>
+<span class="sd">    NewtonPolynomial.diff</span>
+<span class="sd">        The public method to differentiate the polynomial instance of</span>
+<span class="sd">        the given orders of derivative along each dimension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a specification for differentiation</span>
+    <span class="n">spatial_dim</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span>
+    <span class="n">deriv_order_along</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">spatial_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">deriv_order_along</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">order</span>
+
+    <span class="k">return</span> <span class="n">diff_newton</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">deriv_order_along</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="integrate_over_newton">
+<a class="viewcode-back" href="../../../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.integrate_over_newton">[docs]</a>
+<span class="k">def</span> <span class="nf">integrate_over_newton</span><span class="p">(</span>
+    <span class="n">poly</span><span class="p">:</span> <span class="s2">&quot;NewtonPolynomial&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the definite integral of polynomial(s) in the Newton basis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly : NewtonPolynomial</span>
+<span class="sd">        The polynomial of which the integration is carried out.</span>
+<span class="sd">    bounds : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The bounds (lower and upper, respectively) of the definite integration,</span>
+<span class="sd">        specified as an ``(M,2)`` array, where ``M`` is the spatial dimension</span>
+<span class="sd">        of the polynomial.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The integral value of the polynomial over the given domain.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">quad_weights</span> <span class="o">=</span> <span class="n">_compute_quad_weights</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">quad_weights</span> <span class="o">@</span> <span class="n">poly</span><span class="o">.</span><span class="n">coeffs</span></div>
+
+
+
+<span class="c1"># TODO redundant</span>
+<span class="n">generate_internal_domain_newton</span> <span class="o">=</span> <span class="n">verify_domain</span>
+<span class="n">generate_user_domain_newton</span> <span class="o">=</span> <span class="n">verify_domain</span>
+
+
+<div class="viewcode-block" id="NewtonPolynomial">
+<a class="viewcode-back" href="../../../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial">[docs]</a>
+<span class="k">class</span> <span class="nc">NewtonPolynomial</span><span class="p">(</span><span class="n">MultivariatePolynomialSingleABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Concrete implementations of polynomials in the Newton basis.</span>
+
+<span class="sd">    For a definition of the Newton basis, see</span>
+<span class="sd">    :ref:`fundamentals/polynomial-bases:Newton basis`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Virtual Functions</span>
+
+    <span class="c1"># Evaluation</span>
+    <span class="n">_eval</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">eval_newton</span><span class="p">)</span>
+
+    <span class="c1"># Arithmetics (polynomial-polynomial)</span>
+    <span class="n">_add</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">add_newton</span><span class="p">)</span>
+    <span class="n">_sub</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">dummy</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">_mul</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">mul_newton</span><span class="p">)</span>
+    <span class="n">_div</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">dummy</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">_pow</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">dummy</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="c1"># Arithmetics (polynomial-scalar)</span>
+    <span class="n">_scalar_add</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">scalar_add_via_monomials</span><span class="p">)</span>
+
+    <span class="c1"># Calculus</span>
+    <span class="n">_partial_diff</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">partial_diff_newton</span><span class="p">)</span>
+    <span class="n">_diff</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">diff_newton</span><span class="p">)</span>
+    <span class="n">_integrate_over</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">integrate_over_newton</span><span class="p">)</span>
+
+    <span class="c1"># Domain generation</span>
+    <span class="n">generate_internal_domain</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">generate_internal_domain_newton</span><span class="p">)</span>
+    <span class="n">generate_user_domain</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">generate_user_domain_newton</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># --- Internal utility functions</span>
+<span class="k">def</span> <span class="nf">_compute_data_poly_sum</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PolyData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the data to create a summed polynomial in the Newton basis.</span>
+
+<span class="sd">    This function is responsible to prepare the data to construct a new</span>
+<span class="sd">    instance of polynomial in the Newton basis that is the summed of two Newton</span>
+<span class="sd">    polynomials, specifically:</span>
+
+<span class="sd">    - the underlying grid</span>
+<span class="sd">    - the underlying multi-index set</span>
+<span class="sd">    - the polynomial coefficients</span>
+<span class="sd">    - the internal domain</span>
+<span class="sd">    - the user domain</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the addition/subtraction expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the addition/subtraction expression.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    PolyData</span>
+<span class="sd">        The ingredients to construct a summed polynomial in the Newton basis.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Both polynomials are assumed to have the same type, the same spatial</span>
+<span class="sd">      dimension, and matching domains. These conditions have been made sure</span>
+<span class="sd">      upstream.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Get the grid and multi-index set of the summed polynomial</span>
+    <span class="n">grd_sum</span><span class="p">,</span> <span class="n">mi_sum</span> <span class="o">=</span> <span class="n">get_grid_and_multi_index_poly_sum</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">)</span>
+
+    <span class="c1"># --- Process the coefficients</span>
+    <span class="n">coeffs_sum</span> <span class="o">=</span> <span class="n">_compute_coeffs_poly_sum</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">,</span> <span class="n">grd_sum</span><span class="p">,</span> <span class="n">mi_sum</span><span class="p">)</span>
+
+    <span class="c1"># --- Process the domains</span>
+    <span class="c1"># NOTE: Because it is assumed that &#39;poly_1&#39; and &#39;poly_2&#39; have</span>
+    <span class="c1"># matching domains, it does not matter which one to use</span>
+    <span class="n">internal_domain_sum</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">internal_domain</span>
+    <span class="n">user_domain_sum</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">user_domain</span>
+
+    <span class="k">return</span> <span class="n">PolyData</span><span class="p">(</span>
+        <span class="n">multi_index</span><span class="o">=</span><span class="n">mi_sum</span><span class="p">,</span>
+        <span class="n">coeffs</span><span class="o">=</span><span class="n">coeffs_sum</span><span class="p">,</span>
+        <span class="n">internal_domain</span><span class="o">=</span><span class="n">internal_domain_sum</span><span class="p">,</span>
+        <span class="n">user_domain</span><span class="o">=</span><span class="n">user_domain_sum</span><span class="p">,</span>
+        <span class="n">grid</span><span class="o">=</span><span class="n">grd_sum</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_coeffs_poly_sum</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">grid_sum</span><span class="p">:</span> <span class="n">Grid</span><span class="p">,</span>
+    <span class="n">multi_index_sum</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the coefficients of a summed polynomial in the Newton basis.</span>
+
+<span class="sd">    In general, the coefficients of a summed polynomial in the Newton basis</span>
+<span class="sd">    are obtained by going through the Lagrange basis first.</span>
+<span class="sd">    Specifically, the Lagrange coefficients are computed by summing up</span>
+<span class="sd">    the evaluation results of the Newton polynomial operands on the union</span>
+<span class="sd">    Grid. Afterward, these coefficients are transformed to the Newton</span>
+<span class="sd">    coefficients.</span>
+
+<span class="sd">    This is because the Newton monomials depends on the underlying grid</span>
+<span class="sd">    (specifically, its generating points). The monomials of two Newton</span>
+<span class="sd">    polynomials are different if the generating points of the two polynomials</span>
+<span class="sd">    are different.</span>
+
+<span class="sd">    There are two exceptions such that the coefficients may be obtained without</span>
+<span class="sd">    going through the Lagrange basis first.</span>
+
+<span class="sd">    - if the grids of the two polynomial operands are compatible with the</span>
+<span class="sd">      grid of the summed polynomial. In this particular case, the monomials</span>
+<span class="sd">      of the two polynomials are the same.</span>
+<span class="sd">    - if one of the operands is a constant scalar polynomial, whose only a</span>
+<span class="sd">      single element (:math:`(0, \ldots, 0)`) in the multi-index set of the</span>
+<span class="sd">      polynomial and the underlying grid (regardless whether this grid</span>
+<span class="sd">      is compatible with the grid of the summed polynomial).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the addition/subtraction expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the addition/subtraction expression.</span>
+<span class="sd">    grid_sum : Grid</span>
+<span class="sd">        The Grid associated with the summed polynomial.</span>
+<span class="sd">    multi_index_sum : MultiIndexSet</span>
+<span class="sd">        The multi-index set of the summed polynomial.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The coefficients of the summed polynomial in the Newton basis.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Both polynomials are assumed to have the same spatial dimension and</span>
+<span class="sd">      matching domains. These conditions have been made sure upstream.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Handle the case where no transformation is required</span>
+    <span class="k">if</span> <span class="n">_is_compute_coeffs_poly_sum_via_monomials</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">,</span> <span class="n">grid_sum</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">compute_coeffs_poly_sum_via_monomials</span><span class="p">(</span>
+            <span class="n">poly_1</span><span class="p">,</span>
+            <span class="n">poly_2</span><span class="p">,</span>
+            <span class="n">multi_index_sum</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_compute_coeffs_poly_sum_via_lagrange</span><span class="p">(</span>
+        <span class="n">poly_1</span><span class="p">,</span>
+        <span class="n">poly_2</span><span class="p">,</span>
+        <span class="n">grid_sum</span><span class="p">,</span>
+        <span class="n">multi_index_sum</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_is_compute_coeffs_poly_sum_via_monomials</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">grid_sum</span><span class="p">:</span> <span class="n">Grid</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the polynomials may be summed up via the monomials.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the multiplication expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the multiplication expression.</span>
+<span class="sd">    grid_prod : Grid</span>
+<span class="sd">        The Grid associated with the summed polynomial.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        ``True`` if one of the operands is a scalar polynomial, or if both</span>
+<span class="sd">        the underlying grids are compatible with the given product grid;</span>
+<span class="sd">        ``False`` otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If one of the operands is a scalar polynomial</span>
+    <span class="n">is_scalar_poly</span> <span class="o">=</span> <span class="n">is_scalar</span><span class="p">(</span><span class="n">poly_1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_scalar</span><span class="p">(</span><span class="n">poly_2</span><span class="p">)</span>
+    <span class="c1"># ...or if the grids are compatible</span>
+    <span class="n">is_compatible_grid_1</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">is_compatible</span><span class="p">(</span><span class="n">grid_sum</span><span class="p">)</span>
+    <span class="n">is_compatible_grid_2</span> <span class="o">=</span> <span class="n">poly_2</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">is_compatible</span><span class="p">(</span><span class="n">grid_sum</span><span class="p">)</span>
+    <span class="n">is_compatible_grids</span> <span class="o">=</span> <span class="n">is_compatible_grid_1</span> <span class="ow">and</span> <span class="n">is_compatible_grid_2</span>
+
+    <span class="k">return</span> <span class="n">is_scalar_poly</span> <span class="ow">or</span> <span class="n">is_compatible_grids</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_coeffs_poly_sum_via_lagrange</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">grid_sum</span><span class="p">:</span> <span class="n">Grid</span><span class="p">,</span>
+    <span class="n">multi_index_sum</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the coefficients of a summed Newton polynomial via Lagrange.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the addition/subtraction expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the addition/subtraction expression.</span>
+<span class="sd">    grid_sum : Grid</span>
+<span class="sd">        The Grid associated with the summed polynomial.</span>
+<span class="sd">    multi_index_sum : MultiIndexSet</span>
+<span class="sd">        The multi-index set of the summed polynomial.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The coefficients of the summed polynomial in the Newton basis.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Both polynomials are assumed to have the same spatial dimension and</span>
+<span class="sd">      matching domains. These conditions have been made sure upstream.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Compute the values of the operands at the unisolvent nodes</span>
+    <span class="n">lag_coeffs_1</span> <span class="o">=</span> <span class="n">grid_sum</span><span class="p">(</span><span class="n">poly_1</span><span class="p">)</span>
+    <span class="n">lag_coeffs_2</span> <span class="o">=</span> <span class="n">grid_sum</span><span class="p">(</span><span class="n">poly_2</span><span class="p">)</span>
+    <span class="n">lag_coeffs_sum</span> <span class="o">=</span> <span class="n">lag_coeffs_1</span> <span class="o">+</span> <span class="n">lag_coeffs_2</span>
+
+    <span class="c1"># Transform the Lagrange coefficients into Newton coefficients</span>
+    <span class="n">nwt_coeffs_sum</span> <span class="o">=</span> <span class="n">_transform_lag2nwt</span><span class="p">(</span>
+        <span class="n">lag_coeffs_sum</span><span class="p">,</span>
+        <span class="n">grid_sum</span><span class="p">,</span>
+        <span class="n">poly_1</span><span class="o">.</span><span class="n">indices_are_separate</span> <span class="ow">or</span> <span class="n">poly_2</span><span class="o">.</span><span class="n">indices_are_separate</span><span class="p">,</span>
+        <span class="n">multi_index_sum</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nwt_coeffs_sum</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_data_poly_prod</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PolyData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the data to create a product polynomial in the Newton basis.</span>
+
+<span class="sd">    This function is responsible to prepare the data to construct a new</span>
+<span class="sd">    instance of polynomial in the Newton basis that is the product of</span>
+<span class="sd">    two Newton polynomials, specifically:</span>
+
+<span class="sd">    - the underlying grid</span>
+<span class="sd">    - the underlying multi-index set</span>
+<span class="sd">    - the polynomial coefficients</span>
+<span class="sd">    - the internal domain</span>
+<span class="sd">    - the user domain</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the multiplication expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the multiplication expression.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    PolyData</span>
+<span class="sd">        The ingredients to construct a product polynomial in the Newton basis.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Both polynomials are assumed to have the same spatial dimension</span>
+<span class="sd">      and matching domains.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Get the grid and multi-index set of the product polynomial</span>
+    <span class="n">grd_prod</span><span class="p">,</span> <span class="n">mi_prod</span> <span class="o">=</span> <span class="n">get_grid_and_multi_index_poly_prod</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">)</span>
+
+    <span class="c1"># --- Process the coefficients</span>
+    <span class="n">coeffs_prod</span> <span class="o">=</span> <span class="n">_compute_coeffs_poly_prod</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">,</span> <span class="n">grd_prod</span><span class="p">,</span> <span class="n">mi_prod</span><span class="p">)</span>
+
+    <span class="c1"># --- Process the domains</span>
+    <span class="c1"># NOTE: Because it is assumed that &#39;poly_1&#39; and &#39;poly_2&#39; have</span>
+    <span class="c1"># matching domains, it does not matter which one to use</span>
+    <span class="n">internal_domain_prod</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">internal_domain</span>
+    <span class="n">user_domain_prod</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">user_domain</span>
+
+    <span class="k">return</span> <span class="n">PolyData</span><span class="p">(</span>
+        <span class="n">multi_index</span><span class="o">=</span><span class="n">mi_prod</span><span class="p">,</span>
+        <span class="n">coeffs</span><span class="o">=</span><span class="n">coeffs_prod</span><span class="p">,</span>
+        <span class="n">internal_domain</span><span class="o">=</span><span class="n">internal_domain_prod</span><span class="p">,</span>
+        <span class="n">user_domain</span><span class="o">=</span><span class="n">user_domain_prod</span><span class="p">,</span>
+        <span class="n">grid</span><span class="o">=</span><span class="n">grd_prod</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_coeffs_poly_prod</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">grid_prod</span><span class="p">:</span> <span class="n">Grid</span><span class="p">,</span>
+    <span class="n">multi_index_prod</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the coefficients of polynomial product in the Newton basis.</span>
+
+<span class="sd">    In general, the coefficients of a product polynomial in the Newton basis</span>
+<span class="sd">    are obtained by going through the Lagrange basis first.</span>
+<span class="sd">    Specifically, the Lagrange coefficients are computed by multiplying</span>
+<span class="sd">    the evaluation results of the Newton polynomial operands on the product</span>
+<span class="sd">    Grid. Afterward, these coefficients are transformed to the Newton</span>
+<span class="sd">    coefficients.</span>
+
+<span class="sd">    This is because the Newton monomials depends on the underlying grid</span>
+<span class="sd">    (specifically, its generating points). The monomials of two Newton</span>
+<span class="sd">    polynomials are different if the generating points of the two polynomials</span>
+<span class="sd">    are different. Moreover, a multiplication of two Newton monomial does not,</span>
+<span class="sd">    in general, return the monomial of a higher degree even for compatible</span>
+<span class="sd">    monomials (unlike the canonical basis).</span>
+
+<span class="sd">    There are two exceptions such that the coefficients may be obtained without</span>
+<span class="sd">    going through the Lagrange basis first because the meaning of the monomials</span>
+<span class="sd">    are the same.</span>
+
+<span class="sd">    - if one of the operands is a constant scalar polynomial, whose only a</span>
+<span class="sd">      single element (:math:`(0, \ldots, 0)`) in the multi-index set of both</span>
+<span class="sd">      the polynomial and the underlying grid.</span>
+<span class="sd">    - if one of the operands is a constant scalar polynomial whose underlying</span>
+<span class="sd">      grid is not scalar but still compatible with the product grid.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the multiplication expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the multiplication expression.</span>
+<span class="sd">    grid_prod : Grid</span>
+<span class="sd">        The Grid associated with the product polynomial.</span>
+<span class="sd">    multi_index_prod : MultiIndexSet</span>
+<span class="sd">        The multi-index set of the product polynomial.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The coefficients of the product polynomial in the Newton basis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Handle case where no transformation is required</span>
+    <span class="k">if</span> <span class="n">_is_compute_coeffs_poly_prod_via_monomials</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">,</span> <span class="n">grid_prod</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">compute_coeffs_poly_prod_via_monomials</span><span class="p">(</span>
+            <span class="n">poly_1</span><span class="p">,</span>
+            <span class="n">poly_2</span><span class="p">,</span>
+            <span class="n">multi_index_prod</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_compute_coeffs_poly_prod_via_lagrange</span><span class="p">(</span>
+        <span class="n">poly_1</span><span class="p">,</span>
+        <span class="n">poly_2</span><span class="p">,</span>
+        <span class="n">grid_prod</span><span class="p">,</span>
+        <span class="n">multi_index_prod</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_is_compute_coeffs_poly_prod_via_monomials</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">grid_prod</span><span class="p">:</span> <span class="n">Grid</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the polynomials may be multiplied via the monomials.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the multiplication expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the multiplication expression.</span>
+<span class="sd">    grid_prod : Grid</span>
+<span class="sd">        The Grid associated with the product polynomial.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        ``True`` if one of the operands is a scalar polynomial, or if</span>
+<span class="sd">        one of them has a scalar monomial and both of the underlying grids are</span>
+<span class="sd">        compatible with the given product grid; ``False`` otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if one of the operands is a scalar polynomial</span>
+    <span class="n">is_scalar_poly</span> <span class="o">=</span> <span class="n">is_scalar</span><span class="p">(</span><span class="n">poly_1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_scalar</span><span class="p">(</span><span class="n">poly_2</span><span class="p">)</span>
+    <span class="c1"># Check if one of the monomials of the operand is a scalar</span>
+    <span class="n">is_scalar_multi_index_1</span> <span class="o">=</span> <span class="n">is_scalar</span><span class="p">(</span><span class="n">poly_1</span><span class="o">.</span><span class="n">multi_index</span><span class="p">)</span>
+    <span class="n">is_scalar_multi_index_2</span> <span class="o">=</span> <span class="n">is_scalar</span><span class="p">(</span><span class="n">poly_2</span><span class="o">.</span><span class="n">multi_index</span><span class="p">)</span>
+    <span class="n">is_scalar_multi_index</span> <span class="o">=</span> <span class="n">is_scalar_multi_index_1</span> <span class="ow">or</span> <span class="n">is_scalar_multi_index_2</span>
+    <span class="c1"># Check if the grids are compatible with the given grid</span>
+    <span class="n">is_compatible_grid_1</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">is_compatible</span><span class="p">(</span><span class="n">grid_prod</span><span class="p">)</span>
+    <span class="n">is_compatible_grid_2</span> <span class="o">=</span> <span class="n">poly_2</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">is_compatible</span><span class="p">(</span><span class="n">grid_prod</span><span class="p">)</span>
+    <span class="n">is_compatible_grids</span> <span class="o">=</span> <span class="n">is_compatible_grid_1</span> <span class="ow">and</span> <span class="n">is_compatible_grid_2</span>
+
+    <span class="k">return</span> <span class="n">is_scalar_poly</span> <span class="ow">or</span> <span class="p">(</span><span class="n">is_scalar_multi_index</span> <span class="ow">and</span> <span class="n">is_compatible_grids</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_coeffs_poly_prod_via_lagrange</span><span class="p">(</span>
+    <span class="n">poly_1</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">poly_2</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">grid_prod</span><span class="p">:</span> <span class="n">Grid</span><span class="p">,</span>
+    <span class="n">multi_index_prod</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the coefficients of a product Newton polynomial via Lagrange.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly_1 : NewtonPolynomial</span>
+<span class="sd">        Left operand of the multiplication expression.</span>
+<span class="sd">    poly_2 : NewtonPolynomial</span>
+<span class="sd">        Right operand of the multiplication expression.</span>
+<span class="sd">    grid_product : Grid</span>
+<span class="sd">        The Grid associated with the product polynomial.</span>
+<span class="sd">    multi_index_product : MultiIndexSet</span>
+<span class="sd">        The multi-index set of the product polynomial.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The coefficients of the product polynomial in the Newton basis.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Both polynomials are assumed to have the same spatial dimension and</span>
+<span class="sd">      matching domains. These conditions have been made sure upstream.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Compute the values of the operands at the unisolvent nodes</span>
+    <span class="n">lag_coeffs_1</span> <span class="o">=</span> <span class="n">grid_prod</span><span class="p">(</span><span class="n">poly_1</span><span class="p">)</span>
+    <span class="n">lag_coeffs_2</span> <span class="o">=</span> <span class="n">grid_prod</span><span class="p">(</span><span class="n">poly_2</span><span class="p">)</span>
+    <span class="n">lag_coeffs_prod</span> <span class="o">=</span> <span class="n">lag_coeffs_1</span> <span class="o">*</span> <span class="n">lag_coeffs_2</span>
+
+    <span class="c1"># Transform the Lagrange coefficients into Newton coefficients</span>
+    <span class="n">nwt_coeffs_prod</span> <span class="o">=</span> <span class="n">_transform_lag2nwt</span><span class="p">(</span>
+        <span class="n">lag_coeffs_prod</span><span class="p">,</span>
+        <span class="n">grid_prod</span><span class="p">,</span>
+        <span class="n">poly_1</span><span class="o">.</span><span class="n">indices_are_separate</span> <span class="ow">or</span> <span class="n">poly_2</span><span class="o">.</span><span class="n">indices_are_separate</span><span class="p">,</span>
+        <span class="n">multi_index_prod</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nwt_coeffs_prod</span>
+
+
+<span class="k">def</span> <span class="nf">_transform_lag2nwt</span><span class="p">(</span>
+    <span class="n">lag_coeffs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="n">Grid</span><span class="p">,</span>
+    <span class="n">indices_are_separate</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform the (active) Lagrange coefficients to the Newton coefficients.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lag_coeffs : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The coefficients of the polynomial in the Lagrange basis.</span>
+<span class="sd">    grid : Grid</span>
+<span class="sd">        The underlying interpolation grid of the polynomial.</span>
+<span class="sd">    indices_are_separate : bool</span>
+<span class="sd">        A flag that indicates whether the multi-index set of the grid</span>
+<span class="sd">        and the given multi-index set are not the same.</span>
+<span class="sd">    multi_index : MultiIndexSet</span>
+<span class="sd">        The multi-index set of the polynomial</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The Newton coefficients that correspond to the active monomials.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - DDS is used in this function to circumvent the problem of circular</span>
+<span class="sd">      import in Minterpy (transformation class needs polynomial class).</span>
+<span class="sd">      This is a temporary solution; try to solve the circular import issues</span>
+<span class="sd">      by better organization and/or using interface functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Transform the Lagrange coefficients into Newton coefficients</span>
+    <span class="n">nwt_coeffs</span> <span class="o">=</span> <span class="n">dds</span><span class="p">(</span><span class="n">lag_coeffs</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">tree</span><span class="p">)</span>
+
+    <span class="c1"># Deal with separate indices, select only w.r.t the active monomials</span>
+    <span class="k">if</span> <span class="n">indices_are_separate</span><span class="p">:</span>
+        <span class="n">nwt_coeffs</span> <span class="o">=</span> <span class="n">select_active_monomials</span><span class="p">(</span><span class="n">nwt_coeffs</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nwt_coeffs</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_quad_weights</span><span class="p">(</span>
+    <span class="n">poly</span><span class="p">:</span> <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the quadrature weights of a polynomial in the Newton basis.</span>
+
+<span class="sd">    The quadrature weights are the integrated monomials in the Newton basis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    poly : NewtonPolynomial</span>
+<span class="sd">        The polynomial in the Newton basis to be integrated.</span>
+<span class="sd">    bounds : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The bounds of integration.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The quadrature weights of the polynomial in the Newton basis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the relevant data from the polynomial instance</span>
+    <span class="n">exponents</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">exponents</span>
+    <span class="n">generating_points</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">generating_points</span>
+
+    <span class="n">quad_weights</span> <span class="o">=</span> <span class="n">integrate_monomials_newton</span><span class="p">(</span>
+        <span class="n">exponents</span><span class="p">,</span> <span class="n">generating_points</span><span class="p">,</span> <span class="n">bounds</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">quad_weights</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Minterpy Development Team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

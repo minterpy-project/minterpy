@@ -1,0 +1,1628 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>multi_index &#8212; Minterpy 0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles.css?v=a88e7498" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/core/multi_index';</script>
+    <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/api/core/multi_index.html" />
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="grid" href="grid.html" />
+    <link rel="prev" title="minterpy.core" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+g7167eef" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../interpolation.html">Interpolation</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Core</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Multi-Index Set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html">Grid</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="ABC/index.html">Abstract Base Classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="ABC/abc-polynomial.html">Multivariate Polynomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ABC/abc-transformation.html">Transformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ABC/abc-operator.html">Transformation Operator</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="tree.html">Multi-Index Tree</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../polynomials/index.html">Polynomials Bases</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../polynomials/lagrange.html">Lagrange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../polynomials/newton.html">Newton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../polynomials/canonical.html">Canonical</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../polynomials/chebyshev.html">Chebyshev</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../transformations/index.html">Basis Transformations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-lagrange.html">From Lagrange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-newton.html">From Newton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-canonical.html">From Canonical</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-chebyshev.html">From Chebyshev</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-identity.html">Identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/interface.html">Interface</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../transformation-operators/index.html">Transformation Operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../transformation-operators/operator-matrix.html">Matrix Operator</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../transformation-operators/operator-barycentric/index.html">Barycentric Operator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../transformation-operators/operator-barycentric/operator-barycentric.html">Barycentric Operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../transformation-operators/operator-barycentric/operator-barycentric-dict.html">Barycentric Operator (Dict)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../transformation-operators/operator-barycentric/operator-barycentric-factorized.html">Barycentric Operator (Factorized)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../transformation-operators/operator-barycentric/operator-barycentric-piecewise.html">Barycentric Operator (Piecewise)</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../extras/index.html">Extras</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../extras/regression/index.html">Polynomial Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../extras/regression/ordinary_regression.html">Ordinary regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extras/regression/regression_abc.html">Regression abstract class</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../internal/index.html">Internal API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../internal/utils/index.html">Non-Compiled</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../internal/utils/arrays.html">Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/utils/multi-index.html">Multi-Index Exponents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/utils/poly-lagrange.html">Polynomials: Lagrange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/utils/poly-newton.html">Polynomials: Newton</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/utils/poly-canonical.html">Polynomials: Canonical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/utils/poly-chebyshev.html">Polynomials: Chebyshev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/utils/quad.html">Quadrature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/utils/verification.html">Verification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../internal/jit_compiled/index.html">JIT-Compiled</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../internal/jit_compiled/common.html">Common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/jit_compiled/multi-index.html">Multi-index Exponents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/jit_compiled/newton-diff.html">Newton: Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/jit_compiled/newton-eval.html">Newton: Evaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/jit_compiled/canonical.html">Canonical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/jit_compiled/transformations.html">Polynomial transformations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/dds.html">DDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/trafoutils.html">Transformation utility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/gen-points.html">Generating points</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">minterpy.core</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">multi_index</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-minterpy.core.multi_index">
+<span id="multi-index"></span><h1>multi_index<a class="headerlink" href="#module-minterpy.core.multi_index" title="Link to this heading">#</a></h1>
+<p>This module contains the implementation of the <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> class.</p>
+<p>The <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> class represents the multi-index sets of exponents that
+define the multivariate polynomials regardless of their chosen basis.</p>
+<section id="background-information">
+<h2>Background information<a class="headerlink" href="#background-information" title="Link to this heading">#</a></h2>
+<p>Multi-index sets <span class="math notranslate nohighlight">\(A \subseteq \mathbb{N}^m\)</span> generalize the notion of
+polynomial degree to multiple dimensions <span class="math notranslate nohighlight">\(m \in \mathbb{N}\)</span>.
+More detailed background information can be found in
+<a class="reference internal" href="../../fundamentals/polynomial-bases.html#multi-index-sets-and-polynomial-degree"><span class="std std-ref">Multi-index sets and polynomial degree</span></a>.</p>
+</section>
+<section id="implementation-details">
+<h2>Implementation details<a class="headerlink" href="#implementation-details" title="Link to this heading">#</a></h2>
+<p>An instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> class consists of two main properties:
+the set of exponents and the <span class="math notranslate nohighlight">\(l_p\)</span>-degree (i.e., the <span class="math notranslate nohighlight">\(p\)</span> in the
+<span class="math notranslate nohighlight">\(l_p\)</span>-norm of the exponents).</p>
+<p>The set of exponents is always given as a two-dimensional array of non-negative
+integers of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code> where <code class="docutils literal notranslate"><span class="pre">N</span></code> corresponds to the number of elements
+and <code class="docutils literal notranslate"><span class="pre">m</span></code> corresponds to the <em>spatial dimension</em> of the set.
+The <span class="math notranslate nohighlight">\(l_p\)</span>-degree is always given as a scalar of type <em class="xref py py-obj">float</em>.</p>
+</section>
+<section id="how-to-guides">
+<h2>How-To Guides<a class="headerlink" href="#how-to-guides" title="Link to this heading">#</a></h2>
+<p>The relevant section of the <a class="reference internal" href="../../how-to/multi-index-set/index.html"><span class="doc">docs</span></a>
+contains several how-to guides related to instances of the <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>
+class demonstrating their usages and features.</p>
+</section>
+<hr class="docutils" />
+<dl class="py class">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.core.multi_index.</span></span><span class="sig-name descname"><span class="pre">MultiIndexSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exponents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/dev/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A class to represent the set of multi-indices.</p>
+<p>The instances of this class provide the data structure for the exponents
+of multi-dimensional polynomials independently of the chosen basis in
+the polynomial space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
+of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of multi-index elements
+(i.e., exponents) and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of spatial dimension.
+Each row of the array indicates the vector of exponents.
+To create an empty set, an empty two-dimensional array may be passed.</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
+that is used to define the multi-index set. The value of
+<code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> must be a positive float (<span class="math notranslate nohighlight">\(p &gt; 0\)</span>).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If the set of exponents is not given as an integer array, it is converted
+to an integer array once the instance has been constructed.</p></li>
+<li><p>The resulting polynomial degree corresponds to the minimum degree
+that would include the given set of exponents with respect to
+the <span class="math notranslate nohighlight">\(l_p\)</span>-degree.</p></li>
+</ul>
+<p class="rubric">Properties</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.exponents" title="minterpy.core.multi_index.MultiIndexSet.exponents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exponents</span></code></a></p></td>
+<td><p>Array of exponents in the form of multi-indices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.is_complete" title="minterpy.core.multi_index.MultiIndexSet.is_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_complete</span></code></a></p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">exponents</span></code> array is complete.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.is_downward_closed" title="minterpy.core.multi_index.MultiIndexSet.is_downward_closed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_downward_closed</span></code></a></p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">exponents</span></code> array is downward-closed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.lp_degree" title="minterpy.core.multi_index.MultiIndexSet.lp_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp_degree</span></code></a></p></td>
+<td><p><span class="math notranslate nohighlight">\(p\)</span> of <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define the multi-index set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.max_exponent" title="minterpy.core.multi_index.MultiIndexSet.max_exponent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_exponent</span></code></a></p></td>
+<td><p>The maximum exponent of the multi-index set.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.max_exponents" title="minterpy.core.multi_index.MultiIndexSet.max_exponents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_exponents</span></code></a></p></td>
+<td><p>The maximum exponents per dimension of the multi-index set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.poly_degree" title="minterpy.core.multi_index.MultiIndexSet.poly_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">poly_degree</span></code></a></p></td>
+<td><p>The polynomial degree of the multi-index set.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.spatial_dimension" title="minterpy.core.multi_index.MultiIndexSet.spatial_dimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spatial_dimension</span></code></a></p></td>
+<td><p>The dimension of the domain space.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.add_exponents" title="minterpy.core.multi_index.MultiIndexSet.add_exponents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_exponents</span></code></a>(exponents[, inplace])</p></td>
+<td><p>Add a set of exponents lexicographically into this instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.contains_these_exponents" title="minterpy.core.multi_index.MultiIndexSet.contains_these_exponents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contains_these_exponents</span></code></a>(exponents[, expand_dim])</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance contains a given set of exponents.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.expand_dim" title="minterpy.core.multi_index.MultiIndexSet.expand_dim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_dim</span></code></a>(target_dimension[, inplace])</p></td>
+<td><p>Expand the dimension of the multi-index set.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.from_degree" title="minterpy.core.multi_index.MultiIndexSet.from_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_degree</span></code></a>(spatial_dimension, poly_degree)</p></td>
+<td><p>Create an instance from given spatial dim., poly., and lp-degrees.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.is_disjoint" title="minterpy.core.multi_index.MultiIndexSet.is_disjoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_disjoint</span></code></a>(other[, expand_dim])</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is disjoint with another.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.is_propsubset" title="minterpy.core.multi_index.MultiIndexSet.is_propsubset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_propsubset</span></code></a>(other[, expand_dim])</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is a proper subset of another.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.is_propsuperset" title="minterpy.core.multi_index.MultiIndexSet.is_propsuperset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_propsuperset</span></code></a>(other[, expand_dim])</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is a proper subset of another.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.is_subset" title="minterpy.core.multi_index.MultiIndexSet.is_subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_subset</span></code></a>(other[, expand_dim])</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is a subset of another.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.is_superset" title="minterpy.core.multi_index.MultiIndexSet.is_superset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_superset</span></code></a>(other[, expand_dim])</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is a superset of another.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.make_complete" title="minterpy.core.multi_index.MultiIndexSet.make_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_complete</span></code></a>([inplace])</p></td>
+<td><p>Create a complete multi-index set from the current exponents.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.make_downward_closed" title="minterpy.core.multi_index.MultiIndexSet.make_downward_closed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_downward_closed</span></code></a>([inplace])</p></td>
+<td><p>Create a downward-closed multi-index set from the current exponents.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.multiply" title="minterpy.core.multi_index.MultiIndexSet.multiply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multiply</span></code></a>(other[, inplace])</p></td>
+<td><p>Multiply an instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> with another.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet.union" title="minterpy.core.multi_index.MultiIndexSet.union"><code class="xref py py-obj docutils literal notranslate"><span class="pre">union</span></code></a>(other[, inplace])</p></td>
+<td><p>Create a union between this instance with another.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.from_degree">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">DEFAULT_LP_DEG</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.from_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.from_degree" title="Link to this definition">#</a></dt>
+<dd><p>Create an instance from given spatial dim., poly., and lp-degrees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Spatial dimension of the multi-index set (<span class="math notranslate nohighlight">\(m\)</span>); the value of
+<code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> must be a positive integer (<span class="math notranslate nohighlight">\(m &gt; 0\)</span>).</p></li>
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Polynomial degree of the multi-index set (<span class="math notranslate nohighlight">\(n\)</span>); the value of
+<code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> must be a non-negative integer (<span class="math notranslate nohighlight">\(n \geq 0\)</span>).</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
+that is used to define the multi-index set. The value of
+<code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> must be a positive float (<span class="math notranslate nohighlight">\(p &gt; 0\)</span>).
+If not specified, <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> is assigned with the value of
+<span class="math notranslate nohighlight">\(2.0\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> in the given
+<code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> with a complete set of exponents
+with respect to the given <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> and <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet">MultiIndexSet</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.exponents">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exponents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.exponents" title="Link to this definition">#</a></dt>
+<dd><p>Array of exponents in the form of multi-indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A two-dimensional integer array of exponents in the form of
+lexicographically sorted (ordered) multi-indices.
+This is a read-only property and defined at construction.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Each row corresponds to the exponent of a multi-dimensional
+polynomial basis while, each column corresponds to the exponent
+of a given dimension of a multi-dimensional polynomial basis.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.lp_degree">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lp_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.lp_degree" title="Link to this definition">#</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p\)</span> of <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define the multi-index set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm
+(i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree) that is used to define
+the multi-index set. This property is read-only
+and defined at construction.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.poly_degree">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poly_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.poly_degree" title="Link to this definition">#</a></dt>
+<dd><p>The polynomial degree of the multi-index set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The polynomial degree of the multi-index set. This property is
+read-only and inferred from a given multi-index set and lp-degree.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.spatial_dimension">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spatial_dimension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.spatial_dimension" title="Link to this definition">#</a></dt>
+<dd><p>The dimension of the domain space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The dimension of the domain space, on which a polynomial described
+by this instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> lives.
+It is equal to the number of elements in each element
+of multi-indices (i.e., the number of columns of the array
+of multi-indices)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.is_complete">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_complete</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.is_complete" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">exponents</span></code> array is complete.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">exponents</span></code> array is complete and <code class="docutils literal notranslate"><span class="pre">False</span></code>
+otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>For a definition of completeness, refer to the relevant
+<a class="reference internal" href="../../how-to/multi-index-set/multi-index-set-complete.html"><span class="doc">section</span></a>
+of the Minterpy Documentation.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.is_downward_closed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_downward_closed</span></span><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.is_downward_closed" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">exponents</span></code> array is downward-closed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">exponents</span></code> array is downward-closed and
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Many Minterpy routines like DDS, Newton-evaluation, etc. strictly
+require a downward-closed exponent array (i.e., an array without
+lexicographical “holes”) to work.</p></li>
+<li><p>Refer to the Fundamentals section of the Minterpy Documentation
+for the definition of
+<a class="reference internal" href="../../fundamentals/polynomial-bases.html"><span class="doc">multi-index sets</span></a>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.max_exponent">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_exponent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.max_exponent" title="Link to this definition">#</a></dt>
+<dd><p>The maximum exponent of the multi-index set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum exponent over all dimensions of the multi-index set.
+If the index set is empty, <em class="xref py py-obj">None</em> is returned.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a>, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.max_exponents">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_exponents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.max_exponents" title="Link to this definition">#</a></dt>
+<dd><p>The maximum exponents per dimension of the multi-index set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum exponents per dimension of the multi-index set given
+as one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">m</span></code> (the spatial dimension).
+If the index set is empty, <em class="xref py py-obj">None</em> is returned.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.add_exponents">
+<span class="sig-name descname"><span class="pre">add_exponents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exponents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.add_exponents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.add_exponents" title="Link to this definition">#</a></dt>
+<dd><p>Add a set of exponents lexicographically into this instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exponents</strong> (<em class="xref py py-obj">numpy:numpy.ndarray</em>) – Array of exponents to be added. The set of exponents must be of
+integer type.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+in-place with the complete exponents. If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>,
+a new <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
+The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multi-index set with an updated set of exponents.
+If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the modification
+is carried out in-place without an explicit output
+(it returns <code class="docutils literal notranslate"><span class="pre">None</span></code>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>, optional</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The array of added exponents must be of integer types; non-integer
+types will be converted to integer.</p></li>
+<li><p>If the current <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> exponents already
+include the added set of exponents and <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set
+to <code class="docutils literal notranslate"><span class="pre">False</span></code> (the default) a shallow copy is created.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.contains_these_exponents">
+<span class="sig-name descname"><span class="pre">contains_these_exponents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exponents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.contains_these_exponents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.contains_these_exponents" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance contains a given set of exponents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A two-dimensional array of exponents (multi-indices) to be
+checked.</p></li>
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the dimension of an instance is expanded if there is
+a difference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if all the multi-indices in <code class="docutils literal notranslate"><span class="pre">exponents</span></code> are contained
+in the current instance; <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.expand_dim">
+<span class="sig-name descname"><span class="pre">expand_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.expand_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.expand_dim" title="Link to this definition">#</a></dt>
+<dd><p>Expand the dimension of the multi-index set.</p>
+<p>After expansion, the value of exponents in the new dimension is 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The new spatial dimension. It must be larger than or equal
+to the current spatial dimension of the multi-index set.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+in-place with the expanded dimension. If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>,
+a new <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
+The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multi-index set with an expanded dimension.
+If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the modification
+is carried out in-place without an explicit output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>, optional</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the new dimension is smaller than the current spatial
+    dimension of the <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If the new dimension is the same as the current spatial dimension
+of the <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance, setting <code class="docutils literal notranslate"><span class="pre">inplace</span></code>
+to <code class="docutils literal notranslate"><span class="pre">False</span></code> (the default) creates a shallow copy.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.is_disjoint">
+<span class="sig-name descname"><span class="pre">is_disjoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.is_disjoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.is_disjoint" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is disjoint with another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The other instance of multi-index set.</p></li>
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
+if there is a difference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the number of spatial dimensions of the two sets
+    are not the same and <code class="docutils literal notranslate"><span class="pre">expand_dim</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The spatial dimension of the sets is irrelevant if one of the sets is
+empty.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.is_subset">
+<span class="sig-name descname"><span class="pre">is_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.is_subset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.is_subset" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is a subset of another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The superset instance.</p></li>
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
+if there is a difference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance is a subset of another;
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The spatial dimension of the sets is irrelevant if one of the sets is
+empty.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.is_propsubset">
+<span class="sig-name descname"><span class="pre">is_propsubset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.is_propsubset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.is_propsubset" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is a proper subset of another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The superset instance.</p></li>
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the dimension of an instance is expanded if there is
+a difference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance is a proper subset of another;
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The spatial dimension of the sets is irrelevant if one of the sets is
+empty.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.is_superset">
+<span class="sig-name descname"><span class="pre">is_superset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.is_superset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.is_superset" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is a superset of another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The subset instance.</p></li>
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
+if there is a difference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance is a superset of another;
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The spatial dimension of the sets is irrelevant if one of the sets is
+empty.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.is_propsuperset">
+<span class="sig-name descname"><span class="pre">is_propsuperset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.is_propsuperset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.is_propsuperset" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if this instance is a proper subset of another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The subset instance.</p></li>
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
+if there is a difference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance is a proper superset of another;
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The spatial dimension of the sets is irrelevant if one of the sets is
+empty.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.make_complete">
+<span class="sig-name descname"><span class="pre">make_complete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.make_complete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.make_complete" title="Link to this definition">#</a></dt>
+<dd><p>Create a complete multi-index set from the current exponents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+in-place with the complete exponents. If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>,
+a new <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
+The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multi-index set with a complete set of exponents.
+If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the modification
+is carried out in-place without an explicit output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>, optional</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If the current <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> exponents are already
+complete, setting <code class="docutils literal notranslate"><span class="pre">inplace</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code> (the default) creates
+a shallow copy.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.make_downward_closed">
+<span class="sig-name descname"><span class="pre">make_downward_closed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.make_downward_closed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.make_downward_closed" title="Link to this definition">#</a></dt>
+<dd><p>Create a downward-closed multi-index set from the current exponents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+in-place with the downward-closed set of exponents.
+If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>, a new <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>
+instance is created.
+The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multi-index set with the downward-closed set of exponents.
+If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the modification
+is carried out in-place without an explicit output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>, optional</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If the current <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> exponents are already
+complete, setting <code class="docutils literal notranslate"><span class="pre">inplace</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code> (the default) creates
+a shallow copy.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.multiply">
+<span class="sig-name descname"><span class="pre">multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.multiply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.multiply" title="Link to this definition">#</a></dt>
+<dd><p>Multiply an instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> with another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The second operand of the multi-index set multiplication (i.e.,
+<code class="docutils literal notranslate"><span class="pre">other</span></code> in <code class="docutils literal notranslate"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">other</span></code>).</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified in-place
+with the product of the two multi-indices.
+If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, a new
+<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
+The default is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multi-index set having the product of the two sets of
+exponents. If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the modification
+is carried out in-place without an explicit output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.union">
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.union" title="Link to this definition">#</a></dt>
+<dd><p>Create a union between this instance with another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The second operand of the multi-index set union (i.e., <code class="docutils literal notranslate"><span class="pre">other</span></code> in
+<code class="docutils literal notranslate"><span class="pre">self</span> <span class="pre">|</span> <span class="pre">other</span></code>).</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+in-place with the union of the two multi-indices.
+If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, a new
+<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
+The default is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multi-index set having the union of the two sets of exponents.
+If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the modification
+is carried out in-place without an explicit output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>, optional</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If the operands are equal in value, setting <code class="docutils literal notranslate"><span class="pre">inplace</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code>
+(the default) creates a shallow copy.</p></li>
+<li><p>The spatial dimension of the sets is irrelevant if one of the sets is
+empty.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__str__" title="Link to this definition">#</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__repr__" title="Link to this definition">#</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__len__" title="Link to this definition">#</a></dt>
+<dd><p>Return the cardinality of the multi-index set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__contains__">
+<span class="sig-name descname"><span class="pre">__contains__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__contains__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__contains__" title="Link to this definition">#</a></dt>
+<dd><p>Check if an element is contained by a <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>np.ndarray</em>) – An element of multi-index set, a one-dimensional integer array,
+to check whether it is contained in this
+<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the item is an element of the instance,
+and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Containment check is very forgiving; wrong type, wrong dimension,
+multi-element checks will not raise an exception
+but simply return <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p>If the dimension is not consistent then expansion is allowed with
+zero padding.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__eq__" title="Link to this definition">#</a></dt>
+<dd><p>Check the equality of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instances via <code class="docutils literal notranslate"><span class="pre">==</span></code> operator.</p>
+<p>Two instances of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> class is equal in value if and
+only if both the underlying <span class="math notranslate nohighlight">\(l_p\)</span>-degree values are equal
+and the exponents are also equal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – An instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> that is to be compared
+with the current instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the two instances are equal in value, <code class="docutils literal notranslate"><span class="pre">False</span></code>
+otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__mul__">
+<span class="sig-name descname"><span class="pre">__mul__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__mul__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__mul__" title="Link to this definition">#</a></dt>
+<dd><p>Multiply an instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> with another via <code class="docutils literal notranslate"><span class="pre">*</span></code> op.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The second operand of the multi-index set multiplication.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The product of two multi-index sets.
+If the <span class="math notranslate nohighlight">\(l_p\)</span>-degrees of the operands are different,
+then the larger <span class="math notranslate nohighlight">\(l_p\)</span>-degree becomes the <span class="math notranslate nohighlight">\(l_p\)</span>-degree
+of the product set.
+If the dimension differs, the product set has the dimension
+of the set with the larger dimension.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__imul__">
+<span class="sig-name descname"><span class="pre">__imul__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__imul__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__imul__" title="Link to this definition">#</a></dt>
+<dd><p>Multiply inplace an instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> with another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The second operand of the multi-index set multiplication.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The product of two multi-index sets.
+If the <span class="math notranslate nohighlight">\(l_p\)</span>-degrees of the operands are different,
+then the larger <span class="math notranslate nohighlight">\(l_p\)</span>-degree becomes the <span class="math notranslate nohighlight">\(l_p\)</span>-degree
+of the product set.
+If the dimension differs, the product set has the dimension
+of the set with the larger dimension.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__ge__">
+<span class="sig-name descname"><span class="pre">__ge__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__ge__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__ge__" title="Link to this definition">#</a></dt>
+<dd><p>Check if this instance is a subset of another via <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> operator.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The checking does not keep the spatial dimensions of both instances
+strictly. If there’s a dimension mismatch, a dimension expansion
+is carried out.</p></li>
+<li><p>To carry out subset check without dimension expansion, use the method
+<em class="xref py py-obj">is_subset()</em> instead.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__gt__">
+<span class="sig-name descname"><span class="pre">__gt__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__gt__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__gt__" title="Link to this definition">#</a></dt>
+<dd><p>Check if this instance is a subset of another via <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> operator.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The checking does not keep the spatial dimensions of both instances
+strictly. If there’s a dimension mismatch, a dimension expansion
+is carried out.</p></li>
+<li><p>To carry out subset check without dimension expansion, use the method
+<em class="xref py py-obj">is_subset()</em> instead.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__hash__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__le__">
+<span class="sig-name descname"><span class="pre">__le__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__le__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__le__" title="Link to this definition">#</a></dt>
+<dd><p>Check if this instance is a subset of another via <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code> operator.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The checking does not keep the spatial dimensions of both instances
+strictly. If there’s a dimension mismatch, a dimension expansion
+is carried out.</p></li>
+<li><p>To carry out subset check without dimension expansion, use the method
+<em class="xref py py-obj">is_subset()</em> instead.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__weakref__" title="Link to this definition">#</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__lt__">
+<span class="sig-name descname"><span class="pre">__lt__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__lt__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__lt__" title="Link to this definition">#</a></dt>
+<dd><p>Check if this instance is a proper subset of another via <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> op.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The checking does not keep the spatial dimensions of both instances
+strictly. If there’s a dimension mismatch, a dimension expansion
+is carried out.</p></li>
+<li><p>To carry out subset check without dimension expansion, use the method
+<em class="xref py py-obj">is_subset()</em> instead.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__or__">
+<span class="sig-name descname"><span class="pre">__or__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__or__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__or__" title="Link to this definition">#</a></dt>
+<dd><p>Combine an instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> with another via <code class="docutils literal notranslate"><span class="pre">|</span></code> oper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The second operand of the multi-index set union.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The union of two multi-index sets.
+If the <span class="math notranslate nohighlight">\(l_p\)</span>-degrees of the operands are different,
+then the larger <span class="math notranslate nohighlight">\(l_p\)</span>-degree becomes the <span class="math notranslate nohighlight">\(l_p\)</span>-degree
+of the union set.
+If the dimension differs, the union set has the dimension
+of the set with the larger dimension.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__ior__">
+<span class="sig-name descname"><span class="pre">__ior__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__ior__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__ior__" title="Link to this definition">#</a></dt>
+<dd><p>Combine an instance of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> with another inplace via op.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The second operand of the multi-index set union.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The union of two multi-index sets, updating the left-hand-side
+operand. If the <span class="math notranslate nohighlight">\(l_p\)</span>-degrees of the operands are different,
+then the larger <span class="math notranslate nohighlight">\(l_p\)</span>-degree becomes the <span class="math notranslate nohighlight">\(l_p\)</span>-degree
+of the union set.
+If the dimension differs, the union set has the dimension
+of the set with the larger dimension.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.__deepcopy__">
+<span class="sig-name descname"><span class="pre">__deepcopy__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet.__deepcopy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.__deepcopy__" title="Link to this definition">#</a></dt>
+<dd><p>Create of a deepcopy.</p>
+<p>This function is called, if one uses the top-level function
+<code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code> on an instance of this class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A deep copy of the current instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Some properties of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> are lazily evaluated,
+this custom implementation of <a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.deepcopy" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.deepcopy</span></code></a> allows the values of
+already computed properties to be copied.</p></li>
+<li><p>A deep copy contains a deep copy of the property exponents.</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.deepcopy" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.deepcopy</span></code></a></dt><dd><p>copy operator form the python standard library.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">minterpy.core</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="grid.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">grid</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background-information">Background information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-details">Implementation details</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-guides">How-To Guides</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.from_degree"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.from_degree()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.exponents"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.exponents</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.lp_degree"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.lp_degree</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.poly_degree"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.poly_degree</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.spatial_dimension</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.is_complete"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_complete</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.is_downward_closed"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_downward_closed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.max_exponent"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.max_exponent</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.max_exponents"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.max_exponents</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.add_exponents"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.add_exponents()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.contains_these_exponents"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.contains_these_exponents()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.expand_dim"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.expand_dim()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.is_disjoint"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_disjoint()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.is_subset"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_subset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.is_propsubset"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_propsubset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.is_superset"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_superset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.is_propsuperset"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_propsuperset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.make_complete"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.make_complete()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.make_downward_closed"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.make_downward_closed()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.multiply"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.multiply()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.union"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.union()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__str__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__str__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__repr__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__repr__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__len__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__len__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__contains__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__contains__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__eq__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__eq__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__mul__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__mul__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__imul__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__imul__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__ge__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__ge__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__gt__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__gt__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__hash__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__hash__</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__le__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__le__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__weakref__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__weakref__</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__lt__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__lt__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__or__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__or__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__ior__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__ior__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.multi_index.MultiIndexSet.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__deepcopy__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Minterpy Development Team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
