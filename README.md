@@ -14,6 +14,11 @@
 
 ---
 
+|                                  Branches                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+|:--------------------------------------------------------------------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`main`](https://github.com/minterpy-project/minterpy/tree/main) (stable)  | [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=main)](https://minterpy-project.github.io/minterpy/stable/) |
+|  [`dev`](https://github.com/minterpy-project/minterpy/tree/dev) (latest)   | [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=dev)](https://minterpy-project.github.io/minterpy/latest/)  |
+
 `minterpy` is an open-source Python package for a multivariate generalization
 of the classical Newton and Lagrange interpolation schemes as well as related tasks.
 It is based on an optimized re-implementation of
