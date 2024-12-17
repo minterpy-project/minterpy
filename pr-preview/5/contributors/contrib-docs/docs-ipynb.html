@@ -1,0 +1,813 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Writing Jupyter Notebooks &#8212; Minterpy 0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles.css?v=a88e7498" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'contributors/contrib-docs/docs-ipynb';</script>
+    <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/contributors/contrib-docs/docs-ipynb.html" />
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Writing Docstrings for API Documentation" href="docs-docstrings.html" />
+    <link rel="prev" title="Writing reStructuredText Documents" href="docs-rest.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+g1687d5f" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../code-of-conduct.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development-environment.html">Setting Up a Development Environment</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../contrib-codebase/index.html">Contributing to the Codebase</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contrib-codebase/code-style.html">Code Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contrib-codebase/pre-commits.html">Pre-Commits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contrib-codebase/running-writing-tests.html">Running and Writing Tests</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Contributing to the Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="docs-design.html">Documentation: Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-tools.html">Documentation: Framework and Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-source-structure.html">Documentation Source Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-build.html">Building the Documentation Locally</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-rest.html">Writing reStructuredText Documents</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Writing Jupyter Notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-docstrings.html">Writing Docstrings for API Documentation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../merge-request.html">Creating a Merge (Pull) Request</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about-us.html">About Us</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Contributors Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Contributing to the Documentation</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Writing Jupyter Notebooks</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="writing-jupyter-notebooks">
+<h1>Writing Jupyter Notebooks<a class="headerlink" href="#writing-jupyter-notebooks" title="Link to this heading">#</a></h1>
+<p>The functionalities of Minterpy are demonstrated using documents
+written as Jupyter notebooks, which are executed and integrated into
+the official documentation.
+These built documents can be accessed in the <a class="reference internal" href="../../how-to/index.html"><span class="doc">How-to Guides</span></a>
+and <a class="reference internal" href="../../getting-started/index.html"><span class="doc">Getting Started with Minterpy</span></a> sections of the Minterpy documentation.</p>
+<p>This page outlines the specific guidelines and considerations
+for writing a Jupyter notebook that will be included
+as part of the Minterpy documentation.</p>
+<section id="source-organization">
+<h2>Source organization<a class="headerlink" href="#source-organization" title="Link to this heading">#</a></h2>
+<p>Jupyter-notebook-based documents for the Minterpy documentation are currently
+restricted to the following sections:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../getting-started/index.html"><span class="doc">Getting Started with Minterpy</span></a></p></li>
+<li><p><a class="reference internal" href="../../how-to/index.html"><span class="doc">How-to Guides</span></a></p></li>
+</ul>
+<p>The source files for these sections are located in the following directories:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/docs/getting-started</span></code> for the <a class="reference internal" href="../../getting-started/index.html"><span class="doc">Getting Started with Minterpy</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/docs/how-to</span></code> for the <a class="reference internal" href="../../how-to/index.html"><span class="doc">How-to Guides</span></a></p></li>
+</ul>
+<p>Additionally, the How-To Guides are generally organized into a further level
+of hierarchy, based on either:</p>
+<ul class="simple">
+<li><p><strong>Main Components of Minterpy</strong>, for example, <a class="reference internal" href="../../how-to/grid/index.html"><span class="doc">Grid</span></a>, <a class="reference internal" href="../../how-to/multi-index-set/index.html"><span class="doc">Multi-Index Sets</span></a>.</p></li>
+<li><p><strong>Numerical Tasks</strong>, for example, <a class="reference internal" href="../../how-to/integration/index.html"><span class="doc">Integration</span></a>.</p></li>
+</ul>
+<p>New tutorials should be put in <code class="docutils literal notranslate"><span class="pre">/docs/getting-started</span></code> directory and
+new How-To Guides should be put in a relevant sub-directory of
+<code class="docutils literal notranslate"><span class="pre">/docs/how-to</span></code> .</p>
+</section>
+<section id="adding-a-notebook-to-the-source-tree">
+<h2>Adding a notebook to the source tree<a class="headerlink" href="#adding-a-notebook-to-the-source-tree" title="Link to this heading">#</a></h2>
+<p>If you’re adding a new notebook file to the documentation source tree,
+please use one of these locations:</p>
+<p class="rubric">Getting Started Guides / Tutorials</p>
+<p>Place new Tutorials in the <code class="docutils literal notranslate"><span class="pre">/docs/getting-started</span></code> directory.</p>
+<p class="rubric">How-To Guides</p>
+<p>Place new How-To Guides in the appropriate subdirectory within <code class="docutils literal notranslate"><span class="pre">/docs/how-to</span></code>,
+depending on the topic.</p>
+<p>—</p>
+<p>By adhering to this structure, the Jupyter-notebook-based documents will be
+correctly organized and accessible within the Minterpy documentation.</p>
+</section>
+<section id="adding-a-notebook-to-documentation">
+<h2>Adding a notebook to documentation<a class="headerlink" href="#adding-a-notebook-to-documentation" title="Link to this heading">#</a></h2>
+<p>If you add a new Jupyter notebook to the Minterpy documentation,
+ensure that the relevant <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> files are updated accordingly.</p>
+<p class="rubric">Updating the index.rst File</p>
+<p>In the appropriate <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> file, you must add a new entry to
+the <code class="docutils literal notranslate"><span class="pre">toctree</span></code> directive to include the new notebook.
+This ensures the new document is accessible in the built documentation.</p>
+<div class="highlight-rest notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
+   <span class="nc">:maxdepth:</span> 1
+   <span class="nc">:hidden:</span>
+
+<span class="c">   ...</span>
+</pre></div>
+</div>
+<p class="rubric">Getting Started Guides / Tutorials</p>
+<p>For new tutorials, update the <code class="docutils literal notranslate"><span class="pre">/docs/getting-started/index.rst</span></code> file
+with the new notebook entry under the <code class="docutils literal notranslate"><span class="pre">toctree</span></code> directive.</p>
+<p class="rubric">How-To Guides:</p>
+<p>If the new How-To Guide belongs to an existing sub-directory,
+update the corresponding <code class="docutils literal notranslate"><span class="pre">/docs/how-to/&lt;relevant-directory&gt;/index.rst</span></code> file.</p>
+<p>If it does not belong to an existing sub-directory, follow these steps:</p>
+<ul class="simple">
+<li><p>Create a new directory for the guide with its own <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> file.</p></li>
+<li><p>Put the new notebook file in the new directory.</p></li>
+<li><p>Add a <code class="docutils literal notranslate"><span class="pre">toctree</span></code> directive inside the new <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> to list the new file.</p></li>
+<li><p>Update the parent <code class="docutils literal notranslate"><span class="pre">/docs/how-to/index.rst</span></code> to include the new directory
+and its index file.</p></li>
+</ul>
+<hr class="docutils" />
+<p>By following these steps, you ensure that the new Jupyter notebooks are properly linked and accessible within the Minterpy documentation structure.</p>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>We recommend creating and editing Jupyter notebooks using JupyterLab,
+which is included as part of the extras requirement
+for the documentation development environment.</p>
+<p>If you follow the installation steps in
+<a class="reference internal" href="../development-environment.html#installing-minterpy-for-development"><span class="std std-ref">Installing Minterpy for development</span></a>
+with <code class="docutils literal notranslate"><span class="pre">[docs]</span></code> or <code class="docutils literal notranslate"><span class="pre">[all]</span></code> as option, then you launch invoke JupyterLab with
+the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span> <span class="n">lab</span>
+</pre></div>
+</div>
+<p>This command will start a local server, which you can access via a web browser.</p>
+</section>
+<section id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Link to this heading">#</a></h2>
+<p>Although How-To Guides and Getting-Started Guides both focus on the practical
+aspects of using Minterpy, there are notable differences as shown below.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Perspective</p></th>
+<th class="head"><p>Tutorial</p></th>
+<th class="head"><p>Remarks</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Book analogy</p></td>
+<td><p>The book “<em>How to cook potatoes</em>”</p></td>
+<td><p>The book “<em>100 Potato Recipes</em>”</p></td>
+</tr>
+<tr class="row-odd"><td><p>Goal</p></td>
+<td><p>Acquire basic competence</p></td>
+<td><p>Perform a particular task</p></td>
+</tr>
+<tr class="row-even"><td><p>Audience</p></td>
+<td><p>Limited familiarity</p></td>
+<td><p>Has familiarity; able to formulate question</p></td>
+</tr>
+<tr class="row-odd"><td><p>Purpose</p></td>
+<td><p>Provides a lesson</p></td>
+<td><p>Provides a direction</p></td>
+</tr>
+<tr class="row-even"><td><p>Responsibility</p></td>
+<td><p>Author assumes responsibility</p></td>
+<td><p>Author delegates responsibility</p></td>
+</tr>
+<tr class="row-odd"><td><p>Motivating Example</p></td>
+<td><p>Somewhat contrived</p></td>
+<td><p>Very contrived</p></td>
+</tr>
+<tr class="row-even"><td><p>Narrative</p></td>
+<td><p>A single line of carefully managed narrative</p></td>
+<td><p>May branch out (“If you want this, try that”)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Unlike tutorials, which must be carefully designed and curated
+by the project maintainers, How-To Guides are relatively straightforward
+to write due to their more limited scope.
+Below, we focus on the structure of How-To Guides.</p>
+<hr class="docutils" />
+<p>Both tutorials and How-To Guides start with a motivating example,
+but How-To Guides often feature a more contrived example.</p>
+<p>For instance, the How-To Guide on
+<a class="reference internal" href="../../how-to/multi-index-set/multi-index-set-downward-closed.html"><span class="doc">Make a Multi-Index Set Downward-Closed</span></a> starts
+with a non-downward closed set, but:</p>
+<ul class="simple">
+<li><p><strong>Why this particular set?</strong> It doesn’t matter—you have to start somewhere.</p></li>
+<li><p><strong>What’s the importance of a downward-closed set?</strong> Out of scope.
+You should probably already know that. If not, refer to other resources.</p></li>
+</ul>
+<p class="rubric">Structure of a How-To Guide</p>
+<p>Here is a suggested structure for creating a new How-To Guide:</p>
+<ul class="simple">
+<li><p>State the purpose of the guide.</p></li>
+<li><p>Provide a motivating example to set the context albeit contrively.</p></li>
+<li><p>Create relevant instances using Minterpy.</p></li>
+<li><p>Perform an action with the instances (function or method call).</p></li>
+<li><p>Demonstrate that the goal has been achieved.</p></li>
+<li><p>Remark on particularities and highlight other possibilities.</p></li>
+</ul>
+<hr class="docutils" />
+<p>By following this structure, you ensure that the How-To Guides
+are clear, purposeful, and easy to follow for users.</p>
+</section>
+<section id="best-practices">
+<h2>Best practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
+<p>Below are some stylistic conventions we encourage you to follow when
+writing a Jupyter notebook for Minterpy documentation.</p>
+<p class="rubric">Import statements</p>
+<p>You can place the import statements either after the first (opening) paragraph
+or before it:</p>
+<ul class="simple">
+<li><p>In How-To Guides, import statements are typically placed at the beginning,
+<strong>before</strong> the opening paragraph.</p></li>
+<li><p>In Tutorials, they are usually placed <strong>after</strong> the opening paragraph.</p></li>
+</ul>
+<p class="rubric">Minterpy abbrevation in import</p>
+<p>Minterpy should always be imported with <code class="docutils literal notranslate"><span class="pre">mp</span></code> abbreviation in
+the documentation.</p>
+<p class="rubric">Dependencies</p>
+<p>Limit the dependencies in the documentation,
+rely on NumPy, Scipy, and Matplotlib to get your point across.</p>
+<p class="rubric">Plotting</p>
+<p>Plotting is allowed via Matplotlib, if the statements related to plotting
+becomes very long and disturb the flow of the guide, the input cell must be
+hidden.</p>
+<p>Place a cell tag “hide-input” in the relevant cell.</p>
+<p>For more details on hiding cell contents, see <a class="reference external" href="https://myst-nb.readthedocs.io/en/latest/render/hiding.html">Hide cell contents</a>.</p>
+<p class="rubric">Clear all cell output</p>
+<p>Before submitting, all cell output must be cleared.</p>
+<p class="rubric">Markup</p>
+<p>Jupyter notebooks support markup language via Markdown enriched with <a class="reference external" href="https://myst-nb.readthedocs.io/en/latest/index.html">MyST-NB</a>
+which allows you to write mathematics, use admonitions, or cross reference
+other part of Minterpy documentation.</p>
+<p class="rubric">Admonitions</p>
+<p>Here’s an example of creating a note box in a markdown cell of a Jupyter
+notebook:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>```{note}
+The set constructed via `from_degree()` constructor is _complete_
+in the sense that it contains _all_
+the exponents $\boldsymbol{\alpha} = \left( \alpha_1, \ldots, \alpha_m \right) \in \mathbb{N}^m$
+such that the $l_p$-norm $\lVert \boldsymbol{\alpha} \rVert_{p} = (\alpha_1^{p} + \ldots + \alpha_m^{p})^{\frac{1}{p}} \leq n$
+holds.
+```
+</pre></div>
+</div>
+<p class="rubric">Cross-references</p>
+<p>Below are a couple of examples cross-referencing other part of Minterpy documentation
+from a Jupyter notebook:</p>
+<ul class="simple">
+<li><p>Minterpy API element: <code class="docutils literal notranslate"><span class="pre">{py:meth}`.Grid.from_points`</span></code></p></li>
+<li><p>Minterpy documentation page: <code class="docutils literal notranslate"><span class="pre">{doc}`example</span> <span class="pre">&lt;grid-create-from-points&gt;`)</span></code></p></li>
+</ul>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
+<p>If you modify an existing Jupyter notebook or add a new one to the Minterpy
+documentation, please ensure that it can still be executed.</p>
+<p>Assuming that you have placed everything in
+<a class="reference internal" href="#adding-a-notebook-to-the-source-tree"><span class="std std-ref">the correct location</span></a>
+you can test whether all the available notebooks are still (successfully)
+executable by following this <a class="reference internal" href="docs-build.html#testing-the-jupyter-notebook-based-documentation"><span class="std std-ref">instruction</span></a>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="docs-rest.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Writing reStructuredText Documents</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="docs-docstrings.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Writing Docstrings for API Documentation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-organization">Source organization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-a-notebook-to-the-source-tree">Adding a notebook to the source tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-a-notebook-to-documentation">Adding a notebook to documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure">Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best practices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Minterpy Development Team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
