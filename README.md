@@ -1,6 +1,10 @@
 ![](./docs/assets/Wordmark-color.png)
 
+[![DOI](https://rodare.hzdr.de/badge/DOI/10.14278/rodare.2062.svg)](https://rodare.hzdr.de/record/2062)
 [![Code style: black][black-badge]][black-link]
+[![License](https://img.shields.io/github/license/minterpy-project/minterpy)](https://choosealicense.com/licenses/mit/)
+[![PyPI](https://img.shields.io/pypi/v/minterpy)](https://pypi.org/project/minterpy/)
+
 # minterpy
 
 <figure class="quote">
@@ -14,10 +18,10 @@
 
 ---
 
-|                                  Branches                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-|:--------------------------------------------------------------------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`main`](https://github.com/minterpy-project/minterpy/tree/main) (stable)  | [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=main)](https://minterpy-project.github.io/minterpy/stable/) |
-|  [`dev`](https://github.com/minterpy-project/minterpy/tree/dev) (latest)   | [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=dev)](https://minterpy-project.github.io/minterpy/latest/)  |
+|                                  Branches                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                   |
+|:--------------------------------------------------------------------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`main`](https://github.com/minterpy-project/minterpy/tree/main) (stable)  | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Amain+) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=main)](https://minterpy-project.github.io/minterpy/stable/) |
+|  [`dev`](https://github.com/minterpy-project/minterpy/tree/dev) (latest)   | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=dev)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Adev) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=dev)](https://minterpy-project.github.io/minterpy/latest/)     |
 
 `minterpy` is an open-source Python package for a multivariate generalization
 of the classical Newton and Lagrange interpolation schemes as well as related tasks.
