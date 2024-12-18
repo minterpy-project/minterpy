@@ -5,75 +5,34 @@
 [![License](https://img.shields.io/github/license/minterpy-project/minterpy)](https://choosealicense.com/licenses/mit/)
 [![PyPI](https://img.shields.io/pypi/v/minterpy)](https://pypi.org/project/minterpy/)
 
-# minterpy
+# Minterpy
 
-<figure class="quote">
-  <blockquote>
-  to minterpy *sth.* (transitive verb) -- to produce a multivariate polynomial representation of *sth.* .
-  </blockquote>
-  <figcaption>
-    &mdash; The minterpy developers in <cite>["Lifting the curse of dimensionality"](https://interpol.pages.hzdr.de/minterpy/fundamentals/introduction.html)</cite>
-  </figcaption>
-</figure>
+|                                  Branches                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+|:--------------------------------------------------------------------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`main`](https://github.com/minterpy-project/minterpy/tree/main) (stable)  | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Amain+) [![codecov](https://codecov.io/gh/minterpy-project/minterpy/branch/main/graph/badge.svg?token=J8RCUGRKW3)](https://codecov.io/gh/minterpy-project/minterpy) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=main)](https://minterpy-project.github.io/minterpy/stable/) |
+|  [`dev`](https://github.com/minterpy-project/minterpy/tree/dev) (latest)   | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=dev)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Adev) [![codecov](https://codecov.io/gh/minterpy-project/minterpy/graph/badge.svg?token=J8RCUGRKW3)](https://codecov.io/gh/minterpy-project/minterpy) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=dev)](https://minterpy-project.github.io/minterpy/latest/)                 |
 
----
+Minterpy is an open-source Python package designed for constructing and manipulating multivariate interpolating polynomials
+with the goal of lifting the curse of dimensionality from interpolation tasks.
 
-|                                  Branches                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                   |
-|:--------------------------------------------------------------------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`main`](https://github.com/minterpy-project/minterpy/tree/main) (stable)  | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Amain+) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=main)](https://minterpy-project.github.io/minterpy/stable/) |
-|  [`dev`](https://github.com/minterpy-project/minterpy/tree/dev) (latest)   | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=dev)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Adev) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=dev)](https://minterpy-project.github.io/minterpy/latest/)     |
-
-`minterpy` is an open-source Python package for a multivariate generalization
-of the classical Newton and Lagrange interpolation schemes as well as related tasks.
-It is based on an optimized re-implementation of
-the multivariate interpolation prototype algorithm (*MIP*) by Hecht et al.[^1]
-and thereby provides software solutions that lift the curse of dimensionality from interpolation tasks.
-While interpolation occurs as the bottleneck of most computational challenges,
-`minterpy` aims to free empirical sciences from their computational limitations.
-
-`minterpy` is continuously extended and improved
-by adding further functionality and modules that provide novel digital solutions
-to a broad field of computational challenges, including but not limited to:
-
-- multivariate interpolation
-- non-linear polynomial regression
-- numerical integration
-- global (black-box) optimization
-- surface level-set methods
-- non-periodic spectral partial differential equations (PDE) solvers on
-  flat and complex geometries
-- machine learning regularization
-- data reconstruction
-- computational solutions in algebraic geometry
+Minterpy is being continuously extended and improved, with new functionalities added to address the bottlenecks involving
+interpolations in various computational tasks.
 
 ## Installation
 
-Since this implementation is a prototype,
-we currently only provide the installation by self-building from source.
-We recommend to using `git` to get the `minterpy` source:
+You can obtain the stable release of Minterpy directly from PyPI using `pip`:
 
 ```bash
-git clone https://gitlab.hzdr.de/interpol/minterpy.git
+pip install minterpy
 ```
 
-Within the source directory,
-you may use the following package manager to install ``minterpy``.
-
-A best practice is to create a virtual environment for `minterpy`.
-You can do this with the help of [conda] and the ``environment.yaml`` by:
+Alternatively, you can also obtain the latest version of Minterpy from the GitHub repository:
 
 ```bash
-conda env create -f environment.yaml
+git clone https://github.com/minterpy-project/minterpy
 ```
 
-A new conda environment called `minterpy` is created.
-Activate the new environment by:
-
-```bash
-conda activate minterpy
-```
-
-From within the environment, install the `minterpy` using [pip],
+Then from the source directory, you can install Minterpy:
 
 ```bash
 pip install [-e] .[all,dev,docs]
@@ -84,19 +43,13 @@ into the python site-packages of your Python version.
 The options `[all,dev,docs]` refer to the requirements defined
 in the `options.extras_require` section in `setup.cfg`.
 
-You **must not** use the command `python setup.py install` to install `minterpy`,
-as you cannot always assume the files `setup.py` will always be present
-in the further development of `minterpy`.
-
-Finally, if you want to deactivate the conda environment, type:
-
-```bash
-conda deactivate
-```
-
-Alternative to conda, you can create a new virtual environment via
-[venv], [virtualenv], or [pyenv-virtualenv].
+A best practice is to first create a virtual environment with
+the help of a tool like [mamba], [conda], [venv], [virtualenv] or [pyenv-virtualenv].
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+
+**NOTE**: You **must not** use the command `python setup.py install` to install `minterpy`,
+as we cannot guarantee that the file `setup.py` will always be present
+in the further development of `minterpy`.
 
 ## Quickstart
 
@@ -218,6 +171,7 @@ For that, we want to send big thanks to:
 
 [^1]: [arXiv:2010.10824](https://arxiv.org/abs/2010.10824)
 
+[mamba]: https://mamba.readthedocs.io/en/latest/
 [conda]: https://docs.conda.io/
 [pip]: https://pip.pypa.io/en/stable/
 [venv]: https://docs.python.org/3/tutorial/venv.html

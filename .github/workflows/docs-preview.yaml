@@ -53,7 +53,7 @@ jobs:
               body: 'Documentation preview (without executed notebooks) is [available](https://minterpy-project.github.io/minterpy/pr-preview/${{ github.event.number }}).'
             })
 
-  docs_preview_cleanup:
+  docs-preview-cleanup:
     if: github.event.action == 'closed'
     runs-on: ubuntu-latest
     steps:
