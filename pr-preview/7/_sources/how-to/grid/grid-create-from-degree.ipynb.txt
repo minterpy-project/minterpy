@@ -1,0 +1,199 @@
+{
+ "cells": [
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": "# Create a Grid with a Complete Multi-Index Set",
+   "id": "160078106f70cdaf"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": [
+    "import numpy as np\n",
+    "import minterpy as mp\n",
+    "import matplotlib.pyplot as plt"
+   ],
+   "id": "d69f103857a35c1",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "Minterpy interpolating polynomials (i.e., in the Lagrange or Newton basis)\n",
+    "lives on a grid that holds the so-called _unisolvent nodes_.\n",
+    "An interpolating multi-dimensional polynomial of a given multi-index set of\n",
+    "exponents is uniquely\n",
+    "determined on the corresponding unisolvent nodes.\n",
+    "\n",
+    "An instance of `Grid` can be constructed via different constructors:\n",
+    "\n",
+    "- {py:meth}`.Grid.from_degree`: create an instance with a complete multi-index set (this page)\n",
+    "- {py:meth}`.Grid.from_function`: create an instance with a generating function (see the {doc}`example <grid-create-from-function>`)\n",
+    "- {py:meth}`.Grid.from_points`: create an instance with an array of generating points (see the {doc}`example <grid-create-from-points>`)\n",
+    "- {py:meth}`.Grid.from_value_set`: create an instance based on an array of generating values (see the {doc}`example <grid-create-from-value-set>`)\n",
+    "- {py:class}`.Grid`: the default constructor (see the {doc}`example <grid-create-default-constructor>`)\n",
+    "\n",
+    "This guide provides an example on how to construct a `Grid` instance with\n",
+    "a complete multi-index set using the `from_degree()` method."
+   ],
+   "id": "96575b3d1eceacf0"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "## About complete multi-index sets\n",
+    "\n",
+    "A complete multi-index set with respect to spatial dimension $m$,\n",
+    "polynomial degree $n$, and $l_p$-degree $p$ denoted by $A_{m, n, p}$ contains\n",
+    "_all_ the exponents $\\boldsymbol{\\alpha} = (\\alpha_1, \\ldots, \\alpha_m) \\in \\mathbb{N}^m$\n",
+    "such that the $l_p$-norm $\\lVert \\boldsymbol{\\alpha} \\rVert_p \\leq n$ holds.\n",
+    "\n",
+    "A complete multi-index set is a typical way (but by no means, the only way)\n",
+    "to define a multi-index set of exponents in Minterpy."
+   ],
+   "id": "66a43bef3eec5873"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "## About `from_degree()` factory method\n",
+    "\n",
+    "The method `from_degree()` of the `Grid` class returns an instance of `Grid`\n",
+    "based on the specification of a complete multi-index set and optionally,\n",
+    "the generating function and the generating points.\n",
+    "\n",
+    "The method accepts the following arguments:\n",
+    "\n",
+    "- `spatial_dimension` ($m$): the dimension of the multi-index set and\n",
+    "  subsequently, the grid.\n",
+    "- `poly_degree` ($n$): the polynomial degree of the set.\n",
+    "- `lp_degree` ($p$): the $l_p$-degree with respect to which the complete\n",
+    "  multi-index set is defined.\n",
+    "- `generating_function`: the generating function to create an array of generating\n",
+    "  points required by the complete multi-index set. This argument is optional;\n",
+    "  if not specified, the default Leja-ordered Chebyshev-Lobatto generating\n",
+    "  function is selected. For detail regarding a valid generating function,\n",
+    "  see the {doc}`corresponding example <grid-create-from-function>`.\n",
+    "- `generating_points`: the generating points of the interpolation grid.\n",
+    "  This argument is optional; if not specified, the points are generated\n",
+    "  by the generating function as required. For detail regarding valid generating\n",
+    "  points, see the {doc}`corresponding example <grid-create-from-points>`.\n",
+    "\n",
+    "The `from_degree()` method is a shortcut for constructing a grid that corresponds\n",
+    "to a complete multi-index set; it avoids the separate construction of a complete\n",
+    "`MultiIndexSet` instance that is then passed to the other constructors of the\n",
+    "`Grid` class."
+   ],
+   "id": "630829f3a1dce754"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "## Example: Two-dimensional interpolation grid\n",
+    "\n",
+    "Create an interpolation grid that can support two-dimensional polynomials\n",
+    "defined by a complete multi-index set of polynomial degree $3$ with respect\n",
+    "to $l_p$-degree $\\infty$ and with Leja-ordered Chebyshev-Lobatto points as\n",
+    "the generating points. "
+   ],
+   "id": "994375cb184334e7"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "An instance of `Grid` that satisfies the above condition can be created using\n",
+    "`from_degree()` method as follows:"
+   ],
+   "id": "bdae42a7c1207dd9"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": [
+    "grd = mp.Grid.from_degree(\n",
+    "    spatial_dimension=2,\n",
+    "    poly_degree=3,\n",
+    "    lp_degree=np.inf,\n",
+    ")"
+   ],
+   "id": "ab2ead3058749fab",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "As the Leja-ordered Chebyshev-Lobatto points are the generating\n",
+    "function selected by default, no specification is required."
+   ],
+   "id": "175e378f45c8dc9c"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": "The grid has the following unisolvent nodes:",
+   "id": "182f774f24ea80f0"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": "print(grd.unisolvent_nodes)",
+   "id": "abb43629d035920a",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": "The two-dimensional interpolation grid is plotted below:",
+   "id": "54868f1e37d0b07"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": [
+    "plt.scatter(grd.unisolvent_nodes[:, 0], grd.unisolvent_nodes[:, 1])\n",
+    "plt.xlabel(\"$x_1$\", fontsize=16)\n",
+    "plt.ylabel(\"$x_2$\", fontsize=16);"
+   ],
+   "id": "428c889c1af7b3a3",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": "This interpolation grid corresponds to the full tensorial grid of two-dimensional polynomials with polynomial degree of $3$.",
+   "id": "2deaf1b4ceaa3472"
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.6"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

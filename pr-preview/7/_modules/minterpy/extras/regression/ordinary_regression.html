@@ -1,0 +1,1383 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>minterpy.extras.regression.ordinary_regression &#8212; Minterpy 0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles.css?v=a88e7498" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/minterpy/extras/regression/ordinary_regression';</script>
+    <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/_modules/minterpy/extras/regression/ordinary_regression.html" />
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+g706b4cf" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../../../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">minterpy.extras.regression.ordinary_regression</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for minterpy.extras.regression.ordinary_regression</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the concrete implementation of ordinary regression.</span>
+
+<span class="sd">A polynomial regression model is used when the given dataset do not lie</span>
+<span class="sd">on the unisolvent nodes of an interpolating polynomial.</span>
+<span class="sd">In such cases, the function values at the unisolvent nodes are obtained via</span>
+<span class="sd">least-squares.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">from</span> <span class="nn">minterpy.core.ABC</span> <span class="kn">import</span> <span class="n">MultivariatePolynomialSingleABC</span>
+<span class="kn">from</span> <span class="nn">minterpy.core.multi_index</span> <span class="kn">import</span> <span class="n">MultiIndexSet</span>
+<span class="kn">from</span> <span class="nn">minterpy.core.grid</span> <span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">from</span> <span class="nn">minterpy.polynomials</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">LagrangePolynomial</span><span class="p">,</span>
+    <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">CanonicalPolynomial</span><span class="p">,</span>
+    <span class="n">ChebyshevPolynomial</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">minterpy.transformations</span> <span class="kn">import</span> <span class="n">LagrangeToNewton</span>
+<span class="kn">from</span> <span class="nn">minterpy.utils.polynomials.chebyshev</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">evaluate_monomials</span> <span class="k">as</span> <span class="n">evaluate_monomials_chebyshev</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">minterpy.utils.polynomials.newton</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">eval_newton_monomials</span><span class="p">,</span>
+    <span class="n">eval_newton_polynomials</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">minterpy.utils.verification</span> <span class="kn">import</span> <span class="n">verify_query_points</span>
+<span class="kn">from</span> <span class="nn">.regression_abc</span> <span class="kn">import</span> <span class="n">RegressionABC</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;OrdinaryRegression&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="OrdinaryRegression">
+<a class="viewcode-back" href="../../../../api/extras/regression/ordinary_regression.html#minterpy.extras.regression.ordinary_regression.OrdinaryRegression">[docs]</a>
+<span class="k">class</span> <span class="nc">OrdinaryRegression</span><span class="p">(</span><span class="n">RegressionABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of an ordinary (weighted/unweighted) poly. regression.</span>
+
+<span class="sd">    ``OrdinaryRegression`` fits a polynomial model specified by a multi-index</span>
+<span class="sd">    set on a given dataset.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    multi_index : :py:class:`.MultiIndexSet`, optional</span>
+<span class="sd">        The multi-index set that defines the underlying polynomial.</span>
+<span class="sd">        This parameter is optional if a grid is specified; in that case,</span>
+<span class="sd">        the multi-index set is set to the one attached to the grid.</span>
+<span class="sd">    grid : :py:class:`.Grid`, optional</span>
+<span class="sd">        The grid where the polynomial lives.</span>
+<span class="sd">        This parameter is optional if a multi-index set is specified;</span>
+<span class="sd">        in that case, the grid is constructed from the specified</span>
+<span class="sd">        multi-index set.</span>
+<span class="sd">    origin_poly : Type[:py:class:`.MultivariatePolynomialSingleABC`], optional</span>
+<span class="sd">        The polynomial basis on which the regression is carried out.</span>
+<span class="sd">        This parameter is optional and, by default, is set to the</span>
+<span class="sd">        :py:class:`.LagrangePolynomial`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">multi_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiIndexSet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">grid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Grid</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">origin_poly</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">MultivariatePolynomialSingleABC</span><span class="p">]</span> <span class="o">=</span> <span class="n">LagrangePolynomial</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Either a multi-index set or a grid must be specified!&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Initialize and verify the grid</span>
+        <span class="k">if</span> <span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Create a grid from a verified multi-index set</span>
+            <span class="n">_verify_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_verify_grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span> <span class="o">=</span> <span class="n">grid</span>
+
+        <span class="c1"># Verify multi-index set</span>
+        <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">multi_index</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;MultiIndexSet must not be empty!&quot;</span><span class="p">)</span>
+            <span class="c1"># Verify the multi-index set and its relation with the grid</span>
+            <span class="n">_verify_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
+            <span class="n">_verify_grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span> <span class="o">=</span> <span class="n">multi_index</span>
+
+        <span class="c1"># Initialize the origin polynomial basis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_origin_poly</span> <span class="o">=</span> <span class="n">origin_poly</span><span class="p">(</span>
+            <span class="n">multi_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Initialize additional internal attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regression_matrix</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loocv_error</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regfit_linf_error</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regfit_l2_error</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eval_poly</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">multi_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiIndexSet</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multi-index set that defines the polynomial.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">loocv_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Leave-one-out CV error of the fitted polynomial (abs. and norm.).</span>
+
+<span class="sd">        The leave-one-out (LOO) cross-validation (CV) error is defined</span>
+<span class="sd">        as follows:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \epsilon_{LOO} = \frac{1}{N} \sum_{i = 1}^N \left( y^{(i)} - \hat{f}_{\setminus i} \left(\boldsymbol{x}^{(i)}\right) \right)^2</span>
+
+<span class="sd">        where:</span>
+
+<span class="sd">        - :math:`N` is the number of data points;</span>
+<span class="sd">        - :math:`y^{(i)}` is the :math:`i`-th response data point;</span>
+<span class="sd">        - :math:`\boldsymbol{x}^{(i)}` is the :math:`i`-th input data point;</span>
+<span class="sd">        - :math:`\hat{f}_{\setminus i}` is the polynomial fitted on the dataset</span>
+<span class="sd">          excluding the $i$-th data point.</span>
+
+<span class="sd">        The normalized LOO-CV error is defined as follows:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \epsilon_{LOO, \text{norm}} = \frac{\epsilon_{LOO}}{\mathbb{V}[\boldsymbol{y}]}</span>
+
+<span class="sd">        where :math:`\mathbb{V}[\boldsymbol{y}]` denotes the variance</span>
+<span class="sd">        of the response data (:math:`\boldsymbol{y}`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loocv_error</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">regfit_linf_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;:math:`L_{\infty}` regression fit error (in abs. and norm. terms).</span>
+
+<span class="sd">        The :math:`L_{\infty}` regression fit error is defined as follows:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \epsilon_{L_{\infty}} = \max_{i} \; \lvert y^{(i)} - \hat{f}\left(\boldsymbol{x}^{(i)}\right) \rvert</span>
+
+<span class="sd">        where:</span>
+
+<span class="sd">        - :math:`y^{(i)}` is the :math:`i`-th response data point;</span>
+<span class="sd">        - :math:`\boldsymbol{x}^{(i)}` is the :math:`i`-th input data point;</span>
+<span class="sd">        - :math:`\hat{f}` is the fitted polynomial.</span>
+
+<span class="sd">        The normalized :math:`L_{\infty}` regression fit error is defined as follows:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \epsilon_{L_{\infty}, \text{norm}} = \frac{\epsilon_{L_1}}{\sqrt{\mathbb{V}[\boldsymbol{y}]}}</span>
+
+<span class="sd">        where :math:`\mathbb{V}[\boldsymbol{y}]` denotes the variance</span>
+<span class="sd">        of the response data (:math:`\boldsymbol{y}`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regfit_linf_error</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">regfit_l2_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;:math:`L_2` regression fit error (in abs. and norm. terms).</span>
+
+<span class="sd">        The :math:`L_2` regression fit error is defined as follows:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \epsilon_{L_2} = \frac{1}{N} \sum_{i = 1}^N \left( y^{(i)} - \hat{f}\left(\boldsymbol{x}^{(i)}\right) \right)^2</span>
+
+<span class="sd">        where:</span>
+
+<span class="sd">        - :math:`N` is the number of data points;</span>
+<span class="sd">        - :math:`y^{(i)}` is the :math:`i`-th response data point;</span>
+<span class="sd">        - :math:`\boldsymbol{x}^{(i)}` is the :math:`i`-th input data point;</span>
+<span class="sd">        - :math:`\hat{f}` is the fitted polynomial.</span>
+
+<span class="sd">        The normalized :math:`L_2` regression fit error is defined as follows:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \epsilon_{L_2, \text{norm}} = \frac{\epsilon_{L_2}}{\mathbb{V}[\boldsymbol{y}]}</span>
+
+<span class="sd">        where :math:`\mathbb{V}[\boldsymbol{y}]` denotes the variance</span>
+<span class="sd">        of the response data (:math:`\boldsymbol{y}`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regfit_l2_error</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">grid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Grid on which the polynomial lives.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">origin_poly</span><span class="p">(</span>
+        <span class="bp">self</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultivariatePolynomialSingleABC</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Polynomial basis on which the regression is carried out.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_origin_poly</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">coeffs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The fitted coefficients with respect to the origin poly. basis.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">eval_poly</span><span class="p">(</span>
+        <span class="bp">self</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NewtonPolynomial</span><span class="p">,</span> <span class="n">CanonicalPolynomial</span><span class="p">,</span> <span class="n">ChebyshevPolynomial</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Polynomial basis use for the prediction.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Because Minterpy cannot directly evaluate a polynomial</span>
+<span class="sd">          in the Lagrange basis on a set of query points,</span>
+<span class="sd">          the corresponding polynomial in the Newton basis is</span>
+<span class="sd">          created and used for prediction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_poly</span>
+
+<div class="viewcode-block" id="OrdinaryRegression.get_regression_matrix">
+<a class="viewcode-back" href="../../../../api/extras/regression/ordinary_regression.html#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.get_regression_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_regression_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the regression matrix on a set of query points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xx : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            Evaluation points, an array of shape :math:`N_e \times M`, where</span>
+<span class="sd">            :math:`N_e` and :math:`M` correspond to the number of evaluation</span>
+<span class="sd">            points and the number of spatial dimensions, respectively.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            Regression matrix in the chosen polynomial basis,</span>
+<span class="sd">            an array of shape :math:`N_e \times N_b`, where</span>
+<span class="sd">            :math:`N_e` and :math:`N_b` correspond to the number of evaluation</span>
+<span class="sd">            points and the number of monomials, respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">compute_regression_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_origin_poly</span><span class="p">,</span> <span class="n">xx</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OrdinaryRegression.fit">
+<a class="viewcode-back" href="../../../../api/extras/regression/ordinary_regression.html#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.fit">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">weights</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">lstsq_solver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;lstsq&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Fit the ordinary polynomial regression model.</span>
+
+<span class="sd">        Fitting an (unweighted) ordinary polynomial regression model solves</span>
+<span class="sd">        for the set of coefficients :math:`\boldsymbol{c}` in the following</span>
+<span class="sd">        least-squares problem:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \hat{\boldsymbol{c}} = \underset{\boldsymbol{c}}{\mathrm{arg min}} \lVert \boldsymbol{R} \boldsymbol{c} - \boldsymbol{y} \rVert_2^2</span>
+
+<span class="sd">        where:</span>
+
+<span class="sd">        - :math:`\lVert \cdot \rVert_2^2` denotes the square of the Euclidian</span>
+<span class="sd">          norm;</span>
+<span class="sd">        - :math:`\boldsymbol{R}` is the regression matrix evaluated</span>
+<span class="sd">          on the input data points in the chosen polynomial basis;</span>
+<span class="sd">        - :math:`\boldsymbol{y}` is the response data points.</span>
+
+<span class="sd">        Moreover, if the weights matrix :math:`\boldsymbol{W}` are provided,</span>
+<span class="sd">        then fitting a weighted ordinary polynomial regression model obtains</span>
+<span class="sd">        the fitted coefficients :math:`\hat{\boldsymbol{c}}`</span>
+<span class="sd">        from the following relation:</span>
+
+<span class="sd">        .. math ::</span>
+
+<span class="sd">           (\boldsymbol{R}^T \boldsymbol{W} \boldsymbol{R}) \hat{\boldsymbol{c}} = \boldsymbol{R}^T \boldsymbol{W} \boldsymbol{y}</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xx : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            Input matrix, also known as the training inputs.</span>
+<span class="sd">        yy : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            Response vector, observed or evaluated at ``xx``.</span>
+<span class="sd">        weights : :class:`numpy:numpy.ndarray`, optional</span>
+<span class="sd">            Individual weights for each input points.</span>
+<span class="sd">            The default is ``None``.</span>
+<span class="sd">        lstsq_solver : Union[:py:class:`str`, ``Callable``], optional</span>
+<span class="sd">            Least-square solver. The default is ``&quot;lstsq&quot;`` from `SciPy`_.</span>
+<span class="sd">            The additional following linear solvers are available</span>
+<span class="sd">            as pre-defined:</span>
+
+<span class="sd">            - ``&quot;inv&quot;``: (Gram) matrix inversion (NumPy)</span>
+<span class="sd">            - ``&quot;pinv&quot;``: pseudo-inversion of the regression matrix (NumPy)</span>
+<span class="sd">            - ``&quot;dgesv&quot;``: LU with full pivoting solver (SciPy)</span>
+<span class="sd">            - ``&quot;dsysv&quot;``: Diagonal pivoting solver (SciPy)</span>
+<span class="sd">            - ``&quot;dposv&quot;``: Cholesky decomposition solver (SciPy)</span>
+<span class="sd">            - ``&quot;qr&quot;``: QR-decomposition-based solver (NumPy)</span>
+<span class="sd">            - ``&quot;svd&quot;``: SVD-based solver (NumPy)</span>
+<span class="sd">        compute_loocv : :py:class:`bool`, optional</span>
+<span class="sd">            Flag to compute the leave-one-out cross-validation (LOO-CV) error.</span>
+<span class="sd">            For a problem of certain size, the LOO-CV computation</span>
+<span class="sd">            may be costly.</span>
+<span class="sd">            The default is set to ``True``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ``None``</span>
+<span class="sd">            The instance itself is updated with a fitted polynomial.</span>
+<span class="sd">            After a successful fitting, the instance can be evaluated on</span>
+<span class="sd">            a set of query points.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - ``**kwargs`` may take additional keyword arguments that are passed</span>
+<span class="sd">          to the selected least-square solver. Refer to the documentation</span>
+<span class="sd">          of the solver for the list of supported keyword arguments.</span>
+
+<span class="sd">        .. _Scipy: https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Parse &#39;kwargs&#39;</span>
+        <span class="c1"># NOTE: Use &quot;pop&quot;, don&#39;t propagate this argument further downstream</span>
+        <span class="n">compute_loocv</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;compute_loocv&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compute_loocv</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;compute_loocv&#39; argument value must be of &#39;bool&#39; type! &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Got instead </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">compute_loocv</span><span class="p">)</span><span class="si">!r}</span><span class="s2"> .&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Verify the training points</span>
+        <span class="n">xx</span> <span class="o">=</span> <span class="n">verify_query_points</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">)</span>
+
+        <span class="c1"># Get the regression matrix on the data points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regression_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_regression_matrix</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+
+        <span class="c1"># Solve the least-squares problem to obtain the coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span> <span class="o">=</span> <span class="n">solve_least_squares</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">lstsq_solver</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Compute some error metrics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regfit_linf_error</span> <span class="o">=</span> <span class="n">compute_regfit_linf_error</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_regression_matrix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span><span class="p">,</span> <span class="n">yy</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regfit_l2_error</span> <span class="o">=</span> <span class="n">compute_regfit_l2_error</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_regression_matrix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span><span class="p">,</span> <span class="n">yy</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">compute_loocv</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_loocv_error</span> <span class="o">=</span> <span class="n">compute_loocv_error</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_regression_matrix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Reset the property to None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_loocv_error</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Create a polynomial that can be evaluated</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_poly</span><span class="p">,</span> <span class="n">LagrangePolynomial</span><span class="p">):</span>
+            <span class="c1"># Lagrange can&#39;t be evaluated, transform to Newton first</span>
+            <span class="n">lag_poly</span> <span class="o">=</span> <span class="n">LagrangePolynomial</span><span class="p">(</span>
+                <span class="n">multi_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="p">,</span>
+                <span class="n">coeffs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span><span class="p">,</span>
+                <span class="n">grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">l2n</span> <span class="o">=</span> <span class="n">LagrangeToNewton</span><span class="p">(</span><span class="n">lag_poly</span><span class="p">)</span>
+            <span class="n">eval_poly</span> <span class="o">=</span> <span class="n">l2n</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Other polynomials can be directly evaluated</span>
+            <span class="n">eval_poly</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_poly</span><span class="p">)(</span>
+                <span class="n">multi_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="p">,</span>
+                <span class="n">coeffs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span><span class="p">,</span>
+                <span class="n">grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eval_poly</span> <span class="o">=</span> <span class="n">eval_poly</span></div>
+
+
+<div class="viewcode-block" id="OrdinaryRegression.predict">
+<a class="viewcode-back" href="../../../../api/extras/regression/ordinary_regression.html#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.predict">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Predict using the fitted polynomial model a set of points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xx : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            Query points, a two-dimensional array of shape</span>
+<span class="sd">            :math:`N_q \times M`, where :math:`N_q` and :math:`M` correspond to</span>
+<span class="sd">            the number of query points and the number of spatial dimensions,</span>
+<span class="sd">            respectively.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            Predicted response at the query points, a one-dimensional</span>
+<span class="sd">            array of length :math:`N_q`, the number of query points.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - A fitted polynomial regression model can be directly called on the</span>
+<span class="sd">          set of points without accessing the ``predict()`` method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_poly</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Ordinary regression model is not fitted, &quot;</span>
+                <span class="s2">&quot;regression polynomial can&#39;t be evaluated!&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_poly</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OrdinaryRegression.show">
+<a class="viewcode-back" href="../../../../api/extras/regression/ordinary_regression.html#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.show">[docs]</a>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show the summary of the polynomial regression model.&quot;&quot;&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Ordinary Polynomial Regression</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;------------------------------</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Spatial dimension: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Poly. degree     : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">poly_degree</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Lp-degree        : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">lp_degree</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Origin poly.     : </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_poly</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">regfit_linf_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Error&#39;</span><span class="si">:</span><span class="s2">&lt;21s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Absolute&#39;</span><span class="si">:</span><span class="s2">&gt;12s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Relative&#39;</span><span class="si">:</span><span class="s2">&gt;12s</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;L-inf Regression Fit&#39;</span><span class="si">:</span><span class="s2">&lt;21s</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regfit_linf_error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">10.5e</span><span class="si">}</span><span class="s2">  &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regfit_linf_error</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">10.5e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;L2 Regression Fit&#39;</span><span class="si">:</span><span class="s2">&lt;21s</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regfit_l2_error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">10.5e</span><span class="si">}</span><span class="s2">  &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regfit_l2_error</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">10.5e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loocv_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;LOO CV&#39;</span><span class="si">:</span><span class="s2">&lt;21s</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loocv_error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">10.5e</span><span class="si">}</span><span class="s2">  &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loocv_error</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">10.5e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span> <span class="nf">compute_regression_matrix</span><span class="p">(</span>
+    <span class="n">basis_poly</span><span class="p">:</span> <span class="n">MultivariatePolynomialSingleABC</span><span class="p">,</span> <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a regression matrix of the chosen polynomial basis.</span>
+
+<span class="sd">    The regression matrix is constructed by evaluation the monomials of</span>
+<span class="sd">    the chosen basis on all the input points.</span>
+
+<span class="sd">    TODO: This is a temporary solution as ideally each polynomial basis</span>
+<span class="sd">          can call its own &quot;eval_monomials_on&quot; method to construct</span>
+<span class="sd">          the regression matrix on the training points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exponents</span> <span class="o">=</span> <span class="n">basis_poly</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">exponents</span>
+    <span class="n">generating_points</span> <span class="o">=</span> <span class="n">basis_poly</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">generating_points</span>
+
+    <span class="n">regression_matrix</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># Evaluate the basis at the trainining points</span>
+    <span class="c1"># TODO: should have a method basis_poly.eval_monomials(xx),</span>
+    <span class="c1">#       below are temporary solutions.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">LagrangePolynomial</span><span class="p">):</span>
+        <span class="c1"># Compute the coefficients of the Newton basis</span>
+        <span class="c1"># for the Lagrange monomials</span>
+        <span class="n">newton_coeffs</span> <span class="o">=</span> <span class="n">LagrangeToNewton</span><span class="p">(</span>
+            <span class="n">basis_poly</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">transformation_operator</span><span class="o">.</span><span class="n">array_repr_full</span>
+
+        <span class="c1"># Evaluate the Newton polynomials representing the Lagrange monomials</span>
+        <span class="c1"># on the input points</span>
+        <span class="n">regression_matrix</span> <span class="o">=</span> <span class="n">eval_newton_polynomials</span><span class="p">(</span>
+            <span class="n">xx</span><span class="p">,</span> <span class="n">newton_coeffs</span><span class="p">,</span> <span class="n">exponents</span><span class="p">,</span> <span class="n">generating_points</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">NewtonPolynomial</span><span class="p">):</span>
+        <span class="n">regression_matrix</span> <span class="o">=</span> <span class="n">eval_newton_monomials</span><span class="p">(</span>
+            <span class="n">xx</span><span class="p">,</span> <span class="n">exponents</span><span class="p">,</span> <span class="n">generating_points</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">CanonicalPolynomial</span><span class="p">):</span>
+        <span class="n">regression_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">xx</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">exponents</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">ChebyshevPolynomial</span><span class="p">):</span>
+        <span class="n">regression_matrix</span> <span class="o">=</span> <span class="n">evaluate_monomials_chebyshev</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">exponents</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polynomial </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported!&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">regression_matrix</span>
+
+
+<span class="k">def</span> <span class="nf">solve_least_squares</span><span class="p">(</span>
+    <span class="n">regression_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">lstsq_solver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve the least-squares problem with a specified solver.</span>
+
+<span class="sd">    The following linear solvers are available as pre-defined:</span>
+
+<span class="sd">    - ``lstsq``: least-squares solver (SciPy)</span>
+<span class="sd">    - ``inv``: (Gram) matrix inversion (NumPy)</span>
+<span class="sd">    - ``pinv``: pseudo-inversion of the regression matrix (NumPy)</span>
+<span class="sd">    - ``dgesv``: LU with full pivoting solver (SciPy)</span>
+<span class="sd">    - ``dsysv``: Diagonal pivoting solver (SciPy)</span>
+<span class="sd">    - ``dposv``: Cholesky decomposition solver (SciPy)</span>
+<span class="sd">    - ``qr``: QR-decomposition-based solver (NumPy)</span>
+<span class="sd">    - ``svd``: SVD-based solver (NumPy)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    regression_matrix : np.ndarray</span>
+<span class="sd">        Regression matrix constructed on the chosen polynomial basis and</span>
+<span class="sd">        training points.</span>
+<span class="sd">    yy : np.ndarray</span>
+<span class="sd">        Function values that correspond to the training points.</span>
+<span class="sd">    weights: np.ndarray</span>
+<span class="sd">        The weights associated with the function values.</span>
+<span class="sd">    lstsq_solver : Union[str, Callable]</span>
+<span class="sd">        Chosen least-square solvers, may be chosen from a pre-defined solver</span>
+<span class="sd">        using a string or a user-defined function that satisfies a common</span>
+<span class="sd">        interface.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        The coefficients of the regression polynomial.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If the weights are given, make a diagonal matrix out of it</span>
+    <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">weights</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lstsq_solver</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+        <span class="c1"># Solve with a user-defined least-squares solver</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">lstsq_solver</span><span class="p">(</span><span class="n">regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">coeffs</span>
+
+    <span class="n">lstsq_solver</span> <span class="o">=</span> <span class="n">lstsq_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">lstsq_solver</span> <span class="o">==</span> <span class="s2">&quot;lstsq&quot;</span><span class="p">:</span>
+        <span class="c1"># Least-squares solver from SciPy (based on SVD)</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">_solve_lstsq</span><span class="p">(</span><span class="n">regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">lstsq_solver</span> <span class="o">==</span> <span class="s2">&quot;inv&quot;</span><span class="p">:</span>
+        <span class="c1"># Matrix inversion from NumPy (inversion of the Gram matrix)</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">_solve_inv</span><span class="p">(</span><span class="n">regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">lstsq_solver</span> <span class="o">==</span> <span class="s2">&quot;pinv&quot;</span><span class="p">:</span>
+        <span class="c1"># Pseudo-inverse (of the regression matrix) from NumPy</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">_solve_pinv</span><span class="p">(</span><span class="n">regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">lstsq_solver</span> <span class="o">==</span> <span class="s2">&quot;dgesv&quot;</span><span class="p">:</span>
+        <span class="c1"># LU w/ full pivoting solver from SciPy</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">_solve_dgesv</span><span class="p">(</span><span class="n">regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">lstsq_solver</span> <span class="o">==</span> <span class="s2">&quot;dsysv&quot;</span><span class="p">:</span>
+        <span class="c1"># Diagonal pivoting solver from SciPy</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">_solve_dsysv</span><span class="p">(</span><span class="n">regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">lstsq_solver</span> <span class="o">==</span> <span class="s2">&quot;dposv&quot;</span><span class="p">:</span>
+        <span class="c1"># Cholesky decomposition solver from SciPy</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">_solve_dposv</span><span class="p">(</span><span class="n">regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">lstsq_solver</span> <span class="o">==</span> <span class="s2">&quot;qr&quot;</span><span class="p">:</span>
+        <span class="c1"># QR-decomposition-based solver from NumPy</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">_solve_qr</span><span class="p">(</span><span class="n">regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">lstsq_solver</span> <span class="o">==</span> <span class="s2">&quot;svd&quot;</span><span class="p">:</span>
+        <span class="c1"># SVD-based solver from NumPy</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">_solve_svd</span><span class="p">(</span><span class="n">regression_matrix</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lstsq_solver</span><span class="si">}</span><span class="s2"> solver not implemented!&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">coeffs</span>
+
+
+<span class="k">def</span> <span class="nf">compute_loocv_error</span><span class="p">(</span>
+    <span class="n">regression_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">coeffs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the leave-one-out (LOO) cross-validation (CV) errors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    regression_matrix : np.ndarray</span>
+<span class="sd">        Regression matrix constructed on the chosen polynomial basis and</span>
+<span class="sd">        training points.</span>
+<span class="sd">    coeffs : np.ndarray</span>
+<span class="sd">        Coefficients of the regression polynomial.</span>
+<span class="sd">    yy : np.ndarray</span>
+<span class="sd">        Function values that correspond to the training points.</span>
+<span class="sd">    weights: np.ndarray</span>
+<span class="sd">        Weights associated with the function values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[float, float]</span>
+<span class="sd">        The leave-one-out cross-validation errors, in absolute</span>
+<span class="sd">        and relative (normalized) terms. The normalization is with respect to</span>
+<span class="sd">        the function values sample variance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If the weights are given, make a diagonal matrix out of it</span>
+    <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">weights</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">regression_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">regression_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="c1"># Determined or over-determined system</span>
+        <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span>
+            <span class="n">regression_matrix</span>
+            <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">regression_matrix</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">weights</span> <span class="o">@</span> <span class="n">regression_matrix</span><span class="p">)</span>
+            <span class="o">@</span> <span class="n">regression_matrix</span><span class="o">.</span><span class="n">T</span>
+            <span class="o">@</span> <span class="n">weights</span>
+        <span class="p">)</span>
+        <span class="n">loo_cv</span> <span class="o">=</span> <span class="p">((</span><span class="n">yy</span> <span class="o">-</span> <span class="n">regression_matrix</span> <span class="o">@</span> <span class="n">coeffs</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">hi</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">loo_cv</span><span class="p">))</span>
+        <span class="n">loo_cv</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">loo_cv_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">loo_cv</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># NOTE: Under-determined system, unreliable results</span>
+        <span class="n">loo_cv_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+    <span class="k">return</span> <span class="n">loo_cv_error</span><span class="p">,</span> <span class="n">loo_cv_error</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">compute_regfit_linf_error</span><span class="p">(</span>
+    <span class="n">regression_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">coeffs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the absolute and normalized L-inf regression fit error.</span>
+
+<span class="sd">    Calculate the absolute and normalized L-inf regression fit error.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    regression_matrix : np.ndarray</span>
+<span class="sd">        Regression matrix constructed on the chosen polynomial basis and</span>
+<span class="sd">        training points.</span>
+<span class="sd">    coeffs : np.ndarray</span>
+<span class="sd">        Coefficients of the regression polynomial.</span>
+<span class="sd">    yy : np.ndarray</span>
+<span class="sd">        Function values that correspond to the training points.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[float, float]</span>
+<span class="sd">        The L-inf regression fit error (i.e., max. of absolute error),</span>
+<span class="sd">        in absolute and relative (normalized) terms.</span>
+<span class="sd">        The normalization is with respect</span>
+<span class="sd">        to the function values sample standard deviation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">linf_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yy</span> <span class="o">-</span> <span class="n">regression_matrix</span> <span class="o">@</span> <span class="n">coeffs</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">linf_error</span><span class="p">,</span> <span class="n">linf_error</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">compute_regfit_l2_error</span><span class="p">(</span>
+    <span class="n">regression_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">coeffs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the absolute and normalized L2 regression fit error.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    regression_matrix : np.ndarray</span>
+<span class="sd">        Regression matrix constructed on the chosen polynomial basis and</span>
+<span class="sd">        training points.</span>
+<span class="sd">    coeffs : np.ndarray</span>
+<span class="sd">        Coefficients of the regression polynomial.</span>
+<span class="sd">    yy : np.ndarray</span>
+<span class="sd">        Function values that correspond to the training points.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[float, float]</span>
+<span class="sd">        The L2 regression fit error (i.e., mean-squared error), in absolute</span>
+<span class="sd">        and relative (normalized) terms. The normalization is with respect to</span>
+<span class="sd">        the function values sample variance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">l2_error</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">yy</span> <span class="o">-</span> <span class="n">regression_matrix</span> <span class="o">@</span> <span class="n">coeffs</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">l2_error</span><span class="p">,</span> <span class="n">l2_error</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_verify_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify the instance of MultiIndexSet passed to the constructor.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">MultiIndexSet</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Unexpected type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="s2">&quot;of the input multi-index set!&quot;</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_verify_grid</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">Grid</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiIndexSet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify the instance of Grid passed to the constructor&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">Grid</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span><span class="si">}</span><span class="s2"> of the input grid!&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">grid</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">is_superset</span><span class="p">(</span><span class="n">multi_index</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The multi-indices of a polynomial must be a subset of &quot;</span>
+                <span class="s2">&quot;the multi-indices of the grid in use!&quot;</span>
+            <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_solve_lstsq</span><span class="p">(</span>
+    <span class="n">rr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ww</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve a least-squares problem using lstsq solver (SciPy).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ww</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">coeffs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">coeffs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span>
+            <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">rr</span><span class="p">,</span> <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">yy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">coeffs</span>
+
+
+<span class="k">def</span> <span class="nf">_solve_inv</span><span class="p">(</span>
+    <span class="n">rr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ww</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve a system of linear equations via matrix inversion.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ww</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ww</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
+
+    <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">rr</span><span class="p">)</span> <span class="o">@</span> <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">yy</span>
+
+    <span class="k">return</span> <span class="n">coeffs</span>
+
+
+<span class="k">def</span> <span class="nf">_solve_pinv</span><span class="p">(</span>
+    <span class="n">rr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ww</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve a least-squares problem via pseudo-inverse of the regr. matrix.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ww</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">@</span> <span class="n">yy</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">rr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">@</span> <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">yy</span>
+
+    <span class="k">return</span> <span class="n">coeffs</span>
+
+
+<span class="k">def</span> <span class="nf">_solve_dgesv</span><span class="p">(</span>
+    <span class="n">rr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ww</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve a least-squares problem using LU w/ full pivoting solver.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ww</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ww</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lapack</span><span class="o">.</span><span class="n">dgesv</span><span class="p">(</span>
+        <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">rr</span><span class="p">,</span> <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">yy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">coeffs</span>
+
+
+<span class="k">def</span> <span class="nf">_solve_dsysv</span><span class="p">(</span>
+    <span class="n">rr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ww</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve a least-squares problem using a diagonal pivoting solver.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ww</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ww</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lapack</span><span class="o">.</span><span class="n">dsysv</span><span class="p">(</span>
+        <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">rr</span><span class="p">,</span> <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">yy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">coeffs</span>
+
+
+<span class="k">def</span> <span class="nf">_solve_dposv</span><span class="p">(</span>
+    <span class="n">rr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ww</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve a least-squares problem using a Cholesky decompos. solver.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ww</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ww</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lapack</span><span class="o">.</span><span class="n">dposv</span><span class="p">(</span>
+        <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">rr</span><span class="p">,</span> <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">yy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">coeffs</span>
+
+
+<span class="k">def</span> <span class="nf">_solve_qr</span><span class="p">(</span>
+    <span class="n">rr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ww</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve a least-squares problem using a QR-decomposition-based solver.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ww</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">rr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">rr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="c1"># Determined or over-determined system</span>
+            <span class="n">qq_star</span><span class="p">,</span> <span class="n">rr_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rr</span><span class="p">)</span>
+            <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">rr_star</span><span class="p">,</span> <span class="n">qq_star</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">yy</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Under-determined system</span>
+            <span class="n">qq_star</span><span class="p">,</span> <span class="n">rr_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">coeffs</span> <span class="o">=</span> <span class="n">qq_star</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">rr_star</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">@</span> <span class="n">yy</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">qq_star</span><span class="p">,</span> <span class="n">rr_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">rr</span><span class="p">)</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve_triangular</span><span class="p">(</span>
+            <span class="n">rr_star</span><span class="p">,</span> <span class="n">qq_star</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">yy</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">coeffs</span>
+
+
+<span class="k">def</span> <span class="nf">_solve_svd</span><span class="p">(</span>
+    <span class="n">rr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">yy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ww</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve a least-squares problem using an SVD-based solver.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ww</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">uu</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vv_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">rr</span><span class="p">)</span>
+
+        <span class="c1"># Compute the pseudo-inverse of the singular value matrix</span>
+        <span class="n">ss_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">rr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">ss_inv</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">s</span><span class="p">)</span>
+
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="p">(</span><span class="n">vv_t</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ss_inv</span> <span class="o">@</span> <span class="n">uu</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">@</span> <span class="n">yy</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rr_star</span> <span class="o">=</span> <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">rr</span>
+        <span class="c1"># SVD-based solver from NumPy</span>
+        <span class="n">uu</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vv_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">rr_star</span><span class="p">)</span>
+
+        <span class="c1"># Compute the pseudo-inverse of the singular value matrix</span>
+        <span class="n">ss_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">rr_star</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rr_star</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">ss_inv</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">s</span><span class="p">)</span>
+
+        <span class="n">yy_star</span> <span class="o">=</span> <span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ww</span> <span class="o">@</span> <span class="n">yy</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="p">(</span><span class="n">vv_t</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">ss_inv</span> <span class="o">@</span> <span class="n">uu</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">@</span> <span class="n">yy_star</span>
+
+    <span class="k">return</span> <span class="n">coeffs</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Minterpy Development Team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
