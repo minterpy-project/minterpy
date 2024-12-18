@@ -28,7 +28,7 @@ jobs:
         path: ./report-pytest-with-numba.xml
   
   tests-without-numba:
-    name: Run Pytest without Numba
+    name: Run Pytest without Numba (include coverage upload)
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -40,12 +40,16 @@ jobs:
       - name: Run Pytest (deactivate Numba)
         run: |
           export NUMBA_DISABLE_JIT=1
-          pytest --junitxml=report-pytest-without-numba.xml -vvv
+          pytest --junitxml=report-pytest-without-numba.xml -vvv --cov-report=xml --cov-report=term
       - name: Upload the report
         uses: actions/upload-artifact@v4
         with:
           name: report-pytest-without-numba.xml
           path: ./report-pytest-without-numba.xml
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   tests-nbmake:
     name: Run Pytest on the notebooks
