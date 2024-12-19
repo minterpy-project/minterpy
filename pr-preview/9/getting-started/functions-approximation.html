@@ -1,0 +1,984 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quick Start Guide to Function Approximations with Minterpy &#8212; Minterpy 0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'getting-started/functions-approximation';</script>
+    <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/getting-started/functions-approximation.html" />
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="One-Dimensional Polynomial Interpolation" href="1d-polynomial-interpolation.html" />
+    <link rel="prev" title="Getting Started with Minterpy" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+g3fa5014" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Functions approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1d-polynomial-interpolation.html">1D Polynomial Interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="md-polynomial-interpolation.html">mD Polynomial Interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arithmetic-operations-with-polynomials.html">Arithmetic with Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calculus-operations-with-polynomials.html">Calculus with Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polynomial-bases-and-transformations.html">Change of Basis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polynomial-regression.html">Polynomial Regression</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Getting Started with Minterpy</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Quick Start Guide to Function Approximations with Minterpy</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="quick-start-guide-to-function-approximations-with-minterpy">
+<h1>Quick Start Guide to Function Approximations with Minterpy<a class="headerlink" href="#quick-start-guide-to-function-approximations-with-minterpy" title="Link to this heading">#</a></h1>
+<p>Welcome to the Quickstart Guide to Minterpy!</p>
+<p>If you’re here, you likely want to create an interpolant that approximates a function, possibly in multiple dimensions.
+This guide will quickly show you how to do that using Minterpy.</p>
+<section id="how-to-import-minterpy">
+<h2>How to import Minterpy<a class="headerlink" href="#how-to-import-minterpy" title="Link to this heading">#</a></h2>
+<p>After installing <a class="reference internal" href="index.html#installation"><span class="std std-ref">installing Minterpy</span></a>, you can import it as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">minterpy</span> <span class="k">as</span> <span class="nn">mp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The shorthand <code class="docutils literal notranslate"><span class="pre">mp</span></code> is the convention we, the developer team, like to use.
+You’re free to choose any shorthand you prefer, but we find <code class="docutils literal notranslate"><span class="pre">mp</span></code> to be both short and recognizable (similar to <code class="docutils literal notranslate"><span class="pre">np</span></code> for NumPy and <code class="docutils literal notranslate"><span class="pre">pd</span></code> for pandas).</p>
+<p>While you’re at it, you will also need to import Numpy and Matplotlib to follow along with this guide.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="one-dimensional-function">
+<h2>One-dimensional function<a class="headerlink" href="#one-dimensional-function" title="Link to this heading">#</a></h2>
+<p>Let’s start with interpolating the following one-dimensional function:</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
+\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, Minterpy only supports interpolating functions defined in <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> where <span class="math notranslate nohighlight">\(m\)</span> is the spatial dimension. If the domain of your function differs, then you’re responsible to carry out the domain transformation.</p>
+</div>
+<p>You can define the function above using lambda function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fun_1d</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">xx</span><span class="p">:</span> <span class="n">xx</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">xx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>When plotted, the function looks like this:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">yy_1d</span> <span class="o">=</span> <span class="n">fun_1d</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">yy_1d</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$y$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="one-dimensional-interpolant">
+<h3>One-dimensional interpolant<a class="headerlink" href="#one-dimensional-interpolant" title="Link to this heading">#</a></h3>
+<p>To create an interpolant in Minterpy, you can use the function <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a> which takes the following argument (in order):</p>
+<ul class="simple">
+<li><p>the function to interpolate (a callable that takes an array of input values and returns an array of output values of the same length)</p></li>
+<li><p>the spatial dimension of the function</p></li>
+<li><p>the degree of the polynomial interpolant</p></li>
+</ul>
+<p>The lambda function you’ve defined above already satisfies the first requirement: as a callable, it takes an array of input values and returns an array of output values.</p>
+<p>The spatial dimension of the function is <span class="math notranslate nohighlight">\(1\)</span>; since Minterpy cannot infer the dimensionality of your function, you need to specify this.</p>
+<p>Finally, you need to choose the degree of the polynomial interpolant. Since Minterpy interpolants are based on polynomials, specifying the degree in advance is necessary. As a best practice, you should later verify whether the interpolant achieves sufficient accuracy.</p>
+<p>Let’s say that the chosen polynomial degree is <span class="math notranslate nohighlight">\(8\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interp_1d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">fun_1d</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">poly_degree</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">interp_1d</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Congratulations on creating your first interpolant in Minterpy!</p>
+<p>Having obtained an interpolant, you can evaluate it at a set of query points:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_test_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>  <span class="c1"># 1000 query points</span>
+<span class="n">interp_1d</span><span class="p">(</span><span class="n">xx_test_1d</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>  <span class="c1"># Show the first 10</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The plot of the interpolant is shown below along with the original function:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">fun_1d</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;original&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">interp_1d</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;interpolant&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$y$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>It seems that the interpolant still a bit off and does not approximate the function nicely.</p>
+</section>
+<section id="assessing-1d-interpolant-accuracy">
+<h3>Assessing 1D interpolant accuracy<a class="headerlink" href="#assessing-1d-interpolant-accuracy" title="Link to this heading">#</a></h3>
+<p>Looking at the plot above, you might conclude that the interpolant is not accurate enough as an approximation of the original function. However, relying on a plot to draw such conclusions is not always possible, especially when dealing with functions in higher dimensions.</p>
+<p>The infinity norm provides a quantitative measure of the greatest error of the interpolant over the entire domain of the function. It is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+\lVert f - Q \rVert_\infty = \sup_{-1 \leq x \leq 1} \lvert f(x) - Q(x) \rvert
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(Q\)</span> is the interpolant.</p>
+<p>You can estimate the infinity norm based on the <span class="math notranslate nohighlight">\(1'000\)</span> query points as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fun_1d</span><span class="p">(</span><span class="n">xx_test_1d</span><span class="p">)</span> <span class="o">-</span> <span class="n">interp_1d</span><span class="p">(</span><span class="n">xx_test_1d</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Whether the given norm is sufficiently low depends on your application. But we might agree, for now, that the number above is hardly a numerical convergence.</p>
+<p>To have a more accurate interpolant, increase the polynomial degree, say to <span class="math notranslate nohighlight">\(32\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interp_1d_32</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">fun_1d</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">poly_degree</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The plot of the interpolant is shown below.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">fun_1d</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;original&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">interp_1d</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;interpolant (deg=8)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">interp_1d_32</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;interpolant (deg=32)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$y$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>Visually, there is no notable difference between the interpolant of degree <span class="math notranslate nohighlight">\(32\)</span> and the original function.
+And indeed the infinity norm is now:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fun_1d</span><span class="p">(</span><span class="n">xx_test_1d</span><span class="p">)</span> <span class="o">-</span> <span class="n">interp_1d_32</span><span class="p">(</span><span class="n">xx_test_1d</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>which is close to numerical convergence.</p>
+</section>
+</section>
+<section id="two-dimensional-function">
+<h2>Two-dimensional function<a class="headerlink" href="#two-dimensional-function" title="Link to this heading">#</a></h2>
+<p>Consider now two-dimensional function:</p>
+<div class="math notranslate nohighlight">
+\[
+f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
+\]</div>
+<p>Below is the code to define the function above in Python as a regular function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fun_2d</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">xx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">xx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The surface and contour plots of the function are given below.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+
+<span class="c1"># --- Create 2D data</span>
+<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="n">mesh_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">xx_1d</span><span class="p">)</span>
+<span class="n">xx_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_2d</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">yy_2d</span> <span class="o">=</span> <span class="n">fun_2d</span><span class="p">(</span><span class="n">xx_2d</span><span class="p">)</span>
+
+<span class="c1"># --- Create two-dimensional plots</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Surface</span>
+<span class="n">axs_1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>
+    <span class="n">mesh_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">mesh_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">yy_2d</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span>
+    <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Surface plot&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="c1"># Contour</span>
+<span class="n">axs_2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">cf</span> <span class="o">=</span> <span class="n">axs_2</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+    <span class="n">mesh_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mesh_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">yy_2d</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span>
+<span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Contour plot&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">axs_2</span><span class="p">)</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">divider</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;5%&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cf</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="two-dimension-interpolant">
+<h3>Two-dimension interpolant<a class="headerlink" href="#two-dimension-interpolant" title="Link to this heading">#</a></h3>
+<p>The function <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a> also accepts two-dimensional functions for interpolation. Here are a few things to note:</p>
+<ul class="simple">
+<li><p>The function must accept a two-dimensional array as input, where each row corresponds to input values in multiple dimensions, and each column corresponds to input values for each spatial dimension. In this case, the input array is expected to have <span class="math notranslate nohighlight">\(2\)</span> columns (for spatial dimension <span class="math notranslate nohighlight">\(2\)</span>). Furthermore, the function must return an array with the same length as the length of the input (i.e., the number of rows).</p></li>
+<li><p>As previously mentioned, you need to specify that the function to interpolate has a spatial dimension of <span class="math notranslate nohighlight">\(2\)</span>.</p></li>
+</ul>
+<p>Additionally, when the spatial dimension is more than <span class="math notranslate nohighlight">\(1\)</span>, there is one more argument you can specify: the <span class="math notranslate nohighlight">\(l_p\)</span>-degree. This degree is related to the specification of the underlying multi-index set of exponents. Some choices of <span class="math notranslate nohighlight">\(l_p\)</span>-degree may approximate a given function better than others. See the <a class="reference internal" href="../fundamentals/polynomial-bases.html#multi-index-sets-and-polynomial-degree"><span class="std std-ref">relevant section</span></a> for details. This argument is optional, with the default value set to <span class="math notranslate nohighlight">\(2.0\)</span>.</p>
+<p>To create a two-dimensional interpolant with a polynomial degree of <span class="math notranslate nohighlight">\(32\)</span>, you would proceed as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interp_2d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">fun_2d</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">poly_degree</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The surface and contour plots of the interpolant are shown below.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+
+<span class="c1"># --- Create 2D data</span>
+<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="n">mesh_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">xx_1d</span><span class="p">)</span>
+<span class="n">xx_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_2d</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">yy_2d</span> <span class="o">=</span> <span class="n">interp_2d</span><span class="p">(</span><span class="n">xx_2d</span><span class="p">)</span>
+
+<span class="c1"># --- Create two-dimensional plots</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Surface</span>
+<span class="n">axs_1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>
+    <span class="n">mesh_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">mesh_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">yy_2d</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span>
+    <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Surface plot&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="c1"># Contour</span>
+<span class="n">axs_2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">cf</span> <span class="o">=</span> <span class="n">axs_2</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+    <span class="n">mesh_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mesh_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">yy_2d</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span>
+<span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Contour plot&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">axs_2</span><span class="p">)</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">divider</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;5%&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cf</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
+<span class="n">axs_2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+</section>
+<section id="assessing-2d-interpolant-accuracy">
+<h3>Assessing 2D interpolant accuracy<a class="headerlink" href="#assessing-2d-interpolant-accuracy" title="Link to this heading">#</a></h3>
+<p>It is hard by looking at the plot above to conclude that interpolant is accurate enough; the interpolant does capture the overall shape of the original function, though.</p>
+<p>As explained previously, you can use the infinity norm to quantify the accuracy of the interpolant.
+To estimate it using, say, <span class="math notranslate nohighlight">\(100'000\)</span> random points in <span class="math notranslate nohighlight">\([-1, 1]^2\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">194</span><span class="p">)</span>
+<span class="n">xx_test_2d</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100000</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fun_2d</span><span class="p">(</span><span class="n">xx_test_2d</span><span class="p">)</span> <span class="o">-</span> <span class="n">interp_2d</span><span class="p">(</span><span class="n">xx_test_2d</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The choice of polynomial degree seems to be already results in a highly accurate interpolant.</p>
+</section>
+</section>
+<section id="four-dimensional-function">
+<h2>Four-dimensional function<a class="headerlink" href="#four-dimensional-function" title="Link to this heading">#</a></h2>
+<p>You’ve seen how to interpolate a one-dimensional and a two-dimensional function. How about functions in higher dimension?</p>
+<p>Consider now the <span class="math notranslate nohighlight">\(m\)</span>-dimensional Runge function:</p>
+<div class="math notranslate nohighlight">
+\[
+f(\boldsymbol{x}) = \frac{1}{1 + 1.0 \lVert \boldsymbol{x} \rVert_2^2}, \boldsymbol{x} \in [-1, 1]^m.
+\]</div>
+<p>The function can be computed for any arbitrary dimension, but for this tutorial, the dimension is set to <span class="math notranslate nohighlight">\(4\)</span> which already makes it hard to visualize.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The classic Runge function has a factor of <span class="math notranslate nohighlight">\(25\)</span> instead of <span class="math notranslate nohighlight">\(1.0\)</span> which makes the above function “easier” to interpolate.</p>
+</div>
+<p>To define the function above as a lambda function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fun_md</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">xx</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">xx</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="four-dimension-interpolant">
+<h3>Four-dimension interpolant<a class="headerlink" href="#four-dimension-interpolant" title="Link to this heading">#</a></h3>
+<p>The choice of the function above is to demonstrate that the function <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a> works the same way as it does for one- and two-dimensional functions.</p>
+<p>You just need to ensure that the function to interpolate conforms to Minterpy’s requirements: it should be a callable that accepts a two-dimensional array where each row corresponds to a point in a multi-dimensional space, and each column corresponds to values in the spatial dimension.</p>
+<p>Similar to the two-dimensional case, you have the option to adjust the <span class="math notranslate nohighlight">\(l_p\)</span>-degree of the underlying multi-index set. Again, this is optional.</p>
+<p>To create a four-dimensional interpolant with a polynomial degree of <span class="math notranslate nohighlight">\(16\)</span>, you would proceed as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interp_4d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">fun_md</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">poly_degree</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="assessing-4d-interpolant-accuracy">
+<h3>Assessing 4D interpolant accuracy<a class="headerlink" href="#assessing-4d-interpolant-accuracy" title="Link to this heading">#</a></h3>
+<p>Just, you can use the infinity norm to quantify the accuracy of the interpolant.
+To estimate it using, say, <span class="math notranslate nohighlight">\(10'000\)</span> random points in <span class="math notranslate nohighlight">\([-1, 1]^4\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_test_4d</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fun_md</span><span class="p">(</span><span class="n">xx_test_4d</span><span class="p">)</span> <span class="o">-</span> <span class="n">interp_4d</span><span class="p">(</span><span class="n">xx_test_4d</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For an additional cost, you can improve the accuracy of the interpolant by increasing the polynomial degree.</p>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>Congratulations on completing this Quickstart Guide!</p>
+<p>We hope you now know how to interpolate a function in one or multiple dimensions using Minterpy and that you find Minterpy useful for your work.</p>
+<hr class="docutils" />
+<p>Minterpy offers more than just function approximation through interpolation. To fully appreciate its capabilities, we encourage you to explore further. We have prepared a series of tutorials designed to help you become familiar with the more advanced features of Minterpy.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Getting Started with Minterpy</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="1d-polynomial-interpolation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">One-Dimensional Polynomial Interpolation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-import-minterpy">How to import Minterpy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-dimensional-function">One-dimensional function</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-dimensional-interpolant">One-dimensional interpolant</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assessing-1d-interpolant-accuracy">Assessing 1D interpolant accuracy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-dimensional-function">Two-dimensional function</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-dimension-interpolant">Two-dimension interpolant</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assessing-2d-interpolant-accuracy">Assessing 2D interpolant accuracy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#four-dimensional-function">Four-dimensional function</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#four-dimension-interpolant">Four-dimension interpolant</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assessing-4d-interpolant-accuracy">Assessing 4D interpolant accuracy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Minterpy Development Team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1003 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "60f73f47",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "# Quick Start Guide to Function Approximations with Minterpy"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4b710d24-a1e1-49e0-8816-b62886fa8556",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Welcome to the Quickstart Guide to Minterpy!\n",
+    "\n",
+    "If you're here, you likely want to create an interpolant that approximates a function, possibly in multiple dimensions.\n",
+    "This guide will quickly show you how to do that using Minterpy."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7df7d579-94ce-47aa-b682-262df7f192bf",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## How to import Minterpy\n",
+    "\n",
+    "After installing {ref}`installing Minterpy <getting-started/index:Installation>`, you can import it as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4c2b0aa0-e94e-45d5-8a28-96309e80b113",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import minterpy as mp"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6d099ed5-5ee9-4eb9-94ab-5efb1b2e3770",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The shorthand `mp` is the convention we, the developer team, like to use.\n",
+    "You're free to choose any shorthand you prefer, but we find `mp` to be both short and recognizable (similar to `np` for NumPy and `pd` for pandas).\n",
+    "\n",
+    "While you're at it, you will also need to import Numpy and Matplotlib to follow along with this guide."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6027a0cb-14e0-4f26-992e-57e54cd5d4ac",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "03814b27-6007-405a-96bf-140a0f1ce2c5",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## One-dimensional function\n",
+    "\n",
+    "Let's start with interpolating the following one-dimensional function:\n",
+    "\n",
+    "$$\n",
+    "f(x) = x \\, \\sin{(12 x)}, x \\in [-1, 1].\n",
+    "$$"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "57bc44f0-84fc-4b7f-ba13-53d70a69b655",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "```{note}\n",
+    "Currently, Minterpy only supports interpolating functions defined in $[-1, 1]^m$ where $m$ is the spatial dimension. If the domain of your function differs, then you're responsible to carry out the domain transformation.\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "34c6ba22-f1ae-49d0-8d18-e477ba72a777",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "You can define the function above using lambda function:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "55914eaa-9bef-4d34-8200-05cc38a6ab6f",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "fun_1d = lambda xx: xx * np.sin(12 * xx)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7fe2dfc9-e5bb-4a47-95ea-2f11c57c29a3",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "When plotted, the function looks like this:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "80bb25d8-92cf-478d-a9bb-6fa813b834aa",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "xx_1d = np.linspace(-1, 1, 1000)\n",
+    "yy_1d = fun_1d(xx_1d)\n",
+    "\n",
+    "plt.plot(xx_1d, yy_1d)\n",
+    "plt.xlabel(\"$x$\", fontsize=14)\n",
+    "plt.ylabel(\"$y$\", fontsize=14)\n",
+    "plt.tick_params(axis='both', which='major', labelsize=12);"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bf24a03a-f5cb-492a-895f-b4457ff35ecd",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "### One-dimensional interpolant\n",
+    "\n",
+    "To create an interpolant in Minterpy, you can use the function {py:func}`.interpolate` which takes the following argument (in order):\n",
+    "\n",
+    "- the function to interpolate (a callable that takes an array of input values and returns an array of output values of the same length)\n",
+    "- the spatial dimension of the function\n",
+    "- the degree of the polynomial interpolant\n",
+    "\n",
+    "The lambda function you've defined above already satisfies the first requirement: as a callable, it takes an array of input values and returns an array of output values.\n",
+    "\n",
+    "The spatial dimension of the function is $1$; since Minterpy cannot infer the dimensionality of your function, you need to specify this.\n",
+    "\n",
+    "Finally, you need to choose the degree of the polynomial interpolant. Since Minterpy interpolants are based on polynomials, specifying the degree in advance is necessary. As a best practice, you should later verify whether the interpolant achieves sufficient accuracy.\n",
+    "\n",
+    "Let's say that the chosen polynomial degree is $8$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3d7ad74c-94bb-4670-94ee-21330c4f2403",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "interp_1d = mp.interpolate(fun_1d, spatial_dimension=1, poly_degree=8)\n",
+    "interp_1d"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c15113fb-5bc5-4627-a3d9-1b831803fbc8",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Congratulations on creating your first interpolant in Minterpy!"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c24f7269-4b4f-48e3-9071-7a697c67db16",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Having obtained an interpolant, you can evaluate it at a set of query points:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "393a98b7-650a-49f2-8afb-42a1884160ac",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "xx_test_1d = np.linspace(-1, 1, 1000)  # 1000 query points\n",
+    "interp_1d(xx_test_1d)[:10]  # Show the first 10"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "84943d72-9357-41ea-97ad-10b0992a7ead",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The plot of the interpolant is shown below along with the original function:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ed98cf97-fbc2-4c96-8701-cf230837aa0b",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "plt.plot(xx_1d, fun_1d(xx_1d), label=\"original\")\n",
+    "plt.plot(xx_1d, interp_1d(xx_1d), label=\"interpolant\")\n",
+    "plt.xlabel(\"$x$\", fontsize=14)\n",
+    "plt.ylabel(\"$y$\", fontsize=14)\n",
+    "plt.tick_params(axis='both', which='major', labelsize=12)\n",
+    "plt.legend(fontsize=14);"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c8d97746-1434-4048-af7f-29183091bb7c",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "It seems that the interpolant still a bit off and does not approximate the function nicely."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d8e9d19d-0b73-4387-9130-b44d04eedf34",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "### Assessing 1D interpolant accuracy\n",
+    "\n",
+    "Looking at the plot above, you might conclude that the interpolant is not accurate enough as an approximation of the original function. However, relying on a plot to draw such conclusions is not always possible, especially when dealing with functions in higher dimensions.\n",
+    "\n",
+    "The infinity norm provides a quantitative measure of the greatest error of the interpolant over the entire domain of the function. It is defined as:\n",
+    "\n",
+    "$$\n",
+    "\\lVert f - Q \\rVert_\\infty = \\sup_{-1 \\leq x \\leq 1} \\lvert f(x) - Q(x) \\rvert\n",
+    "$$\n",
+    "\n",
+    "where $Q$ is the interpolant."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2160b6cb-6605-4ce8-a2e3-d891f734c58d",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "You can estimate the infinity norm based on the $1'000$ query points as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "dd918ee6-733a-477d-ae43-914828041084",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "np.max(np.abs(fun_1d(xx_test_1d) - interp_1d(xx_test_1d)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d1231db5-ac7e-4124-8ba7-beb383905c26",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Whether the given norm is sufficiently low depends on your application. But we might agree, for now, that the number above is hardly a numerical convergence."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "036e8c5c-6f65-4980-aeea-3ed9d47db440",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "To have a more accurate interpolant, increase the polynomial degree, say to $32$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e068e8a8-dcdb-499f-8799-3db966889925",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "interp_1d_32 = mp.interpolate(fun_1d, spatial_dimension=1, poly_degree=32)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e66c5249-b9cd-40a6-91af-b05a58501bab",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The plot of the interpolant is shown below."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a15053d0-842a-44bc-9c60-7f4e2d7d01ff",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "plt.plot(xx_1d, fun_1d(xx_1d), label=\"original\")\n",
+    "plt.plot(xx_1d, interp_1d(xx_1d), label=\"interpolant (deg=8)\")\n",
+    "plt.plot(xx_1d, interp_1d_32(xx_1d), label=\"interpolant (deg=32)\")\n",
+    "plt.xlabel(\"$x$\", fontsize=14)\n",
+    "plt.ylabel(\"$y$\", fontsize=14)\n",
+    "plt.tick_params(axis='both', which='major', labelsize=12)\n",
+    "plt.legend(fontsize=14);"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ed752780-e6c6-45d8-ac06-ad2798518a30",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Visually, there is no notable difference between the interpolant of degree $32$ and the original function.\n",
+    "And indeed the infinity norm is now:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e9d038ac-8c1c-4800-818f-b66a0ab91bf2",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "np.max(np.abs(fun_1d(xx_test_1d) - interp_1d_32(xx_test_1d)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "80cef552-8264-4813-9a1f-06e18e433205",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "which is close to numerical convergence."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d3db9c27-95a5-406d-964b-e67a15e758e8",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## Two-dimensional function\n",
+    "\n",
+    "Consider now two-dimensional function:\n",
+    "\n",
+    "$$\n",
+    "f(x_1, x_2) = \\sin{\\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \\in [-1, 1].\n",
+    "$$"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "376428ce-7d2d-4a5a-b76b-d8099fcb1407",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Below is the code to define the function above in Python as a regular function:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ef31278e-1f54-438b-a95d-39c432f85e4b",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def fun_2d(xx):\n",
+    "    return np.sin(np.pi * (1.5 * xx[:, 0] + 2.5 * xx[:, 1]))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "89912507-3439-4582-a1cc-90c613fe33c6",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The surface and contour plots of the function are given below."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2d9ead19-fb38-4a28-a7de-545b2a0cb530",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "from mpl_toolkits.axes_grid1 import make_axes_locatable\n",
+    "\n",
+    "# --- Create 2D data\n",
+    "xx_1d = np.linspace(-1.0, 1.0, 1000)[:, np.newaxis]\n",
+    "mesh_2d = np.meshgrid(xx_1d, xx_1d)\n",
+    "xx_2d = np.array(mesh_2d).T.reshape(-1, 2)\n",
+    "yy_2d = fun_2d(xx_2d)\n",
+    "\n",
+    "# --- Create two-dimensional plots\n",
+    "fig = plt.figure(figsize=(10, 5))\n",
+    "\n",
+    "# Surface\n",
+    "axs_1 = plt.subplot(121, projection='3d')\n",
+    "axs_1.plot_surface(\n",
+    "    mesh_2d[0],\n",
+    "    mesh_2d[1],\n",
+    "    yy_2d.reshape(1000,1000).T,\n",
+    "    linewidth=0,\n",
+    "    cmap=\"plasma\",\n",
+    "    antialiased=False,\n",
+    "    alpha=0.5\n",
+    ")\n",
+    "axs_1.set_xlabel(\"$x_1$\", fontsize=14)\n",
+    "axs_1.set_ylabel(\"$x_2$\", fontsize=14)\n",
+    "axs_1.set_title(\"Surface plot\", fontsize=14)\n",
+    "axs_1.tick_params(axis='both', which='major', labelsize=12)\n",
+    "\n",
+    "# Contour\n",
+    "axs_2 = plt.subplot(122)\n",
+    "cf = axs_2.contourf(\n",
+    "    mesh_2d[0], mesh_2d[1], yy_2d.reshape(1000, 1000).T, cmap=\"plasma\"\n",
+    ")\n",
+    "axs_2.set_xlabel(\"$x_1$\", fontsize=14)\n",
+    "axs_2.set_ylabel(\"$x_2$\", fontsize=14)\n",
+    "axs_2.set_title(\"Contour plot\", fontsize=14)\n",
+    "divider = make_axes_locatable(axs_2)\n",
+    "cax = divider.append_axes('right', size='5%', pad=0.05)\n",
+    "fig.colorbar(cf, cax=cax, orientation='vertical')\n",
+    "axs_2.axis('scaled')\n",
+    "axs_2.tick_params(axis='both', which='major', labelsize=12)\n",
+    "\n",
+    "fig.tight_layout(pad=3.0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "cc2c9f8a-1d07-42b7-84cd-144d507e7edc",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "### Two-dimension interpolant\n",
+    "\n",
+    "The function {py:func}`.interpolate` also accepts two-dimensional functions for interpolation. Here are a few things to note:\n",
+    "\n",
+    "- The function must accept a two-dimensional array as input, where each row corresponds to input values in multiple dimensions, and each column corresponds to input values for each spatial dimension. In this case, the input array is expected to have $2$ columns (for spatial dimension $2$). Furthermore, the function must return an array with the same length as the length of the input (i.e., the number of rows).\n",
+    "- As previously mentioned, you need to specify that the function to interpolate has a spatial dimension of $2$.\n",
+    "\n",
+    "Additionally, when the spatial dimension is more than $1$, there is one more argument you can specify: the $l_p$-degree. This degree is related to the specification of the underlying multi-index set of exponents. Some choices of $l_p$-degree may approximate a given function better than others. See the {ref}`relevant section <fundamentals/polynomial-bases:Multi-index sets and polynomial degree>` for details. This argument is optional, with the default value set to $2.0$.\n",
+    "\n",
+    "To create a two-dimensional interpolant with a polynomial degree of $32$, you would proceed as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6bbb9b05-8d4c-49a1-b4ff-80b3d54b6144",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "interp_2d = mp.interpolate(fun_2d, spatial_dimension=2, poly_degree=32)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e2d630e4-40c6-40ec-8370-322fb2f6b587",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The surface and contour plots of the interpolant are shown below."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "33a4ea63-4576-4693-9f69-e81f14395827",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "from mpl_toolkits.axes_grid1 import make_axes_locatable\n",
+    "\n",
+    "# --- Create 2D data\n",
+    "xx_1d = np.linspace(-1.0, 1.0, 500)[:, np.newaxis]\n",
+    "mesh_2d = np.meshgrid(xx_1d, xx_1d)\n",
+    "xx_2d = np.array(mesh_2d).T.reshape(-1, 2)\n",
+    "yy_2d = interp_2d(xx_2d)\n",
+    "\n",
+    "# --- Create two-dimensional plots\n",
+    "fig = plt.figure(figsize=(10, 5))\n",
+    "\n",
+    "# Surface\n",
+    "axs_1 = plt.subplot(121, projection='3d')\n",
+    "axs_1.plot_surface(\n",
+    "    mesh_2d[0],\n",
+    "    mesh_2d[1],\n",
+    "    yy_2d.reshape(500, 500).T,\n",
+    "    linewidth=0,\n",
+    "    cmap=\"plasma\",\n",
+    "    antialiased=False,\n",
+    "    alpha=0.5\n",
+    ")\n",
+    "axs_1.set_xlabel(\"$x_1$\", fontsize=14)\n",
+    "axs_1.set_ylabel(\"$x_2$\", fontsize=14)\n",
+    "axs_1.set_title(\"Surface plot\", fontsize=14)\n",
+    "axs_1.tick_params(axis='both', which='major', labelsize=12)\n",
+    "\n",
+    "# Contour\n",
+    "axs_2 = plt.subplot(122)\n",
+    "cf = axs_2.contourf(\n",
+    "    mesh_2d[0], mesh_2d[1], yy_2d.reshape(500, 500).T, cmap=\"plasma\"\n",
+    ")\n",
+    "axs_2.set_xlabel(\"$x_1$\", fontsize=14)\n",
+    "axs_2.set_ylabel(\"$x_2$\", fontsize=14)\n",
+    "axs_2.set_title(\"Contour plot\", fontsize=14)\n",
+    "divider = make_axes_locatable(axs_2)\n",
+    "cax = divider.append_axes('right', size='5%', pad=0.05)\n",
+    "fig.colorbar(cf, cax=cax, orientation='vertical')\n",
+    "axs_2.axis('scaled')\n",
+    "axs_2.tick_params(axis='both', which='major', labelsize=12)\n",
+    "\n",
+    "fig.tight_layout(pad=3.0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "424faf5f-a8f6-414d-b5b0-d41ace287ef0",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "### Assessing 2D interpolant accuracy\n",
+    "\n",
+    "It is hard by looking at the plot above to conclude that interpolant is accurate enough; the interpolant does capture the overall shape of the original function, though.\n",
+    "\n",
+    "As explained previously, you can use the infinity norm to quantify the accuracy of the interpolant.\n",
+    "To estimate it using, say, $100'000$ random points in $[-1, 1]^2$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "70a8583a-eb98-4f94-9ff6-281eefad5656",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "rng = np.random.default_rng(194)\n",
+    "xx_test_2d = -1 + 2 * rng.random((100000, 2))\n",
+    "np.max(np.abs(fun_2d(xx_test_2d) - interp_2d(xx_test_2d)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e923c32f-98cb-4d2a-ad1c-99105b684591",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The choice of polynomial degree seems to be already results in a highly accurate interpolant."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "45d65842-d6d5-4b81-8e57-f13a7a2091b9",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## Four-dimensional function\n",
+    "\n",
+    "You've seen how to interpolate a one-dimensional and a two-dimensional function. How about functions in higher dimension?\n",
+    "\n",
+    "Consider now the $m$-dimensional Runge function:\n",
+    "\n",
+    "$$\n",
+    "f(\\boldsymbol{x}) = \\frac{1}{1 + 1.0 \\lVert \\boldsymbol{x} \\rVert_2^2}, \\boldsymbol{x} \\in [-1, 1]^m.\n",
+    "$$\n",
+    "\n",
+    "The function can be computed for any arbitrary dimension, but for this tutorial, the dimension is set to $4$ which already makes it hard to visualize.\n",
+    "\n",
+    "```{note}\n",
+    "The classic Runge function has a factor of $25$ instead of $1.0$ which makes the above function \"easier\" to interpolate.\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f705edcb-be0b-41c6-bcd0-5352740fc7f8",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "To define the function above as a lambda function:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0eb6f962-a6c6-45b8-94fe-485e05f0aff2",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "fun_md = lambda xx: 1 / (1 + 1.0 * np.sum(xx**2, axis=1))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "de22d83d-a4f5-4312-94d6-db478339332b",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "### Four-dimension interpolant\n",
+    "\n",
+    "The choice of the function above is to demonstrate that the function {py:func}`.interpolate` works the same way as it does for one- and two-dimensional functions.\n",
+    "\n",
+    "You just need to ensure that the function to interpolate conforms to Minterpy's requirements: it should be a callable that accepts a two-dimensional array where each row corresponds to a point in a multi-dimensional space, and each column corresponds to values in the spatial dimension.\n",
+    "\n",
+    "Similar to the two-dimensional case, you have the option to adjust the $l_p$-degree of the underlying multi-index set. Again, this is optional.\n",
+    "\n",
+    "To create a four-dimensional interpolant with a polynomial degree of $16$, you would proceed as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c38d821b-30cd-496a-916c-8ae9f3bd6be3",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "interp_4d = mp.interpolate(fun_md, spatial_dimension=4, poly_degree=16)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "94caf68a-0bf0-4cb4-926c-14575eee6f91",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "### Assessing 4D interpolant accuracy\n",
+    "\n",
+    "Just, you can use the infinity norm to quantify the accuracy of the interpolant.\n",
+    "To estimate it using, say, $10'000$ random points in $[-1, 1]^4$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "24fbe115-a840-49f1-90a0-ffde0a89cac4",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "xx_test_4d = -1 + rng.random((10000, 4))\n",
+    "np.max(np.abs(fun_md(xx_test_4d) - interp_4d(xx_test_4d)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7ea5532d-aa70-4934-be6b-e5429ff07be2",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "For an additional cost, you can improve the accuracy of the interpolant by increasing the polynomial degree."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d781a090-1b31-45f8-a491-e6a69e241906",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## Summary\n",
+    "\n",
+    "Congratulations on completing this Quickstart Guide!\n",
+    "\n",
+    "We hope you now know how to interpolate a function in one or multiple dimensions using Minterpy and that you find Minterpy useful for your work.\n",
+    "\n",
+    "---\n",
+    "\n",
+    "Minterpy offers more than just function approximation through interpolation. To fully appreciate its capabilities, we encourage you to explore further. We have prepared a series of tutorials designed to help you become familiar with the more advanced features of Minterpy."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.16"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
