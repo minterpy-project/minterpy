@@ -1,19 +1,19 @@
 # Changelog
 
-## Unreleased
+## Version 0.3.0
 
 ### Added
 
 - Support for the Chebyshev polynomials of the first kind as a polynomial basis
   via `ChebyshevPolynomial`. Differentiation and integration of polynomials in
   this basis are not yet supported.
-- Faster differentiation of polynomials in the Newton basis due to a Numba 
+- Faster differentiation of polynomials in the Newton basis due to a Numba
   implementation; the methods `diff()` and `partial_diff()` now support
   a keyword argument `backend` to select the numerical routine for
   differentiation. Supported values are: `"numpy"` (NumPy-based implementation
   used by default in v0.2.0-alpha), `"numba"` (Numba-based implementation,
   now the default), `"numba-par"` (CPU parallelization in the Numba-based
-  implementation; may accelerates computation for larger problems).
+  implementation; may accelerate computation for larger problems).
 - Exact equality check via the `==` operator has been implemented for instances
   of the `Grid` class. Two instances of `Grid` are equal (in values) if and
   only if both the underlying multi-index sets and generating points are
@@ -38,8 +38,8 @@
 - Polynomial-polynomial addition/subtraction as well as polynomial-(real)scalar
   addition/subtraction are now supported for polynomials in the Newton basis.
   The implementation includes the left-sided addition via `__add__()` and
-  subtraction via `__sub__()` (for both Newton polynomial and real scalar 
-  number) as well as right-sided addition via `__radd__()` and subtraction via 
+  subtraction via `__sub__()` (for both Newton polynomial and real scalar
+  number) as well as right-sided addition via `__radd__()` and subtraction via
   `__rsub__()` (for real scalar numbers).
 - Static abstract method `_scalar_add()` is now included in the
   `MultivariatePolynomialSingleABC` as a placeholder for the concrete
@@ -47,7 +47,7 @@
 - Instances of `MultiIndexSet` may now be multiplied with each other;
   the result is an instance of `MultiIndexSet` whose exponents are
   the cross-product-and-sum of the two operands exponents.
-- A method `expand_dim()` is introduced to instances  of the `Grid` class
+- A method `expand_dim()` is introduced to instances of the `Grid` class
   to encapsulate the procedure of expanding the dimension of a `Grid` instance.
 - Add two new factory methods for the `Grid` class: `from_degree()` to
   create a `Grid` instance with a complete multi-index set and `from_points()`
@@ -76,7 +76,7 @@
 - A new factory method `from_grid()` is available for all concrete polynomial
   classes. Calling the method with an instance of `Grid` creates a polynomial
   with the given grid and with the multi-index of the given grid.
-- All concrete polynomial classes now inherits `__len__()` from the abstract
+- All concrete polynomial classes now inherit `__len__()` from the abstract
   base class. Calling `len()` on a polynomial instance returns the number
   of coefficient sets the instance has.
 - Polynomial-polynomial multiplication is now supported for polynomials in the
@@ -91,12 +91,18 @@
   based on their generating functions and points.
 - Instances of all polynomial bases may now be divided by a real scalar number.
   Both the `/` (true division) and `//` (floor division) operators are
-  supported. 
+  supported.
 - Overhauled the "Getting Started" section in the documentation to include
-  a Quickstart Guide for Minterpy and six in-depth tutorials.
+  a quickstart guide for Minterpy and six in-depth tutorials.
   The tutorials cater to both beginner and advanced levels,
   starting from scratch and gradually introducing sophisticated
   Minterpy features.
+- Added support for exponentiation of polynomials, which extents the support for
+  arithmetic manipulations of polynomials.
+- Added polynomial bases transformations to the Interpolant class.
+- Major update to the contributors guide section of the documentation.
+- Added `sphinx_design` as new dependency for the documentation.
+- Added support for polynomial-scalar division.
 
 ### Fixed
 
@@ -126,7 +132,7 @@
   `generating_function` (instead of `generating_values` which is deprecated)
   and `generating_points` both are defaulted to `None`.
   If `generating_function` is not specified, then the default of Leja-ordered
-  Chebyshev-Lobatto generating function is selected. This preserves the 
+  Chebyshev-Lobatto generating function is selected. This preserves the
   previous behavior of calling the constructor without any optional arguments.
 - The factory method `from_generator()` of the `Grid` class has been renamed
   to `from_function()` to avoid confusion with the Python's term.
@@ -139,8 +145,21 @@
   to the underlying multi-index set of a `Grid` instance.
 - Polynomial coefficients will now be stored as an array of `numpy.float64`
   as expected by Numba. Conversion will always be attempted.
-- Polynomial-polynomial addition and multiplication of polynomials in the 
+- Polynomial-polynomial addition and multiplication of polynomials in the
   Chebyshev basis are now supported.
+- Support for scalar addition and subtraction are moved to the abstract polynomial base class,
+  which allows distinct implementations for the different polynomial bases.
+- Polynomial-polynomial addition/subtraction of Newton polynomials with a common grid
+  add the coefficients of their matching multi-index set elements instead of using base
+  transformations.
+- Revision and reorganization of the fundamentals section of the documentation.
+- Reorganization of the API reference section of the documentation.
+- Refactoring of the multiplication of all polynomial instances with a constant scalar
+  polynomial, to avoid the usage of standard polynomial-polynomial multiplication and its
+  related issues.
+- Refactoring of the multiplication of all polynomial instances with a constant scalar
+  polynomial, to avoid the usage of standard polynomial-polynomial multiplication and its
+  related issues.
 
 ### Removed
 
@@ -153,13 +172,14 @@
   transformation class.
 
 # Version 0.2.0-alpha
+
 This is the next alpha release of `minterpy`, which adds several
 new functionalities and enhances code quality and performance.
 
 ## new features
 
 - partial derivatives for canonical and Newton polynomials
-- support of arbitrary positive `lp_degree` 
+- support of arbitrary positive `lp_degree`
 - ordinary regression based on multivariate polynomials
   as the first extra feature
 
@@ -169,20 +189,19 @@ new functionalities and enhances code quality and performance.
 - adding API documentation
 - improvement of user documentations
 - clean-up: deletion of code/comments, which are no longer used
-- introduction of a corporate design including logo and banner to docs, 
+- introduction of a corporate design including logo and banner to docs,
   repository, README etc.
 
 This code is still marked as experimental and there is no assurance,
 that neither everything works as expected,
 nor if further releases will break the current API.
 
-
 # Version 0.1.0-alpha
 
 This is the initial alpha release of `minterpy`.
 It contains general structures to perform the polynomial interpolation task
 in multiple dimensions:
- 
+
 - Multivariate polynomial bases (ABC + concrete implementations)
 - Base transformations
 - Interpolation schemes
