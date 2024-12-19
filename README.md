@@ -7,10 +7,10 @@
 
 # Minterpy
 
-|                                  Branches                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-|:--------------------------------------------------------------------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`main`](https://github.com/minterpy-project/minterpy/tree/main) (stable)  | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Amain+) [![codecov](https://codecov.io/gh/minterpy-project/minterpy/branch/main/graph/badge.svg?token=J8RCUGRKW3)](https://codecov.io/gh/minterpy-project/minterpy) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=main)](https://minterpy-project.github.io/minterpy/stable/) |
-|  [`dev`](https://github.com/minterpy-project/minterpy/tree/dev) (latest)   | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=dev)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Adev) [![codecov](https://codecov.io/gh/minterpy-project/minterpy/graph/badge.svg?token=J8RCUGRKW3)](https://codecov.io/gh/minterpy-project/minterpy) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=dev)](https://minterpy-project.github.io/minterpy/latest/)                 |
+|                                 Branches                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| :-----------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`main`](https://github.com/minterpy-project/minterpy/tree/main) (stable) | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Amain+) [![codecov](https://codecov.io/gh/minterpy-project/minterpy/branch/main/graph/badge.svg?token=J8RCUGRKW3)](https://codecov.io/gh/minterpy-project/minterpy) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=main)](https://minterpy-project.github.io/minterpy/stable/) |
+|  [`dev`](https://github.com/minterpy-project/minterpy/tree/dev) (latest)  | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=dev)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Adev) [![codecov](https://codecov.io/gh/minterpy-project/minterpy/graph/badge.svg?token=J8RCUGRKW3)](https://codecov.io/gh/minterpy-project/minterpy) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=dev)](https://minterpy-project.github.io/minterpy/latest/)                 |
 
 Minterpy is an open-source Python package designed for constructing and manipulating multivariate interpolating polynomials
 with the goal of lifting the curse of dimensionality from interpolation tasks.
@@ -92,11 +92,11 @@ the `test_function` almost up to machine precision:
     plt.legend()
     plt.show()
 ```
+
 <img src="./docs/assets/images/test-function1D.png" alt="Compare test function with its interpolant" width="400"/>
 
-
 For more comprehensive examples, see the [getting started guides](https://interpol.pages.hzdr.de/minterpy/getting-started/index.html)
-section of the ``minterpy`` docs.
+section of the `minterpy` docs.
 
 ## Testing
 
@@ -131,10 +131,10 @@ The core development of the `minterpy` is currently done
 by a small team at the Center for Advanced Systems Understanding ([CASUS]),
 namely
 
-- Uwe Hernandez Acosta ([HZDR]/[CASUS]) (u.hernandez@hzdr.de)
-- Sachin Krishnan Thekke Veettil ([HZDR]/[CASUS]) (s.thekke-veettil@hzdr.de)
 - Damar Wicaksono ([HZDR]/[CASUS]) (d.wicaksono@hzdr.de)
+- Uwe Hernandez Acosta ([HZDR]/[CASUS]) (u.hernandez@hzdr.de)
 - Janina Schreiber ([HZDR]/[CASUS]) (j.schreiber@hzdr.de)
+- Sachin Krishnan Thekke Veettil ([HZDR]/[CASUS]) (s.thekke-veettil@hzdr.de)
 
 ### Mathematical foundation
 
@@ -162,8 +162,7 @@ This package would not be possible without many contributions done
 from the community as well.
 For that, we want to send big thanks to:
 
-  - the guy who will show me how to include a list of contributors on github/gitlab
-
+- the guy who will show me how to include a list of contributors on github/gitlab
 
 ## License
 
@@ -187,9 +186,5 @@ For that, we want to send big thanks to:
 [HZDR]: https://www.hzdr.de
 [MPI-CBG]: https://www.mpi-cbg.de
 [CSBD]: https://www.csbdresden.de
-
-
-
-[black-badge]:              https://img.shields.io/badge/code%20style-black-000000.svg
-[black-link]:               https://github.com/psf/black
-
+[black-badge]: https://img.shields.io/badge/code%20style-black-000000.svg
+[black-link]: https://github.com/psf/black
