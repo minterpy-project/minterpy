@@ -1,7 +1,11 @@
 name: Publish to PyPI
 
-on: push
-
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
 jobs:
   build:
     name: Build distribution
