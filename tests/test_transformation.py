@@ -1,208 +1,239 @@
 """
-
-testing module for Transformation classes.
-
+Testing module for Transformation classes.
 """
-
 import numpy as np
 import pytest
+
 from conftest import (
-    LpDegree,
-    PolyDegree,
-    SpatialDimension,
-    assert_call,
     assert_polynomial_almost_equal,
     build_rnd_coeffs,
+    POLY_CLASSES,
 )
-from numpy.testing import assert_, assert_almost_equal, assert_raises
 
-from minterpy import (
-    CanonicalPolynomial,
-    LagrangePolynomial,
-    MultiIndexSet,
-    NewtonPolynomial,
-)
+from minterpy import MultiIndexSet
 from minterpy.core.ABC import OperatorABC, TransformationABC
 from minterpy.transformations import (
-    CanonicalToLagrange,
-    CanonicalToNewton,
     Identity,
-    LagrangeToCanonical,
-    LagrangeToNewton,
-    NewtonToCanonical,
-    NewtonToLagrange,
     get_transformation,
     get_transformation_class,
 )
-from minterpy.transformations.utils import (
-    _build_lagrange_to_newton_bary,
-    _build_lagrange_to_newton_naive,
-    _build_newton_to_lagrange_bary,
-    _build_newton_to_lagrange_naive,
-    build_l2n_matrix_dds,
-)
-
-transform_classes = [
-    LagrangeToNewton,
-    NewtonToLagrange,
-    LagrangeToCanonical,
-    CanonicalToLagrange,
-    NewtonToCanonical,
-    CanonicalToNewton,
-]
 
 
-@pytest.fixture(params=transform_classes)
-def Transform(request):
-    return request.param
+class TestInitialization:
+    """All tests related to the initialization of a transformation class."""
+
+    def test_success(
+        self,
+        transformation_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test successful initialization."""
+        # Create a polynomial of the origin type
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        origin_poly = transformation_class.origin_type(mi)
+
+        # Create a transformation instance
+        transform = transformation_class(origin_poly)
+
+        # Assertions
+        # The type of the origin polynomial is consistent
+        assert isinstance(transform.origin_poly, transform.origin_type)
+        # Transformation operator instance exists
+        assert isinstance(transform.transformation_operator, OperatorABC)
+
+    def test_failure(
+        self,
+        transformation_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test a failed initialization."""
+        # Create a polynomial of the origin type
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        # Intentionally pick another type of origin poly
+        origin_polys = [
+            _ for _ in POLY_CLASSES if _ != transformation_class.origin_type
+        ]
+        idx = np.random.choice(len(origin_polys), 1)[0]
+        origin_poly = origin_polys[idx](mi)
+
+        # Assertion
+        with pytest.raises(TypeError):
+            # Create a transformation instance with inconsistent origin poly.
+            transformation_class(origin_poly)
 
 
-def test_init_transform(Transform):
-    """testing the initialization of transformation classes"""
+class TestTransformation:
+    """All tests related to carrying out the polynomial transformation."""
 
-    assert_(issubclass(Transform, TransformationABC))
+    def test_call_success(
+        self,
+        transformation_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test successful calling of an instance to transform the origin poly.
+        """
+        # Create a polynomial of the origin type
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        coeffs = np.arange(len(mi), dtype=float)
+        origin_poly = transformation_class.origin_type(mi, coeffs)
 
-    # Test initialization
-    mi = MultiIndexSet.from_degree(2, 2, 1.0)
-    coeffs = np.arange(len(mi), dtype=float)
-    poly = Transform.origin_type(mi, coeffs)
-    assert_call(Transform, poly)
+        # Create a transformation instance
+        transform = transformation_class(origin_poly)
 
-    # test transformation call
-    transform = Transform(poly)
-    assert_call(transform)
+        # Call the instance
+        target_poly = transform()
 
-    # test the type of transformed poly
-    res_poly = transform()
-    assert_(isinstance(res_poly, Transform.target_type))
+        # Assertion
+        assert isinstance(target_poly, transform.target_type)
 
-    # test existence of transformation_operator
-    operator = transform.transformation_operator
-    assert_(isinstance(operator, OperatorABC))
+    def test_call_failure(
+        self,
+        transformation_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test failed calling of an instance to transform the origin poly."""
+        # Create a polynomial of the origin type
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        # Polynomial without coefficients
+        origin_poly = transformation_class.origin_type(mi)
 
+        # Create a transformation instance
+        transform = transformation_class(origin_poly)
 
-poly_classes = [CanonicalPolynomial, NewtonPolynomial, LagrangePolynomial]
+        # Call the instance
+        with pytest.raises(ValueError):
+            # Polynomial without coefficients can't be transformed
+            transform()
 
+    def test_transform(
+        self,
+        transformation_class,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test an alternative approach to transformation."""
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        coeffs = np.arange(len(mi), dtype=float)
+        origin_poly = transformation_class.origin_type(mi, coeffs)
 
-@pytest.fixture(params=poly_classes)
-def Polynom(request):
-    return request.param
+        # Create a transformation instance
+        transform = transformation_class(origin_poly)
 
+        # Call the instance
+        target_poly = transform()
 
-P1 = Polynom
-P2 = Polynom
+        # Transform the coefficients of the origin poly. manually
+        transformed_coeffs = transform.transformation_operator @ coeffs
 
+        # Assertion
+        assert np.allclose(transformed_coeffs, target_poly.coeffs)
 
-def test_get_transformation(P1, P2):
-    """ test the get_transformation function in transformation_meta"""
+    def test_identity(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+            poly_class_all,
+    ):
+        """Test the identity transformation."""
+        # Create a polynomial
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        coeffs = build_rnd_coeffs(mi)
+        origin_poly = poly_class_all(mi, coeffs)
 
-    mi = MultiIndexSet.from_degree(2, 1, 1.0)
-    coeffs = np.arange(len(mi), dtype=float)
-    poly = P1(mi, coeffs)
+        # Create an identity transformer
+        transformer = Identity(origin_poly)
+        operator = transformer.transformation_operator.array_repr_full
+        target_poly = transformer()
 
-    transform = get_transformation(poly, P2)
+        # Assertions
+        # no changes to the polynomial
+        assert_polynomial_almost_equal(origin_poly, target_poly)
+        # the operator is the identity matrix
+        assert np.allclose(operator, np.eye(len(mi)))
 
-    if P1 == P2:
-        assert_(isinstance(transform, Identity))
-    else:
-        assert_(isinstance(transform, TransformationABC))
+    def test_back_n_forth(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        origin_type,
+        target_type
+):
+        """Test the forward and backward transformation."""
+        # Create a polynomial
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        coeffs = build_rnd_coeffs(mi)
+        origin_poly = origin_type(mi, coeffs)
 
+        # Forward transformer
+        fwd_transformer = get_transformation(origin_poly, target_type)
+        target_poly = fwd_transformer()
 
-def test_fail_get_transformation_class():
-    """ tests if get_transformation_class throws an error if it cannot find a transforamtion"""
+        # Backward transformer
+        bwd_transformer = get_transformation(target_poly, origin_type)
+        origin_poly_recovered = bwd_transformer()
 
-    assert_raises(
-        NotImplementedError, get_transformation_class, None, LagrangePolynomial
-    )
-
-
-def test_l2n_transform(SpatialDimension, PolyDegree, LpDegree):
-    """Tests the Lagrange to Newton transformations."""
-
-    # Arrange
-    mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-    coeffs = build_rnd_coeffs(mi)
-    lag_poly = LagrangePolynomial(mi, coeffs)
-
-    transformation_l2n = LagrangeToNewton(lag_poly)
-
-    # Test the naive form
-    transform_naive = _build_lagrange_to_newton_naive(transformation_l2n)
-    newt_coeffs_naive = transform_naive @ lag_poly.coeffs
-    newt_poly_naive = NewtonPolynomial(mi, newt_coeffs_naive)
-
-    # Test the barycentric form
-    transform_bary = _build_lagrange_to_newton_bary(transformation_l2n)
-    newt_coeffs_bary = transform_bary @ lag_poly.coeffs
-    newt_poly_bary = NewtonPolynomial(mi, newt_coeffs_bary)
-
-    # Compare the results of the naive and barycentric transformation
-    assert_polynomial_almost_equal(newt_poly_naive, newt_poly_bary)
-
-    # Test the transformation via DDS of the Lagrange polynomial on the grid
-    l2n_matrix = build_l2n_matrix_dds(lag_poly.grid)
-
-    # Compare the results of the naive and DDS transformation
-    assert_almost_equal(l2n_matrix, transform_naive.array_repr_full)
-
-    # Test if the Newton interpolation polynomials evaluated on the unisolvent
-    # nodes are indeed the Lagrange coefficients
-    res_eval = newt_poly_naive(lag_poly.unisolvent_nodes)
-    assert_almost_equal(res_eval, lag_poly.coeffs)
-
-
-def test_n2l_transform(SpatialDimension, PolyDegree, LpDegree):
-    """ testing the naive and bary centric l2n transformations """
-    mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-    coeffs = build_rnd_coeffs(mi)
-    newt_poly = NewtonPolynomial(mi, coeffs)
-
-    transformation_n2l = NewtonToLagrange(newt_poly)
-
-    # test naive
-    transform_naive = _build_newton_to_lagrange_naive(transformation_n2l)
-    lag_coeffs_naive = transform_naive @ newt_poly.coeffs
-    lag_poly_naive = LagrangePolynomial(mi, lag_coeffs_naive)
-
-    # test bary dict
-    transform_bary = _build_newton_to_lagrange_bary(transformation_n2l)
-    lag_coeffs_bary = transform_bary @ newt_poly.coeffs
-    lag_poly_bary = LagrangePolynomial(mi, lag_coeffs_bary)
-
-    # compare the result of naive and bary transformation
-    assert_polynomial_almost_equal(lag_poly_naive, lag_poly_bary)
-
-
-def test_transformation_identity():
-
-    mi = MultiIndexSet.from_degree(2, 1, 1.0)
-    coeffs = build_rnd_coeffs(mi)
-    newt_poly = NewtonPolynomial(mi, coeffs)
-
-    assert_call(Identity, newt_poly)
-    transform = Identity(newt_poly)
-
-    transform_mat = transform.transformation_operator.array_repr_full
-
-    # check whether transformation matrix is identity
-    assert_almost_equal(transform_mat, np.eye(len(mi)))
-
-    assert_call(transform)
-    res_poly = transform()
-
-    # check the resulting polynomial is same after transformation
-    assert_polynomial_almost_equal(res_poly, newt_poly)
+        # Assertions
+        assert isinstance(target_poly, target_type)
+        assert_polynomial_almost_equal(origin_poly, origin_poly_recovered)
 
 
-def test_transform_back_n_forth(P1, P2, SpatialDimension, PolyDegree, LpDegree):
-    mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-    coeffs = build_rnd_coeffs(mi)
-    origin_poly = P1(mi, coeffs)
+class TestGetTransformation:
+    """All tests related to the helper function get_transformation()."""
 
-    transform_forward = get_transformation(origin_poly, P2)
-    interim_poly = transform_forward()
+    def test_get_transformation(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        origin_type,
+        target_type,
+    ):
+        """Test getting the transformation instance."""
+        # Create an origin polynomial
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        coeffs = np.arange(len(mi), dtype=float)
+        origin_poly = origin_type(mi, coeffs)
 
-    transform_back = get_transformation(interim_poly, P1)
-    final_poly = transform_back()
+        # Get the relevant transformation
+        transform = get_transformation(origin_poly, target_type)
 
-    assert_polynomial_almost_equal(origin_poly, final_poly)
+        # Assertions
+        if origin_type == target_type:
+            assert isinstance(transform, Identity)
+        else:
+            assert isinstance(transform, TransformationABC)
+            assert transform.target_type == target_type
+
+    def test_get_transformation_class_success(self, origin_type, target_type):
+        """Test successfully getting the transformation class."""
+        trans_class = get_transformation_class(origin_type, target_type)
+
+        # Assertions
+        if origin_type == target_type:
+            assert trans_class == Identity
+        else:
+            assert trans_class.origin_type == origin_type
+            assert trans_class.target_type == target_type
+
+    def test_get_transformation_class_no_target(self, origin_type):
+        """Test unsuccessfully getting the transformation class."""
+        target_type = None
+        with pytest.raises(NotImplementedError):
+            get_transformation_class(origin_type, target_type)
+
+    def test_get_transformation_class_no_origin(self, target_type):
+        """Test unsuccessfully getting the transformation class."""
+        origin_type = None
+        with pytest.raises(NotImplementedError):
+            get_transformation_class(origin_type, target_type)

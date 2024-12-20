@@ -1,32 +1,52 @@
 """
-Concrete implementations of the Transformation classes for the NewtonPolynomial.
+Implementations of the transformation classes **from**
+:py:class:`.NewtonPolynomial` (polynomials in the
+:ref:`Newton basis <fundamentals/polynomial-bases:Newton basis>`)
+**to**:
 
-Transformations from Newton basis to Canonical and Lagrange basis are provided.
+- :py:class:`.LagrangePolynomial` (polynomials in the
+  :ref:`Lagrange basis <fundamentals/polynomial-bases:Lagrange basis>`)
+- :py:class:`.CanonicalPolynomial` (polynomials in the
+  :ref:`canonical basis <fundamentals/polynomial-bases:Canonical basis>`)
+- :py:class:`.ChebyshevPolynomial` (polynomials in the
+  :ref:`Chebyshev basis <fundamentals/polynomial-bases:Chebyshev basis>`
+  of the first kind)
 """
-
 from minterpy.core.ABC import TransformationABC
-from minterpy.polynomials import CanonicalPolynomial, LagrangePolynomial
-from minterpy.polynomials.newton_polynomial import NewtonPolynomial
-
-from .utils import (
-    _build_newton_to_canonical_operator,
-    _build_newton_to_lagrange_operator,
+from minterpy.polynomials import (
+    NewtonPolynomial,
+    LagrangePolynomial,
+    CanonicalPolynomial,
+    ChebyshevPolynomial,
+)
+from minterpy.transformations.utils import (
+    build_newton_to_lagrange_operator,
+    build_newton_to_canonical_operator,
+    build_newton_to_chebyshev_operator,
 )
 
-__all__ = ["NewtonToCanonical", "NewtonToLagrange"]
-
-
-class NewtonToCanonical(TransformationABC):
-    """Transformation from NewtonPolynomial to CanonicalPolynomial"""
-
-    origin_type = NewtonPolynomial
-    target_type = CanonicalPolynomial
-    _get_transformation_operator = _build_newton_to_canonical_operator
+__all__ = ["NewtonToLagrange", "NewtonToCanonical", "NewtonToChebyshev"]
 
 
 class NewtonToLagrange(TransformationABC):
-    """Transformation from NewtonPolynomial to LagrangePolynomial"""
+    """Transformation from the Newton basis to the Lagrange basis."""
 
     origin_type = NewtonPolynomial
     target_type = LagrangePolynomial
-    _get_transformation_operator = _build_newton_to_lagrange_operator
+    _get_transformation_operator = build_newton_to_lagrange_operator
+
+
+class NewtonToCanonical(TransformationABC):
+    """Transformation from the Newton basis to the canonical basis."""
+
+    origin_type = NewtonPolynomial
+    target_type = CanonicalPolynomial
+    _get_transformation_operator = build_newton_to_canonical_operator
+
+
+class NewtonToChebyshev(TransformationABC):
+    """Transformation from the Newton basis to the Chebyshev basis."""
+
+    origin_type = NewtonPolynomial
+    target_type = ChebyshevPolynomial
+    _get_transformation_operator = build_newton_to_chebyshev_operator

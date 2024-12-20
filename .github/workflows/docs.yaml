@@ -1,0 +1,43 @@
+# This workflow builds and deploys Minterpy documentation as a GitHub page.
+# The workflow are triggered whenever there is a push to either
+# the `main` and `dev` branches. Two versions of the documentation are
+# maintained: "stable" from the `main` branch
+# and `latest` from the `dev` branch.
+name: docs
+
+on:
+  push:
+    branches: ["dev", "main"]
+
+permissions:
+  contents: write
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Install Minterpy with docs extras
+        uses: ./.github/actions/install-minterpy
+        with:
+          extras_require: "[docs]"
+      - name: Build the docs
+        run: |
+          sphinx-build docs _build 
+      - name: Deploy to GitHub Pages (Latest)
+        uses: peaceiris/actions-gh-pages@v4
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' }}
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _build/
+          destination_dir: ./latest
+      - name: Deploy to GitHub Pages (Stable)
+        uses: peaceiris/actions-gh-pages@v4
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _build/
+          destination_dir: ./stable

@@ -1,20 +1,20 @@
 ###############
-Code of conduct
+Code of Conduct
 ###############
 
 This code of conduct provides a set of expectations for participation
-in ``minterpy`` open-source project, as well as steps for reporting
+in the Minterpy open-source project, as well as steps for reporting
 unacceptable behavior.
 
-We, the contributors and maintainers of ``minterpy``,
+We, the contributors and maintainers of Minterpy,
 are committed to providing a welcoming place for all.
-Anyone who violates this Code of conduct may be banned from the ``minterpy``
+Anyone who violates this code of conduct may be banned from the Minterpy
 project temporarily or permanently.
 
 Our pledge
 ##########
 
-We as contributors and maintainers of ``minterpy`` pledge to make participation
+We as contributors and maintainers of Minterpy pledge to make participation
 in our project and community a harassment-free experience for everyone,
 regardless of age, body size, visible or invisible disability, ethnicity,
 sex characteristics, gender identity and expression, level of experience,
@@ -65,14 +65,14 @@ threatening, offensive, or harmful.
 Scope
 #####
 
-This Code of conduct applies to all content of ``minterpy`` project repository,
-its online documentation, as well as at all ``minterpy`` events, whether online
+This code of conduct applies to all content of Minterpy project repository,
+its online documentation, as well as at all Minterpy events, whether online
 or offline.
 
 Enforcement and reporting
 #########################
 
-We encourage members of the ``minterpy`` community to resolve issues
+We encourage members of the Minterpy community to resolve issues
 on their own whenever possible.
 An instance of abusive, harassing, or otherwise unacceptable behavior
 may be reported to the project maintainers for enforcement at ``email_address``.

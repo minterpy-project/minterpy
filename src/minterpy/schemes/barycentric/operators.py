@@ -1,12 +1,20 @@
 """
-Concrete implementations for Operator classes.
+This module contains the concrete implementations of the barycentric operators
+classes.
 
-The following implementations are provided:
+The class `BarycentricOperator` implements the abstract base class
+:py:class:`OperatorABC <.core.ABC.operator_abstract.OperatorABC>` and
+serves as the parent class for several specialized barycentric transformation
+operator classes.
 
-- MatrixOperator
-- BarycentricDictOperator
-- BarycentricFactorisedOperator
-- BarycentricPiecewiseOperator
+These specialized classes differ in how the decomposition of the transformation
+matrix is performed and how the transformation is applied:
+
+- `BarycentricDictOperator`
+- `BarycentricFactorisedOperator`
+- `BarycentricPiecewiseOperator`
+
+----
 
 """
 
@@ -31,11 +39,6 @@ from .transformation_fcts import (
 class BarycentricOperator(OperatorABC):
     """Base class for the barycentric transformation operators.
        Specialized versions (dict, factorised, and piecewise) are derived from this base class.
-
-    Attributes
-    ----------
-    array_representation
-
     """
 
     _array_representation: Optional[ARRAY] = None

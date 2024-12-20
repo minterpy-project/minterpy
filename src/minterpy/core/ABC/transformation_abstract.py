@@ -1,8 +1,14 @@
 """
-Abstract base class for defining transformations from one polynomial basis to another.
+This module contains the abstract base class for defining the transformation
+from one polynomial basis to another.
 
-This module provides the abstract base class for polynomial basis transformations (origin to target) from
-which all concrete implentations are derived.
+All transformation classes, each of which defines the transformation from
+one polynomial basis (the origin) to another (the target), must inherit
+from this abstract base class to ensure consistent behaviors across all
+instances.
+
+----
+
 """
 
 from abc import ABC, abstractmethod
@@ -23,17 +29,6 @@ class TransformationABC(ABC):
 
     All polynomial basis transformers should be derived from this class to maintain a uniform interface for
      basis transformations.
-
-    Attributes
-    ----------
-    origin_type
-    target_type
-    origin_poly : MultivariatePolynomialSingleABC
-        The instance of the polynomial to be transformed.
-    multi_index
-    grid
-
-
     """
 
     available_transforms: Dict[Any, Any] = {}

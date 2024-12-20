@@ -1,108 +1,108 @@
-#################################
-Getting started with ``minterpy``
-#################################
+#############################
+Getting Started with Minterpy
+#############################
 
-..
-    .. todo::
-
-       Getting started is the most important part of the documentation for new users
-       and developers. It should provide users what is it like to use ``minterpy``
-       to solve interpolation problems.
-       This chapter might be broken into parts with increasing complexity,
-       progressively disclosing more difficult or specific terms related to interpolation problems or ``minterpy``  itself.
-
-       For example:
-
-       - Part 1: Installation
-       - Part 2: One-dimensional interpolation (make sure users are convinced that it works for the most simple problems while introducing ``minterpy`` basic usage, say ``mp.interpolate``)
-       - Part 3: Multi-dimensional interpolation (it works for one-dimension, it also works for higher-dimensions, introduce other aspects of ``minterpy`` not apparent in one-dimensional problem)
-       - Part 4: Interpolator objects (this is also an exposed interface for users, so it might be good idea to introduce how to create and handle such objects)
-
-Have you installed ``minterpy``?
+Have you installed Minterpy?
 Read on how to install it before moving on.
 
 Installation
 ############
 
-Since this implementation is a prototype,
-we currently only provide the installation by self-building from source.
-We recommend to use ``git`` to get the ``minterpy`` source:
+.. tab-set::
 
-.. code-block:: bash
+    .. tab-item:: release
 
-   git clone https://gitlab.hzdr.de/interpol/minterpy.git
+       The public release of Minterpy (i.e., the `main branch`_) can be obtained
+       directly from `PyPI`_ with `pip`_:
 
-Within the source directory,
-you may use the following package manager to install ``minterpy``.
+        .. code-block:: bash
 
-A best practice is to create a virtual environment for `minterpy`.
-You can do this with the help of `conda`_ and the ``environment.yaml`` by:
+           pip install minterpy
 
-.. code-block::
+    .. tab-item:: dev
 
-   conda env create -f environment.yaml
+       The latest `development branch`_ of Minterpy can be obtained from
+       its GitHub `repository`_:
 
+       .. code-block:: bash
 
-A new conda environment called ``minterpy`` is created.
-Activate the new environment by:
+          git clone -b dev https://github.com/casus/minterpy
 
-.. code-block::
+       After moving inside the cloned directory, the package can be installed
+       from source with ``pip``:
 
-   conda activate minterpy
+       .. code-block:: bash
 
-From within the environment, install the ``minterpy`` using `pip`_:
+          pip install [-e] .
 
-.. code-block::
+A best practice is to create a virtual environment so as not to install
+external package to the your base Python environment.
+You can do this with the help of, among others:
 
-   pip install [-e] .[all,dev,docs]
+- `venv`_
+- `virtualenv`_
+- `mamba`_
+- `conda`_
 
-where the flag ``-e`` means the package is directly linked
-into the python site-packages of your Python version.
-The options ``[all,dev,docs]`` refer to the requirements defined
-in the ``options.extras_require`` section in ``setup.cfg``.
+What's next?
+############
 
-You **must not** use the command :code:`python setup.py install` to install `minterpy`,
-as you cannot always assume the files ``setup.py`` will always be present
-in the further development of ``minterpy``.
+If you're brand new to Minterpy and simply want to approximate a function using
+polynomial interpolations, start with:
 
-Finally, if you want to deactivate the conda environment, type:
+:doc:`functions-approximation`
 
-.. code-block::
+While approximating functions using polynomials is a main feature of Minterpy,
+it also offers multi-dimensional polynomials in Python.
+These polynomials have a consistent interface that allows for advanced
+manipulation such arithmetic and calculus operations.
 
-   conda deactivate
+To learn more about these features of Minterpy, follow the series of tutorials
+below. We recommend that you go through these tutorials in sequence.
 
-Testing the installation
-========================
+.. list-table:: Available Getting Started Guides (In-Depth Tutorials)
+   :header-rows: 1
 
-After installation, we encourage you to at least run the unit tests of ``minterpy``,
-where we use `pytest`_ to run the tests.
+   * - If you want to...
+     - Go to...
+   * - understand Minterpy polynomials through approximating a 1D function
+     - :doc:`1d-polynomial-interpolation`
+   * - learn how to approximate mD function with polynomial interpolation
+     - :doc:`md-polynomial-interpolation`
+   * - know more about the supported *arithmetic operations*
+       with Minterpy polynomials
+     - :doc:`arithmetic-operations-with-polynomials`
+   * - know more more the supported *calculus operations*
+       with Minterpy polynomials
+     - :doc:`calculus-operations-with-polynomials`
+   * - understand the available polynomial bases and how to transform between
+       them
+     - :doc:`polynomial-bases-and-transformations`
+   * - learn how to construct a polynomial from scattered data
+     - :doc:`Polynomial Regression <polynomial-regression>`
 
-If you want to run all tests, type:
-
-.. code-block:: bash
-
-   pytest [-vvv]
-
-from within the ``minterpy`` source directory.
-
-What's next
-###########
-
-The best way to learn about ``minterpy`` is to read and play around
-with the tutorials below.
-
-Once you're more familiar with ``minterpy`` and would like to achieve a particular task,
-be sure to check out the :doc:`/how-to/index`!
-
-Tutorials table of contents
-###########################
+Once you've become more familiar with Minterpy and need help to achieve
+a particular task, be sure to check out the :doc:`/how-to/index`!
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
+   :hidden:
 
-   one-dimensional-function-interpolation
-   polynomial-regression
+   Functions approximation <functions-approximation>
+   1D Polynomial Interpolation <1d-polynomial-interpolation>
+   mD Polynomial Interpolation <md-polynomial-interpolation>
+   Arithmetic with Polynomials <arithmetic-operations-with-polynomials>
+   Calculus with Polynomials <calculus-operations-with-polynomials>
+   Change of Basis <polynomial-bases-and-transformations>
+   Polynomial Regression <polynomial-regression>
 
+.. _main branch: https://github.com/casus/minterpy
+.. _development branch: https://github.com/casus/minterpy/tree/dev
 .. _conda: https://docs.conda.io/
 .. _pip: https://pip.pypa.io/en/stable/
 .. _pytest: https://docs.pytest.org/en/6.2.x/
+.. _PyPI: https://pypi.org/project/minterpy/
+.. _repository: https://github.com/casus/minterpy
+.. _mamba: https://mamba.readthedocs.io/en/latest/
+.. _virtualenv: https://virtualenv.pypa.io/en/latest/index.html
+.. _venv: https://docs.python.org/3/library/venv.html

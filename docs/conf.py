@@ -11,11 +11,16 @@ from typing import List
 
 from pkg_resources import get_distribution
 
+from sphinx.ext.autosummary import Autosummary
+from sphinx.ext.autosummary import get_documenter
+from docutils.parsers.rst import directives
+from sphinx.util.inspect import safe_getattr
+
 # -- Project information -----------------------------------------------------
 
 project = "minterpy"
-copyright = "2022, Minterpy development team"
-author = "Uwe Hernandez Acosta"
+copyright = "2022, Minterpy Development Team"
+author = "Minterpy Development Team"
 
 version = get_distribution(project).version
 
@@ -25,9 +30,7 @@ version = get_distribution(project).version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "myst_parser",
     "sphinx.ext.autodoc",
-    "numpydoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
@@ -36,9 +39,10 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.autosectionlabel",
     "sphinxcontrib.bibtex",
-    "nbsphinx"
+    "myst_nb",
+    "sphinx_design",
+    "sphinx.ext.viewcode",
 ]
-
 
 # Intersphinx configuration
 intersphinx_mapping = {
@@ -50,15 +54,9 @@ intersphinx_mapping = {
     "pytest": ("https://docs.pytest.org/en/stable", None),
 }
 
-# bibtex config
+# --- bibtex config
 bibtex_bibfiles = ["bibliography.bib"]
 
-# configure numpydoc
-
-numpydoc_show_class_members = False
-
-# Display todos by setting to True
-todo_include_todos = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []
@@ -75,7 +73,42 @@ default_role = "autolink"
 autosectionlabel_prefix_document = True
 
 # Math configurations
-math_eqref_format = 'Eq. ({number})'
+math_eqref_format = "Eq. ({number})"
+
+# Figure
+numfig = True
+
+# --- ToDo  options
+
+# Display todos (don't display for public)
+todo_include_todos = False
+
+# --- Autodoc customization
+
+# Don't sort the API elements alphabetically; instead, follow the source
+autodoc_member_order = "bysource"
+
+# Don't expand/evaluate the default value in function signatures
+autodoc_preserve_defaults = True
+
+# Only show typehints in the functions/methods description, not signature
+autodoc_typehints = "description"
+
+# --- napoleon options
+napoleon_use_rtype = True
+napoleon_use_param = True
+
+# --- Autosummary options
+autosummary_generate = True
+autosummary_imported_members = True
+
+# --- MyST-NB options
+myst_enable_extensions = [
+    "amsmath",
+    "dollarmath",  # Enable LaTeX-style dollar syntax for math.
+]
+# Allow the notebook-based documentation to be built a bit longer
+nb_execution_timeout = 120
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -88,11 +121,133 @@ html_title = f"Minterpy {version[0:3]}"
 
 html_baseurl = "https://minterpy.readthedocs.io/en/latest/"
 
-
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path: List[str] = []
+html_static_path: List[str] = ["assets/supported-by", "assets/styles"]
 
-html_favicon = './assets/favicon.ico'
-html_logo = './assets/minterpy-logo.png'
+html_favicon = "./assets/favicon.ico"
+html_logo = "./assets/Wordmark-color.png"
+
+html_css_files = [
+    'styles.css',
+]
+
+# Hide the "Show Source" button
+html_show_sourcelink = False
+
+# Theme options
+html_theme_options = {
+    "icon_links": [
+            {
+                "name": "GitHub",
+                "url": "https://github.com/minterpy-project/minterpy",
+                "icon": "fa-brands fa-square-github",
+                "type": "fontawesome",
+            },
+            {
+                "name": "Latest Docs",
+                "url": "https://minterpy-project.github.io/minterpy/latest/",
+                "icon": "fa-brands fa-dev",
+                "type": "fontawesome",
+            },
+            {
+                "name": "Stable Docs",
+                "url": "https://minterpy-project.github.io/minterpy/stable/",
+                "icon": "fa-solid fa-box-open",
+                "type": "fontawesome",
+            },
+    ],
+}
+
+suppress_warnings = [
+    'autosummary.import_cycle',
+]
+
+# Flag to execute notebooks-based documentation during build
+nb_execution_mode = "auto"
+
+# --- Custom directives -------------------------------------------------------
+
+class ClassAutosummary(Autosummary):
+    """Create a summary of class attributes, properties, and methods.
+
+    Notes
+    -----
+    - Only public attributes, methods, and properties (do not start with
+      "_") will be summarized.
+    - Only class, not instance, attributes will be summarized. That means,
+      attributes defined under `__init__` will not be visible.
+    - This implementation is adapted from an `answer`_ in Stack Overflow. Note
+      that the answer will not work out-of-the-box.
+
+    .. _answer: https://stackoverflow.com/a/30783465
+    """
+
+    option_spec = {
+        "attributes": directives.unchanged,  # Class, not instance, attribs
+        "properties": directives.unchanged,
+        "methods": directives.unchanged,
+    }
+
+    required_arguments = 1
+
+    @staticmethod
+    def get_members(app, obj, typ, include_public=None):
+        if not include_public:
+            include_public = []
+        items = []
+        for name in dir(obj):
+            try:
+                documenter = get_documenter(app, safe_getattr(obj, name), obj)
+            except AttributeError:
+                continue
+            if documenter.objtype == typ:
+                items.append(name)
+        public = [x for x in items if x in include_public or not x.startswith("_")]
+
+        return public, items
+
+    def run(self):
+        """Execute run() method when the directive is used."""
+
+        # Get the current Sphinx application attached to self
+        try:
+            app = self.state.document.settings.env.app
+        except AttributeError:
+            app = None
+
+        cls = self.arguments[0]
+        (module_name, class_name) = cls.rsplit(".", 1)
+        m = __import__(module_name, globals(), locals(), [class_name])
+        c = getattr(m, class_name)
+        if "methods" in self.options:
+            # Always include __init__
+            _, methods = self.get_members(app, c, "method", ["__init__"])
+
+            self.content = [
+                f"~{cls}.{method}" for method in methods if not method.startswith("_")
+            ]
+
+        if "attributes" in self.options:
+            _, attribs = self.get_members(app, c, "attribute")
+
+            self.content = [
+                f"~{cls}.{attrib}" for attrib in attribs if not attrib.startswith("_")
+            ]
+
+        if "properties" in self.options:
+            _, props = self.get_members(app, c, "property")
+
+            self.content = [
+                f"~{cls}.{prop}" for prop in props if not prop.startswith("_")
+            ]
+
+        return super(ClassAutosummary, self).run()
+
+
+def setup(app):
+    try:
+        app.add_directive("classautosummary", ClassAutosummary)
+    except BaseException as e:
+        raise e

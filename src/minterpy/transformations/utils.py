@@ -1,27 +1,36 @@
 """
 Utility functions for computing matrices for transformation between canonical, lagrange, and newton basis.
 
+.. todo::
+   - Consider if simplifying the names makes any sense
+   - make sure that the transformations are tested
+   - find solution for the case that the multi-indices are separated
+     from the grid indices
+   - Consider if making separate modules for some relevant functions
+     makes any sense
 """
-from typing import no_type_check
-
 import numpy as np
+
+from typing import no_type_check
 
 from minterpy.core.ABC import OperatorABC, TransformationABC
 from minterpy.dds import dds
 from minterpy.global_settings import ARRAY, DEBUG, FLOAT_DTYPE
-from minterpy.jit_compiled_utils import compute_vandermonde_n2c
+from minterpy.jit_compiled.transformations import compute_vandermonde_n2c
 from minterpy.schemes.barycentric.precomp import (
     _build_lagrange_to_newton_bary,
     _build_newton_to_lagrange_bary,
 )
 from minterpy.schemes.matrix_operator import MatrixOperator
-from minterpy.utils import eval_newton_monomials
+from minterpy.utils.polynomials.newton import eval_newton_monomials
+
+from minterpy.utils.polynomials.chebyshev import (
+    evaluate_monomials as evaluate_monomials_chebyshev,
+)
+
 
 # NOTE: avoid looping over a numpy array! e.g. for j in np.arange(num_monomials):
 # see: # https://stackoverflow.com/questions/10698858/built-in-range-or-numpy-arange-which-is-more-efficient
-
-
-# todo simplify names
 
 
 def invert_triangular(triangular_matrix: np.ndarray) -> np.ndarray:
@@ -124,26 +133,151 @@ def _build_n2c_array(transformation: TransformationABC) -> ARRAY:
     return invert_triangular(_build_c2n_array(transformation))
 
 
-# TODO own module?
-
-
+# --- From LagrangePolynomial
 @no_type_check
-def _build_newton_to_lagrange_operator(
+def build_lagrange_to_newton_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """constructs the Newton to Lagrange transformation operator
+    """Construct the Lagrange-to-Newton transformation operator.
 
-    use the barycentric transformation if the indices are complete!
-    TODO find solution for the case that the multi indices are separate from the grid indices
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of LagrangePolynomial) and
+        the target type (NewtonPolynomial).
 
-    :param transformation: the Transformation instance
-        with the fixed polynomial defining the unisolvent nodes to perform the transformation on
-    :return: the transformation operator from Newton to Lagrange basis
+    Returns
+    -------
+    OperatorABC
+        The Lagrange-to-Newton transformation operator.
+
+    Notes
+    -----
+    - The barycentric transformation operator is employed if the multi-indices
+      are downward-closed.
+    - The naive transformation operator is inefficient due to the following
+      inversion: ``inv(nwt2lag_matrix)``.
     """
     grid = transformation.grid
-    complete_indices = grid.multi_index.is_complete
+    is_downward_closed = grid.multi_index.is_downward_closed
     identical_indices = not transformation.origin_poly.indices_are_separate
-    if complete_indices and identical_indices:
+    if is_downward_closed and identical_indices:
+        # use barycentric transformation
+        transformation_operator = _build_lagrange_to_newton_bary(transformation)
+    else:  # use "naive" matrix transformation format
+        transformation_operator = _build_lagrange_to_newton_naive(transformation)
+    return transformation_operator
+
+
+def build_lagrange_to_canonical_operator(
+    transformation: TransformationABC,
+) -> OperatorABC:
+    """Construct the Lagrange-to-Canonical transformation operator.
+
+    The transformation is the chain: Lagrange-to-Newton then
+    Newton-to-Canonical.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of LagrangePolynomial) and
+        the target type (CanonicalPolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The Lagrange-to-Canonical transformation operator.
+
+    Notes
+    -----
+    - Barycentric transformation operator is employed if the multi-indices
+      are downward-closed.
+    """
+    lag2nwt_operator = build_lagrange_to_newton_operator(transformation)
+    nwt2can_operator = build_newton_to_canonical_operator(transformation)
+
+    return nwt2can_operator @ lag2nwt_operator
+
+
+def build_lagrange_to_chebyshev_operator(
+    transformation: TransformationABC
+) -> OperatorABC:
+    """Compute the Lagrange-to-Chebyshev transformation.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of LagrangePolynomial) and
+        the target type (ChebyshevPolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The Lagrange-to-Chebyshev transformation operator.
+
+    Notes
+    -----
+    - The transformation is carried out by inverting the evaluation
+      at the unisolvent nodes; this is not a sparse transformation operator.
+    """
+    # Get the relevant data from the transformer
+    mi_poly = transformation.multi_index
+    mi_grid = transformation.grid.multi_index
+    if mi_poly != mi_grid:
+        raise ValueError(
+            "Inconsistent behavior for different multi-indices of "
+            "the polynomial and the grid!"
+        )
+    else:
+        unisolvent_nodes = transformation.grid.unisolvent_nodes
+        exponents = transformation.grid.multi_index.exponents
+
+    # Compute the Chebyshev monomials at the unisolvent nodes
+    cheb2lag_matrix = evaluate_monomials_chebyshev(
+        unisolvent_nodes,
+        exponents,
+    )
+
+    # Compute the inverse transformation
+    lag2cheb_matrix = np.linalg.inv(cheb2lag_matrix)
+
+    # Create the operator
+    lag2cheb_operator = MatrixOperator(transformation, lag2cheb_matrix)
+
+    return lag2cheb_operator
+
+
+# --- From NewtonPolynomial
+@no_type_check
+def build_newton_to_lagrange_operator(
+    transformation: TransformationABC,
+) -> OperatorABC:
+    """Construct the Newton-to-Lagrange transformation operator.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of NewtonPolynomial) and
+        the target type (LagrangePolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The Newton-to-Lagrange transformation operator.
+
+    Notes
+    -----
+    - The barycentric transformation operator is employed if the multi-indices
+      are downward-closed.
+    """
+    grid = transformation.grid
+    is_downward_closed = grid.multi_index.is_downward_closed
+    identical_indices = not transformation.origin_poly.indices_are_separate
+    if is_downward_closed and identical_indices:
         # use barycentric transformation
         transformation_operator = _build_newton_to_lagrange_bary(transformation)
     else:  # use "naive" matrix transformation format
@@ -152,57 +286,229 @@ def _build_newton_to_lagrange_operator(
     return transformation_operator
 
 
-@no_type_check
-def _build_lagrange_to_newton_operator(
+def build_newton_to_canonical_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    """constructs the Lagrange to Newton transformation operator
+    """Construct the Newton-to-Canonical transformation operator.
 
-    use the barycentric transformation if the indices are complete!
-    TODO find solution for the case that the multi indices are separate from the grid indices
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of NewtonPolynomial) and
+        the target type (CanonicalPolynomial).
 
-    NOTE: it is inefficient to compute this by inversion:
-        newton_to_lagrange = inv(lagrange_to_newton) # based on DDS
-
-    :param transformation: the Transformation instance
-        with the fixed polynomial defining the unisolvent nodes to perform the transformation on
-    :return: the transformation operator from Newton to Lagrange basis
+    Returns
+    -------
+    OperatorABC
+        The Newton-to-Canonical transformation operator.
     """
-    grid = transformation.grid
-    complete_indices = grid.multi_index.is_complete
-    identical_indices = not transformation.origin_poly.indices_are_separate
-    if complete_indices and identical_indices:
-        # use barycentric transformation
-        transformation_operator = _build_lagrange_to_newton_bary(transformation)
-    else:  # use "naive" matrix transformation format
-        transformation_operator = _build_lagrange_to_newton_naive(transformation)
-    return transformation_operator
+    nwt2can_matrix = _build_n2c_array(transformation)
+    nwt2can_operator = MatrixOperator(transformation, nwt2can_matrix)
+
+    return nwt2can_operator
 
 
-# TODO test these transformations:
-def _build_canonical_to_newton_operator(
-    transformation: TransformationABC,
-) -> MatrixOperator:
-    return MatrixOperator(transformation, _build_c2n_array(transformation))
+def build_newton_to_chebyshev_operator(
+    transformation: TransformationABC
+) -> OperatorABC:
+    """Construct the Newton-to-Chebyshev transformation operator.
+
+    The transformation is the chain: Newton-to-Lagrange then
+    Lagrange-to-Chebyshev.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of NewtonPolynomial) and
+        the target type (ChebyshevPolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The Newton-to-Chebyshev transformation operator.
+    """
+    nwt2lag_operator = build_newton_to_lagrange_operator(transformation)
+    lag2cheb_operator = build_lagrange_to_chebyshev_operator(transformation)
+
+    return lag2cheb_operator @ nwt2lag_operator
 
 
-def _build_newton_to_canonical_operator(
-    transformation: TransformationABC,
-) -> MatrixOperator:
-    return MatrixOperator(transformation, _build_n2c_array(transformation))
-
-
-def _build_lagrange_to_canonical_operator(
+# --- From CanonicalPolynomial
+def build_canonical_to_newton_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    lagrange_to_newton = _build_lagrange_to_newton_operator(transformation)
-    newton_to_canonical = _build_newton_to_canonical_operator(transformation)
-    return newton_to_canonical @ lagrange_to_newton
+    """Construct the Canonical-to-Newton transformation operator.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of CanonicalPolynomial) and
+        the target type (NewtonPolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The Canonical-to-Newton transformation operator.
+    """
+    can2nwt_matrix = _build_c2n_array(transformation)
+    can2nwt_operator = MatrixOperator(transformation, can2nwt_matrix)
+
+    return can2nwt_operator
 
 
-def _build_canonical_to_lagrange_operator(
+def build_canonical_to_lagrange_operator(
     transformation: TransformationABC,
 ) -> OperatorABC:
-    newton_to_lagrange = _build_newton_to_lagrange_operator(transformation)
-    canonical_to_newton = _build_canonical_to_newton_operator(transformation)
-    return newton_to_lagrange @ canonical_to_newton
+    """Construct the Canonical-to-Lagrange transformation operator.
+
+    The transformation is the chain: Canonical-to-Newton then
+    Newton-to-Lagrange.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of CanonicalPolynomial) and
+        the target type (LagrangePolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The Canonical-to-Lagrange transformation operator.
+    """
+    nwt2lag_operator = build_newton_to_lagrange_operator(transformation)
+    can2nwt_operator = build_canonical_to_newton_operator(transformation)
+
+    return nwt2lag_operator @ can2nwt_operator
+
+
+def build_canonical_to_chebyshev_operator(
+    transformation: TransformationABC
+) -> OperatorABC:
+    """Construct the Canonical-to-Chebyshev transformation operator.
+
+    The transformation is the chain: Canonical-to-Newton then
+    Newton-to-Lagrange then Lagrange-to-Chebyshev.
+
+    The Canonical-to-Lagrange operator is implemented as a single operator.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of CanonicalPolynomial) and
+        the target type (ChebyshevPolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The canonical-to-Chebyshev transformation operator.
+    """
+    can2lag_operator = build_canonical_to_lagrange_operator(transformation)
+    lag2cheb_operator = build_lagrange_to_chebyshev_operator(transformation)
+
+    return lag2cheb_operator @ can2lag_operator
+
+
+# --- From ChebyshevPolynomial
+def build_chebyshev_to_lagrange_operator(
+    transformation: TransformationABC
+) -> OperatorABC:
+    """Construct the Chebyshev to Lagrange transformation operator.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of ChebyshevPolynomial) and
+        the target type (LagrangePolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The Chebyshev-to-Lagrange transformation operator.
+
+    Notes
+    -----
+    - The transformation is carried out by evaluation at the unisolvent nodes;
+      this is not a sparse transformation operator.
+    """
+    # Get relevant data from the transformer
+    mi_poly = transformation.multi_index
+    mi_grid = transformation.grid.multi_index
+    if mi_poly != mi_grid:
+        raise ValueError(
+            "Inconsistent behavior for different multi-indices of "
+            "the polynomial and the grid!"
+        )
+    else:
+        unisolvent_nodes = transformation.grid.unisolvent_nodes
+        exponents = transformation.grid.multi_index.exponents
+
+    # Compute the Chebyshev monomials at the unisolvent nodes
+    chebyshev_monomials = evaluate_monomials_chebyshev(
+        unisolvent_nodes,
+        exponents,
+    )
+
+    # The monomials are the (full) transformation operator
+    cheb2lag_operator = MatrixOperator(transformation, chebyshev_monomials)
+
+    return cheb2lag_operator
+
+
+def build_chebyshev_to_newton_operator(
+    transformation: TransformationABC,
+) -> OperatorABC:
+    """Construct the Chebyshev-to-Newton transformation operator.
+
+    The transformation is the chain: Chebyshev-to-Lagrange then
+    Lagrange-to-Newton.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of ChebyshevPolynomial) and
+        the target type (NewtonPolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The Chebyshev-to-Newton transformation operator.
+    """
+    cheb2lag_operator = build_chebyshev_to_lagrange_operator(transformation)
+    lag2nwt_operator = build_lagrange_to_newton_operator(transformation)
+
+    return lag2nwt_operator @ cheb2lag_operator
+
+
+def build_chebyshev_to_canonical_operator(
+    transformation: TransformationABC,
+) -> OperatorABC:
+    """Construct the Chebyshev-to-Canonical transformation operator.
+
+    The transformation is the chain: Chebyshev-to-Lagrange then
+    Lagrange-to-Newton then Newton-to-Canonical.
+
+    The Lagrange-to-Canonical is implemented as a single operator.
+
+    Parameters
+    ----------
+    transformation : TransformationABC
+        The transformer instance with information about the origin polynomial
+        (an instance of ChebyshevPolynomial) and
+        the target type (NewtonPolynomial).
+
+    Returns
+    -------
+    OperatorABC
+        The Chebyshev-to-Newton transformation operator.
+    """
+    cheb2lag_operator = build_chebyshev_to_lagrange_operator(transformation)
+    lag2can_operator = build_lagrange_to_canonical_operator(transformation)
+
+    return lag2can_operator @ cheb2lag_operator

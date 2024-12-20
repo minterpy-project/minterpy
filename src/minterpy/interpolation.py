@@ -1,19 +1,36 @@
-"""
-The `interpolation` module is part of `minterpy`.
+"""A top-level module with interfaces to conveniently create interpolants.
 
-It contains:
-    - `interpolate`, the main interpolation function.
-    - `Interpolant`, data type which acts like the function which interpolates a given function.
-    - `Interpolator`, data type which builds all relevant parts for an interpolation and caches them.
+The main purpose of Minterpy is to interpolate given functions provided as
+Python Callables.
+This top-level module provides a convenient function named `interpolate`,
+which outputs a Callable of the type `Interpolant`.
+This represents the given function as a multidimensional (Newton) polynomial.
+
+Moreover, it is also possible to construct an `Interpolator` instance.
+This object precomputes and caches all the necessary ingredients
+for the interpolation of any functions.
+
++-------------------+---------------------------------------------------------+
+| Function / Class  | Description                                             |
++===================+=========================================================+
+| `interpolate`     | Interpolate a given function                            |
++-------------------+---------------------------------------------------------+
+| `Interpolant`     | Class that represents an interpolated function          |
++-------------------+---------------------------------------------------------+
+| `Interpolator`    | Class that represents interpolators for given functions |
++-------------------+---------------------------------------------------------+
+
 """
-from typing import Callable, Optional
 
 import attr
-import numpy as np
+
+from typing import Callable, Optional
 
 from .core import Grid, MultiIndexSet
 from .dds import dds
-from .polynomials import NewtonPolynomial
+from .polynomials import NewtonPolynomial, LagrangePolynomial
+from .transformations import NewtonToCanonical, NewtonToChebyshev
+from .global_settings import DEFAULT_LP_DEG
 
 __all__ = ["Interpolator", "Interpolant", "interpolate"]
 
@@ -71,7 +88,7 @@ class Interpolator:
         :raises InterpolationError: Raised if anything goes wrong with the interpolation.
         """
         try:
-            fct_values = fct(self.grid.unisolvent_nodes)
+            fct_values = self.grid(fct)
             # NOTE: Don't use np.squeeze as DDS results may be of shape (1,1)
             interpol_coeffs = dds(fct_values, self.grid.tree).reshape(-1)
         except Exception as e:
@@ -149,6 +166,34 @@ class Interpolant:
         """
         return self.interpolator.lp_degree
 
+    @property
+    def lagrange_coeffs(self):
+        """Return the Lagrange coefficients of the interpolating polynomial."""
+        return self.interpolator.grid(self.fct)
+
+    def to_newton(self):
+        """Return the interpolant as a polynomial in the Newton basis."""
+        return self.__interpolation_poly
+
+    def to_lagrange(self):
+        """Return the interpolant as a polynomial in the Lagrange basis."""
+        return LagrangePolynomial.from_grid(
+            self.interpolator.grid,
+            self.lagrange_coeffs,
+        )
+
+    def to_canonical(self):
+        """Return the interpolant as a polynomial in the canonical basis."""
+        nwt_poly = self.__interpolation_poly
+
+        return NewtonToCanonical(nwt_poly)()
+
+    def to_chebyshev(self):
+        """Return the interpolant as a polynomial in the Chebyshev basis."""
+        nwt_poly = self.__interpolation_poly
+
+        return NewtonToChebyshev(nwt_poly)()
+
     def __call__(self, pts):
         """Evaulate the interpolant on a given array of points.
 
@@ -158,7 +203,7 @@ class Interpolant:
         return self.__interpolation_poly(pts)
 
 
-def interpolate(fct, spatial_dimension, poly_degree, lp_degree=None):
+def interpolate(fct, spatial_dimension, poly_degree, lp_degree=DEFAULT_LP_DEG):
     """Interpolate a given function.
 
     Return an interpolant, which represents the given function on the domain :math:`[-1, 1]^d`, where :math:`d` is the dimension of the domain space.

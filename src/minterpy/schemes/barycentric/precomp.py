@@ -31,7 +31,7 @@ from minterpy.global_settings import (
     TRAFO_DICT,
     TYPED_LIST,
 )
-from minterpy.utils import eval_newton_monomials
+from minterpy.utils.polynomials.newton import eval_newton_monomials
 
 from .operators import BarycentricFactorisedOperator, BarycentricOperator
 

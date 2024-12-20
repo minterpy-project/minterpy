@@ -8,7 +8,6 @@ import numpy as np
 import pytest
 from conftest import (
     LpDegree,
-    MultiIndices,
     NrPoints,
     PolyDegree,
     SpatialDimension,
@@ -103,3 +102,77 @@ def test_interpolate(NrPoints, SpatialDimension, PolyDegree, LpDegree):
     interpolant = interpolate(groundtruth_poly, SpatialDimension, PolyDegree, LpDegree)
     res = interpolant(rnd_points)
     assert_almost_equal(res, groundtruth)
+
+
+def _fun(xx: np.ndarray) -> np.ndarray:
+    """Dummy function for testing interpolant."""
+    return np.sum(xx, axis=1)
+
+
+class TestPoly:
+    """All tests related to the accessing the polynomial of an interpolant."""
+
+    def test_to_newton(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test obtaining the interpolating polynomial in the Newton basis."""
+        # Interpolate a function
+        interpol = interpolate(_fun, SpatialDimension, PolyDegree, LpDegree)
+        poly_1 = interpol.to_newton()
+
+        # Create a reference
+        grd = mp.Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        lag_coeffs = grd(_fun)
+        # 'interpolate()' use DDS (don't use LagrangeToNewton in the test
+        # as the results won't be identical, very close to, but not identical)
+        nwt_coeffs = mp.dds.dds(lag_coeffs, grd.tree)
+        poly_2 = mp.NewtonPolynomial.from_grid(grd, nwt_coeffs)
+
+        assert poly_1 == poly_2
+
+    def test_to_lagrange(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test obtaining the interpolating polynomial in the Newton basis."""
+        # Interpolate a function
+        interpol = interpolate(_fun, SpatialDimension, PolyDegree, LpDegree)
+        poly_1 = interpol.to_lagrange()
+
+        # Create a reference
+        grd = mp.Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        lag_coeffs = grd(_fun)
+        poly_2 = mp.LagrangePolynomial.from_grid(grd, lag_coeffs)
+
+        assert poly_1 == poly_2
+
+    def test_to_canonical(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test obtaining the interpolating polynomial in the Newton basis."""
+        # Interpolate a function
+        interpol = interpolate(_fun, SpatialDimension, PolyDegree, LpDegree)
+        poly_1 = interpol.to_canonical()
+
+        # Create a reference
+        grd = mp.Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        lag_coeffs = grd(_fun)
+        lag_coeffs = grd(_fun)
+        # 'interpolate()' use DDS (don't use LagrangeToNewton in the test
+        # as the results won't be identical, very close to, but not identical)
+        nwt_coeffs = mp.dds.dds(lag_coeffs, grd.tree)
+        nwt_poly = mp.NewtonPolynomial.from_grid(grd, nwt_coeffs)
+        poly_2 = mp.NewtonToCanonical(nwt_poly)()
+
+        assert poly_1 == poly_2
+
+    def test_to_chebyshev(self, SpatialDimension, PolyDegree, LpDegree):
+        """Test obtaining the interpolating polynomial in the Newton basis."""
+        # Interpolate a function
+        interpol = interpolate(_fun, SpatialDimension, PolyDegree, LpDegree)
+        poly_1 = interpol.to_chebyshev()
+
+        # Create a reference
+        grd = mp.Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        lag_coeffs = grd(_fun)
+        lag_coeffs = grd(_fun)
+        # 'interpolate()' use DDS (don't use LagrangeToNewton in the test
+        # as the results won't be identical, very close to, but not identical)
+        nwt_coeffs = mp.dds.dds(lag_coeffs, grd.tree)
+        nwt_poly = mp.NewtonPolynomial.from_grid(grd, nwt_coeffs)
+        poly_2 = mp.NewtonToChebyshev(nwt_poly)()
+
+        assert poly_1 == poly_2

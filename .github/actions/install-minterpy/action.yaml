@@ -1,0 +1,23 @@
+name: install-minterpy
+description: Common steps for installing Minterpy
+inputs:
+  extras_require:
+      description: 'Extras feature specification'
+      required: false
+      default: ''
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+    - name: Create a virtual environment
+      shell: bash
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+    - name: Install docs dependencies
+      shell: bash
+      run: |
+        pip install -e .${{ inputs.extras_require }}

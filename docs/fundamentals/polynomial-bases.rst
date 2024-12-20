@@ -1,27 +1,40 @@
-#############################
-Multivariate polynomial bases
-#############################
+=================================
+Multidimensional Polynomial Bases
+=================================
 
-..
-    .. todo::
-
-       This page should introduce and define all the supported multivariate
-       polynomial bases supported in ``minterpy``. Some pictures might help as well.
+This page introduces the polynomial bases supported by Minterpy.
+To extend the notion of polynomial degree and exponents to multiple dimensions,
+the concept of multi-indices is introduced first.
 
 Multi-index sets and polynomial degree
-######################################
+======================================
 
-Multi-index sets :math:`A\subseteq \mathbb{N}^m` generalise the notion of polynomial degree to multi-dimensions :math:`m \in \mathbb{N}`.
-We call a multi-index set **downward closed** if and only if there is no :math:`\beta = (b_1,\dots,b_m) \in \mathbb{N}^m \setminus A`
-with :math:`b_i \leq a_i`,  for all :math:`i=1,\dots,m` and some :math:`\alpha = (a_1,\dots,a_m) \in A`.
-This follows the classic terminology introduced for instance by \ :footcite:`Cohen2018`.
+Multi-index sets :math:`A \subseteq \mathbb{N}^m` generalize the notion
+of polynomial degree to multiple dimensions :math:`m \in \mathbb{N}`.
 
-Any (not necessarily downward closed) multi-index set :math:`A\subseteq \mathbb{N}^m` is assumed to be orderd with respect to the
-**lexicographical order** :math:`\preceq` from the last entry to the first, e.g.,
-:math:`(5,3,1)\preceq(1,0,3) \preceq(1,1,3)`.
+Downward-closedness
+-------------------
 
+We call a multi-index set *downward closed* if and only if there is no
+:math:`\beta = (\beta_1, \dots, \beta_m) \in \mathbb{N}^m \setminus A`
+with :math:`b_i \leq a_i`,  for all :math:`i=1, \dots, m`
+and some :math:`\alpha = (\alpha_1, \dots, \alpha_m) \in A`.
+This follows the classic terminology introduced for instance
+by Cohen and Migliorati\ :footcite:`Cohen2018`.
 
-For :math:`\alpha=(\alpha_1,\ldots,\alpha_m) \in \mathbb{N}^m` we consider the :math:`l_p`-norm
+Lexicographical ordering
+------------------------
+
+Any (not necessarily downward-closed) multi-index set
+:math:`A\subseteq \mathbb{N}^m` is assumed to be ordered *lexicographically*
+:math:`\preceq` from the last entry to the first, for example,
+:math:`(5, 3, 1) \preceq (1, 0, 3) \preceq(1, 1, 3)`.
+
+Complete multi-index set
+------------------------
+
+For :math:`\alpha=(\alpha_1, \ldots, \alpha_m) \in \mathbb{N}^m`,
+we consider the :math:`l_p`-norm
 
 .. math::
 
@@ -33,104 +46,193 @@ and denote the multi-index sets of bounded :math:`l_p`-norm by
 
   A_{m,n,p} = \{\alpha \in \mathbb{N}^m :  \|\alpha\|_p \leq n \}\,, \quad p>1 \,.
 
-Indeed, the sets :math:`A_{m,n,p}` are downward closed and yield the multi-indices being relevant when considering polynomials of :math:`l_p`-degree
-:math:`n \in \mathbb{N}` in dimension :math:`m \in \mathbb{N}`.
+Indeed, the sets :math:`A_{m,n,p}` are downward closed and called
+*complete multi-index sets*.
+The sets yield the relevant multi-indices when considering polynomials of
+:math:`l_p`-degree :math:`n \in \mathbb{N}` in dimension
+:math:`m \in \mathbb{N}`.
 
+.. note::
 
-While :math:`A_{1,n,1}=A_{1,n,p} = A_{1,n,\infty}` for all :math:`p>1` the
-generalised notion of polynomial degree induced by the multi-index sets :math:`A_{m,n,p}` just becomes observable for multi-dimensions.
+   For a given :math:`n`, all :math:`A_{1, n, p}` are identical
+   for all :math:`p > 0`.
 
-Below the canonical, Lagrange \& Newton bases are introduced. In fact, all of them are bases of :math:`\Pi_A` (:eq:`eq_PiA`) whenever :math:`A`
-is a downward closed multi-index set.
+Polynomial spaces
+=================
 
-
-Canonical polynomials
-#####################
-
-Given a not necessarily downward closed multi-index set :math:`A\subseteq \mathbb{N}^m` in dimension  :math:`m \in \mathbb{N}` we consider the
-**polynomial spaces**
-
-.. math::
-  :label: eq_PiA
-
-  \Pi_A =\left<x^\alpha = x_1^{\alpha_1}\cdots x_m^{\alpha_m} : \alpha \in A\right>
-
-spanned by the canonical monomials :math:`x^\alpha\,, \alpha \in A`. A polynomial in **canonical form**
+Given a multi-index set :math:`A\subseteq \mathbb{N}^m`
+in dimension :math:`m \in \mathbb{N}`,
+consider the *polynomial spaces*
 
 .. math::
+   :label: eq_Pi_A
 
-  Q(x) = \sum_{\alpha \in A} c_\alpha x^\alpha \in \Pi_A\,.
+   \Pi_A =\langle \Psi_{\boldsymbol{\alpha}} : \alpha \in A \rangle
 
-is determined by :math:`A` and its **canonical coefficients** :math:`(c_\alpha)_{\alpha \in A} \in \mathbb{R}^{|A|}`,
-which are implemented as an array ordered with respect to the lexicographical order :math:`\preceq`.
+spanned by the *basis polynomials* :math:`\Psi_{\boldsymbol{\alpha}}`.
 
-The crucial point of our general setup of multi-index sets :math:`A \subseteq \mathbb{N}^m` can for instance be observed by realising that
-:math:`\|(2,2)\|_1 = 4  > 3`, :math:`\|(2,2)\|_2 = \sqrt{8}  < 3`  implies
+A *polynomial basis* consists of a distinct set of basis polynomials.
+Many polynomial bases exist in the literature, and Minterpy supports a couple
+of them, which are reviewed in the subsequent sections.
+
+.. tip::
+
+   A *polynomial basis* is an entire set of *basis polynomials*.
+
+Given a polynomial basis and a multi-index set :math:`A`,
+a multidimensional polynomial :math:`Q` can then be written as
+
+.. math::
+   :label: eq_poly_arbitrary_basis
+
+   Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A}
+   c_{\cdot, \boldsymbol{\alpha}} \, \Psi_{\cdot, \boldsymbol{\alpha}}
+   (\boldsymbol{x}) \in \Pi_A,
+
+where :math:`\Psi_{\cdot, \boldsymbol{\alpha}}` and
+:math:`c_{\cdot, \boldsymbol{\alpha}}` are the chosen basis polynomials and
+the corresponding coefficients, respectively.
+
+A polynomial in the form of :eq:`eq_poly_arbitrary_basis` is determined
+by the chosen basis, the multi-index set :math:`A`, and the corresponding
+coefficients
+:math:`\left( c_{\cdot, \boldsymbol{\alpha}} \right)_{\boldsymbol{\alpha} \in A}
+\in \mathbb{R}^{\lvert A \rvert}`. The coefficients are stored as an array
+ordered according to the :ref:`lexicographical ordering
+<fundamentals/polynomial-bases:Lexicographical ordering>`
+:math:`\preceq` of the corresponding multi-index set.
+
+.. note::
+
+   The Lagrange and Newton polynomial basis, as will explained below,
+   require an additionally set of generating points to be defined.
+
+Canonical basis
+===============
+
+The basis polynomial of the canonical basis associated with a multi-index
+element :math:`\boldsymbol{\alpha} \in A \subseteq \mathbb{N}^m` is defined as
+
+.. math::
+
+   \Psi_{\mathrm{can}, \boldsymbol{\alpha}} (\boldsymbol{x}) =
+   x_1^{\alpha_1} \cdots x_m^{\alpha_m} =
+   \prod_{j = 1}^m x_j^{\alpha_j},
+
+where :math:`m` is the spatial dimension of the polynomial.
+
+.. note::
+
+   The canonical basis in Minterpy is synonymous with the *monomial basis*.
+
+----
+
+The crucial point of our general setup of multi-index sets
+:math:`A \subseteq \mathbb{N}^m` can be observed by, for instance, realizing
+that the multi-index element :math:`\lVert (2,2) \rVert_1 = 4  > 3`,
+but :math:`\lVert (2,2) \rVert_2 = \sqrt{8} < 3` implies
 
 .. math::
 
   x^2y^2 \not \in \Pi_{A_{2,3,1}}\,, \quad \text{but}\quad x^2y^2  \in \Pi_{A_{2,3,2}}\,.
 
-In other words: the choice of :math:`l_p`-degree constraints the combinations of considered monomials. This fact is crucial for the approximation
-power of polynomials as asserted in the **introduction**.
+In other words, the choice of :math:`l_p`-degree constrains the combinations
+of monomials considered.
+This fact is crucial for the approximation power of polynomials,
+as asserted in the :doc:`Introduction </fundamentals/interpolation-problem>`.
 
+Lagrange basis
+==============
 
-
-Lagrange polynomials
-####################
-
-Given a multi-index set :math:`A\subseteq \mathbb{N}^m` in dimension :math:`m \in \mathbb{N}`
-and a set of unisolvent nodes given as the sub-grid
-
-.. math::
-
-  P_A = \left\{ p_\alpha = (p_{\alpha_1,1},\ldots,p_{\alpha_m,m}) \in \Omega\subseteq \mathbb{R}^m : \alpha \in A\right\}\,, \quad p_{\alpha_i,i} \in P_i \subseteq [-1,1]\,.
-
-that is specified by the chosen **generating nodes** :math:`\mathrm{GP} = \oplus_{i=1}^m P_i` the Lagrange polynomials
-:math:`L_\alpha` are uniquely determined by being required to satisfy
+Given a multi-index set :math:`A \subseteq \mathbb{N}^m` in dimension
+:math:`m \in \mathbb{N}` and a set of :ref:`unisolvent nodes
+<fundamentals/interpolation-at-unisolvent-nodes:Unisolvent nodes>` defined
+by the sub-grid
 
 .. math::
 
-  L_{\alpha}(p_\beta) = \delta_{\alpha,\beta}\,,
+  P_A = \left\{ p_\alpha = (p_{\alpha_1, 1}, \ldots, p_{\alpha_m,m})
+  \in \Omega\subseteq \mathbb{R}^m : \alpha \in A\right\}\,, \quad p_{\alpha_j, j}
+  \in P_j \subseteq [-1,1]\,.
 
-where :math:`\delta_{\cdot,\cdot}` denotes the **Kronecker delta**. A polynomial in **Lagrange form**
-
-.. math::
-
-  Q(x) = \sum_{\alpha \in A} c_\alpha L_\alpha \in \Pi_A
-
-is determined by the choice of :math:`A, \mathrm{GP}` and its **Lagrange coefficients** :math:`(c_\alpha)_{\alpha \in A} \in \mathbb{R}^{|A|}`,
-which are implemented as an array ordered with respect to the lexicographical order :math:`\preceq`.
-
-
-Newton polynomials
-##################
-
-Given a multi-index set :math:`A\subseteq \mathbb{N}^m` in dimension :math:`m \in \mathbb{N}`
-and a set of unisolvent nodes given as the sub-grid
+which is specified by the chosen :ref:`generating points
+<fundamentals/interpolation-at-unisolvent-nodes:Generating points>`
+:math:`\mathrm{GP} = \oplus_{j=1}^m P_j`,
+the Lagrange basis polynomial :math:`L_{\boldsymbol{\alpha}}`
+are uniquely determined by their requirement to satisfy
 
 .. math::
 
-  P_A = \left\{ p_\alpha = (p_{\alpha_1,1},\ldots,p_{\alpha_m,m}) \in \Omega\subseteq \mathbb{R}^m : \alpha \in A\right\}\,, \quad p_{\alpha_i,i} \in P_i\,.
+  L_{\boldsymbol{\alpha}}(p_{\boldsymbol{\beta}}) =
+  \delta_{\boldsymbol{\alpha}, \boldsymbol{\beta}}, \quad
+  p_{\boldsymbol{\beta}} \in P_A,
 
-that is specified by the chosen **generating nodes** :math:`\mathrm{GP} = \oplus_{i=1}^m P_i` the Newton polynomials
-:math:`N_\alpha` are defined by
+where :math:`\delta_{\cdot, \cdot}` denotes the *Kronecker delta*.
+
+To be fully determined, polynomials in the Lagrange basis also require
+the set of unisolvent nodes :math:`P_A` to be defined.
+
+Newton basis
+============
+
+Given a multi-index set :math:`A \subseteq \mathbb{N}^m` in dimension
+:math:`m \in \mathbb{N}` and a set of :ref:`unisolvent nodes
+<fundamentals/interpolation-at-unisolvent-nodes:Unisolvent nodes>` defined
+by the sub-grid
 
 .. math::
-  N_\alpha(x) = \prod_{i=1}^m\prod_{j=0}^{\alpha_i -1}(x- p_{j,i})\,,\quad  p_{j,i} \in P_i
 
-generalising their classic notion from 1D to multi-dimensions, see e.g.\ :footcite:`stoer2002,gautschi2012`. A polynomial in **Newton form**
+  P_A = \left\{ p_\alpha = (p_{\alpha_1, 1}, \ldots, p_{\alpha_m, m})
+  \in \Omega\subseteq \mathbb{R}^m : \alpha \in A\right\}\,, \quad p_{\alpha_j, j}
+  \in P_j\,.
+
+which is specified by the chosen :ref:`generating points
+<fundamentals/interpolation-at-unisolvent-nodes:Generating points>`
+:math:`\mathrm{GP} = \oplus_{j = 1}^m P_j`,
+the Newton monomials :math:`N_\alpha` are defined by
+
+.. math::
+   :label: eq_newton_basis
+
+   N_\alpha(x) = \prod_{j = 1}^m \prod_{i=0}^{\alpha_j - 1}(x_j - p_{i, j})\,,\quad  p_{i, j} \in P_i
+
+which generalizes their classic form from one dimension to multiple
+dimensions\ :footcite:`stoer2002,gautschi2012`.
+
+To be fully determined, and as noted in :eq:`eq_newton_basis`,
+polynomials in the Newton basis require
+the set of generating points :math:`\mathrm{GP}` to be defined.
+
+Chebyshev basis
+===============
+
+The basis polynomial of the Chebyshev basis (of the first kind) associated with
+a multi-index element :math:`\boldsymbol{\alpha} \in A \subseteq \mathbb{N}^m`
+is defined as
 
 .. math::
 
-  Q(x) = \sum_{\alpha \in A} c_\alpha N_\alpha \in \Pi_A
+   \Psi_{\mathrm{cheb}, \boldsymbol{\alpha}} (\boldsymbol{x}) =
+   T_{\alpha_1} (x_1) \cdots T_{\alpha_m} (x_m) =
+   \prod_{j = 1}^m T_{\alpha_j} (x_j),
 
-is determined by the choice of :math:`A, \mathrm{GP}` and its **Newton coefficients** :math:`(c_\alpha)_{\alpha \in A} \in \mathbb{R}^{|A|}`,
-which are implemented as an array ordered with respect to the lexicographical order :math:`\preceq`.
+where :math:`T_{\alpha_j} (x_j)` is the :math:`\alpha_j`th-degree
+(one-dimensional) Chebyshev polynomial of the first kind associated
+with the :math:`j`-th-dimension.
+In other words, the multidimensional basis polynomial is constructed by
+taking the tensor product of one-dimensional basis polynomial
 
+The one-dimensional Chebyshev basis polynomial of the first kind satisfies
+the following three-term recurrence (TTR) relation:
 
+.. math::
 
-References
-##########
+   \begin{aligned}
+      T_0 (x) & = 1 \\
+      T_1 (x) & = x \\
+      T_{n + 1} (x) & = 2 x T_n (x) - T_{n - 1} (x)
+   \end{aligned}
+
+.. rubric:: References
 
 .. footbibliography::

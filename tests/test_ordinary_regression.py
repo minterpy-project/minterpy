@@ -8,13 +8,13 @@ from numpy.testing import assert_
 import minterpy as mp
 from minterpy.extras.regression import OrdinaryRegression
 from minterpy.polynomials import (
-    LagrangePolynomial, NewtonPolynomial, CanonicalPolynomial
+    LagrangePolynomial,
+    NewtonPolynomial,
+    CanonicalPolynomial,
+    ChebyshevPolynomial,
 )
 
 from conftest import (
-    SpatialDimension,
-    LpDegree,
-    PolyDegree,
     assert_call,
     assert_multi_index_equal,
     assert_grid_equal,
@@ -25,10 +25,10 @@ from conftest import (
 def _solve_gmres(rr: np.ndarray, yy: np.ndarray, ww: np.ndarray, **kwargs):
     """Solve a least-squares problem using a Generalized Min. Resid. solver."""
     if ww is None:
-        coeffs, _ = gmres(rr, yy, atol="legacy", **kwargs)
+        coeffs, _ = gmres(rr, yy, **kwargs)
     else:
         coeffs, _ = gmres(
-            rr.T @ ww @ rr, rr.T @ ww @ yy, atol="legacy", **kwargs
+            rr.T @ ww @ rr, rr.T @ ww @ yy, **kwargs
         )
 
     return coeffs
@@ -79,7 +79,10 @@ def least_squares_solver(request):
 
 # Fixtures for least-squares solver
 origin_polys = [
-    LagrangePolynomial, NewtonPolynomial, CanonicalPolynomial
+    LagrangePolynomial,
+    NewtonPolynomial,
+    CanonicalPolynomial,
+    ChebyshevPolynomial,
 ]
 
 
@@ -121,8 +124,9 @@ def test_ordinary_regression_init_multi_index(
 
     # Assert uninitialized attributes prior to fitting
     assert my_ordinary_regression.loocv_error is None
-    assert my_ordinary_regression.regfit_l1_error is None
+    assert my_ordinary_regression.regfit_linf_error is None
     assert my_ordinary_regression.regfit_l2_error is None
+    assert my_ordinary_regression.coeffs is None
     assert my_ordinary_regression.eval_poly is None
 
     # show() method can be called
@@ -154,8 +158,9 @@ def test_ordinary_regression_init_grid(
 
     # Assert uninitialized attributes prior to fitting
     assert my_ordinary_regression.loocv_error is None
-    assert my_ordinary_regression.regfit_l1_error is None
+    assert my_ordinary_regression.regfit_linf_error is None
     assert my_ordinary_regression.regfit_l2_error is None
+    assert my_ordinary_regression.coeffs is None
     assert my_ordinary_regression.eval_poly is None
 
 
@@ -197,8 +202,9 @@ def test_ordinary_regression_init_grid_multi_index(
 
     # Assert uninitialized attributes prior to fitting
     assert my_ordinary_regression.loocv_error is None
-    assert my_ordinary_regression.regfit_l1_error is None
+    assert my_ordinary_regression.regfit_linf_error is None
     assert my_ordinary_regression.regfit_l2_error is None
+    assert my_ordinary_regression.coeffs is None
     assert my_ordinary_regression.eval_poly is None
 
 
@@ -262,8 +268,9 @@ def test_ordinary_regression_fit(
 
     # Assert uninitialized attributes prior to fitting
     assert my_ordinary_regression.loocv_error is not None
-    assert my_ordinary_regression.regfit_l1_error is not None
+    assert my_ordinary_regression.regfit_linf_error is not None
     assert my_ordinary_regression.regfit_l2_error is not None
+    assert my_ordinary_regression.coeffs is not None
     assert my_ordinary_regression.eval_poly is not None
 
     # show() method can be called
@@ -409,7 +416,7 @@ def test_underdetermined_system(SpatialDimension, PolyDegree, LpDegree):
     # Fit the ordinary regression model
     my_ordinary_regression.fit(xx_train, yy_train, lstsq_solver="qr")
 
-    assert my_ordinary_regression.loocv_error == (np.infty, np.infty)
+    assert my_ordinary_regression.loocv_error == (np.inf, np.inf)
 
 
 def test_single_monomial(origin_poly):
@@ -474,6 +481,49 @@ def test_unsupported_polynomial_basis():
 
     with pytest.raises(TypeError):
         my_ordinary_regression.fit(xx_train, yy_train)
+
+
+def test_compute_errors():
+    """Test the flag for LOO CV error computations."""
+    spatial_dimension = 3
+    poly_degree = 3
+    lp_degree = 2.0
+    # Create a multi-index set
+    multi_index = mp.MultiIndexSet.from_degree(
+        spatial_dimension, poly_degree, lp_degree
+    )
+
+    # Create a test training set
+    xx_train = -1 + 2 * np.random.rand(100, 3)
+    yy_train = 2 * xx_train[:,0]
+
+    # Create and fit an OrdinaryRegression instance
+    my_ordinary_regression = OrdinaryRegression(multi_index=multi_index)
+
+    # Fit and compute LOO-CV error
+    my_ordinary_regression.fit(xx_train, yy_train, compute_loocv=True)
+    assert my_ordinary_regression.loocv_error is not None
+    assert_call(my_ordinary_regression.show)
+
+    # Fit but don't compute LOO-CV error
+    my_ordinary_regression.fit(xx_train, yy_train, compute_loocv=False)
+    assert my_ordinary_regression.loocv_error is None
+    assert_call(my_ordinary_regression.show)
+
+    # Fit with invalid value for the compute_loocv flag
+    with pytest.raises(ValueError):
+        my_ordinary_regression.fit(xx_train, yy_train, compute_loocv=100)
+
+
+@pytest.mark.parametrize("spatial_dimension", [0, 1, 5])
+def test_empty_set(spatial_dimension, LpDegree):
+    """Test construction with an empty set."""
+    # Create an empty set
+    mi = mp.MultiIndexSet(np.empty((0, spatial_dimension)), LpDegree)
+
+    # Assertion
+    with pytest.raises(ValueError):
+        OrdinaryRegression(mi)
 
 
 class _EmptyClass:

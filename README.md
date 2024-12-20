@@ -1,70 +1,38 @@
 ![](./docs/assets/Wordmark-color.png)
 
+[![DOI](https://rodare.hzdr.de/badge/DOI/10.14278/rodare.2062.svg)](https://rodare.hzdr.de/record/2062)
 [![Code style: black][black-badge]][black-link]
-# minterpy
+[![License](https://img.shields.io/github/license/minterpy-project/minterpy)](https://choosealicense.com/licenses/mit/)
+[![PyPI](https://img.shields.io/pypi/v/minterpy)](https://pypi.org/project/minterpy/)
 
-<figure class="quote">
-  <blockquote>
-  to minterpy *sth.* (transitive verb) -- to produce a multivariate polynomial representation of *sth.* .
-  </blockquote>
-  <figcaption>
-    &mdash; The minterpy developers in <cite>["Lifting the curse of dimensionality"](https://interpol.pages.hzdr.de/minterpy/fundamentals/introduction.html)</cite>
-  </figcaption>
-</figure>
+# Minterpy
 
----
+|                                 Branches                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| :-----------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`main`](https://github.com/minterpy-project/minterpy/tree/main) (stable) | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Amain+) [![codecov](https://codecov.io/gh/minterpy-project/minterpy/branch/main/graph/badge.svg?token=J8RCUGRKW3)](https://codecov.io/gh/minterpy-project/minterpy) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=main)](https://minterpy-project.github.io/minterpy/stable/) |
+|  [`dev`](https://github.com/minterpy-project/minterpy/tree/dev) (latest)  | [![Build](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml/badge.svg?branch=dev)](https://github.com/minterpy-project/minterpy/actions/workflows/build.yaml?query=branch%3Adev) [![codecov](https://codecov.io/gh/minterpy-project/minterpy/graph/badge.svg?token=J8RCUGRKW3)](https://codecov.io/gh/minterpy-project/minterpy) [![Documentation Build and Deployment](https://github.com/minterpy-project/minterpy/actions/workflows/docs.yaml/badge.svg?branch=dev)](https://minterpy-project.github.io/minterpy/latest/)                 |
 
-`minterpy` is an open-source Python package for a multivariate generalization
-of the classical Newton and Lagrange interpolation schemes as well as related tasks.
-It is based on an optimized re-implementation of
-the multivariate interpolation prototype algorithm (*MIP*) by Hecht et al.[^1]
-and thereby provides software solutions that lift the curse of dimensionality from interpolation tasks.
-While interpolation occurs as the bottleneck of most computational challenges,
-`minterpy` aims to free empirical sciences from their computational limitations.
+Minterpy is an open-source Python package designed for constructing and manipulating multivariate interpolating polynomials
+with the goal of lifting the curse of dimensionality from interpolation tasks.
 
-`minterpy` is continuously extended and improved
-by adding further functionality and modules that provide novel digital solutions
-to a broad field of computational challenges, including but not limited to:
-
-- multivariate interpolation
-- non-linear polynomial regression
-- numerical integration
-- global (black-box) optimization
-- surface level-set methods
-- non-periodic spectral partial differential equations (PDE) solvers on
-  flat and complex geometries
-- machine learning regularization
-- data reconstruction
-- computational solutions in algebraic geometry
+Minterpy is being continuously extended and improved, with new functionalities added to address the bottlenecks involving
+interpolations in various computational tasks.
 
 ## Installation
 
-Since this implementation is a prototype,
-we currently only provide the installation by self-building from source.
-We recommend to using `git` to get the `minterpy` source:
+You can obtain the stable release of Minterpy directly from PyPI using `pip`:
 
 ```bash
-git clone https://gitlab.hzdr.de/interpol/minterpy.git
+pip install minterpy
 ```
 
-Within the source directory,
-you may use the following package manager to install ``minterpy``.
-
-A best practice is to create a virtual environment for `minterpy`.
-You can do this with the help of [conda] and the ``environment.yaml`` by:
+Alternatively, you can also obtain the latest version of Minterpy from the GitHub repository:
 
 ```bash
-conda env create -f environment.yaml
+git clone https://github.com/minterpy-project/minterpy
 ```
 
-A new conda environment called `minterpy` is created.
-Activate the new environment by:
-
-```bash
-conda activate minterpy
-```
-
-From within the environment, install the `minterpy` using [pip],
+Then from the source directory, you can install Minterpy:
 
 ```bash
 pip install [-e] .[all,dev,docs]
@@ -75,19 +43,13 @@ into the python site-packages of your Python version.
 The options `[all,dev,docs]` refer to the requirements defined
 in the `options.extras_require` section in `setup.cfg`.
 
-You **must not** use the command `python setup.py install` to install `minterpy`,
-as you cannot always assume the files `setup.py` will always be present
-in the further development of `minterpy`.
-
-Finally, if you want to deactivate the conda environment, type:
-
-```bash
-conda deactivate
-```
-
-Alternative to conda, you can create a new virtual environment via
-[venv], [virtualenv], or [pyenv-virtualenv].
+A best practice is to first create a virtual environment with
+the help of a tool like [mamba], [conda], [venv], [virtualenv] or [pyenv-virtualenv].
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+
+**NOTE**: You **must not** use the command `python setup.py install` to install `minterpy`,
+as we cannot guarantee that the file `setup.py` will always be present
+in the further development of `minterpy`.
 
 ## Quickstart
 
@@ -130,11 +92,11 @@ the `test_function` almost up to machine precision:
     plt.legend()
     plt.show()
 ```
+
 <img src="./docs/assets/images/test-function1D.png" alt="Compare test function with its interpolant" width="400"/>
 
-
 For more comprehensive examples, see the [getting started guides](https://interpol.pages.hzdr.de/minterpy/getting-started/index.html)
-section of the ``minterpy`` docs.
+section of the `minterpy` docs.
 
 ## Testing
 
@@ -169,10 +131,10 @@ The core development of the `minterpy` is currently done
 by a small team at the Center for Advanced Systems Understanding ([CASUS]),
 namely
 
-- Uwe Hernandez Acosta ([HZDR]/[CASUS]) (u.hernandez@hzdr.de)
-- Sachin Krishnan Thekke Veettil ([HZDR]/[CASUS]) (s.thekke-veettil@hzdr.de)
 - Damar Wicaksono ([HZDR]/[CASUS]) (d.wicaksono@hzdr.de)
+- Uwe Hernandez Acosta ([HZDR]/[CASUS]) (u.hernandez@hzdr.de)
 - Janina Schreiber ([HZDR]/[CASUS]) (j.schreiber@hzdr.de)
+- Sachin Krishnan Thekke Veettil ([HZDR]/[CASUS]) (s.thekke-veettil@hzdr.de)
 
 ### Mathematical foundation
 
@@ -200,8 +162,7 @@ This package would not be possible without many contributions done
 from the community as well.
 For that, we want to send big thanks to:
 
-  - the guy who will show me how to include a list of contributors on github/gitlab
-
+- the guy who will show me how to include a list of contributors on github/gitlab
 
 ## License
 
@@ -209,6 +170,7 @@ For that, we want to send big thanks to:
 
 [^1]: [arXiv:2010.10824](https://arxiv.org/abs/2010.10824)
 
+[mamba]: https://mamba.readthedocs.io/en/latest/
 [conda]: https://docs.conda.io/
 [pip]: https://pip.pypa.io/en/stable/
 [venv]: https://docs.python.org/3/tutorial/venv.html
@@ -224,9 +186,5 @@ For that, we want to send big thanks to:
 [HZDR]: https://www.hzdr.de
 [MPI-CBG]: https://www.mpi-cbg.de
 [CSBD]: https://www.csbdresden.de
-
-
-
-[black-badge]:              https://img.shields.io/badge/code%20style-black-000000.svg
-[black-link]:               https://github.com/psf/black
-
+[black-badge]: https://img.shields.io/badge/code%20style-black-000000.svg
+[black-link]: https://github.com/psf/black

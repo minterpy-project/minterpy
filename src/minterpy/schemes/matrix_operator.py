@@ -1,5 +1,13 @@
 """
-Matrix operator class.
+This module contains the matrix transformation operator class.
+
+The `MatrixOperator` class represents the polynomial basis transformation
+operator as a full matrix without exploiting any special structure.
+As a result, this matrix typically large and may require significant memory
+and computational resources.
+
+----
+
 """
 from minterpy.core.ABC import OperatorABC
 from minterpy.global_settings import ARRAY
