@@ -1,19 +1,16 @@
-#################################
-Polynomial Transformation classes
-#################################
+========================
+minterpy.transformations
+========================
 
-An abstract base class is provided as the blueprint on which every implementation of a polynomial basis transformation
-class must be derived from. Concrete implementations for basis transformations between the built-in
-polynomial basis (Canonical, Lagrange, and Newton) are also provided.
-
-For most common use cases, the high-level :doc:`interface` provides a convenient way to do basis
-transformations.
+.. automodule:: minterpy.transformations
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
-   transformationCanonical
-   transformationNewton
-   transformationLagrange
-   transformationIdentity
-   interface
+   From Lagrange <transformation-lagrange>
+   From Newton <transformation-newton>
+   From Canonical <transformation-canonical>
+   From Chebyshev <transformation-chebyshev>
+   Identity <transformation-identity>
+   Interface <interface>

@@ -2,7 +2,16 @@
 How-to Guides
 #############
 
-This page is still under construction.
+This page contains a series of guides on how to carry out routine numerical
+tasks with polynomials in Minterpy as well as demonstrating important features
+of the main components of Minterpy.
+
+.. toctree::
+   :maxdepth: 2
+
+   Multi-index Set <multi-index-set/index>
+   Grid <grid/index>
+   Integration <integration/index>
 
 ..
     .. todo::

@@ -1,13 +1,14 @@
-############
-Core modules
-############
+=============
+minterpy.core
+=============
 
 .. automodule:: minterpy.core
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
-   Multi index sets <multi_index>
+   Multi-Index Set <multi_index>
    Grid <grid>
-   Multi index tree <tree>
-   Abstract base classes <ABC/index>
+   Abstract Base Classes <ABC/index>
+   Multi-Index Tree <tree>

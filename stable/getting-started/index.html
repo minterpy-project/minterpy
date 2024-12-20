@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Getting started with minterpy &#8212; Minterpy 0.1</title>
+    <title>Getting Started with Minterpy &#8212; Minterpy 0.1</title>
   
   
   
@@ -32,6 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,19 +47,19 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'getting-started/index';</script>
     <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/getting-started/index.html" />
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="One-dimensional function interpolation" href="one-dimensional-function-interpolation.html" />
-    <link rel="prev" title="minterpy Documentation" href="../index.html" />
+    <link rel="next" title="Quick Start Guide to Function Approximations with Minterpy" href="functions-approximation.html" />
+    <link rel="prev" title="Minterpy Documentation" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g7205332" />
+  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
   </head>
   
   
@@ -122,8 +125,8 @@
       
     
     
-    <img src="../_static/minterpy-logo.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../_static/minterpy-logo.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
   
   
 </a></div>
@@ -172,30 +175,6 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../TODO.html">
-    Todo list
-  </a>
-</li>
-
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -222,6 +201,46 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
       
     </div>
     
@@ -303,20 +322,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../TODO.html">
-    Todo list
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -335,6 +340,46 @@
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
       </div>
     
   </div>
@@ -345,8 +390,13 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="one-dimensional-function-interpolation.html">One-dimensional function interpolation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="polynomial-regression.html">Polynomial Regression with minterpy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions-approximation.html">Functions approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1d-polynomial-interpolation.html">1D Polynomial Interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="md-polynomial-interpolation.html">mD Polynomial Interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arithmetic-operations-with-polynomials.html">Arithmetic with Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calculus-operations-with-polynomials.html">Calculus with Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polynomial-bases-and-transformations.html">Change of Basis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polynomial-regression.html">Polynomial Regression</a></li>
 </ul>
 </div>
 </nav></div>
@@ -387,7 +437,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Getting started with <code class="docutils literal notranslate"><span class="pre">minterpy</span></code></span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Getting Started with Minterpy</span></li>
   </ul>
 </nav>
 </div>
@@ -405,92 +455,94 @@
                 <article class="bd-article">
                   
   <section id="getting-started-with-minterpy">
-<h1>Getting started with <code class="docutils literal notranslate"><span class="pre">minterpy</span></code><a class="headerlink" href="#getting-started-with-minterpy" title="Link to this heading">#</a></h1>
-<p>Have you installed <code class="docutils literal notranslate"><span class="pre">minterpy</span></code>?
+<h1>Getting Started with Minterpy<a class="headerlink" href="#getting-started-with-minterpy" title="Link to this heading">#</a></h1>
+<p>Have you installed Minterpy?
 Read on how to install it before moving on.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
-<p>Since this implementation is a prototype,
-we currently only provide the installation by self-building from source.
-We recommend to use <code class="docutils literal notranslate"><span class="pre">git</span></code> to get the <code class="docutils literal notranslate"><span class="pre">minterpy</span></code> source:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://gitlab.hzdr.de/interpol/minterpy.git
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+release</label><div class="sd-tab-content docutils">
+<p>The public release of Minterpy (i.e., the <a class="reference external" href="https://github.com/casus/minterpy">main branch</a>) can be obtained
+directly from <a class="reference external" href="https://pypi.org/project/minterpy/">PyPI</a> with <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a>:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>minterpy
 </pre></div>
 </div>
-<p>Within the source directory,
-you may use the following package manager to install <code class="docutils literal notranslate"><span class="pre">minterpy</span></code>.</p>
-<p>A best practice is to create a virtual environment for <code class="xref py py-obj docutils literal notranslate"><span class="pre">minterpy</span></code>.
-You can do this with the help of <a class="reference external" href="https://docs.conda.io/">conda</a> and the <code class="docutils literal notranslate"><span class="pre">environment.yaml</span></code> by:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">environment</span><span class="o">.</span><span class="n">yaml</span>
+</div></blockquote>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+dev</label><div class="sd-tab-content docutils">
+<p>The latest <a class="reference external" href="https://github.com/casus/minterpy/tree/dev">development branch</a> of Minterpy can be obtained from
+its GitHub <a class="reference external" href="https://github.com/casus/minterpy">repository</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>-b<span class="w"> </span>dev<span class="w"> </span>https://github.com/casus/minterpy
 </pre></div>
 </div>
-<p>A new conda environment called <code class="docutils literal notranslate"><span class="pre">minterpy</span></code> is created.
-Activate the new environment by:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">activate</span> <span class="n">minterpy</span>
+<p>After moving inside the cloned directory, the package can be installed
+from source with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="o">[</span>-e<span class="o">]</span><span class="w"> </span>.
 </pre></div>
 </div>
-<p>From within the environment, install the <code class="docutils literal notranslate"><span class="pre">minterpy</span></code> using <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="p">[</span><span class="o">-</span><span class="n">e</span><span class="p">]</span> <span class="o">.</span><span class="p">[</span><span class="nb">all</span><span class="p">,</span><span class="n">dev</span><span class="p">,</span><span class="n">docs</span><span class="p">]</span>
-</pre></div>
 </div>
-<p>where the flag <code class="docutils literal notranslate"><span class="pre">-e</span></code> means the package is directly linked
-into the python site-packages of your Python version.
-The options <code class="docutils literal notranslate"><span class="pre">[all,dev,docs]</span></code> refer to the requirements defined
-in the <code class="docutils literal notranslate"><span class="pre">options.extras_require</span></code> section in <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code>.</p>
-<p>You <strong>must not</strong> use the command <code class="code docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code> to install <code class="xref py py-obj docutils literal notranslate"><span class="pre">minterpy</span></code>,
-as you cannot always assume the files <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> will always be present
-in the further development of <code class="docutils literal notranslate"><span class="pre">minterpy</span></code>.</p>
-<p>Finally, if you want to deactivate the conda environment, type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">deactivate</span>
-</pre></div>
 </div>
-<section id="testing-the-installation">
-<h3>Testing the installation<a class="headerlink" href="#testing-the-installation" title="Link to this heading">#</a></h3>
-<p>After installation, we encourage you to at least run the unit tests of <code class="docutils literal notranslate"><span class="pre">minterpy</span></code>,
-where we use <a class="reference external" href="https://docs.pytest.org/en/6.2.x/">pytest</a> to run the tests.</p>
-<p>If you want to run all tests, type:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span><span class="o">[</span>-vvv<span class="o">]</span>
-</pre></div>
-</div>
-<p>from within the <code class="docutils literal notranslate"><span class="pre">minterpy</span></code> source directory.</p>
-</section>
+<p>A best practice is to create a virtual environment so as not to install
+external package to the your base Python environment.
+You can do this with the help of, among others:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/venv.html">venv</a></p></li>
+<li><p><a class="reference external" href="https://virtualenv.pypa.io/en/latest/index.html">virtualenv</a></p></li>
+<li><p><a class="reference external" href="https://mamba.readthedocs.io/en/latest/">mamba</a></p></li>
+<li><p><a class="reference external" href="https://docs.conda.io/">conda</a></p></li>
+</ul>
 </section>
 <section id="what-s-next">
-<h2>What’s next<a class="headerlink" href="#what-s-next" title="Link to this heading">#</a></h2>
-<p>The best way to learn about <code class="docutils literal notranslate"><span class="pre">minterpy</span></code> is to read and play around
-with the tutorials below.</p>
-<p>Once you’re more familiar with <code class="docutils literal notranslate"><span class="pre">minterpy</span></code> and would like to achieve a particular task,
-be sure to check out the <a class="reference internal" href="../how-to/index.html"><span class="doc">How-to Guides</span></a>!</p>
-</section>
-<section id="tutorials-table-of-contents">
-<h2>Tutorials table of contents<a class="headerlink" href="#tutorials-table-of-contents" title="Link to this heading">#</a></h2>
+<h2>What’s next?<a class="headerlink" href="#what-s-next" title="Link to this heading">#</a></h2>
+<p>If you’re brand new to Minterpy and simply want to approximate a function using
+polynomial interpolations, start with:</p>
+<p><a class="reference internal" href="functions-approximation.html"><span class="doc">Quick Start Guide to Function Approximations with Minterpy</span></a></p>
+<p>While approximating functions using polynomials is a main feature of Minterpy,
+it also offers multi-dimensional polynomials in Python.
+These polynomials have a consistent interface that allows for advanced
+manipulation such arithmetic and calculus operations.</p>
+<p>To learn more about these features of Minterpy, follow the series of tutorials
+below. We recommend that you go through these tutorials in sequence.</p>
+<div class="pst-scrollable-table-container"><table class="table" id="id1">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">Available Getting Started Guides (In-Depth Tutorials)</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>If you want to…</p></th>
+<th class="head"><p>Go to…</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>understand Minterpy polynomials through approximating a 1D function</p></td>
+<td><p><a class="reference internal" href="1d-polynomial-interpolation.html"><span class="doc">One-Dimensional Polynomial Interpolation</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>learn how to approximate mD function with polynomial interpolation</p></td>
+<td><p><a class="reference internal" href="md-polynomial-interpolation.html"><span class="doc">Multidimensional Polynomial Interpolation</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>know more about the supported <em>arithmetic operations</em>
+with Minterpy polynomials</p></td>
+<td><p><a class="reference internal" href="arithmetic-operations-with-polynomials.html"><span class="doc">Basic Arithmetic Operations with Polynomials</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>know more more the supported <em>calculus operations</em>
+with Minterpy polynomials</p></td>
+<td><p><a class="reference internal" href="calculus-operations-with-polynomials.html"><span class="doc">Basic Calculus Operations with Polynomials</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>understand the available polynomial bases and how to transform between
+them</p></td>
+<td><p><a class="reference internal" href="polynomial-bases-and-transformations.html"><span class="doc">Polynomial Bases and Transformations</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>learn how to construct a polynomial from scattered data</p></td>
+<td><p><a class="reference internal" href="polynomial-regression.html"><span class="doc">Polynomial Regression</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Once you’ve become more familiar with Minterpy and need help to achieve
+a particular task, be sure to check out the <a class="reference internal" href="../how-to/index.html"><span class="doc">How-to Guides</span></a>!</p>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="one-dimensional-function-interpolation.html">One-dimensional function interpolation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="one-dimensional-function-interpolation.html#Setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="one-dimensional-function-interpolation.html#Create-an-interpolant">Create an interpolant</a></li>
-<li class="toctree-l2"><a class="reference internal" href="one-dimensional-function-interpolation.html#Interpolants-of-increasing-degrees">Interpolants of increasing degrees</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="polynomial-regression.html">Polynomial Regression with minterpy</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-regression.html#Problem">Problem</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-regression.html#Generate-groundtruth-data">Generate groundtruth data</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="polynomial-regression.html#Locations-where-the-data-is-known">Locations where the data is known</a></li>
-<li class="toctree-l3"><a class="reference internal" href="polynomial-regression.html#Observed-groundtruth-data">Observed groundtruth data</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-regression.html#Polynomial-regression">Polynomial regression</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="polynomial-regression.html#Constructing-the-polynomial-model">Constructing the polynomial model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="polynomial-regression.html#Constructing-the-Regression-matrix">Constructing the Regression matrix</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-regression.html#Reconstruct-the-groundtruth-using-fit-polynomial">Reconstruct the groundtruth using fit polynomial</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="polynomial-regression.html#Fit-error">Fit error</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-regression.html#Resampling-on-a-finer-grid">Resampling on a finer grid</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </section>
 </section>
@@ -511,15 +563,15 @@ be sure to check out the <a class="reference internal" href="../how-to/index.htm
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">minterpy</span></code> Documentation</p>
+        <p class="prev-next-title">Minterpy Documentation</p>
       </div>
     </a>
     <a class="right-next"
-       href="one-dimensional-function-interpolation.html"
+       href="functions-approximation.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">One-dimensional function interpolation</p>
+        <p class="prev-next-title">Quick Start Guide to Function Approximations with Minterpy</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -542,23 +594,10 @@ be sure to check out the <a class="reference internal" href="../how-to/index.htm
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-the-installation">Testing the installation</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-next">What’s next</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials-table-of-contents">Tutorials table of contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-next">What’s next?</a></li>
 </ul>
   </nav></div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/getting-started/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               
@@ -585,7 +624,7 @@ be sure to check out the <a class="reference internal" href="../how-to/index.htm
 
   <p class="copyright">
     
-      © Copyright 2022, Minterpy development team.
+      © Copyright 2022, Minterpy Development Team.
       <br/>
     
   </p>

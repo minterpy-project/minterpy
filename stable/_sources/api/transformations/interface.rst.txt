@@ -1,9 +1,8 @@
-.. currentmodule:: minterpy.transformations
+=========
+interface
+=========
 
-.. interface:
+.. currentmodule:: minterpy.transformations.interface
 
-################
-Helper functions
-################
 .. automodule:: minterpy.transformations.interface
    :members:

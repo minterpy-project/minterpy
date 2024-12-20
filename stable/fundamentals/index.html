@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fundamentals of minterpy &#8212; Minterpy 0.1</title>
+    <title>Fundamentals of Minterpy &#8212; Minterpy 0.1</title>
   
   
   
@@ -32,6 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,19 +47,19 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'fundamentals/index';</script>
     <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/fundamentals/index.html" />
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Introduction" href="introduction.html" />
-    <link rel="prev" title="How-to Guides" href="../how-to/index.html" />
+    <link rel="next" title="Multidimensional Polynomial Interpolation" href="interpolation-problem.html" />
+    <link rel="prev" title="Integrate an M-Dimensional Polynomial" href="../how-to/integration/poly-interpolant-integration-md.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g7205332" />
+  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
   </head>
   
   
@@ -122,8 +125,8 @@
       
     
     
-    <img src="../_static/minterpy-logo.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../_static/minterpy-logo.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
   
   
 </a></div>
@@ -172,30 +175,6 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../TODO.html">
-    Todo list
-  </a>
-</li>
-
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -223,6 +202,46 @@
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
       
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+      
     </div>
     
   </div>
@@ -238,10 +257,6 @@
     </div>
   
 
-  
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
-      <span class="fa-solid fa-outdent"></span>
-    </button>
   
 </div>
 
@@ -303,20 +318,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../TODO.html">
-    Todo list
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -335,6 +336,46 @@
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
       </div>
     
   </div>
@@ -345,13 +386,15 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="polynomial-bases.html">Multivariate polynomial bases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="interpolation-in-unisolvent-nodes.html">Interpolation in unisolvent nodes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="interpolation-evaluation.html">Evaluation of multivariate polynomials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multivariate-dds.html">Multivariate divided difference scheme (DDS)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="transformation.html">Transformation between bases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="barycentric-transformation.html">Barycentric transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolation-problem.html">mD Polynomial Interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polynomial-bases.html">mD Polynomial Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolation-at-unisolvent-nodes.html">Interpolation at Unisolvent Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polynomial-evaluation.html">Evaluation of mD Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transformation.html">Transformation Between Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polynomial-regression.html">Polynomial Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dds.html">mD Divided Difference Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="barycentric-transformation.html">Barycentric Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unisolvence.html">The Notion of Unisolvence</a></li>
 </ul>
 </div>
 </nav></div>
@@ -392,7 +435,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Fundamentals of <code class="docutils literal notranslate"><span class="pre">minterpy</span></code></span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Fundamentals of Minterpy</span></li>
   </ul>
 </nav>
 </div>
@@ -410,57 +453,130 @@
                 <article class="bd-article">
                   
   <section id="fundamentals-of-minterpy">
-<h1>Fundamentals of <code class="docutils literal notranslate"><span class="pre">minterpy</span></code><a class="headerlink" href="#fundamentals-of-minterpy" title="Link to this heading">#</a></h1>
+<h1>Fundamentals of Minterpy<a class="headerlink" href="#fundamentals-of-minterpy" title="Link to this heading">#</a></h1>
+<p>This section provides a detailed explanation of the mathematical foundation
+behind Minterpy.</p>
+<div class="sd-container-fluid sd-sphinx-override sd-m-0 sd-p-0 docutils">
+<div class="sd-row sd-row-cols-auto sd-row-cols-xs-auto sd-row-cols-sm-auto sd-row-cols-md-auto sd-row-cols-lg-auto sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-col sd-d-flex-row sd-col-12 sd-col-xs-12 sd-col-sm-8 sd-col-md-8 sd-col-lg-6 docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-border-0 sd-card-hover-1 docutils">
+<div class="sd-card-header docutils">
+<p class="sd-card-text"><em>The problem</em></p>
+</div>
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Multidimensional Polynomial Interpolation</div>
+<p class="sd-card-text">The polynomial interpolation problem is central to Minterpy.</p>
+<p class="sd-card-text">Revisit the polynomial interpolation problem and
+its connection to approximation on this page.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="interpolation-problem.html"><span class="doc">Multidimensional Polynomial Interpolation</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row sd-col-12 sd-col-xs-12 sd-col-sm-8 sd-col-md-8 sd-col-lg-6 docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-border-0 sd-card-hover-1 docutils">
+<div class="sd-card-header docutils">
+<p class="sd-card-text"><em>Representing polynomials</em></p>
+</div>
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Polynomial Bases</div>
+<p class="sd-card-text">Polynomials can be expressed as a linear combination of a set of
+polynomials called the basis polynomials.</p>
+<p class="sd-card-text">Review the polynomial bases supported by Minterpy on this page.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="polynomial-bases.html"><span class="doc">Multidimensional Polynomial Bases</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row sd-col-12 sd-col-xs-12 sd-col-sm-8 sd-col-md-8 sd-col-lg-6 docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-border-0 sd-card-hover-1 docutils">
+<div class="sd-card-header docutils">
+<p class="sd-card-text"><em>Getting interpolating polynomials</em></p>
+</div>
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Interpolation at Unisolvent Nodes</div>
+<p class="sd-card-text">With a careful consideration, a polynomial that interpolate
+a given function can be constructed.</p>
+<p class="sd-card-text">Review the essential components required to build
+an interpolating polynomial on this page.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="interpolation-at-unisolvent-nodes.html"><span class="doc">Interpolation at Unisolvent Nodes</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row sd-col-12 sd-col-xs-12 sd-col-sm-8 sd-col-md-8 sd-col-lg-6 docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-border-0 sd-card-hover-1 docutils">
+<div class="sd-card-header docutils">
+<p class="sd-card-text"><em>Evaluating polynomials</em></p>
+</div>
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Evaluation of Polynomials</div>
+<p class="sd-card-text">Once a polynomial is obtained, how can it be evaluated at an arbitrary
+query point?</p>
+<p class="sd-card-text">The answer depends on the basis in which the polynomial is represented.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="polynomial-evaluation.html"><span class="doc">Evaluation of Multidimensional Polynomials</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row sd-col-12 sd-col-xs-12 sd-col-sm-8 sd-col-md-8 sd-col-lg-6 docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-border-0 sd-card-hover-1 docutils">
+<div class="sd-card-header docutils">
+<p class="sd-card-text"><em>Changing polynomial basis</em></p>
+</div>
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Transformation between Bases</div>
+<p class="sd-card-text">A polynomial expressed in one basis may be expressed in another.
+Depending on the purpose, some representations may be better
+than the others.</p>
+<p class="sd-card-text">On this page, the theorems behind such a transformation are presented.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="transformation.html"><span class="doc">Transformation Between Bases</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row sd-col-12 sd-col-xs-12 sd-col-sm-8 sd-col-md-8 sd-col-lg-6 docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-border-0 sd-card-hover-1 docutils">
+<div class="sd-card-header docutils">
+<p class="sd-card-text"><em>Polynomial based on scattered data</em></p>
+</div>
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Polynomial Regression</div>
+<p class="sd-card-text">Stable polynomial interpolation requires a careful selection of
+interpolation points; but what if scattered data is provided instead?</p>
+<p class="sd-card-text">Using the least squares method, you can still construct a polynomial
+from the data.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="polynomial-regression.html"><span class="doc">Polynomial Regression</span></a></div>
+</div>
+</div>
+</div>
+<p class="rubric">Advanced topics</p>
+<div class="sd-container-fluid sd-sphinx-override sd-m-0 sd-p-0 docutils">
+<div class="sd-row sd-row-cols-auto sd-row-cols-xs-auto sd-row-cols-sm-auto sd-row-cols-md-auto sd-row-cols-lg-auto sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 docutils">
+<div class="sd-col sd-d-flex-row sd-col-12 sd-col-xs-12 sd-col-sm-6 sd-col-md-6 sd-col-lg-4 docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-border-0 sd-card-hover-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Divided Difference Scheme (DDS)</div>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="dds.html"><span class="doc">Multidimensional Divided Difference Scheme (DDS)</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row sd-col-12 sd-col-xs-12 sd-col-sm-6 sd-col-md-6 sd-col-lg-4 docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-border-0 sd-card-hover-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Barycentric Transformation</div>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="barycentric-transformation.html"><span class="doc">Barycentric Transformation</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row sd-col-12 sd-col-xs-12 sd-col-sm-6 sd-col-md-6 sd-col-lg-4 docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover sd-border-0 sd-card-hover-1 docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+The Notion of Unisolvence</div>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="unisolvence.html"><span class="doc">The Notion of Unisolvence</span></a></div>
+</div>
+</div>
+</div>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#multivariate-polynomial-interpolation">Multivariate polynomial interpolation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#lifting-the-curse-of-dimensionality">Lifting the curse of dimensionality</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#the-notion-of-unisolvence">The notion of unisolvence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#references">References</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="polynomial-bases.html">Multivariate polynomial bases</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-bases.html#multi-index-sets-and-polynomial-degree">Multi-index sets and polynomial degree</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-bases.html#canonical-polynomials">Canonical polynomials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-bases.html#lagrange-polynomials">Lagrange polynomials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-bases.html#newton-polynomials">Newton polynomials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynomial-bases.html#references">References</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="interpolation-in-unisolvent-nodes.html">Interpolation in unisolvent nodes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="interpolation-in-unisolvent-nodes.html#generating-nodes">Generating nodes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation-in-unisolvent-nodes.html#unisolvent-nodes">Unisolvent nodes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation-in-unisolvent-nodes.html#lagrange-interpolation">Lagrange interpolation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation-in-unisolvent-nodes.html#newton-interpolation">Newton interpolation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation-in-unisolvent-nodes.html#references">References</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="interpolation-evaluation.html">Evaluation of multivariate polynomials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="interpolation-evaluation.html#canonical-evaluation">Canonical evaluation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation-evaluation.html#newton-evaluation">Newton evaluation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation-evaluation.html#lagrange-evaluation">Lagrange evaluation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation-evaluation.html#references">References</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="multivariate-dds.html">Multivariate divided difference scheme (DDS)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="multivariate-dds.html#splitting-theorems">Splitting Theorems</a></li>
-<li class="toctree-l2"><a class="reference internal" href="multivariate-dds.html#d-divided-difference-scheme">1D Divided Difference Scheme</a></li>
-<li class="toctree-l2"><a class="reference internal" href="multivariate-dds.html#multi-index-tree">Multi-index tree</a></li>
-<li class="toctree-l2"><a class="reference internal" href="multivariate-dds.html#splitting-of-the-unisolvent-nodes">Splitting of the unisolvent nodes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="multivariate-dds.html#sub-tree-recursion">Sub-tree recursion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="multivariate-dds.html#references">References</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="transformation.html">Transformation between bases</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="transformation.html#references">References</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="barycentric-transformation.html">Barycentric transformation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="barycentric-transformation.html#references">References</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </section>
 
@@ -475,20 +591,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../how-to/index.html"
+       href="../how-to/integration/poly-interpolant-integration-md.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How-to Guides</p>
+        <p class="prev-next-title">Integrate an M-Dimensional Polynomial</p>
       </div>
     </a>
     <a class="right-next"
-       href="introduction.html"
+       href="interpolation-problem.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Introduction</p>
+        <p class="prev-next-title">Multidimensional Polynomial Interpolation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -498,21 +614,6 @@
             </div>
             
             
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/fundamentals/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
-
-</div></div>
               
             
           </div>
@@ -537,7 +638,7 @@
 
   <p class="copyright">
     
-      © Copyright 2022, Minterpy development team.
+      © Copyright 2022, Minterpy Development Team.
       <br/>
     
   </p>

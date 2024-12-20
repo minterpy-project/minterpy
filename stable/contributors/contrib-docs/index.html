@@ -32,6 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles.css?v=a88e7498" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,19 +47,19 @@
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'contributors/contrib-docs/index';</script>
     <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/contributors/contrib-docs/index.html" />
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="About the Docs" href="about-the-docs.html" />
-    <link rel="prev" title="Contributing to the Development" href="../contrib-dev/index.html" />
+    <link rel="next" title="Documentation: Design" href="docs-design.html" />
+    <link rel="prev" title="Running and Writing Tests" href="../contrib-codebase/running-writing-tests.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g7205332" />
+  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
   </head>
   
   
@@ -122,8 +125,8 @@
       
     
     
-    <img src="../../_static/minterpy-logo.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../../_static/minterpy-logo.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
   
   
 </a></div>
@@ -172,30 +175,6 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../../TODO.html">
-    Todo list
-  </a>
-</li>
-
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -222,6 +201,46 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
       
     </div>
     
@@ -303,20 +322,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../TODO.html">
-    Todo list
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -335,6 +340,46 @@
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
       </div>
     
   </div>
@@ -345,18 +390,25 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../code-of-conduct.html">Code of conduct</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contrib-dev/index.html">Development contribution</a></li>
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Documentation contribution</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="about-the-docs.html">About the Docs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how-to-contrib.html">How to Contribute to the Docs</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="guidelines/index.html">Documentation contribution guidelines</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="guidelines/rest-based-docs.html">reST-based docs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guidelines/ipynb-based-docs.html">Jupyter-notebook-based docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-of-conduct.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development-environment.html">Setting Up a Development Environment</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../contrib-codebase/index.html">Contributing to the Codebase</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contrib-codebase/code-style.html">Code Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contrib-codebase/pre-commits.html">Pre-Commits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contrib-codebase/running-writing-tests.html">Running and Writing Tests</a></li>
 </ul>
 </details></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Contributing to the Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs-design.html">Documentation: Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-tools.html">Documentation: Framework and Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-source-structure.html">Documentation Source Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-build.html">Building the Documentation Locally</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-rest.html">Writing reStructuredText Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-ipynb.html">Writing Jupyter Notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs-docstrings.html">Writing Docstrings for API Documentation</a></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="../merge-request.html">Creating a Merge (Pull) Request</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about-us.html">About Us</a></li>
 </ul>
 </div>
@@ -420,55 +472,84 @@
                   
   <section id="contributing-to-the-documentation">
 <h1>Contributing to the Documentation<a class="headerlink" href="#contributing-to-the-documentation" title="Link to this heading">#</a></h1>
-<p>On this page, you’ll find detailed information on the <code class="docutils literal notranslate"><span class="pre">minterpy</span></code>
-documentation and how to contribute to it.
-For information on contributing to the code base see <a class="reference internal" href="../contrib-dev/index.html"><span class="doc">Contributing to the Development</span></a>.</p>
+<p>We welcome contributions to the Minterpy documentation.
+Like the codebase, the documentation is a perpetual work in progress,
+with always something missing, incomplete, or unclear.</p>
+<p>If you encounter anything in the documentation that doesn’t make sense,
+please raise an issue.
+If you can’t find what you need, please raise an issue.
+If you spot a mistake, well… you get the idea.</p>
+<p>That said, before contributing to the Minterpy documentation,
+please review the guidelines and conventions outlined in the following sections.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For information on contributing to the code base,
+see <a class="reference internal" href="../contrib-codebase/index.html"><span class="doc">Contributing to the Codebase</span></a> instead.</p>
+</div>
 <section id="about-the-documentation">
 <h2>About the documentation<a class="headerlink" href="#about-the-documentation" title="Link to this heading">#</a></h2>
-<p>This section describes the underlying design and tooling
-of the <code class="docutils literal notranslate"><span class="pre">minterpy</span></code> documentation.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="about-the-docs.html">About the Docs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="about-the-docs.html#design">Design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="about-the-docs.html#frameworks-and-tools">Frameworks and tools</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<p>We put some thoughts on how we designed the documentation and the selection
+of tools to build and serve the documentation; so please take a quick look
+at <a class="reference internal" href="docs-design.html"><span class="doc">Documentation: Design</span></a> and <a class="reference internal" href="docs-tools.html"><span class="doc">Documentation: Framework and Tools</span></a>.</p>
 </section>
 <section id="how-to-contribute">
 <h2>How to contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading">#</a></h2>
-<p>This section outlines the ways you can help maintain and improve
-the <code class="docutils literal notranslate"><span class="pre">minterpy</span></code> documentation.</p>
+<p>We care deeply about a useful, readable, and consistent documentation;
+that’s why we value your contributions, no matter how small or large.</p>
+<p>Here’s how you can help us maintain and improve the Minterpy documentation:</p>
+<ul class="simple">
+<li><p><strong>General language improvements</strong>: Stumbled upon a typo or grammatical error?
+Found a phrase that’s imprecise or misleading? We appreciate your sharp eye!
+Please let us know so we can correct these instances right away.</p></li>
+<li><p><strong>Correcting technical errors</strong>: Should you encounter any technical errors
+such as incorrect statements, broken links, inaccurate code examples, or
+missing parameters in the API reference, let us know about them.</p></li>
+<li><p><strong>Adding new how-to guides</strong>: Is there a how-to guide you wish existed?
+Would you like to create one yourself? We welcome your input and contributions
+in this area too!</p></li>
+<li><p><strong>Documenting new features</strong>: If you’re developing a new feature for Minterpy,
+we strongly encourage you to provide the accompanying documentation.
+This would include how-to guides. In fact, any new feature additions to the
+main branch of Minterpy <strong>must</strong> feature sufficient documentation.
+We weigh the quality of the code and the documentation equally during
+review stages.</p></li>
+</ul>
+<p class="rubric">Opening an issue</p>
+<p>If you have an idea or suggestion to improve and fix the Minterpy documentation,
+please open an issue in the Minterpy repository and share your thoughts.
+This way we can track of all documentation-related issues and your valuable
+contributions.</p>
+<p>Afterward, you have a couple of options:</p>
+<ul class="simple">
+<li><p>You can sit back and let another team member review your suggestion.
+If it’s a go, they will implement it for you.</p></li>
+<li><p>If you’re eager, feel free to make the necessary changes yourself.
+More about that below.</p></li>
+</ul>
+<p class="rubric">Contributing directly to the source</p>
+<p>As proponents of the <a class="reference internal" href="docs-tools.html"><span class="doc">docs-like-code framework</span></a>,
+we maintain all of our documentation source files alongside the Minterpy codebase,
+all stored within the same repository.</p>
+<p>This setup allows for more seamless contributions.
+If you’re inclined to do so, feel free to directly modify the source files
+to improve the documentation.</p>
+<p>Before you start, we recommend checking out the following documents to get
+familiar with the recommended workflow:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../development-environment.html"><span class="doc">Setting Up a Development Environment</span></a>: So that you get everything set up on your system.</p></li>
+<li><p><a class="reference internal" href="docs-source-structure.html"><span class="doc">Documentation Source Structure</span></a>: So that you can add new files in the right places
+by knowing how the documentation source files are organized in the repository.</p></li>
+<li><p><a class="reference internal" href="docs-build.html"><span class="doc">Building the Documentation Locally</span></a>: So that you can preview the changes you make.</p></li>
+</ul>
+<p>You may also find the following references helpful:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="docs-rest.html"><span class="doc">Writing reStructuredText Documents</span></a></p></li>
+<li><p><a class="reference internal" href="docs-ipynb.html"><span class="doc">Writing Jupyter Notebooks</span></a></p></li>
+<li><p><a class="reference internal" href="docs-docstrings.html"><span class="doc">Writing Docstrings for API Documentation</span></a></p></li>
+</ul>
+<p>Once you ready to put your changes into the Minterpy codebase,
+be sure to <a class="reference internal" href="../merge-request.html"><span class="doc">create a merge (pull) request</span></a>.</p>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="how-to-contrib.html">How to Contribute to the Docs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="how-to-contrib.html#what-to-contribute">What to contribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how-to-contrib.html#before-contributing">Before contributing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how-to-contrib.html#docs-source-structure">Docs source structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how-to-contrib.html#building-the-docs-locally">Building the docs locally</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how-to-contrib.html#creating-an-issue-in-the-repository">Creating an issue in the repository</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how-to-contrib.html#contributing-directly-to-the-docs">Contributing directly to the docs</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</section>
-<section id="contribution-guidelines">
-<h2>Contribution guidelines<a class="headerlink" href="#contribution-guidelines" title="Link to this heading">#</a></h2>
-<p>This section contains reference guides and best-practice recommendations
-for when you’re working with the documentation.
-There are separate guidelines for each document type
-(reStructuredText, Jupyter notebooks, and Python docstrings for the API docs).</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="guidelines/index.html">Documentation contribution guidelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="guidelines/rest-based-docs.html">reST-based docs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guidelines/ipynb-based-docs.html">Jupyter-notebook-based docs</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </section>
 </section>
@@ -484,20 +565,20 @@ There are separate guidelines for each document type
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../contrib-dev/index.html"
+       href="../contrib-codebase/running-writing-tests.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Contributing to the Development</p>
+        <p class="prev-next-title">Running and Writing Tests</p>
       </div>
     </a>
     <a class="right-next"
-       href="about-the-docs.html"
+       href="docs-design.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">About the Docs</p>
+        <p class="prev-next-title">Documentation: Design</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -522,18 +603,8 @@ There are separate guidelines for each document type
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-the-documentation">About the documentation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-contribute">How to contribute</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contribution-guidelines">Contribution guidelines</a></li>
 </ul>
   </nav></div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/contributors/contrib-docs/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               
@@ -560,7 +631,7 @@ There are separate guidelines for each document type
 
   <p class="copyright">
     
-      © Copyright 2022, Minterpy development team.
+      © Copyright 2022, Minterpy Development Team.
       <br/>
     
   </p>

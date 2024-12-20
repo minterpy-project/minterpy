@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>minterpy API Reference &#8212; Minterpy 0.1</title>
+    <title>API Reference &#8212; Minterpy 0.1</title>
   
   
   
@@ -32,6 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,19 +47,19 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/index';</script>
     <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/api/index.html" />
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Interpolation" href="interpolation/index.html" />
-    <link rel="prev" title="Barycentric transformation" href="../fundamentals/barycentric-transformation.html" />
+    <link rel="next" title="minterpy.interpolation" href="interpolation.html" />
+    <link rel="prev" title="The Notion of Unisolvence" href="../fundamentals/unisolvence.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g7205332" />
+  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
   </head>
   
   
@@ -122,8 +125,8 @@
       
     
     
-    <img src="../_static/minterpy-logo.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../_static/minterpy-logo.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
   
   
 </a></div>
@@ -172,30 +175,6 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../TODO.html">
-    Todo list
-  </a>
-</li>
-
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -223,6 +202,46 @@
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
       
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+      
     </div>
     
   </div>
@@ -238,10 +257,6 @@
     </div>
   
 
-  
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
-      <span class="fa-solid fa-outdent"></span>
-    </button>
   
 </div>
 
@@ -303,20 +318,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../TODO.html">
-    Todo list
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -335,6 +336,46 @@
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
       </div>
     
   </div>
@@ -345,52 +386,78 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="interpolation/index.html">Interpolation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="interpolation/interpolate.html">interpolate function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation/interpolant.html">Interpolant class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation/interpolator.html">Interpolator class</a></li>
-</ul>
-</details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="core/index.html">Core modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="core/multi_index.html">Multi index sets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="core/index.html">Core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/multi_index.html">Multi-Index Set</a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/grid.html">Grid</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/tree.html">Multi index tree</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="core/ABC/index.html">Abstract base classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="core/ABC/polyABC.html">Multivariate polynomial ABC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="core/ABC/trafoABC.html">Transformation ABC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="core/ABC/operatorABC.html">Operator ABC</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="core/ABC/index.html">Abstract Base Classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/ABC/abc-polynomial.html">Multivariate Polynomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core/ABC/abc-transformation.html">Transformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core/ABC/abc-operator.html">Transformation Operator</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="core/tree.html">Multi-Index Tree</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="polynomials/index.html">Polynomials Bases</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="polynomials/lagrange.html">Lagrange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polynomials/newton.html">Newton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polynomials/canonical.html">Canonical</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polynomials/chebyshev.html">Chebyshev</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="transformations/index.html">Basis Transformations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="transformations/transformation-lagrange.html">From Lagrange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations/transformation-newton.html">From Newton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations/transformation-canonical.html">From Canonical</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations/transformation-chebyshev.html">From Chebyshev</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations/transformation-identity.html">Identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations/interface.html">Interface</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="transformation-operators/index.html">Transformation Operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="transformation-operators/operator-matrix.html">Matrix Operator</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="transformation-operators/operator-barycentric/index.html">Barycentric Operator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="transformation-operators/operator-barycentric/operator-barycentric.html">Barycentric Operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transformation-operators/operator-barycentric/operator-barycentric-dict.html">Barycentric Operator (Dict)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transformation-operators/operator-barycentric/operator-barycentric-factorized.html">Barycentric Operator (Factorized)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transformation-operators/operator-barycentric/operator-barycentric-piecewise.html">Barycentric Operator (Piecewise)</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="polyBases/index.html">Polynomial Base classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="polyBases/canonical.html">Canonical Polynomial Base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polyBases/newton.html">Newton Polynomial Base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polyBases/lagrange.html">Lagrange Polynomial Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="extras/index.html">Extras</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="extras/regression/index.html">Polynomial Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="extras/regression/ordinary_regression.html">Ordinary regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extras/regression/regression_abc.html">Regression abstract class</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="transformations/index.html">Polynomial Transformation classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="transformations/transformationCanonical.html">From Canonical basis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformations/transformationNewton.html">From Newton basis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformations/transformationLagrange.html">From Lagrange basis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformations/transformationIdentity.html">Identity transformation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformations/interface.html">Helper functions</a></li>
-</ul>
-</details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="transformOperators/index.html">Transformation Operator classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/barycentricOp.html">Barycentric Operator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/matrixTransform.html">Matrix Operator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/barycentricDictTransform.html">Barycentric Dict Operator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html">Barycentric Factorised Operator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html">Barycentric Piecewise Operator</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="internal/index.html">Internal API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="internal/utils.html">utility functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal/coreutils.html">core utility functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal/trafoutils.html">transformation utility functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal/verification.html">verification functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal/jit_compiled_utils.html">numba accelerated utility functions</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="internal/utils/index.html">Non-Compiled</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="internal/utils/arrays.html">Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/utils/multi-index.html">Multi-Index Exponents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/utils/poly-lagrange.html">Polynomials: Lagrange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/utils/poly-newton.html">Polynomials: Newton</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/utils/poly-canonical.html">Polynomials: Canonical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/utils/poly-chebyshev.html">Polynomials: Chebyshev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/utils/quad.html">Quadrature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/utils/verification.html">Verification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="internal/jit_compiled/index.html">JIT-Compiled</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled/common.html">Common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled/multi-index.html">Multi-index Exponents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled/newton-diff.html">Newton: Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled/newton-eval.html">Newton: Evaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled/canonical.html">Canonical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled/transformations.html">Polynomial transformations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/dds.html">DDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/trafoutils.html">Transformation utility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/gen-points.html">Generating points</a></li>
 </ul>
 </details></li>
 </ul>
@@ -433,7 +500,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><code class="docutils literal notranslate"><span class="pre">minterpy</span></code> API Reference</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">API Reference</span></li>
   </ul>
 </nav>
 </div>
@@ -450,512 +517,50 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="minterpy-api-reference">
-<h1><code class="docutils literal notranslate"><span class="pre">minterpy</span></code> API Reference<a class="headerlink" href="#minterpy-api-reference" title="Link to this heading">#</a></h1>
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Release<span class="colon">:</span></dt>
-<dd class="field-odd"><p>0.1.dev1+g7205332</p>
+<dd class="field-odd"><p>0.1.dev1+gc3f60a4</p>
 </dd>
 <dt class="field-even">Date<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dec 17, 2024</p>
+<dd class="field-even"><p>Dec 20, 2024</p>
 </dd>
 </dl>
-<p>This is the API reference of minterpy. Here all exposed functions and classes will be documented.</p>
+<p>This section of the documentation provides a comprehensive overview of the available Minterpy
+public modules, classes, methods, and functions.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Module / Sub-package</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="interpolation.html#module-minterpy.interpolation" title="minterpy.interpolation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Interpolation</span></code></a></p></td>
+<td><p>A high-level interface to conveniently create interpolants</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core/index.html#module-minterpy.core" title="minterpy.core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Core</span></code></a></p></td>
+<td><p>Top domain-specific classes and abstract classes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="polynomials/index.html#module-minterpy.polynomials" title="minterpy.polynomials"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Polynomial</span> <span class="pre">Bases</span></code></a></p></td>
+<td><p>Concrete classes representing polynomial bases</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="transformations/index.html#module-minterpy.transformations" title="minterpy.transformations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Transformations</span></code></a></p></td>
+<td><p>Concrete classes for polynomial basis transformations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="transformation-operators/index.html#module-minterpy.schemes" title="minterpy.schemes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Transformation</span> <span class="pre">Operators</span></code></a></p></td>
+<td><p>Concrete classes for polynomial basis transformation operators</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="extras/index.html"><span class="doc">Extras</span></a></p></td>
+<td><p>Features that are not part of the core package</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="internal/index.html"><span class="doc">Internal</span></a></p></td>
+<td><p>Utility modules and low-level numerical routines</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="interpolation/index.html">Interpolation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="interpolation/interpolate.html">interpolate function</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="interpolation/interpolate.html#minterpy.interpolation.interpolate"><code class="docutils literal notranslate"><span class="pre">interpolate()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation/interpolant.html">Interpolant class</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant"><code class="docutils literal notranslate"><span class="pre">Interpolant</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.__call__"><code class="docutils literal notranslate"><span class="pre">Interpolant.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.__delattr__"><code class="docutils literal notranslate"><span class="pre">Interpolant.__delattr__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.__init__"><code class="docutils literal notranslate"><span class="pre">Interpolant.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.__repr__"><code class="docutils literal notranslate"><span class="pre">Interpolant.__repr__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.__setattr__"><code class="docutils literal notranslate"><span class="pre">Interpolant.__setattr__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.__weakref__"><code class="docutils literal notranslate"><span class="pre">Interpolant.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.from_degree"><code class="docutils literal notranslate"><span class="pre">Interpolant.from_degree()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.lp_degree"><code class="docutils literal notranslate"><span class="pre">Interpolant.lp_degree</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.poly_degree"><code class="docutils literal notranslate"><span class="pre">Interpolant.poly_degree</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolant.html#minterpy.interpolation.Interpolant.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">Interpolant.spatial_dimension</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation/interpolator.html">Interpolator class</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="interpolation/interpolator.html#minterpy.interpolation.Interpolator"><code class="docutils literal notranslate"><span class="pre">Interpolator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolator.html#minterpy.interpolation.Interpolator.__call__"><code class="docutils literal notranslate"><span class="pre">Interpolator.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolator.html#minterpy.interpolation.Interpolator.__delattr__"><code class="docutils literal notranslate"><span class="pre">Interpolator.__delattr__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolator.html#minterpy.interpolation.Interpolator.__init__"><code class="docutils literal notranslate"><span class="pre">Interpolator.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolator.html#minterpy.interpolation.Interpolator.__repr__"><code class="docutils literal notranslate"><span class="pre">Interpolator.__repr__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolator.html#minterpy.interpolation.Interpolator.__setattr__"><code class="docutils literal notranslate"><span class="pre">Interpolator.__setattr__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="interpolation/interpolator.html#minterpy.interpolation.Interpolator.__weakref__"><code class="docutils literal notranslate"><span class="pre">Interpolator.__weakref__</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="core/index.html">Core modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="core/multi_index.html">Multi index sets</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__add__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__add__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__copy__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__copy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__deepcopy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__init__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__repr__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__repr__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__str__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__str__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__weakref__"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet._new_instance_if_necessary"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet._new_instance_if_necessary()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.contains_these_exponents"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.contains_these_exponents()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.copy_private_attributes"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.copy_private_attributes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.exponents"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.exponents</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.exponents_completed"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.exponents_completed</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.is_complete"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_complete</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.is_sub_index_set_of"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_sub_index_set_of()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.is_super_index_set_of"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.is_super_index_set_of()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.lp_degree"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.lp_degree</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.make_complete"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.make_complete()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.ordering"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.ordering()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.spatial_dimension</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.union"><code class="docutils literal notranslate"><span class="pre">MultiIndexSet.union()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="core/grid.html">Grid</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.__copy__"><code class="docutils literal notranslate"><span class="pre">Grid.__copy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">Grid.__deepcopy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.__init__"><code class="docutils literal notranslate"><span class="pre">Grid.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.__weakref__"><code class="docutils literal notranslate"><span class="pre">Grid.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid._new_instance_if_necessary"><code class="docutils literal notranslate"><span class="pre">Grid._new_instance_if_necessary()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.add_points"><code class="docutils literal notranslate"><span class="pre">Grid.add_points()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.apply_func"><code class="docutils literal notranslate"><span class="pre">Grid.apply_func()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.from_generator"><code class="docutils literal notranslate"><span class="pre">Grid.from_generator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.from_value_set"><code class="docutils literal notranslate"><span class="pre">Grid.from_value_set()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.generating_values"><code class="docutils literal notranslate"><span class="pre">Grid.generating_values</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.make_complete"><code class="docutils literal notranslate"><span class="pre">Grid.make_complete()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">Grid.spatial_dimension</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.tree"><code class="docutils literal notranslate"><span class="pre">Grid.tree</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid.unisolvent_nodes"><code class="docutils literal notranslate"><span class="pre">Grid.unisolvent_nodes</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="core/tree.html">Multi index tree</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="core/tree.html#minterpy.core.tree.MultiIndexTree"><code class="docutils literal notranslate"><span class="pre">MultiIndexTree</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="core/tree.html#minterpy.core.tree.MultiIndexTree.__init__"><code class="docutils literal notranslate"><span class="pre">MultiIndexTree.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/tree.html#minterpy.core.tree.MultiIndexTree.__weakref__"><code class="docutils literal notranslate"><span class="pre">MultiIndexTree.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/tree.html#minterpy.core.tree.MultiIndexTree.multi_index"><code class="docutils literal notranslate"><span class="pre">MultiIndexTree.multi_index</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/tree.html#minterpy.core.tree.MultiIndexTree.stored_masks"><code class="docutils literal notranslate"><span class="pre">MultiIndexTree.stored_masks</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="core/ABC/index.html">Abstract base classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="core/ABC/polyABC.html">Multivariate polynomial ABC</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="core/ABC/polyABC.html#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialABC</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="core/ABC/polyABC.html#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="core/ABC/trafoABC.html">Transformation ABC</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="core/ABC/trafoABC.html#minterpy.core.ABC.transformation_abstract.TransformationABC"><code class="docutils literal notranslate"><span class="pre">TransformationABC</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="core/ABC/operatorABC.html">Operator ABC</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="core/ABC/operatorABC.html#minterpy.core.ABC.operator_abstract.OperatorABC"><code class="docutils literal notranslate"><span class="pre">OperatorABC</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="polyBases/index.html">Polynomial Base classes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="polyBases/canonical.html">Canonical Polynomial Base</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__add__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__add__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__call__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__copy__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__copy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__deepcopy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__init__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__mul__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__mul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__neg__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__neg__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__pos__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__pos__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__radd__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__radd__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__rmul__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__rmul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__rsub__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__rsub__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__sub__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__sub__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.__weakref__"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._add"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._add()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._diff"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._div"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._div()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._eval"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._eval()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._gen_grid_default"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._gen_grid_default()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._mul"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._mul()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._new_instance_if_necessary"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._new_instance_if_necessary()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._partial_diff"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._partial_diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._pow"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._pow()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial._sub"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial._sub()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.add_points"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.add_points()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.coeffs"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.coeffs</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.diff"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.expand_dim"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.expand_dim()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.from_degree"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.from_degree()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.from_poly"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.from_poly()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.generate_internal_domain"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.generate_internal_domain()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.generate_user_domain"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.generate_user_domain()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.make_complete"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.make_complete()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.nr_active_monomials"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.nr_active_monomials</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.partial_diff"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.partial_diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.spatial_dimension</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial.unisolvent_nodes"><code class="docutils literal notranslate"><span class="pre">CanonicalPolynomial.unisolvent_nodes</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="polyBases/newton.html">Newton Polynomial Base</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__add__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__add__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__call__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__copy__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__copy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__deepcopy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__init__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__mul__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__mul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__neg__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__neg__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__pos__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__pos__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__radd__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__radd__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__rmul__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__rmul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__rsub__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__rsub__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__sub__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__sub__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.__weakref__"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._add"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._add()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._diff"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._div"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._div()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._eval"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._eval()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._gen_grid_default"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._gen_grid_default()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._mul"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._mul()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._new_instance_if_necessary"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._new_instance_if_necessary()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._partial_diff"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._partial_diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._pow"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._pow()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial._sub"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial._sub()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.add_points"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.add_points()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.coeffs"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.coeffs</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.diff"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.expand_dim"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.expand_dim()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.from_degree"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.from_degree()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.from_poly"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.from_poly()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.generate_internal_domain"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.generate_internal_domain()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.generate_user_domain"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.generate_user_domain()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.make_complete"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.make_complete()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.nr_active_monomials"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.nr_active_monomials</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.partial_diff"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.partial_diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.spatial_dimension</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.unisolvent_nodes"><code class="docutils literal notranslate"><span class="pre">NewtonPolynomial.unisolvent_nodes</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="polyBases/lagrange.html">Lagrange Polynomial Base</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__add__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__add__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__call__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__copy__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__copy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__deepcopy__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__init__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__mul__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__mul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__neg__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__neg__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__pos__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__pos__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__radd__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__radd__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__rmul__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__rmul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__rsub__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__rsub__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__sub__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__sub__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.__weakref__"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._add"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._add()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._diff"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._div"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._div()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._eval"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._eval()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._gen_grid_default"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._gen_grid_default()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._mul"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._mul()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._new_instance_if_necessary"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._new_instance_if_necessary()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._partial_diff"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._partial_diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._pow"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._pow()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial._sub"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial._sub()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.add_points"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.add_points()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.coeffs"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.coeffs</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.diff"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.expand_dim"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.expand_dim()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.from_degree"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.from_degree()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.from_poly"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.from_poly()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.generate_internal_domain"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.generate_internal_domain()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.generate_user_domain"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.generate_user_domain()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.make_complete"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.make_complete()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.nr_active_monomials"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.nr_active_monomials</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.partial_diff"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.partial_diff()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.spatial_dimension</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="polyBases/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.unisolvent_nodes"><code class="docutils literal notranslate"><span class="pre">LagrangePolynomial.unisolvent_nodes</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="transformations/index.html">Polynomial Transformation classes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="transformations/transformationCanonical.html">From Canonical basis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton.__call__"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton.__init__"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton.__init_subclass__"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton.__init_subclass__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton.__weakref__"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton._apply_transformation"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton._apply_transformation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton._get_transformation_operator"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton._get_transformation_operator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton._target_indices"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton._target_indices</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton.grid"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton.grid</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton.multi_index"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton.multi_index</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton.origin_type"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton.origin_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton.target_type"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton.target_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToNewton.transformation_operator"><code class="docutils literal notranslate"><span class="pre">CanonicalToNewton.transformation_operator</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange.__call__"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange.__init__"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange.__init_subclass__"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange.__init_subclass__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange.__weakref__"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange._apply_transformation"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange._apply_transformation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange._get_transformation_operator"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange._get_transformation_operator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange._target_indices"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange._target_indices</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange.grid"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange.grid</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange.multi_index"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange.multi_index</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange.origin_type"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange.origin_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange.target_type"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange.target_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationCanonical.html#minterpy.transformations.canonical.CanonicalToLagrange.transformation_operator"><code class="docutils literal notranslate"><span class="pre">CanonicalToLagrange.transformation_operator</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transformations/transformationNewton.html">From Newton basis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical.__call__"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical.__init__"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical.__init_subclass__"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical.__init_subclass__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical.__weakref__"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical._apply_transformation"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical._apply_transformation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical._get_transformation_operator"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical._get_transformation_operator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical._target_indices"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical._target_indices</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical.grid"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical.grid</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical.multi_index"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical.multi_index</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical.origin_type"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical.origin_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical.target_type"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical.target_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToCanonical.transformation_operator"><code class="docutils literal notranslate"><span class="pre">NewtonToCanonical.transformation_operator</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange.__call__"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange.__init__"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange.__init_subclass__"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange.__init_subclass__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange.__weakref__"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange._apply_transformation"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange._apply_transformation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange._get_transformation_operator"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange._get_transformation_operator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange._target_indices"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange._target_indices</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange.grid"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange.grid</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange.multi_index"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange.multi_index</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange.origin_type"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange.origin_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange.target_type"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange.target_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationNewton.html#minterpy.transformations.newton.NewtonToLagrange.transformation_operator"><code class="docutils literal notranslate"><span class="pre">NewtonToLagrange.transformation_operator</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transformations/transformationLagrange.html">From Lagrange basis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton.__call__"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton.__init__"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton.__init_subclass__"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton.__init_subclass__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton.__weakref__"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton._apply_transformation"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton._apply_transformation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton._get_transformation_operator"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton._get_transformation_operator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton._target_indices"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton._target_indices</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton.grid"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton.grid</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton.multi_index"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton.multi_index</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton.origin_type"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton.origin_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton.target_type"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton.target_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToNewton.transformation_operator"><code class="docutils literal notranslate"><span class="pre">LagrangeToNewton.transformation_operator</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical.__call__"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical.__init__"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical.__init_subclass__"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical.__init_subclass__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical.__weakref__"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical._apply_transformation"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical._apply_transformation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical._get_transformation_operator"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical._get_transformation_operator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical._target_indices"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical._target_indices</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical.grid"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical.grid</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical.multi_index"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical.multi_index</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical.origin_type"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical.origin_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical.target_type"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical.target_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationLagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical.transformation_operator"><code class="docutils literal notranslate"><span class="pre">LagrangeToCanonical.transformation_operator</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transformations/transformationIdentity.html">Identity transformation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity"><code class="docutils literal notranslate"><span class="pre">Identity</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity.__call__"><code class="docutils literal notranslate"><span class="pre">Identity.__call__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity.__init__"><code class="docutils literal notranslate"><span class="pre">Identity.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity.__init_subclass__"><code class="docutils literal notranslate"><span class="pre">Identity.__init_subclass__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity.__weakref__"><code class="docutils literal notranslate"><span class="pre">Identity.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity._apply_transformation"><code class="docutils literal notranslate"><span class="pre">Identity._apply_transformation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity._get_transformation_operator"><code class="docutils literal notranslate"><span class="pre">Identity._get_transformation_operator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity._target_indices"><code class="docutils literal notranslate"><span class="pre">Identity._target_indices</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity.grid"><code class="docutils literal notranslate"><span class="pre">Identity.grid</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity.multi_index"><code class="docutils literal notranslate"><span class="pre">Identity.multi_index</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity.origin_type"><code class="docutils literal notranslate"><span class="pre">Identity.origin_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity.target_type"><code class="docutils literal notranslate"><span class="pre">Identity.target_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformations/transformationIdentity.html#minterpy.transformations.identity.Identity.transformation_operator"><code class="docutils literal notranslate"><span class="pre">Identity.transformation_operator</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transformations/interface.html">Helper functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformations/interface.html#minterpy.transformations.interface.get_transformation"><code class="docutils literal notranslate"><span class="pre">get_transformation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="transformations/interface.html#minterpy.transformations.interface.get_transformation_class"><code class="docutils literal notranslate"><span class="pre">get_transformation_class()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="transformOperators/index.html">Transformation Operator classes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/barycentricOp.html">Barycentric Operator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator.__init__"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator.__matmul__"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator.__matmul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator.__weakref__"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator._get_array_repr"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator._get_array_repr()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator.array_repr_full"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator.array_repr_full</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator.array_repr_sparse"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator.array_repr_sparse</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator.array_representation"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator.array_representation</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator.merging_fct"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator.merging_fct()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricOp.html#minterpy.schemes.barycentric.operators.BarycentricOperator.transformation_fct"><code class="docutils literal notranslate"><span class="pre">BarycentricOperator.transformation_fct()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/matrixTransform.html">Matrix Operator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformOperators/matrixTransform.html#minterpy.schemes.matrix_operator.MatrixOperator"><code class="docutils literal notranslate"><span class="pre">MatrixOperator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/matrixTransform.html#minterpy.schemes.matrix_operator.MatrixOperator.__init__"><code class="docutils literal notranslate"><span class="pre">MatrixOperator.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/matrixTransform.html#minterpy.schemes.matrix_operator.MatrixOperator.__matmul__"><code class="docutils literal notranslate"><span class="pre">MatrixOperator.__matmul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/matrixTransform.html#minterpy.schemes.matrix_operator.MatrixOperator.__weakref__"><code class="docutils literal notranslate"><span class="pre">MatrixOperator.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/matrixTransform.html#minterpy.schemes.matrix_operator.MatrixOperator._get_array_repr"><code class="docutils literal notranslate"><span class="pre">MatrixOperator._get_array_repr()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/matrixTransform.html#minterpy.schemes.matrix_operator.MatrixOperator.array_repr_full"><code class="docutils literal notranslate"><span class="pre">MatrixOperator.array_repr_full</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/matrixTransform.html#minterpy.schemes.matrix_operator.MatrixOperator.array_repr_sparse"><code class="docutils literal notranslate"><span class="pre">MatrixOperator.array_repr_sparse</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/barycentricDictTransform.html">Barycentric Dict Operator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator.__init__"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator.__matmul__"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator.__matmul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator.__weakref__"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator._get_array_repr"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator._get_array_repr()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator.array_repr_full"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator.array_repr_full</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator.array_repr_sparse"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator.array_repr_sparse</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator.array_representation"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator.array_representation</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator.merging_fct"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator.merging_fct()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricDictTransform.html#minterpy.schemes.barycentric.operators.BarycentricDictOperator.transformation_fct"><code class="docutils literal notranslate"><span class="pre">BarycentricDictOperator.transformation_fct()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html">Barycentric Factorised Operator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator.__init__"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator.__matmul__"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator.__matmul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator.__weakref__"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator._get_array_repr"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator._get_array_repr()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator.array_repr_full"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator.array_repr_full</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator.array_repr_sparse"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator.array_repr_sparse</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator.array_representation"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator.array_representation</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator.merging_fct"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator.merging_fct()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricFactorisedTransform.html#minterpy.schemes.barycentric.operators.BarycentricFactorisedOperator.transformation_fct"><code class="docutils literal notranslate"><span class="pre">BarycentricFactorisedOperator.transformation_fct()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html">Barycentric Piecewise Operator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator.__init__"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator.__matmul__"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator.__matmul__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator.__weakref__"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator.__weakref__</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator._get_array_repr"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator._get_array_repr()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator.array_repr_full"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator.array_repr_full</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator.array_repr_sparse"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator.array_repr_sparse</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator.array_representation"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator.array_representation</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator.merging_fct"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator.merging_fct()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="transformOperators/barycentricPiecewiseTransform.html#minterpy.schemes.barycentric.operators.BarycentricPiecewiseOperator.transformation_fct"><code class="docutils literal notranslate"><span class="pre">BarycentricPiecewiseOperator.transformation_fct()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="internal/index.html">Internal API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="internal/utils.html">utility functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="internal/utils.html#minterpy.utils.cartesian_product"><code class="docutils literal notranslate"><span class="pre">cartesian_product()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/utils.html#minterpy.utils.chebychev_2nd_order"><code class="docutils literal notranslate"><span class="pre">chebychev_2nd_order()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/utils.html#minterpy.utils.eval_newton_monomials"><code class="docutils literal notranslate"><span class="pre">eval_newton_monomials()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/utils.html#minterpy.utils.eval_newton_polynomials"><code class="docutils literal notranslate"><span class="pre">eval_newton_polynomials()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/utils.html#minterpy.utils.eval_newton_polynomials_batch"><code class="docutils literal notranslate"><span class="pre">eval_newton_polynomials_batch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/utils.html#minterpy.utils.gen_chebychev_2nd_order_leja_ordered"><code class="docutils literal notranslate"><span class="pre">gen_chebychev_2nd_order_leja_ordered()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/utils.html#minterpy.utils.lp_norm"><code class="docutils literal notranslate"><span class="pre">lp_norm()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/utils.html#minterpy.utils.lp_sum"><code class="docutils literal notranslate"><span class="pre">lp_sum()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="internal/coreutils.html">core utility functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="internal/coreutils.html#minterpy.core.utils.find_match_between"><code class="docutils literal notranslate"><span class="pre">find_match_between()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/coreutils.html#minterpy.core.utils.gen_missing_derivatives"><code class="docutils literal notranslate"><span class="pre">gen_missing_derivatives()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/coreutils.html#minterpy.core.utils.gen_partial_derivatives"><code class="docutils literal notranslate"><span class="pre">gen_partial_derivatives()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/coreutils.html#minterpy.core.utils.get_exponent_matrix"><code class="docutils literal notranslate"><span class="pre">get_exponent_matrix()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/coreutils.html#minterpy.core.utils.insert_lexicographically"><code class="docutils literal notranslate"><span class="pre">insert_lexicographically()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/coreutils.html#minterpy.core.utils.is_lexicographically_complete"><code class="docutils literal notranslate"><span class="pre">is_lexicographically_complete()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/coreutils.html#minterpy.core.utils.list_insert_single"><code class="docutils literal notranslate"><span class="pre">list_insert_single()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/coreutils.html#minterpy.core.utils.make_complete"><code class="docutils literal notranslate"><span class="pre">make_complete()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/coreutils.html#minterpy.core.utils.make_derivable"><code class="docutils literal notranslate"><span class="pre">make_derivable()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="internal/trafoutils.html">transformation utility functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal/verification.html">verification functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.check_domain_fit"><code class="docutils literal notranslate"><span class="pre">check_domain_fit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.check_dtype"><code class="docutils literal notranslate"><span class="pre">check_dtype()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.check_shape"><code class="docutils literal notranslate"><span class="pre">check_shape()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.check_type"><code class="docutils literal notranslate"><span class="pre">check_type()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.check_type_n_values"><code class="docutils literal notranslate"><span class="pre">check_type_n_values()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.check_values"><code class="docutils literal notranslate"><span class="pre">check_values()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.convert_eval_output"><code class="docutils literal notranslate"><span class="pre">convert_eval_output()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.rectify_eval_input"><code class="docutils literal notranslate"><span class="pre">rectify_eval_input()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.rectify_query_points"><code class="docutils literal notranslate"><span class="pre">rectify_query_points()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/verification.html#minterpy.core.verification.verify_domain"><code class="docutils literal notranslate"><span class="pre">verify_domain()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="internal/jit_compiled_utils.html">numba accelerated utility functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.all_indices_are_contained"><code class="docutils literal notranslate"><span class="pre">all_indices_are_contained()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.can_eval_mult"><code class="docutils literal notranslate"><span class="pre">can_eval_mult()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.compute_vandermonde_n2c"><code class="docutils literal notranslate"><span class="pre">compute_vandermonde_n2c()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.eval_newton_monomials_multiple"><code class="docutils literal notranslate"><span class="pre">eval_newton_monomials_multiple()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.eval_newton_monomials_single"><code class="docutils literal notranslate"><span class="pre">eval_newton_monomials_single()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.fill_match_positions"><code class="docutils literal notranslate"><span class="pre">fill_match_positions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.get_match_idx"><code class="docutils literal notranslate"><span class="pre">get_match_idx()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.have_lexicographical_ordering"><code class="docutils literal notranslate"><span class="pre">have_lexicographical_ordering()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.index_is_contained"><code class="docutils literal notranslate"><span class="pre">index_is_contained()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="internal/jit_compiled_utils.html#minterpy.jit_compiled_utils.lex_smaller_or_equal"><code class="docutils literal notranslate"><span class="pre">lex_smaller_or_equal()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
 </div>
 </section>
 
@@ -970,20 +575,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../fundamentals/barycentric-transformation.html"
+       href="../fundamentals/unisolvence.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Barycentric transformation</p>
+        <p class="prev-next-title">The Notion of Unisolvence</p>
       </div>
     </a>
     <a class="right-next"
-       href="interpolation/index.html"
+       href="interpolation.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Interpolation</p>
+        <p class="prev-next-title">minterpy.interpolation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -993,21 +598,6 @@
             </div>
             
             
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/api/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
-
-</div></div>
               
             
           </div>
@@ -1032,7 +622,7 @@
 
   <p class="copyright">
     
-      © Copyright 2022, Minterpy development team.
+      © Copyright 2022, Minterpy Development Team.
       <br/>
     
   </p>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>transformation utility functions &#8212; Minterpy 0.1</title>
+    <title>Transformation Utility Functions &#8212; Minterpy 0.1</title>
   
   
   
@@ -32,6 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles.css?v=a88e7498" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,17 +47,17 @@
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/internal/trafoutils';</script>
     <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/api/internal/trafoutils.html" />
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="verification functions" href="verification.html" />
-    <link rel="prev" title="core utility functions" href="coreutils.html" />
+    <link rel="next" title="minterpy.gen_points" href="gen-points.html" />
+    <link rel="prev" title="minterpy.dds" href="dds.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g7205332" />
+  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
   </head>
   
   
@@ -120,8 +123,8 @@
       
     
     
-    <img src="../../_static/minterpy-logo.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../../_static/minterpy-logo.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
   
   
 </a></div>
@@ -170,30 +173,6 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../../TODO.html">
-    Todo list
-  </a>
-</li>
-
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -220,6 +199,46 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
       
     </div>
     
@@ -301,20 +320,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../TODO.html">
-    Todo list
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -333,6 +338,46 @@
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
       </div>
     
   </div>
@@ -343,52 +388,78 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../interpolation/index.html">Interpolation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../interpolation/interpolate.html">interpolate function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../interpolation/interpolant.html">Interpolant class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../interpolation/interpolator.html">Interpolator class</a></li>
-</ul>
-</details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../core/index.html">Core modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/multi_index.html">Multi index sets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolation.html">Interpolation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../core/index.html">Core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../core/multi_index.html">Multi-Index Set</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/grid.html">Grid</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/tree.html">Multi index tree</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../core/ABC/index.html">Abstract base classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../core/ABC/polyABC.html">Multivariate polynomial ABC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../core/ABC/trafoABC.html">Transformation ABC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../core/ABC/operatorABC.html">Operator ABC</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../core/ABC/index.html">Abstract Base Classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../core/ABC/abc-polynomial.html">Multivariate Polynomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core/ABC/abc-transformation.html">Transformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core/ABC/abc-operator.html">Transformation Operator</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/tree.html">Multi-Index Tree</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../polynomials/index.html">Polynomials Bases</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../polynomials/lagrange.html">Lagrange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../polynomials/newton.html">Newton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../polynomials/canonical.html">Canonical</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../polynomials/chebyshev.html">Chebyshev</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../transformations/index.html">Basis Transformations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-lagrange.html">From Lagrange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-newton.html">From Newton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-canonical.html">From Canonical</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-chebyshev.html">From Chebyshev</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/transformation-identity.html">Identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations/interface.html">Interface</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../transformation-operators/index.html">Transformation Operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../transformation-operators/operator-matrix.html">Matrix Operator</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../transformation-operators/operator-barycentric/index.html">Barycentric Operator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../transformation-operators/operator-barycentric/operator-barycentric.html">Barycentric Operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../transformation-operators/operator-barycentric/operator-barycentric-dict.html">Barycentric Operator (Dict)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../transformation-operators/operator-barycentric/operator-barycentric-factorized.html">Barycentric Operator (Factorized)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../transformation-operators/operator-barycentric/operator-barycentric-piecewise.html">Barycentric Operator (Piecewise)</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../polyBases/index.html">Polynomial Base classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../polyBases/canonical.html">Canonical Polynomial Base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../polyBases/newton.html">Newton Polynomial Base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../polyBases/lagrange.html">Lagrange Polynomial Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../extras/index.html">Extras</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../extras/regression/index.html">Polynomial Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../extras/regression/ordinary_regression.html">Ordinary regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extras/regression/regression_abc.html">Regression abstract class</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../transformations/index.html">Polynomial Transformation classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../transformations/transformationCanonical.html">From Canonical basis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformations/transformationNewton.html">From Newton basis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformations/transformationLagrange.html">From Lagrange basis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformations/transformationIdentity.html">Identity transformation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformations/interface.html">Helper functions</a></li>
-</ul>
-</details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../transformOperators/index.html">Transformation Operator classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../transformOperators/barycentricOp.html">Barycentric Operator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformOperators/matrixTransform.html">Matrix Operator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformOperators/barycentricDictTransform.html">Barycentric Dict Operator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformOperators/barycentricFactorisedTransform.html">Barycentric Factorised Operator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformOperators/barycentricPiecewiseTransform.html">Barycentric Piecewise Operator</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Internal API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="utils.html">utility functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="coreutils.html">core utility functions</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">transformation utility functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verification.html">verification functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jit_compiled_utils.html">numba accelerated utility functions</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="utils/index.html">Non-Compiled</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="utils/arrays.html">Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils/multi-index.html">Multi-Index Exponents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils/poly-lagrange.html">Polynomials: Lagrange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils/poly-newton.html">Polynomials: Newton</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils/poly-canonical.html">Polynomials: Canonical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils/poly-chebyshev.html">Polynomials: Chebyshev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils/quad.html">Quadrature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils/verification.html">Verification</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="jit_compiled/index.html">JIT-Compiled</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="jit_compiled/common.html">Common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jit_compiled/multi-index.html">Multi-index Exponents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jit_compiled/newton-diff.html">Newton: Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jit_compiled/newton-eval.html">Newton: Evaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jit_compiled/canonical.html">Canonical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jit_compiled/transformations.html">Polynomial transformations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Transformation utility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-points.html">Generating points</a></li>
 </ul>
 </details></li>
 </ul>
@@ -432,12 +503,12 @@
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link"><code class="docutils literal notranslate"><span class="pre">minterpy</span></code> API Reference</a></li>
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
     
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Internal API</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">transformation utility functions</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Transformation Utility Functions</span></li>
   </ul>
 </nav>
 </div>
@@ -455,8 +526,277 @@
                 <article class="bd-article">
                   
   <section id="module-minterpy.transformations.utils">
-<span id="transformation-utility-functions"></span><h1>transformation utility functions<a class="headerlink" href="#module-minterpy.transformations.utils" title="Link to this heading">#</a></h1>
+<span id="transformation-utility-functions"></span><h1>Transformation Utility Functions<a class="headerlink" href="#module-minterpy.transformations.utils" title="Link to this heading">#</a></h1>
 <p>Utility functions for computing matrices for transformation between canonical, lagrange, and newton basis.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_lagrange_to_newton_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_lagrange_to_newton_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_lagrange_to_newton_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_lagrange_to_newton_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Lagrange-to-Newton transformation operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of LagrangePolynomial) and
+the target type (NewtonPolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Lagrange-to-Newton transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The barycentric transformation operator is employed if the multi-indices
+are downward-closed.</p></li>
+<li><p>The naive transformation operator is inefficient due to the following
+inversion: <code class="docutils literal notranslate"><span class="pre">inv(nwt2lag_matrix)</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_lagrange_to_canonical_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_lagrange_to_canonical_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_lagrange_to_canonical_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_lagrange_to_canonical_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Lagrange-to-Canonical transformation operator.</p>
+<p>The transformation is the chain: Lagrange-to-Newton then
+Newton-to-Canonical.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of LagrangePolynomial) and
+the target type (CanonicalPolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Lagrange-to-Canonical transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Barycentric transformation operator is employed if the multi-indices
+are downward-closed.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_lagrange_to_chebyshev_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_lagrange_to_chebyshev_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_lagrange_to_chebyshev_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_lagrange_to_chebyshev_operator" title="Link to this definition">#</a></dt>
+<dd><p>Compute the Lagrange-to-Chebyshev transformation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of LagrangePolynomial) and
+the target type (ChebyshevPolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Lagrange-to-Chebyshev transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The transformation is carried out by inverting the evaluation
+at the unisolvent nodes; this is not a sparse transformation operator.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_newton_to_lagrange_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_newton_to_lagrange_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_newton_to_lagrange_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_newton_to_lagrange_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Newton-to-Lagrange transformation operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of NewtonPolynomial) and
+the target type (LagrangePolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Newton-to-Lagrange transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The barycentric transformation operator is employed if the multi-indices
+are downward-closed.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_newton_to_canonical_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_newton_to_canonical_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_newton_to_canonical_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_newton_to_canonical_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Newton-to-Canonical transformation operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of NewtonPolynomial) and
+the target type (CanonicalPolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Newton-to-Canonical transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_newton_to_chebyshev_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_newton_to_chebyshev_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_newton_to_chebyshev_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_newton_to_chebyshev_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Newton-to-Chebyshev transformation operator.</p>
+<p>The transformation is the chain: Newton-to-Lagrange then
+Lagrange-to-Chebyshev.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of NewtonPolynomial) and
+the target type (ChebyshevPolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Newton-to-Chebyshev transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_canonical_to_newton_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_canonical_to_newton_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_canonical_to_newton_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_canonical_to_newton_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Canonical-to-Newton transformation operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of CanonicalPolynomial) and
+the target type (NewtonPolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Canonical-to-Newton transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_canonical_to_lagrange_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_canonical_to_lagrange_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_canonical_to_lagrange_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_canonical_to_lagrange_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Canonical-to-Lagrange transformation operator.</p>
+<p>The transformation is the chain: Canonical-to-Newton then
+Newton-to-Lagrange.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of CanonicalPolynomial) and
+the target type (LagrangePolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Canonical-to-Lagrange transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_canonical_to_chebyshev_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_canonical_to_chebyshev_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_canonical_to_chebyshev_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_canonical_to_chebyshev_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Canonical-to-Chebyshev transformation operator.</p>
+<p>The transformation is the chain: Canonical-to-Newton then
+Newton-to-Lagrange then Lagrange-to-Chebyshev.</p>
+<p>The Canonical-to-Lagrange operator is implemented as a single operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of CanonicalPolynomial) and
+the target type (ChebyshevPolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The canonical-to-Chebyshev transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_chebyshev_to_lagrange_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_chebyshev_to_lagrange_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_chebyshev_to_lagrange_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_chebyshev_to_lagrange_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Chebyshev to Lagrange transformation operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of ChebyshevPolynomial) and
+the target type (LagrangePolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Chebyshev-to-Lagrange transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The transformation is carried out by evaluation at the unisolvent nodes;
+this is not a sparse transformation operator.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_chebyshev_to_newton_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_chebyshev_to_newton_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_chebyshev_to_newton_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_chebyshev_to_newton_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Chebyshev-to-Newton transformation operator.</p>
+<p>The transformation is the chain: Chebyshev-to-Lagrange then
+Lagrange-to-Newton.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of ChebyshevPolynomial) and
+the target type (NewtonPolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Chebyshev-to-Newton transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.transformations.utils.build_chebyshev_to_canonical_operator">
+<span class="sig-prename descclassname"><span class="pre">minterpy.transformations.utils.</span></span><span class="sig-name descname"><span class="pre">build_chebyshev_to_canonical_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/transformations/utils.html#build_chebyshev_to_canonical_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.transformations.utils.build_chebyshev_to_canonical_operator" title="Link to this definition">#</a></dt>
+<dd><p>Construct the Chebyshev-to-Canonical transformation operator.</p>
+<p>The transformation is the chain: Chebyshev-to-Lagrange then
+Lagrange-to-Newton then Newton-to-Canonical.</p>
+<p>The Lagrange-to-Canonical is implemented as a single operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformation</strong> (<a class="reference internal" href="../core/ABC/abc-transformation.html#minterpy.core.ABC.transformation_abstract.TransformationABC" title="minterpy.core.ABC.transformation_abstract.TransformationABC"><em>TransformationABC</em></a>) – The transformer instance with information about the origin polynomial
+(an instance of ChebyshevPolynomial) and
+the target type (NewtonPolynomial).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Chebyshev-to-Newton transformation operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ABC/abc-operator.html#minterpy.core.ABC.operator_abstract.OperatorABC" title="minterpy.core.ABC.operator_abstract.OperatorABC">OperatorABC</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -470,20 +810,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="coreutils.html"
+       href="dds.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">core utility functions</p>
+        <p class="prev-next-title">minterpy.dds</p>
       </div>
     </a>
     <a class="right-next"
-       href="verification.html"
+       href="gen-points.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">verification functions</p>
+        <p class="prev-next-title">minterpy.gen_points</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -499,13 +839,27 @@
 
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/api/internal/trafoutils.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_lagrange_to_newton_operator"><code class="docutils literal notranslate"><span class="pre">build_lagrange_to_newton_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_lagrange_to_canonical_operator"><code class="docutils literal notranslate"><span class="pre">build_lagrange_to_canonical_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_lagrange_to_chebyshev_operator"><code class="docutils literal notranslate"><span class="pre">build_lagrange_to_chebyshev_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_newton_to_lagrange_operator"><code class="docutils literal notranslate"><span class="pre">build_newton_to_lagrange_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_newton_to_canonical_operator"><code class="docutils literal notranslate"><span class="pre">build_newton_to_canonical_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_newton_to_chebyshev_operator"><code class="docutils literal notranslate"><span class="pre">build_newton_to_chebyshev_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_canonical_to_newton_operator"><code class="docutils literal notranslate"><span class="pre">build_canonical_to_newton_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_canonical_to_lagrange_operator"><code class="docutils literal notranslate"><span class="pre">build_canonical_to_lagrange_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_canonical_to_chebyshev_operator"><code class="docutils literal notranslate"><span class="pre">build_canonical_to_chebyshev_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_chebyshev_to_lagrange_operator"><code class="docutils literal notranslate"><span class="pre">build_chebyshev_to_lagrange_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_chebyshev_to_newton_operator"><code class="docutils literal notranslate"><span class="pre">build_chebyshev_to_newton_operator()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.transformations.utils.build_chebyshev_to_canonical_operator"><code class="docutils literal notranslate"><span class="pre">build_chebyshev_to_canonical_operator()</span></code></a></li>
+</ul>
+  </nav></div>
 
 </div></div>
               
@@ -532,7 +886,7 @@
 
   <p class="copyright">
     
-      © Copyright 2022, Minterpy development team.
+      © Copyright 2022, Minterpy Development Team.
       <br/>
     
   </p>

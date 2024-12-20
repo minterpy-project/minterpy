@@ -1,0 +1,1754 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>minterpy.core.grid &#8212; Minterpy 0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles.css?v=a88e7498" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/minterpy/core/grid';</script>
+    <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/_modules/minterpy/core/grid.html" />
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how-to/index.html">
+    How-to
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../fundamentals/index.html">
+    Fundamentals
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../contributors/index.html">
+    Contributors
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">minterpy.core.grid</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for minterpy.core.grid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the implementation of the `Grid` class.</span>
+
+<span class="sd">The `Grid` class represents the interpolation grid on which interpolating</span>
+<span class="sd">polynomials live.</span>
+
+<span class="sd">Background information</span>
+<span class="sd">======================</span>
+
+<span class="sd">An interpolation grid is defined by its multi-index set, generating points,</span>
+<span class="sd">and generating function. The generating function, when provided,</span>
+<span class="sd">defines the generating points, which are the one-dimensional interpolation</span>
+<span class="sd">nodes in each dimension. The multi-index set, together with</span>
+<span class="sd">the generating points, specifies the unisolvent nodes---these are the points</span>
+<span class="sd">where the function to be interpolated is evaluated.</span>
+
+<span class="sd">More detailed background information can be found in</span>
+<span class="sd">:doc:`/fundamentals/interpolation-at-unisolvent-nodes`.</span>
+
+<span class="sd">How-To Guides</span>
+<span class="sd">=============</span>
+
+<span class="sd">The relevant section of the :doc:`docs &lt;/how-to/grid/index&gt;`</span>
+<span class="sd">contains several how-to guides related to instances of the `Grid` class</span>
+<span class="sd">demonstrating their usages and features.</span>
+
+<span class="sd">----</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span><span class="p">,</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="n">ARRAY</span><span class="p">,</span> <span class="n">INT_DTYPE</span>
+<span class="kn">from</span> <span class="nn">minterpy.gen_points</span> <span class="kn">import</span> <span class="n">GENERATING_FUNCTIONS</span><span class="p">,</span> <span class="n">gen_points_from_values</span>
+
+<span class="kn">from</span> <span class="nn">minterpy.core.multi_index</span> <span class="kn">import</span> <span class="n">MultiIndexSet</span>
+<span class="kn">from</span> <span class="nn">minterpy.core.tree</span> <span class="kn">import</span> <span class="n">MultiIndexTree</span>
+<span class="kn">from</span> <span class="nn">minterpy.utils.arrays</span> <span class="kn">import</span> <span class="n">is_unique</span>
+<span class="kn">from</span> <span class="nn">minterpy.utils.verification</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">check_type</span><span class="p">,</span>
+    <span class="n">check_values</span><span class="p">,</span>
+    <span class="n">check_dimensionality</span><span class="p">,</span>
+    <span class="n">check_domain_fit</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Grid&quot;</span><span class="p">]</span>
+
+<span class="c1"># Default generating function</span>
+<span class="n">DEFAULT_FUN</span> <span class="o">=</span> <span class="s2">&quot;chebyshev&quot;</span>
+
+<span class="c1"># Type alias</span>
+<span class="n">GEN_FUNCTION</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_gen_unisolvent_nodes</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">generating_points</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. todo::</span>
+<span class="sd">        - document this function but ship it to utils first.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">generating_points</span><span class="p">,</span> <span class="n">multi_index</span><span class="o">.</span><span class="n">exponents</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="c1"># TODO implement comparison operations based on multi index comparison operations and the generating values used</span>
+<div class="viewcode-block" id="Grid">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid">[docs]</a>
+<span class="k">class</span> <span class="nc">Grid</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class representing the nodes on which interpolating polynomials live.</span>
+
+<span class="sd">    Instances of this class provide the data structure for the unisolvent</span>
+<span class="sd">    nodes, i.e., points in a hypercube that uniquely determine</span>
+<span class="sd">    a multi-dimensional interpolating polynomial</span>
+<span class="sd">    (of a specified multi-index set).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    multi_index : MultiIndexSet</span>
+<span class="sd">        The multi-index set of exponents of multi-dimensional polynomials</span>
+<span class="sd">        that the Grid should support.</span>
+<span class="sd">    generating_function : Union[GEN_FUNCTION, str], optional</span>
+<span class="sd">        The generating function to construct an array of generating points.</span>
+<span class="sd">        One of the built-in generating functions may be selected via</span>
+<span class="sd">        a string as a key to a dictionary.</span>
+<span class="sd">        This parameter is optional; if neither this parameter nor</span>
+<span class="sd">        ``generating_points`` is specified, the default generating function</span>
+<span class="sd">        based on the Leja-ordered Chebyshev-Lobatto nodes is selected.</span>
+<span class="sd">    generating_points : :class:`numpy:numpy.ndarray`, optional</span>
+<span class="sd">        The generating points of the interpolation grid, a two-dimensional</span>
+<span class="sd">        array of floats whose columns are the generating points</span>
+<span class="sd">        per spatial dimension. The shape of the array is ``(n + 1, m)``</span>
+<span class="sd">        where ``n`` is the maximum degree of all one-dimensional polynomials</span>
+<span class="sd">        (i.e., the maximum exponent) and ``m`` is the spatial dimension.</span>
+<span class="sd">        This parameter is optional. If not specified, the generating points</span>
+<span class="sd">        are created from the default generating function. If specified,</span>
+<span class="sd">        then the points must be consistent with any non-``None`` generating</span>
+<span class="sd">        function.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - The ``Callable`` as a ``generating_function`` must accept as its</span>
+<span class="sd">      arguments two integers, namely, the maximum exponent (``n``) of all</span>
+<span class="sd">      of the multi-index set of polynomial exponents and the spatial dimension</span>
+<span class="sd">      (``m``). Furthermore, it must return an array of shape ``(n + 1, m)``</span>
+<span class="sd">      whose values are unique per column.</span>
+<span class="sd">    - The multi-index set to construct a :class:`Grid` instance may not be</span>
+<span class="sd">      downward-closed. However, building a :class:`.MultiIndexTree` used</span>
+<span class="sd">      in the transformation between polynomials in the Newton and Lagrange</span>
+<span class="sd">      bases requires a downward-closed multi-index set.</span>
+<span class="sd">    - The notion of unisolvent nodes, strictly speaking, relies on the</span>
+<span class="sd">      downward-closedness of the multi-index set. If the set is not</span>
+<span class="sd">      downward-closed then unisolvency cannot be guaranteed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+        <span class="n">generating_function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">generating_points</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="c1"># --- Arguments processing</span>
+
+        <span class="c1"># Process and assign the multi-index set argument</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span> <span class="o">=</span> <span class="n">_process_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
+
+        <span class="c1"># If generating_function and points not specified,</span>
+        <span class="c1"># use the default generating function</span>
+        <span class="n">no_gen_function</span> <span class="o">=</span> <span class="n">generating_function</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="n">no_gen_points</span> <span class="o">=</span> <span class="n">generating_points</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">no_gen_function</span> <span class="ow">and</span> <span class="n">no_gen_points</span><span class="p">:</span>
+            <span class="n">generating_function</span> <span class="o">=</span> <span class="n">DEFAULT_FUN</span>
+
+        <span class="c1"># Process and assign the generating function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generating_function</span> <span class="o">=</span> <span class="n">_process_generating_function</span><span class="p">(</span>
+            <span class="n">generating_function</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Assign and verify the generating points argument</span>
+        <span class="k">if</span> <span class="n">no_gen_points</span><span class="p">:</span>
+            <span class="n">generating_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_generating_points</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Create a copy to avoid accidental changes from the outside</span>
+            <span class="n">generating_points</span> <span class="o">=</span> <span class="n">generating_points</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span> <span class="o">=</span> <span class="n">generating_points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_verify_generating_points</span><span class="p">()</span>
+
+        <span class="c1"># --- Post-assignment verifications</span>
+
+        <span class="c1"># Verify the maximum exponent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_verify_grid_max_exponent</span><span class="p">()</span>
+
+        <span class="c1"># Verify generating function and points again if both are specified</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">no_gen_function</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">no_gen_points</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_verify_matching_gen_function_and_points</span><span class="p">()</span>
+
+        <span class="c1"># --- Lazily-evaluated properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unisolvent_nodes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># --- Factory methods</span>
+<div class="viewcode-block" id="Grid.from_degree">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.from_degree">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_degree</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">poly_degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">generating_function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">generating_points</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Create an instance of Grid with a complete multi-index set.</span>
+
+<span class="sd">        A complete multi-index set denoted by :math:`A_{m, n, p}` contains</span>
+<span class="sd">        all the exponents</span>
+<span class="sd">        :math:`\boldsymbol{\alpha}=(\alpha_1,\ldots,\alpha_m) \in \mathbb{N}^m`</span>
+<span class="sd">        such that the :math:`l_p`-norm</span>
+<span class="sd">        :math:`|| \boldsymbol{\alpha} ||_p \leq n`, where:</span>
+
+<span class="sd">        - :math:`m`: the spatial dimension</span>
+<span class="sd">        - :math:`n`: the polynomial degree</span>
+<span class="sd">        - :math:`p`: the `l_p`-degree</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        spatial_dimension : int</span>
+<span class="sd">            Spatial dimension of the multi-index set (:math:`m`); the value of</span>
+<span class="sd">            ``spatial_dimension`` must be a positive integer (:math:`m &gt; 0`).</span>
+<span class="sd">        poly_degree : int</span>
+<span class="sd">            Polynomial degree of the multi-index set (:math:`n`); the value of</span>
+<span class="sd">            ``poly_degree`` must be a non-negative integer (:math:`n \geq 0`).</span>
+<span class="sd">        lp_degree : float</span>
+<span class="sd">            :math:`p` of the :math:`l_p`-norm (i.e., the :math:`l_p`-degree)</span>
+<span class="sd">            that is used to define the multi-index set. The value of</span>
+<span class="sd">            ``lp_degree`` must be a positive float (:math:`p &gt; 0`).</span>
+<span class="sd">        generating_function : Union[GEN_FUNCTION, str], optional</span>
+<span class="sd">            The generating function to construct an array of generating points.</span>
+<span class="sd">            One of the built-in generating functions may be selected via</span>
+<span class="sd">            a string key.</span>
+<span class="sd">            This parameter is optional; if neither this parameter nor</span>
+<span class="sd">            ``generating_points`` is specified, the default generating function</span>
+<span class="sd">            based on the Leja-ordered Chebyshev-Lobatto nodes is selected.</span>
+<span class="sd">        generating_points : :class:`numpy:numpy.ndarray`, optional</span>
+<span class="sd">            The generating points of the interpolation grid, a two-dimensional</span>
+<span class="sd">            array of floats whose columns are the generating points</span>
+<span class="sd">            per spatial dimension. The shape of the array is ``(n + 1, m)``</span>
+<span class="sd">            where ``n`` is the maximum degree of all one-dimensional</span>
+<span class="sd">            polynomials (i.e., the maximum exponent) and ``m`` is the spatial</span>
+<span class="sd">            dimension. This parameter is optional. If not specified,</span>
+<span class="sd">            the generating points are created from the default generating</span>
+<span class="sd">            function. If specified, then the points must be consistent</span>
+<span class="sd">            with any non-``None`` generating function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A new instance of the `Grid` class initialized with a complete</span>
+<span class="sd">            multi-index set (:math:`A_{m, n, p}`) and with the given</span>
+<span class="sd">            generating function and generating points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create a complete multi-index set</span>
+        <span class="n">mi</span> <span class="o">=</span> <span class="n">MultiIndexSet</span><span class="o">.</span><span class="n">from_degree</span><span class="p">(</span>
+            <span class="n">spatial_dimension</span><span class="p">,</span>
+            <span class="n">poly_degree</span><span class="p">,</span>
+            <span class="n">lp_degree</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create an instance of Grid</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">mi</span><span class="p">,</span> <span class="n">generating_function</span><span class="p">,</span> <span class="n">generating_points</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.from_function">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.from_function">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_function</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+        <span class="n">generating_function</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of Grid with a given generating function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        multi_index : MultiIndexSet</span>
+<span class="sd">            The multi-index set of exponents of multi-dimensional polynomials</span>
+<span class="sd">            that the Grid should support.</span>
+<span class="sd">        generating_function: Union[GEN_FUNCTION, str]</span>
+<span class="sd">            The generating function to construct an array of generating points.</span>
+<span class="sd">            The function should accept as its arguments two integers, namely,</span>
+<span class="sd">            the maximum exponent of the multi-index set of exponents and</span>
+<span class="sd">            the spatial dimension and returns an array of shape ``(n + 1, m)``</span>
+<span class="sd">            where ``n`` is the one-dimensional polynomial degree</span>
+<span class="sd">            and ``m`` is the spatial dimension.</span>
+<span class="sd">            Alternatively, a string as a key to dictionary of built-in</span>
+<span class="sd">            generating functions may be specified.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A new instance of the `Grid` class initialized with the given</span>
+<span class="sd">            generating function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">generating_function</span><span class="o">=</span><span class="n">generating_function</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.from_points">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.from_points">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_points</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+        <span class="n">generating_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of Grid from an array of generating points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        multi_index : MultiIndexSet</span>
+<span class="sd">            The multi-index set of exponents of multi-dimensional polynomials</span>
+<span class="sd">            that the Grid should support.</span>
+<span class="sd">        generating_points : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            The generating points of the interpolation grid, a two-dimensional</span>
+<span class="sd">            array of floats whose columns are the generating points</span>
+<span class="sd">            per spatial dimension. The shape of the array is ``(n + 1, m)``</span>
+<span class="sd">            where ``n`` is the maximum polynomial degree in all dimensions</span>
+<span class="sd">            (i.e., the maximum exponent) and ``m`` is the spatial dimension.</span>
+<span class="sd">            The values in each column must be unique.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A new instance of the `Grid` class initialized</span>
+<span class="sd">            with the given multi-index set and generating points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">generating_points</span><span class="o">=</span><span class="n">generating_points</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.from_value_set">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.from_value_set">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_value_set</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+        <span class="n">generating_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of Grid from an array of generating values.</span>
+
+<span class="sd">        A set of generating values is one-dimensional interpolation points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        multi_index : MultiIndexSet</span>
+<span class="sd">            The multi-index set of polynomial exponents that defines the Grid.</span>
+<span class="sd">            The set, in turn, defines the polynomials the Grid can support.</span>
+<span class="sd">        generating_values : :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            The one-dimensional generating points of the interpolation grid,</span>
+<span class="sd">            a one-dimensional array of floats of length ``(n + 1, )``</span>
+<span class="sd">            where ``n`` is the maximum exponent of the multi-index set.</span>
+<span class="sd">            The values in the array must be unique.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A new instance of the `Grid` class initialized</span>
+<span class="sd">            with the given multi-index set and generating values.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - An array of generating points are created based on tiling</span>
+<span class="sd">          the generating values to the required spatial dimension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create the generating points from the generating values</span>
+        <span class="n">spatial_dimension</span> <span class="o">=</span> <span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span>
+        <span class="k">if</span> <span class="n">generating_values</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">generating_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Only one set of generating values can be provided; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Got </span><span class="si">{</span><span class="n">generating_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> instead&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># Make sure it is one-dimensional array</span>
+        <span class="k">if</span> <span class="n">generating_values</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">generating_values</span> <span class="o">=</span> <span class="n">generating_values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">generating_points</span> <span class="o">=</span> <span class="n">gen_points_from_values</span><span class="p">(</span>
+            <span class="n">generating_values</span><span class="p">,</span>
+            <span class="n">spatial_dimension</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">generating_points</span><span class="o">=</span><span class="n">generating_points</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- Properties</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">multi_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiIndexSet</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The multi-index set of exponents associated with the Grid.</span>
+
+<span class="sd">        The multi-index set of a Grid indicates the largest interpolating</span>
+<span class="sd">        polynomial the Grid can support.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MultiIndexSet</span>
+<span class="sd">            A multi-index set of polynomial exponents associated with the Grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">generating_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The generating function of the interpolation Grid.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[GEN_FUNCTION]</span>
+<span class="sd">            The generating function of the interpolation Grid which is used</span>
+<span class="sd">            to construct the array of generating points.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - If the generating function is ``None`` then the Grid may not be</span>
+<span class="sd">          manipulated that results in a grid of a higher degree or dimension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_function</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">generating_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The generating points of the interpolation Grid.</span>
+
+<span class="sd">        The generating points of the interpolation grid are one two main</span>
+<span class="sd">        ingredients of constructing unisolvent nodes (the other being the</span>
+<span class="sd">        multi-index set of exponents).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            A two-dimensional array of floats whose columns are the</span>
+<span class="sd">            generating points per spatial dimension. The shape of the array</span>
+<span class="sd">            is ``(n + 1, m)`` where ``n`` is the maximum exponent of the</span>
+<span class="sd">            multi-index set of exponents and ``m`` is the spatial dimension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_exponent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The maximum exponent of the interpolation grid.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The maximum exponent of the interpolation grid is the maximum</span>
+<span class="sd">            degree of any one-dimensional polynomials the grid can support.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unisolvent_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The array of unisolvent nodes.</span>
+
+<span class="sd">        For a definition of unisolvent nodes, see</span>
+<span class="sd">        :doc:`/fundamentals/unisolvence`</span>
+<span class="sd">        in the docs.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            The unisolvent nodes as a two-dimensional array of floats.</span>
+<span class="sd">            The shape of the array is ``(N, m)`` where ``N`` is the number of</span>
+<span class="sd">            elements in the multi-index set and ``m`` is the spatial dimension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unisolvent_nodes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># lazy evaluation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_unisolvent_nodes</span> <span class="o">=</span> <span class="n">_gen_unisolvent_nodes</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unisolvent_nodes</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">spatial_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dimension of the domain space.</span>
+
+<span class="sd">        This attribute is propagated from ``multi_index``.</span>
+
+<span class="sd">        :return: The dimension of the domain space, where the polynomial will live on.</span>
+<span class="sd">        :rtype: int</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The used :class:`MultiIndexTree`.</span>
+
+<span class="sd">        :return: The :class:`MultiIndexTree` which is connected to this :class:`Grid` instance.</span>
+<span class="sd">        :rtype: MultiIndexTree</span>
+
+<span class="sd">        .. todo::</span>
+<span class="sd">            - is this really necessary?</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># lazy evaluation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="n">MultiIndexTree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">has_generating_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``True`` if the instance has a generating function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the instance has a generating function assigned to it,</span>
+<span class="sd">            and ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``True`` if the instance has a complete multi-index set.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the underlying multi-index set of the instance</span>
+<span class="sd">            is a complete index set and ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">is_complete</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_downward_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``True`` if the instance has a downward-closed multi-indices.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the underlying multi-index set of the instance</span>
+<span class="sd">            is a downward-closed set and ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">is_downward_closed</span>
+
+    <span class="c1"># --- Instance methods</span>
+<div class="viewcode-block" id="Grid.add_exponents">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.add_exponents">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_exponents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a set of exponents to the underlying multi-index set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exponents : `numpy:numpy.ndarray`</span>
+<span class="sd">            Array of integers to be added. A single element of multi-index set</span>
+<span class="sd">            may be specified as a one-dimensional array with the length</span>
+<span class="sd">            of the spatial dimension. Multiple elements must be specified</span>
+<span class="sd">            as a two-dimensional array with the spatial dimension as</span>
+<span class="sd">            the number of columns</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A new instance of `Grid` with the updated multi-index set.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - The set of exponents are added lexicographically.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Add the set of exponents</span>
+        <span class="n">mi_added</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">add_exponents</span><span class="p">(</span><span class="n">exponents</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_instance</span><span class="p">(</span><span class="n">mi_added</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.expand_dim">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.expand_dim">[docs]</a>
+    <span class="k">def</span> <span class="nf">expand_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dimension</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;Grid&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Expand the dimension of the Grid.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        target_dimension : Union[Grid, int]</span>
+<span class="sd">            The new spatial dimension. It must be larger than or equal</span>
+<span class="sd">            to the current dimension of the Grid. Alternatively,</span>
+<span class="sd">            another instance of Grid whose dimension is higher can also</span>
+<span class="sd">            be specified as a target dimension.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            The Grid with expanded dimension.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If an instance is expanded to a dimension that cannot be supported</span>
+<span class="sd">            either by the available generating function or generating points.</span>
+<span class="sd">            If the target dimension is a `Grid`, the exception is raised</span>
+<span class="sd">            when there are inconsistencies in either generating function</span>
+<span class="sd">            or points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Expand the dimension to the target Grid instance</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_dimension</span><span class="p">,</span> <span class="n">Grid</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_expand_dim_to_target_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dimension</span><span class="p">)</span>
+
+        <span class="c1"># Expand to the target dimension</span>
+        <span class="k">return</span> <span class="n">_expand_dim_to_target_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dimension</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.is_compatible">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.is_compatible">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_compatible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``True`` if the instance is compatible with another.</span>
+
+<span class="sd">        Two grids are compatible if they have the same generating function</span>
+<span class="sd">        (if exists) and the generating points up to a common dimension.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : Grid</span>
+<span class="sd">            The other instance to check its compatibility with the current</span>
+<span class="sd">            instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the current instance is compatible with the given</span>
+<span class="sd">            instance; ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">_have_gen_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+            <span class="c1"># Check if the Grid instances have compatible generating functions</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">_have_compatible_gen_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Check if the Grid instances have compatible generating points</span>
+        <span class="k">if</span> <span class="n">_have_compatible_gen_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Grid.make_complete">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.make_complete">[docs]</a>
+    <span class="k">def</span> <span class="nf">make_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Complete the underlying multi-index set of the `Grid` instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A new instance of `Grid` whose underlying multi-index set is</span>
+<span class="sd">            a complete set with respect to the spatial dimension, polynomial</span>
+<span class="sd">            degree, and :math:`l_p`-degree.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Calling the function always returns a new instance. If the index-set</span>
+<span class="sd">          is already complete, a deep copy of the current instance</span>
+<span class="sd">          is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span><span class="p">:</span>
+            <span class="c1"># This is a deep copy</span>
+            <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Complete the index set -&gt; New instance</span>
+        <span class="n">mi_complete</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">make_complete</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_instance</span><span class="p">(</span><span class="n">mi_complete</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.make_downward_closed">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.make_downward_closed">[docs]</a>
+    <span class="k">def</span> <span class="nf">make_downward_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make the underlying multi-index set downward-closed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A new instance of `Grid` whose underlying multi-index set is</span>
+<span class="sd">            a downward-closed set.</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Calling the function always returns a new instance. If the index-set</span>
+<span class="sd">          is already downward-closed, a deep copy of the current instance</span>
+<span class="sd">          is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_downward_closed</span><span class="p">:</span>
+            <span class="c1"># This is a deep copy</span>
+            <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Make the index set downward-closed -&gt; New instance</span>
+        <span class="n">mi_downward_closed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">make_downward_closed</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_instance</span><span class="p">(</span><span class="n">mi_downward_closed</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.merge">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.merge">[docs]</a>
+    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge two instances of Grid with a new multi-index set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : Grid</span>
+<span class="sd">            Another instance of `Grid` to merge with the current instance.</span>
+<span class="sd">        multi_index : MultiIndexSet</span>
+<span class="sd">            The multi-index set of the merged instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            The merged instance with the given multi-index set.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the generating functions of the instances are incompatible</span>
+<span class="sd">            with each other (if both are specified) or if the generating points</span>
+<span class="sd">            are incompatible with each other (if an instance is missing</span>
+<span class="sd">            a generating function).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">_have_gen_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+            <span class="c1"># Check if the Grid instances have compatible generating functions</span>
+            <span class="k">if</span> <span class="n">_have_compatible_gen_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+                <span class="c1"># The functions are compatible</span>
+                <span class="n">gen_fun</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">gen_fun</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The Grid instance has an incompatible generating function&quot;</span>
+                    <span class="s2">&quot; with the other instance&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Check if the Grid instances have compatible generating points</span>
+        <span class="k">if</span> <span class="n">_have_compatible_gen_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+            <span class="c1"># Get the largest generating points from the two</span>
+            <span class="n">gen_points</span> <span class="o">=</span> <span class="n">_get_larger_gen_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">gen_points</span><span class="p">)</span>
+
+        <span class="c1"># Points are inconsistent</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The Grid instance has incompatible generating points &quot;</span>
+            <span class="s2">&quot;with the other instance&quot;</span>
+        <span class="p">)</span></div>
+
+
+    <span class="c1"># --- Special methods: Copies</span>
+    <span class="c1"># copying</span>
+<div class="viewcode-block" id="Grid.__copy__">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__copy__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates of a shallow copy.</span>
+
+<span class="sd">        This function is called, if one uses the top-level function ``copy()`` on an instance of this class.</span>
+
+<span class="sd">        :return: The copy of the current instance.</span>
+<span class="sd">        :rtype: Grid</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        copy.copy</span>
+<span class="sd">            copy operator form the python standard library.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span><span class="p">,</span>
+            <span class="n">generating_function</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_function</span><span class="p">,</span>
+            <span class="n">generating_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.__deepcopy__">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__deepcopy__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mem</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create of a deepcopy.</span>
+
+<span class="sd">        This function is called, if one uses the top-level function</span>
+<span class="sd">        ``deepcopy()`` on an instance of this class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A deepcopy of the current instance where the underlying</span>
+<span class="sd">            multi-index set and the generating points are deepcopied.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        copy.deepcopy</span>
+<span class="sd">            copy function from the Python standard library.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create a new instance with deep-copied multi-index set</span>
+        <span class="n">multi_index</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span><span class="p">)</span>
+        <span class="n">new_self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_instance</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">new_self</span></div>
+
+
+    <span class="c1"># --- Dunder method: Callable instance</span>
+<div class="viewcode-block" id="Grid.__call__">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the given function on the unisolvent nodes of the grid.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fun : Callable</span>
+<span class="sd">            The given function to evaluate. The function must accept as its</span>
+<span class="sd">            first argument a two-dimensional array and return as its output</span>
+<span class="sd">            an array of the same length as the input array.</span>
+<span class="sd">        *args</span>
+<span class="sd">            Additional positional arguments passed to the given function.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Additional keyword arguments passed to the given function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            The values of the given function evaluated on the unisolvent nodes</span>
+<span class="sd">            (i.e., the coefficients of the polynomial in the Lagrange basis).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># No need for type checking the argument; rely on Python to raise any</span>
+        <span class="c1"># exceptions when a problematic &#39;fun&#39; is called on the nodes.</span>
+        <span class="k">return</span> <span class="n">fun</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unisolvent_nodes</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- Dunder methods: Rich comparison</span>
+<div class="viewcode-block" id="Grid.__eq__">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__eq__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare two instances of Grid for exact equality in value.</span>
+
+<span class="sd">        Two instances of :class:`Grid` class is equal in value if and only if:</span>
+
+<span class="sd">        - both the underlying multi-index sets are equal, and</span>
+<span class="sd">        - both the generating points are equal, and</span>
+<span class="sd">        - both the generating functions are equal.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : Grid</span>
+<span class="sd">            An instance of :class:`Grid` that is to be compared with</span>
+<span class="sd">            the current instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the two instances are equal in value,</span>
+<span class="sd">            ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Checks are from the cheapest to the most expensive for early exit</span>
+        <span class="c1"># (multi-index equality check is the most expensive one)</span>
+
+        <span class="c1"># Check for consistent type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Grid</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Generating function equality</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">generating_function</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Generating points equality</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">generating_points</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Multi-index set equality</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">multi_index</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+    <span class="c1"># --- Dunder methods: Arithmetics</span>
+<div class="viewcode-block" id="Grid.__mul__">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__mul__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiply two instances of `Grid` via the ``*`` operator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : `Grid`</span>
+<span class="sd">            The second operand of the grid multiplication.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `Grid`</span>
+<span class="sd">            The product of two grids; the underlying multi-index set is</span>
+<span class="sd">            the product of the multi-index sets of the operands.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Multiply the underlying multi-index sets</span>
+        <span class="n">mi_product</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">multi_index</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">mi_product</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.__or__">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__or__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Combine two instances of `Grid` via the ``|`` operator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : `Grid`</span>
+<span class="sd">            The second operand of the grid union.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `Grid`</span>
+<span class="sd">            The union of two grids; the underlying multi-index set is</span>
+<span class="sd">            the union of the multi-index sets of the operands.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Add (union) the underlying multi-index sets</span>
+        <span class="n">mi_union</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">multi_index</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">mi_union</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- Private internal methods: not to be called directly from outside</span>
+<div class="viewcode-block" id="Grid._create_generating_points">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._create_generating_points">[docs]</a>
+    <span class="k">def</span> <span class="nf">_create_generating_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct generating points from the generating function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            The generating points of the interpolation grid, a two-dimensional</span>
+<span class="sd">            array of floats whose columns are the generating points</span>
+<span class="sd">            per spatial dimension. The shape of the array is ``(n + 1, m)``</span>
+<span class="sd">            where ``n`` is the maximum exponent of the multi-index set of</span>
+<span class="sd">            exponents and ``m`` is the spatial dimension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">multi_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span>
+        <span class="n">poly_degree</span> <span class="o">=</span> <span class="n">multi_index</span><span class="o">.</span><span class="n">max_exponent</span>
+        <span class="n">spatial_dimension</span> <span class="o">=</span> <span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span>
+
+        <span class="n">generating_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_function</span>
+
+        <span class="k">return</span> <span class="n">generating_function</span><span class="p">(</span><span class="n">poly_degree</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid._verify_generating_points">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._verify_generating_points">[docs]</a>
+    <span class="k">def</span> <span class="nf">_verify_generating_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify if the generating points are valid.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the points are not of the correct dimension, contains</span>
+<span class="sd">            NaN&#39;s or inf&#39;s, do not fit the standard domain, or the values</span>
+<span class="sd">            per column are not unique.</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If the points are not given in the correct type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check array dimension</span>
+        <span class="n">check_dimensionality</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="p">,</span> <span class="n">dimensionality</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># No NaN&#39;s and inf&#39;s</span>
+        <span class="n">check_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="p">)</span>
+        <span class="c1"># Check domain fit</span>
+        <span class="n">check_domain_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="p">)</span>
+        <span class="c1"># Check dimension against spatial dimension of the set</span>
+        <span class="n">gen_points_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">gen_points_dim</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Dimension mismatch between the generating points &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">gen_points_dim</span><span class="si">}</span><span class="s2">) and the multi-index set &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># Check the uniqueness of values column-wise</span>
+        <span class="n">are_unique</span> <span class="o">=</span> <span class="nb">all</span><span class="p">([</span><span class="n">is_unique</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="o">.</span><span class="n">T</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">are_unique</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;One or more columns of the generating points are not unique&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid._verify_matching_gen_function_and_points">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._verify_matching_gen_function_and_points">[docs]</a>
+    <span class="k">def</span> <span class="nf">_verify_matching_gen_function_and_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify if the generation function and points match.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the generating function generates different points than</span>
+<span class="sd">            then ones that are provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gen_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_exponent</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">gen_points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The generating function generates points that are &quot;</span>
+                <span class="s2">&quot;inconsistent with the generating points&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid._verify_grid_max_exponent">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._verify_grid_max_exponent">[docs]</a>
+    <span class="k">def</span> <span class="nf">_verify_grid_max_exponent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify if the Grid max. exponent is consistent with the multi-index.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the maximum exponent of the Grid is smaller than the maximum</span>
+<span class="sd">            exponent of the multi-index set of polynomial exponents.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - While it perhaps makes sense to store the maximum exponent of each</span>
+<span class="sd">          dimension as the instance property instead of the maximum over all</span>
+<span class="sd">          dimensions, this has no use because the generating points have</span>
+<span class="sd">          a uniform length in every dimension. For instance, if the maximum</span>
+<span class="sd">          exponent per dimension of a two-dimensional polynomial are</span>
+<span class="sd">          ``[5, 3]``, the stored generating points remain ``(5, 2)`` instead of</span>
+<span class="sd">          two arrays having lengths of ``5`` and ``3``, respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># The maximum exponent in any dimension of the multi-index set</span>
+        <span class="c1"># indicates the largest degree of one-dimensional polynomial</span>
+        <span class="c1"># the grid needs to support.</span>
+        <span class="n">max_exponent_multi_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">max_exponent</span>
+
+        <span class="c1"># Both must be consistent; &quot;smaller&quot; multi-index may be contained</span>
+        <span class="c1"># in a larger grid, but not the other way around.</span>
+        <span class="k">if</span> <span class="n">max_exponent_multi_index</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_exponent</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;A grid of a maximum exponent </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_exponent</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;cannot consist of multi-indices with a maximum exponent &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;of </span><span class="si">{</span><span class="n">max_exponent_multi_index</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid._new_instance">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._new_instance">[docs]</a>
+    <span class="k">def</span> <span class="nf">_new_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct new grid instance with a new multi-index set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        multi_index : MultiIndexSet</span>
+<span class="sd">            The multi-index set of the new instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            The new instance of `Grid` with the given multi-index set.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - The new instance will have the same underlying generating function</span>
+<span class="sd">          and generating points.</span>
+<span class="sd">        - If the new multi-index set cannot be accommodated either by</span>
+<span class="sd">          the generating function or the generating points, an exception</span>
+<span class="sd">          will be raised.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_generating_function</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span>
+                <span class="n">multi_index</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span>
+            <span class="n">multi_index</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># --- Internal helper functions</span>
+<span class="k">def</span> <span class="nf">_process_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiIndexSet</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process the MultiIndexSet given as an argument to Grid constructor.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    multi_index : MultiIndexSet</span>
+<span class="sd">        The multi-index set as input argument to the Grid constructor to be</span>
+<span class="sd">        processed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    MultiIndexSet</span>
+<span class="sd">        The same instance of :class:`MultiIndexSet` if processing does not</span>
+<span class="sd">        raise any exceptions.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If the argument is not an instance of :class:`MultiIndexSet`.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the argument is an empty instance of :class:`MultiIndexSet`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">check_type</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">MultiIndexSet</span><span class="p">)</span>
+
+    <span class="c1"># MultiIndexSet for a Grid cannot be an empty set</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;MultiIndexSet must not be empty!&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">multi_index</span>
+
+
+<span class="k">def</span> <span class="nf">_process_generating_function</span><span class="p">(</span>
+    <span class="n">generating_function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process the generating function given as argument to Grid constructor.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    generating_function : Union[GEN_FUNCTION, str], optional</span>
+<span class="sd">        The generating function to be processed, either ``None``,</span>
+<span class="sd">        a dictionary key as string for selecting from the built-in functions,</span>
+<span class="sd">        or a callable.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    GEN_FUNCTION, optional</span>
+<span class="sd">        The generating function as a callable or ``None`` if not specified.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># None is specified</span>
+    <span class="k">if</span> <span class="n">generating_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">generating_function</span>
+
+    <span class="c1"># Get the built-in generating function</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">generating_function</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">GENERATING_FUNCTIONS</span><span class="p">[</span><span class="n">generating_function</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">generating_function</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">generating_function</span>
+
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;The generating function </span><span class="si">{</span><span class="n">generating_function</span><span class="si">}</span><span class="s2"> is not callable&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_expand_dim_to_target_dim</span><span class="p">(</span>
+    <span class="n">origin_grid</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span>
+    <span class="n">target_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand the dimension of a given Grid to a target dimension.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    origin_grid : Grid</span>
+<span class="sd">        The `Grid` instance whose dimension is to be expanded.</span>
+<span class="sd">    target_dimension : Grid</span>
+<span class="sd">        The target dimension; must be equal to or larger than the current</span>
+<span class="sd">        dimension of the `Grid` instance.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Grid</span>
+<span class="sd">        The grid with an expanded dimension.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the target dimension cannot be accommodated by the available</span>
+<span class="sd">        generating points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Expand the dimension of the multi-index set</span>
+    <span class="n">mi_expanded</span> <span class="o">=</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">expand_dim</span><span class="p">(</span><span class="n">target_dimension</span><span class="p">)</span>
+
+    <span class="c1"># Check if a generating function is available</span>
+    <span class="k">if</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">has_generating_function</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">origin_grid</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span>
+            <span class="n">mi_expanded</span><span class="p">,</span>
+            <span class="n">origin_grid</span><span class="o">.</span><span class="n">generating_function</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Check if the available generating points can accommodate higher dimension</span>
+    <span class="n">gen_points_dim</span> <span class="o">=</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">gen_points_dim</span> <span class="o">&gt;=</span> <span class="n">target_dimension</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">origin_grid</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span>
+            <span class="n">mi_expanded</span><span class="p">,</span>
+            <span class="n">origin_grid</span><span class="o">.</span><span class="n">generating_points</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;The available dimension of the generating points (</span><span class="si">{</span><span class="n">gen_points_dim</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;can&#39;t accommodate target dimension (</span><span class="si">{</span><span class="n">target_dimension</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_expand_dim_to_target_grid</span><span class="p">(</span>
+    <span class="n">origin_grid</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span>
+    <span class="n">target_grid</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand the dimension of a given Grid to the dimension of another.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    origin_grid : Grid</span>
+<span class="sd">        The grid whose dimension is to be expanded.</span>
+<span class="sd">    target_grid : Grid</span>
+<span class="sd">        The grid whose dimension is the base for expansion.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Grid</span>
+<span class="sd">        The grid with an expanded dimension.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the generating functions are not compatible (when available) or</span>
+<span class="sd">        if the generating points are not compatible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create expanded multi-index set</span>
+    <span class="n">target_dim</span> <span class="o">=</span> <span class="n">target_grid</span><span class="o">.</span><span class="n">spatial_dimension</span>
+    <span class="n">mi_expanded</span> <span class="o">=</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">expand_dim</span><span class="p">(</span><span class="n">target_dim</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">target_grid</span><span class="p">,</span> <span class="n">mi_expanded</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_have_gen_functions</span><span class="p">(</span><span class="o">*</span><span class="n">grids</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a sequence of Grid instances all have generating function.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">grd</span><span class="o">.</span><span class="n">has_generating_function</span> <span class="k">for</span> <span class="n">grd</span> <span class="ow">in</span> <span class="n">grids</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_have_compatible_gen_functions</span><span class="p">(</span><span class="n">grid_1</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span> <span class="n">grid_2</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two grids have compatible generating functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    grid_1 : Grid</span>
+<span class="sd">        First instance of `Grid` to compare.</span>
+<span class="sd">    grid_2 : Grid</span>
+<span class="sd">        Second instance of `Grid` to compare.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># There is no way in Python to check for equality to what functions do</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">grid_1</span><span class="o">.</span><span class="n">has_generating_function</span>
+        <span class="ow">and</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">has_generating_function</span>
+        <span class="ow">and</span> <span class="n">grid_1</span><span class="o">.</span><span class="n">generating_function</span> <span class="o">==</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">generating_function</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_have_compatible_gen_points</span><span class="p">(</span><span class="n">grid_1</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span> <span class="n">grid_2</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two grids have compatible generating points.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    grid_1 : Grid</span>
+<span class="sd">        First `Grid` instance to compare.</span>
+<span class="sd">    grid_2 : Grid</span>
+<span class="sd">        Second `Grid` instance to compare.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        ``True`` if all generating points in the common spatial dimension</span>
+<span class="sd">        of the two `Grid` instances are equal; ``False`` otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dim_1</span> <span class="o">=</span> <span class="n">grid_1</span><span class="o">.</span><span class="n">spatial_dimension</span>
+    <span class="n">dim_2</span> <span class="o">=</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">spatial_dimension</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">dim_1</span><span class="p">,</span> <span class="n">dim_2</span><span class="p">])</span>
+
+    <span class="n">row_1</span> <span class="o">=</span> <span class="n">grid_1</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">row_2</span> <span class="o">=</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">row_1</span><span class="p">,</span> <span class="n">row_2</span><span class="p">])</span>
+
+    <span class="n">gen_points_1</span> <span class="o">=</span> <span class="n">grid_1</span><span class="o">.</span><span class="n">generating_points</span><span class="p">[:</span><span class="n">row</span><span class="p">,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span>
+    <span class="n">gen_points_2</span> <span class="o">=</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">generating_points</span><span class="p">[:</span><span class="n">row</span><span class="p">,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">gen_points_1</span><span class="p">,</span> <span class="n">gen_points_2</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_larger_gen_points</span><span class="p">(</span><span class="n">grid_1</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span> <span class="n">grid_2</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the larger array of generating points from two Grid instances.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    grid_1 : Grid</span>
+<span class="sd">        First `Grid` instance to check.</span>
+<span class="sd">    grid_2 : Grid</span>
+<span class="sd">        Second `Grid` instance to check.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        The generating points with the larger number of columns.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - It is assumed that the generating points are consistent (i.e.,</span>
+<span class="sd">      equal up to the common dimension/columns).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dim_1</span> <span class="o">=</span> <span class="n">grid_1</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">dim_2</span> <span class="o">=</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">grids</span> <span class="o">=</span> <span class="p">[</span><span class="n">grid_1</span><span class="p">,</span> <span class="n">grid_2</span><span class="p">]</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">([</span><span class="n">dim_1</span><span class="p">,</span> <span class="n">dim_2</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">grids</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">generating_points</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Minterpy Development Team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

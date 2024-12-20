@@ -32,6 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,17 +47,16 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'contributors/about-us';</script>
     <link rel="canonical" href="https://minterpy.readthedocs.io/en/latest/contributors/about-us.html" />
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Glossary" href="../glossary.html" />
-    <link rel="prev" title="Writing Jupyter Notebooks" href="contrib-docs/guidelines/ipynb-based-docs.html" />
+    <link rel="prev" title="Creating a Merge (Pull) Request" href="merge-request.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g7205332" />
+  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
   </head>
   
   
@@ -120,8 +122,8 @@
       
     
     
-    <img src="../_static/minterpy-logo.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../_static/minterpy-logo.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
   
   
 </a></div>
@@ -170,30 +172,6 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../TODO.html">
-    Todo list
-  </a>
-</li>
-
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -220,6 +198,46 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
       
     </div>
     
@@ -301,20 +319,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../glossary.html">
-    Glossary
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../TODO.html">
-    Todo list
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -333,6 +337,46 @@
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/minterpy-project/minterpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/latest/" title="Latest Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-dev fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Latest Docs</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://minterpy-project.github.io/minterpy/stable/" title="Stable Docs" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box-open fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Stable Docs</span></a>
+        </li>
+</ul></div>
+        
       </div>
     
   </div>
@@ -343,18 +387,25 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="code-of-conduct.html">Code of conduct</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contrib-dev/index.html">Development contribution</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="contrib-docs/index.html">Documentation contribution</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="contrib-docs/about-the-docs.html">About the Docs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contrib-docs/how-to-contrib.html">How to Contribute to the Docs</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="contrib-docs/guidelines/index.html">Documentation contribution guidelines</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="contrib-docs/guidelines/rest-based-docs.html">reST-based docs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="contrib-docs/guidelines/ipynb-based-docs.html">Jupyter-notebook-based docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code-of-conduct.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development-environment.html">Setting Up a Development Environment</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="contrib-codebase/index.html">Contributing to the Codebase</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="contrib-codebase/code-style.html">Code Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib-codebase/pre-commits.html">Pre-Commits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib-codebase/running-writing-tests.html">Running and Writing Tests</a></li>
 </ul>
 </details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="contrib-docs/index.html">Contributing to the Documentation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="contrib-docs/docs-design.html">Documentation: Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib-docs/docs-tools.html">Documentation: Framework and Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib-docs/docs-source-structure.html">Documentation Source Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib-docs/docs-build.html">Building the Documentation Locally</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib-docs/docs-rest.html">Writing reStructuredText Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib-docs/docs-ipynb.html">Writing Jupyter Notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib-docs/docs-docstrings.html">Writing Docstrings for API Documentation</a></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="merge-request.html">Creating a Merge (Pull) Request</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">About Us</a></li>
 </ul>
 </div>
@@ -418,9 +469,22 @@
                   
   <section id="about-us">
 <h1>About Us<a class="headerlink" href="#about-us" title="Link to this heading">#</a></h1>
-<section id="project-maintainers">
-<h2>Project maintainers<a class="headerlink" href="#project-maintainers" title="Link to this heading">#</a></h2>
-<p>Project maintainers are the current main developers responsible for <code class="docutils literal notranslate"><span class="pre">minterpy</span></code>
+<p>Minterpy is an optimized Python implementation of
+the multidimensional polynomial interpolation prototype algorithm called MIP,
+which was originally developed in MATLAB
+by Hecht et al.<a class="footnote-reference brackets" href="#footcite-hecht2020" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>It is developed and maintained by a small team at the Center
+for Advanced Systems Understanding (<a class="reference external" href="https://www.casus.science">CASUS</a>), an institute of the
+Helmholtz-Zentrum Dresden-Rossendorf (<a class="reference external" href="https://www.hzdr.de/">HZDR</a>).</p>
+<table>
+   <tr>
+      <td align="center"><a href="https://www.casus.science/"><img src="../_static/CASUS.png" width="250px;" alt="CASUS"/></td>
+      <td align="center"><a href="https://www.hzdr.de/"><img src="../_static/HZDR.png" width="250px;" alt="HZDR"/></td>
+   </tr>
+</table><section id="maintainers-and-contributors">
+<h2>Maintainers and contributors<a class="headerlink" href="#maintainers-and-contributors" title="Link to this heading">#</a></h2>
+<p class="rubric">Project maintainers</p>
+<p>Project maintainers are the current main developers responsible for Minterpy
 and managing its development process.</p>
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove this section -->
 <table>
@@ -430,55 +494,98 @@ and managing its development process.</p>
          <a href="https://gitlab.hzdr.de/interpol/minterpy/-/merge_requests?scope=all&state=all&author_username=hernan68" title="Code">💻</a>
          <a href="https://gitlab.hzdr.de/interpol/minterpy/-/issues?scope=all&state=all&author_username=hernan68" title="Bug reports">🐛</a>
          <a href="https://gitlab.hzdr.de/interpol/minterpy/-/merge_requests?scope=all&state=all&reviewer_username=hernan68" title="Reviewed Merge Requests">👀</a><br />
-         <a href="#ideas-hernan68" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center"><a href="https://www.casus.science/team-members/michael-hecht/"><img src="https://gitlab.hzdr.de/uploads/-/system/user/avatar/454/avatar.png?width=90" width="100px;" alt=""/><br /><sub><b>Michael Hecht</b></sub></a><br />
+         <a href="#ideas-hernan68" title="Ideas, Planning, & Feedback">🤔</a>
+      </td>
+      <td align="center"><a href="https://www.casus.science/team-members/dr-damar-wicaksono/"><img src="https://de.gravatar.com/userimage/108859669/c1851123ff56c230cf2a67834ee1337b.jpeg" width="100px;" alt=""/><br /><sub><b>Damar Wicaksono</b></sub></a><br />
+         <a href="https://gitlab.hzdr.de/interpol/minterpy/-/merge_requests?scope=all&state=all&assignee_username=wicaks72" title="Maintenance">🚧</a>
+         <a href="https://gitlab.hzdr.de/interpol/minterpy/-/merge_requests?scope=all&state=all&author_username=wicaks72" title="Code">💻</a>
+         <a href="https://gitlab.hzdr.de/interpol/minterpy/-/issues?scope=all&state=all&author_username=wicaks72" title="Bug reports">🐛</a><br />
+         <a href="https://gitlab.hzdr.de/dashboard/merge_requests?scope=all&state=all&reviewer_username=wicaks72" title="Reviewed Merge Requests">👀</a>
+         <a href="https://codebase.helmholtz.cloud/interpol/minterpy/-/issues/?sort=updated_desc&state=opened&label_name%5B%5D=documentation&assignee_username%5B%5D=wicaks72" title="Documentation">📖</a>
+         <a href="#ideas-wicaks72" title="Ideas, Planning, & Feedback">🤔</a>
+      </td>
+   </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END --><p class="rubric">Scientific direction and funding</p>
+<p>These individuals provide input on the scientific direction of the project
+or help attract and secure funding for the research underlying Minterpy.</p>
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove this section -->
+<table>
+   <tr>
+      <td align="center"><a href="https://sites.google.com/view/prof-dr-michael-hecht/home"><img src="https://gitlab.hzdr.de/uploads/-/system/user/avatar/454/avatar.png?width=90" width="100px;" alt=""/><br /><sub><b>Michael Hecht</b></sub></a><br />
          <a href="#ideas-MikeyPice" title="Ideas, Planning, & Feedback">🤔</a>
          <a href="#business-MikeyPice" title="Business">💼</a>
          <a href="#talk-MikeyPice" title="Talks">📢</a>
+         <a href="#project-management-MikeyPice" title="Project Management">📆</a>
          <a href="#documentation-MikeyPice" title="Documentation">📖</a><br />
-         <a href="#project-management-MikeyPice" title="Project Management">📆</a></td>
+      </td>
+   </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END --><p class="rubric">Contributors</p>
+<p>Contributors are developers and technical writers who have made contributions
+to the Minterpy project through development, documentation, infrastructure,
+and code reviews.</p>
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove this section -->
+<table>
+   <tr>
+     <td align="center"><a href="https://www.casus.science/team-members/janina-schreiber/"><img src="https://gitlab.hzdr.de/assets/no_avatar-849f9c04a3a0d0cea2424ae97b27447dc64a7dbfae83c036c45b403392f0e8ba.png" width="100px;" alt=""/><br /><sub><b>Janina Schreiber</b></sub></a><br />
+        <a href="https://gitlab.hzdr.de/dashboard/merge_requests?scope=all&state=all&reviewer_username=schrei06" title="Reviewed Merge Requests">👀</a>
+     </td>
+     <td align="center"><a href="https://www.casus.science/team-members/daniel-kotik/"><img src="https://gitlab.hzdr.de/uploads/-/system/user/avatar/577/avatar.png" width="100px;" alt=""/><br /><sub><b>Daniel Kotik</b></sub></a><br />
+         <a href="#infra-kotik79" title="Infrastructure">🚇</a>
+     </td>
+     <td align="center"><a href="https://www.casus.science/de-de/team-members/1119-2/"><img src="https://www.casus.science/backend/wp-content/uploads/2020/10/Michal_Bajda_.jpg" width="68px;" alt=""/><br /><sub><b>Michał Bajda</b></sub></a><br />
+         <a href="#logo-michal" title="Logo design">🎨</a>
+     </td>
+   </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END --><p class="rubric">Former maintainers and contributors</p>
+<p>These are former maintainers and contributors to the Minterpy project
+who have left their mark on the project for its betterment.</p>
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove this section -->
+<table>
+   <tr>
       <td align="center"><a href="https://www.casus.science/team-members/sachin-krishnan-thekke-veettil/"><img src="https://gitlab.hzdr.de/uploads/-/system/user/avatar/939/avatar.png" width="100px;" alt=""/><br /><sub><b>Sachin Thekke Veettil</b></sub></a><br />
          <a href="https://gitlab.hzdr.de/interpol/minterpy/-/merge_requests?scope=all&state=all&author_username=thekke48" title="Code">💻</a>
          <a href="https://gitlab.hzdr.de/interpol/minterpy/-/merge_requests?scope=all&state=all&assignee_username=thekke48" title="Maintenance">🚧</a>
          <a href="https://gitlab.hzdr.de/interpol/minterpy/-/issues?scope=all&state=all&author_username=thekke48" title="Bug reports">🐛</a>
          <a href="https://gitlab.hzdr.de/dashboard/merge_requests?scope=all&state=all&reviewer_username=thekke48" title="Reviewed Merge Requests">👀</a><br />
-         <a href="#tutorial-thekke48" title="Tutorials">✅</a></td>
-     <td align="center"><a href="https://www.casus.science/team-members/dr-damar-wicaksono/"><img src="https://de.gravatar.com/userimage/108859669/c1851123ff56c230cf2a67834ee1337b.jpeg" width="100px;" alt=""/><br /><sub><b>Damar Wicaksono</b></sub></a><br />
-         <a href="#documentation-wicaks72" title="Documentation">📖</a>
-         <a href="#tutorial-wicaks72" title="Tutorials">✅</a>
-         <a href="https://gitlab.hzdr.de/interpol/minterpy/-/merge_requests?scope=all&state=all&author_username=wicaks72" title="Code">💻</a>
-         <a href="https://gitlab.hzdr.de/interpol/minterpy/-/issues?scope=all&state=all&author_username=wicaks72" title="Bug reports">🐛</a><br />
-         <a href="https://gitlab.hzdr.de/dashboard/merge_requests?scope=all&state=all&reviewer_username=wicaks72" title="Reviewed Merge Requests">👀</a></td>
-   </tr>
-</table>
-
-<!-- ALL-CONTRIBUTORS-LIST:END --></section>
-<section id="contributors">
-<h2>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
-<p>Contributors are developers and technical writers who made additions to <code class="docutils literal notranslate"><span class="pre">minterpy</span></code>’s codebase,
-docs, or infrastructure.</p>
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove this section -->
-<table>
-   <tr>
-     <td align="center"><a href="https://www.casus.science/team-members/daniel-kotik/"><img src="https://gitlab.hzdr.de/uploads/-/system/user/avatar/577/avatar.png" width="100px;" alt=""/><br /><sub><b>Daniel Kotik</b></sub></a><br />
-         <a href="#infra-kotik79" title="Infrastructure">🚇</a></td>
-   </tr>
-</table>
-
-<!-- ALL-CONTRIBUTORS-LIST:END --></section>
-<section id="former-contributors">
-<h2>Former contributors<a class="headerlink" href="#former-contributors" title="Link to this heading">#</a></h2>
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove this section -->
-<table>
-   <tr>
-     <td align="center"><a href="https://gitlab.hzdr.de/MrMinimal64"><img src="https://gitlab.hzdr.de/assets/no_avatar-849f9c04a3a0d0cea2424ae97b27447dc64a7dbfae83c036c45b403392f0e8ba.png" width="100px;" alt=""/><br /><sub><b>Jannik Michelfeit</b></sub></a><br />
-         <a href="https://gitlab.hzdr.de/interpol/minterpy/-/commits/dev?author=Jannik%20Michelfeit" title="Code">💻</a></td>
+     </td>
+     <td align="center"><a href="https://github.com/jannikmi"><img src="https://avatars.githubusercontent.com/u/15111305?v=4" width="100px;" alt=""/><br /><sub><b>Jannik Michelfeit</b></sub></a><br />
+         <a href="https://gitlab.hzdr.de/interpol/minterpy/-/commits/dev?author=Jannik%20Michelfeit" title="Code">💻</a>
+     </td>
    </tr>
 </table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END --></section>
 <section id="sponsors">
 <h2>Sponsors<a class="headerlink" href="#sponsors" title="Link to this heading">#</a></h2>
+<p>The Minterpy project is partly funded by the Center for Advanced Systems Understanding
+(<a class="reference external" href="https://www.casus.science">CASUS</a>) which is financed by Germany’s Federal Ministry of Education and Research
+(<a class="reference external" href="https://www.bmbf.de/bmbf/en/home/home_node.html">BMBF</a>) and by the Saxony Ministry for Science, Culture and Tourism (<a class="reference external" href="https://www.smwk.sachsen.de">SMWK</a>).
+Funding is provided through tax funds based on the budget approved
+by the Saxony State Parliament.</p>
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove this section -->
+<table>
+   <tr>
+      <td align="center"><a href="https://www.bmbf.de/bmbf/en/home/home_node.html"><img src="../_static/BMBF.png" width="250px;" alt="BMBF"/></td>
+      <td align="center"><a href="https://www.smwk.sachsen.de"><img src="../_static/SWKT.png" width="250px;" alt="SMWK"/></td>
+     </td>
+   </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END --><p class="rubric">Reference</p>
+<div class="docutils container" id="id2">
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footcite-hecht2020" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Michael Hecht, Krzysztof Gonciarz, Jannik Michelfeit, Vladimir Sivkin, and Ivo F Sbalzarini. Multivariate interpolation on unisolvent nodes–lifting the curse of dimensionality. <em>arXiv preprint arXiv:2010.10824</em>, 2020.</p>
+</aside>
+</aside>
+</div>
 </section>
 </section>
 
@@ -493,22 +600,13 @@ docs, or infrastructure.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="contrib-docs/guidelines/ipynb-based-docs.html"
+       href="merge-request.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Writing Jupyter Notebooks</p>
+        <p class="prev-next-title">Creating a Merge (Pull) Request</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="../glossary.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Glossary</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -529,21 +627,10 @@ docs, or infrastructure.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-maintainers">Project maintainers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">Contributors</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#former-contributors">Former contributors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maintainers-and-contributors">Maintainers and contributors</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sponsors">Sponsors</a></li>
 </ul>
   </nav></div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/contributors/about-us.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               
@@ -570,7 +657,7 @@ docs, or infrastructure.</p>
 
   <p class="copyright">
     
-      © Copyright 2022, Minterpy development team.
+      © Copyright 2022, Minterpy Development Team.
       <br/>
     
   </p>

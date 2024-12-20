@@ -1,59 +1,131 @@
-############################
-Fundamentals of ``minterpy``
-############################
+========================
+Fundamentals of Minterpy
+========================
 
-..
-    .. todo::
+This section provides a detailed explanation of the mathematical foundation
+behind Minterpy.
 
-       The Fundamentals is a Guide about the underlying theory behind ``minterpy``
-       and establishing the mathematical notions, notations, and conventions used
-       in ``minterpy``.
-       Interpolation problems are quite common (and simple in its premise) across
-       scientific and engineering disciplines and ``minterpy`` users most probably
-       do not come from mathematics or disciplines that have particularly strong
-       background in mathematics.
-       However, it is also important for users
-       to understand the underlying theory behind ``minterpy`` if they were
-       to progress to, say, *power users* (or from users to *contributors*).
+.. grid:: auto
+   :margin: 0
+   :padding: 0
+   :gutter: 3
 
-       Some general notes on how the Fundamentals should be written:
+   .. grid-item-card:: Multidimensional Polynomial Interpolation
+      :link: interpolation-problem
+      :link-type: doc
+      :columns: 12 8 8 6
+      :class-card: sd-border-0, sd-card-hover-1
 
-       - *Focus on introducing the mathematical notions or concepts required to understand*
-         *``minterpy``*: minimize reference to ``minterpy`` usage and specific code
-         implementation.
-       - *Be consistent with mathematical notations*: define the terms and symbols
-         and use the same terms and symbols again later on when required.
-         Using mathematics is unavoidable in the Fundamental guide.
-         Be mindful, however, of the target audience and keep the bar of the pre-requisites low
-         (say university-level mathematics of applied science and engineering curricula,
-         **not** of a pure mathematics curriculum).
-       - *Be as verbose with as much details as necessary, when necessary*:
-         This is not an article, there´s no real page limits. Besides, users are
-         coming here intentionally to look for an explanation and understanding
-         so they are ready to invest some time.
-       - *Clearly distinguish between mathematical concepts*,
-         *algorithmic considerations*, *usage*, and *code implementation*:
-         It is easy to confuse users when these different aspects of ``minterpy``
-         are all mixed up in the same part of the documentation.
-         If this is not always possible, make a clear transition
-         or use an :ref:`contributors/contrib-docs/guidelines/rest-based-docs:Admonitions`.
-       - *Accept (some) repetitions in the documentation* (ARID): documentation is
-         not code, so it's okay to repeat something to make a page more self-contained.
-         Otherwise, be sure to *cross-reference other parts of the documentation*
-         but with clear context.
-       - Be aware that external cross-referencing (say, to Wikipedia) might be useful
-         so as not to repeat oneself.
-         But do this only if readers won't be confused
-         with any changes of conventions and notations.
+      *The problem*
+      ^^^
+      The polynomial interpolation problem is central to Minterpy.
 
+      Revisit the polynomial interpolation problem and
+      its connection to approximation on this page.
+
+   .. grid-item-card:: Polynomial Bases
+      :link: polynomial-bases
+      :link-type: doc
+      :columns: 12 8 8 6
+      :class-card: sd-border-0, sd-card-hover-1
+
+      *Representing polynomials*
+      ^^^
+      Polynomials can be expressed as a linear combination of a set of
+      polynomials called the basis polynomials.
+
+      Review the polynomial bases supported by Minterpy on this page.
+
+   .. grid-item-card:: Interpolation at Unisolvent Nodes
+      :link: interpolation-at-unisolvent-nodes
+      :link-type: doc
+      :columns: 12 8 8 6
+      :class-card: sd-border-0, sd-card-hover-1
+
+      *Getting interpolating polynomials*
+      ^^^
+      With a careful consideration, a polynomial that interpolate
+      a given function can be constructed.
+
+      Review the essential components required to build
+      an interpolating polynomial on this page.
+
+   .. grid-item-card:: Evaluation of Polynomials
+      :link: polynomial-evaluation
+      :link-type: doc
+      :columns: 12 8 8 6
+      :class-card: sd-border-0, sd-card-hover-1
+
+      *Evaluating polynomials*
+      ^^^
+      Once a polynomial is obtained, how can it be evaluated at an arbitrary
+      query point?
+
+      The answer depends on the basis in which the polynomial is represented.
+
+   .. grid-item-card:: Transformation between Bases
+      :link: transformation
+      :link-type: doc
+      :columns: 12 8 8 6
+      :class-card: sd-border-0, sd-card-hover-1
+
+      *Changing polynomial basis*
+      ^^^
+      A polynomial expressed in one basis may be expressed in another.
+      Depending on the purpose, some representations may be better
+      than the others.
+
+      On this page, the theorems behind such a transformation are presented.
+
+   .. grid-item-card:: Polynomial Regression
+      :link: polynomial-regression
+      :link-type: doc
+      :columns: 12 8 8 6
+      :class-card: sd-border-0, sd-card-hover-1
+
+      *Polynomial based on scattered data*
+      ^^^
+      Stable polynomial interpolation requires a careful selection of
+      interpolation points; but what if scattered data is provided instead?
+
+      Using the least squares method, you can still construct a polynomial
+      from the data.
+
+.. rubric:: Advanced topics
+
+.. grid:: auto
+   :margin: 0
+   :padding: 0
+   :gutter: 2
+
+   .. grid-item-card:: Divided Difference Scheme (DDS)
+      :link: dds
+      :link-type: doc
+      :columns: 12 6 6 4
+      :class-card: sd-border-0, sd-card-hover-1
+
+   .. grid-item-card:: Barycentric Transformation
+      :link: barycentric-transformation
+      :link-type: doc
+      :columns: 12 6 6 4
+      :class-card: sd-border-0, sd-card-hover-1
+
+   .. grid-item-card:: The Notion of Unisolvence
+      :link: unisolvence
+      :link-type: doc
+      :columns: 12 6 6 4
+      :class-card: sd-border-0, sd-card-hover-1
 
 .. toctree::
    :maxdepth: 3
+   :hidden:
 
-   introduction
-   polynomial-bases
-   interpolation-in-unisolvent-nodes
-   interpolation-evaluation
-   multivariate-dds
+   mD Polynomial Interpolation <interpolation-problem>
+   mD Polynomial Bases <polynomial-bases>
+   interpolation-at-unisolvent-nodes
+   Evaluation of mD Polynomials <polynomial-evaluation>
    transformation
+   polynomial-regression
+   mD Divided Difference Scheme <dds>
    barycentric-transformation
+   unisolvence
