@@ -327,7 +327,8 @@ Fundamentals (explanations of the mathematical theory that underlies Minterpy),
 and API reference (detailed descriptions of the functions and classes in the API).
 A dedicated section on contributing to the Minterpy project is also available.
 
-The package documentation can be found on the Minterpy [readthedocs]()
+The package documentation is automatically built and deployed
+on the Minterpy [GitHub pages](https://minterpy-project.github.io/minterpy/).
 
 ## Applications
 
@@ -359,8 +360,11 @@ to the CRediT (Contributor Roles Taxonomy).
 
 ## Acknowledgments
 
-The authors sincerely thank Janina Schreiber for
-the thorough and insightful code review during the development process.
+The authors express their gratitude to
+Michael Bussmann for his support, invaluable discussions, and suggestions;
+Michał Bajda for designing the Minterpy logo;
+Janina Schreiber for the thorough and insightful code review
+during the development process.
 
 The work is partly funded by the Center for Advanced Systems Understanding ([CASUS](https://www.casus.science))
 which is financed by Germany's Federal Ministry of Education and Research (BMBF)
