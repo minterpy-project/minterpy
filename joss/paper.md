@@ -377,7 +377,7 @@ Funding is provided through taxfunds based on the budget approved the Saxony Sta
 include ApproxFun [@Olver2023] in Julia,
 and ChebPy [@Richardson2024] and pychebfun [@Swierczewski2024] in Python.
 [^rational-function]: Minterpy currently does not support polynomial-polynomial division.
-[^machine]: The experiment was conducted on a machine equipped with a 32-core AMD EPYC processor, 256 GB of RAM, and running Debian 12 Linux.
+[^machine]: The numerical experiment was conducted on a machine equipped with a 32-core AMD EPYC processor, 256 GB of RAM, and running Debian 12 Linux and Python v3.9.19.
 [^sparse]: Both Chaospy and equadratures support sparse polynomial construction,
 which may alleviate the issue of large number of coefficients.
 Comparing these approaches, however, is beyond the scope of this work.
