@@ -248,7 +248,7 @@ a frequently cited pitfall when employing high-degree global polynomial interpol
 with equispaced points.
 
 \autoref{fig:convergence} shows the accuracy of Minterpy interpolating polynomials
-for three different $l_p$-degrees in dimension $m = 3, 4$.
+for three different $l_p$-degrees in dimension $m = 3, 4$[^machine].
 As the increase of polynomial degree is directly related to the growing number of coefficients
 (and equivalently, function evaluations),
 the number of coefficients or data points is shown in the horizontal axis to facilitate
@@ -377,6 +377,7 @@ Funding is provided through taxfunds based on the budget approved the Saxony Sta
 include ApproxFun [@Olver2023] in Julia,
 and ChebPy [@Richardson2024] and pychebfun [@Swierczewski2024] in Python.
 [^rational-function]: Minterpy currently does not support polynomial-polynomial division.
+[^machine]: The experiment was conducted on a machine equipped with a 32-core AMD EPYC processor, 256 GB of RAM, and running Debian 12 Linux.
 [^sparse]: Both Chaospy and equadratures support sparse polynomial construction,
 which may alleviate the issue of large number of coefficients.
 Comparing these approaches, however, is beyond the scope of this work.
