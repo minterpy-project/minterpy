@@ -159,7 +159,7 @@ $$
 Typical choices for $p$ are $1.0$, $2.0$, and $\infty$, representing the total, Euclidian, and tensor-product degree, respectively.
 The Euclidean degree, in particular, demonstrates a greater resistance to the curse of dimensionality [@Trefethen2017a;@Hecht2020].
 
-Deriving multidimensional Lagrange basis expressions is challenging.
+Deriving multidimensional Lagrange basis expressions for general non-tensorial grids is challenging.
 For operations like evaluation and differentiation, Minterpy converts polynomials into the Newton basis
 $$
 Q (\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A} c_{\boldsymbol{\alpha}} \, N_{\boldsymbol{\alpha}} (\boldsymbol{x}),\;\; N_{\boldsymbol{\alpha}} (\boldsymbol{x}) = \prod_{i = 1}^m \prod_{j = 0}^{\alpha_i - 1} (x_i - q_j),\;\; q_j \in P_i,
