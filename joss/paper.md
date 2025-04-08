@@ -67,41 +67,38 @@ commonly associated with interpolation tasks.
 
 As a means of approximating functions, global polynomials---where a single
 polynomial is defined over the entire domain---offer several advantages.
-For sufficiently smooth functions, global polynomials can achieve high accuracy
-with a smaller number of data points (sampled over the entire domain) compared
+For sufficiently smooth functions, global polynomials can achieve
+high accuracy with a smaller number of data points (sampled over the entire domain) compared
 to local piecewise polynomials.
-Additionally, their relatively simple structure facilitates
-many common numerical operations.
+Additionally, their relatively simple structure facilitates many common numerical operations.
 These operations include differentiation, integration, addition, subtraction,
 and multiplication [@Trefethen2019].
 
 The Stone-Weierstrass theorem establishes that any continuous function
 on a bounded domain in multiple dimensions can be approximated uniformly
 to arbitrary precision by multivariate global polynomials [@Branges1959].
-However, the theorem does not specify a concrete method
-for constructing such approximating polynomials.
+However, the theorem does not specify a concrete method for constructing
+such approximating polynomials.
 Various techniques can be employed to build approximating polynomials,
 including Taylor expansions and least square approximations.
-Minterpy focuses on constructing approximating global polynomials
-using one of the earliest and most established methods:
-interpolation [@Goldstine1977].
+Minterpy focuses on constructing approximating global polynomials using
+one of the earliest and most established methods: interpolation [@Goldstine1977].
 
 Polynomial interpolation is based on the principle that, in one dimension,
-there exists a unique polynomial $Q_{f, n}$ of degree $n$
-that interpolates a function $f: \Omega \to \mathbb{R}$ in a bounded domain
+there exists a unique polynomial $Q_{f, n}$ of degree $n$ that interpolates
+a function $f: \Omega \to \mathbb{R}$ in a bounded domain
 $\Omega$ with $n + 1$ _distinct (unisolvent[^unisolvent]) interpolation nodes
-(or points)_ $P_n$ such that 
+(or points)_ $P_n$ such that
 $$
 Q_{f, n} (p_i) = f(p_i),\; \forall p_i \in P_n \subset \Omega,\; i = 0, \ldots, n.
 $$
 Polynomial interpolation has its roots in the works of Newton, Euler, Lagrange,
-and others [@Meijering2002],
-and its significance in mathematics and computing
-is well-established [@Cools2002;@Hecht2018;@Xiu2009].
+and others [@Meijering2002], and its significance in mathematics and computing
+is well-established [@Cools2002;@Hecht2018;@Xiu2009].  
 
 Despite their aforementioned advantages as global polynomials,
-global interpolating polynomials have a controversial reputation
-due to several common misconceptions [@Trefethen2011;@Trefethen2016;@Trefethen2017]:
+global interpolating polynomials have a controversial reputation due to
+several common misconceptions [@Trefethen2011;@Trefethen2016;@Trefethen2017]:  
 
 - They are often thought to be prone to Runge's phenomenon,
   whereby increasing the degree of interpolating polynomials worsens
@@ -125,45 +122,63 @@ Minterpy addresses these issues by:
   appropriate interpolation nodes (e.g., Chebyshev-Lobatto nodes)
   to help mitigate Runge's phenomenon[^equispaced];
 - Representing the interpolating polynomials in the Newton basis,
-  combined with Leja ordering of the interpolation nodes
+  combined with Leja ordering of the interpolation nodes  
   to ensure stable evaluation [@Reichel1990;@TalEzer1991;@Breuss2018];
 - Using a multi-index set to represent the multivariate polynomials,
   which can be tailored to mitigate the curse of dimensionality
   while preserving the approximation power of the interpolating polynomials
-  (next section).
+  (more on this in the next section).
 
-While Faber's theorem shows that no _interpolating polynomial_ can converge 
+While Faber's theorem shows that no _interpolating polynomial_ can converge
 for _all_ continuous functions, it has been demonstrated that if the function
 is reasonably smooth, the interpolating polynomials do converge
 at high algebraic rates for common regular (Lipschitz continuous[^lipschitz])
 functions and at at geometric rates for analytic functions [@Trefethen2017a].
 
-In short, while not a universal solution for all function approximation problems,
-Minterpy provides polynomials that can accurately and stably approximate
-a wide range of Lipschitz continuous functions.
-
 Minterpy shares similar objectives and functionality with Chebfun [@Driscoll2014],
 a popular MATLAB package[^chebfun-ports] designed for numerical computations
 using interpolating polynomials, specifically Chebyshev polynomials.
-Chebfun provides features such as root finding, differentiation, and integration 
+Chebfun provides features such as root finding, differentiation, and integration
 for function approximation in up to three dimensions.
 In contrast, Minterpy supports higher dimensions but with fewer features.
 
 Several Python packages, such as Chaospy [@Feinberg2015],
 equadratures [@Seshadri2017], PyGPC [@Weise2020], PyThia [@Hegemann2023],
 and UncertainSci [@Tate2023], provide polynomial-based function approximations,
-primarily for uncertainty quantification (UQ) using generalized polynomial chaos expansion [@Xiu2002].
-These tools often require framing problems as UQ tasks,
-where inputs are modeled probabilistically.
-In contrast, Minterpy offers a straightforward, UQ-free, and lower barrier-to-entry
-approach to function approximation with interpolating polynomials.
+primarily for uncertainty quantification (UQ) using generalized polynomial
+chaos expansion [@Xiu2002].
+These tools naturally frame problems as UQ tasks, where inputs are modeled
+probabilistically.
+With few exceptions (notably Chaospy), the resulting polynomials are primarily
+used for function approximations, accompanied by additional post-processing
+utilities tailored to UQ tasks (e.g., uncertainty propagation,
+sensitivity analysis).
+In contrast, Minterpy offers a simpler, UQ-free approach to function approximation
+using interpolating polynomials, with fewer barriers to entry, and includes
+additional standard mathematical operations on the polynomials.
 
 Several other Python packages construct polynomial approximations from data.
-SciPy [@Virtanen2020] provides multivariate interpolation methods (e.g., linear, nearest, pchip[^pchip]) for rectilinear grids.
-ndsplines [@Margolis2019] efficiently implements tensor-product multivariate B-splines. 
+SciPy [@Virtanen2020] provides multivariate interpolation methods
+(e.g., linear, nearest, pchip[^pchip]) for rectilinear grids.
+ndsplines [@Margolis2019] efficiently implements tensor-product multivariate
+B-splines that can be differentiated and anti-differentiated.
 Unlike Minterpy, these tools rely on piecewise local polynomials
-and are tailored for input/output pairs data pairs.
-Familiar and widely used, piecewise polynomials (especially splines) remain established tools for polynomial interpolation tasks.
+and are tailored for input/output data pairs.
+Familiar and widely used, piecewise polynomials---especially splines---remain
+established tools for polynomial interpolation tasks.
+
+In summary, while not a universal tool for all function approximation problems,
+Minterpy offers a robust solution for approximating a wide range of multidimensional
+Lipschitz continuous functions using accurate and stable polynomials.
+Once obtained, these polynomials can be readily manipulated using standard
+arithmetic operations, such as addition and multiplication,
+as well as calculus operations, like differentiation and integration.
+The significance of this capability extends beyond function approximation,
+as many numerical methods (e.g., root finding, optimization) can be boiled down
+to these fundamental operations on functions.
+By leveraging Minterpy's polynomials,
+users can conveniently carry out symbolic-like computations
+that would normally require direct manipulation of function values.
 
 # Package overview
 
@@ -210,11 +225,11 @@ to the rapid growth of the set size.
 
 It has been shown that the Euclidean degree $p = 2.0$ offers the best compromise
 for isotropic functions[^anisotropy],
-as its accuracy is almost as effective as that of $p = \infty$,
-yet with significantly smaller multi-index set.
-In contrast, while the multi-index set for $p = 2.0$ is larger than that
-for $p = 1.0$, the gain in accuracy more than compensates for
-the increased cost, making it comparable to $p = \infty$ in accuracy
+as its convergence rate matches that of $p = \infty$ with respect
+to the polynomial degree, yet with a significantly smaller multi-index set.
+In contrast, while the size of the multi-index set for $p = 2.0$
+is larger than that for $p = 1.0$, the gain in accuracy more than compensates
+for the increased cost, making it comparable to $p = \infty$ in accuracy
 [@Trefethen2017a;@Hecht2020].
 
 Deriving multidimensional Lagrange basis expressions
@@ -234,7 +249,8 @@ Computing Newton coefficients, based on the Lagrange coefficients and interpolat
 via a multidimensional divided-difference scheme (DDS) is a key step
 in Minterpy [@Hecht2020].
 
-Minterpy also supports other polynomial bases, including the canonical (monomial) and Chebyshev (first kind) bases,
+Minterpy also supports other polynomial bases,
+including the canonical (monomial) and Chebyshev (first kind) bases,
 along with transformations between them.
 
 ## Minterpy polynomials for function approximation
@@ -260,13 +276,15 @@ $$
 $$
 is measured at $1'000'000$ random points.
 
-The figure compares data-driven methods (SciPy v1.13.1, ndsplines v0.2.0) and pseudo-spectral methods (Chaospy v4.3.17, Equadratures v10).
+The figure compares data-driven methods (SciPy v1.13.1, ndsplines v0.2.0)
+and pseudo-spectral methods (Chaospy v4.3.17, Equadratures v10).
 In the data-driven methods, approximation complexity is fixed as data increases.
 While ndsplines supports higher degrees, splines above degree 5 are rare in practice.
 The pseudo-spectral methods approximate functions using Legendre polynomial expansions on tensor-product grids,
 with coefficients computed via numerical integration.
 The coefficient count matches Minterpy interpolating polynomials with $p = \infty$.
-Equadratures, whose results are comparable to Minterpy, (softly) limits multi-index cardinality to $5 \times 10^4$ due to computational expense,
+Equadratures, whose results are comparable to Minterpy,
+(softly) limits multi-index cardinality to $5 \times 10^4$ due to computational expense,
 while Chaospy struggles with tensor-product grids[^sparse].
 
 The results show Minterpy polynomials provide accurate function approximation
@@ -274,7 +292,8 @@ with stability and convergence up to $10^{-14}$, outperforming competing tools.
 
 ## Operations on the Minterpy polynomials
 
-Minterpy polynomials support arithmetic operations (addition, subtraction, multiplication) 
+As mentioned, Minterpy polynomials support arithmetic operations
+(addition, subtraction, multiplication) 
 and calculus operations (differentiation, definite integration).
 Except for definite integration (yielding a numerical value),
 these operations produce another polynomial, ensuring closure.
