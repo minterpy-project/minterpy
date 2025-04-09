@@ -122,7 +122,7 @@ Minterpy addresses these issues by:
   appropriate interpolation nodes (e.g., Chebyshev-Lobatto nodes)
   to help mitigate Runge's phenomenon[^equispaced];
 - Representing the interpolating polynomials in the Newton basis,
-  combined with Leja ordering of the interpolation nodes  
+  combined with Leja ordering of the interpolation nodes
   to ensure stable evaluation [@Reichel1990;@TalEzer1991;@Breuss2018];
 - Using a multi-index set to represent the multivariate polynomials,
   which can be tailored to mitigate the curse of dimensionality
@@ -272,7 +272,7 @@ The horizontal axis shows the number of coefficients (and function evaluations),
 directly linked to the polynomial degree, to enable comparisons with other methods.
 The infinity norm of the difference between the function and its approximation,
 $$
-\lVert f - Q_f \rVert_{\infty} = \max_{x \in [-1, 1]^m} \lvert f - Q_f \rvert
+\lVert f - Q_f \rVert_{\infty} = \max_{\boldsymbol{x} \in [-1, 1]^m} \lvert f(\boldsymbol{x}) - Q_f(\boldsymbol{x}) \rvert
 $$
 is measured at $1'000'000$ random points.
 
