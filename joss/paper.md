@@ -276,8 +276,8 @@ $$
 $$
 is measured at $1'000'000$ random points.
 
-The figure compares data-driven methods (SciPy v1.13.1, ndsplines v0.2.0)
-and pseudo-spectral methods (Chaospy v4.3.17, Equadratures v10).
+The figure compares data-driven methods (SciPy v1.13.1, ndsplines v0.2.0post0)
+and pseudo-spectral methods (Chaospy v4.3.18, Equadratures v10).
 In the data-driven methods, approximation complexity is fixed as data increases.
 While ndsplines supports higher degrees, splines above degree 5 are rare in practice.
 The pseudo-spectral methods approximate functions using Legendre polynomial expansions on tensor-product grids,
