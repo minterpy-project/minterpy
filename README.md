@@ -111,16 +111,20 @@ nwt_poly = interpolant.to_newton()
 prod_poly = nwt_poly * nwt_poly  
 # Differentiate the polynomial once -> obtained another polynomial  
 diff_poly = nwt_poly.diff(1)  
-  
+# Reference function for the (once) differentiated test function
+diff_fun = lambda xx: np.sin(10 * xx) + xx * 10 * np.cos(10 * xx)
+
 fig, axs = plt.subplots(1, 2, figsize=(10, 5))  
   
-axs[0].plot(xx, prod_poly(xx))  
-axs[0].set_title("Product polynomial")  
-axs[0].set_xlabel("$x$")  
-axs[0].set_ylabel("$y$")  
-axs[1].plot(xx, diff_poly(xx))  
-axs[1].set_title("Differentiated polynomial")  
-axs[1].set_xlabel("$x$")  
+axs[0].plot(xx, prod_poly(xx), label="product polynomial")
+axs[0].plot(xx, fun(xx)**2, "k.", label="product test function")
+axs[0].legend()
+axs[0].set_xlabel("$x$")
+axs[0].set_ylabel("$y$")
+axs[1].plot(xx, diff_poly(xx), label="differentiated polynomial")
+axs[1].plot(xx, diff_fun(xx), "k.", label="differentiated test function")
+axs[1].legend()
+axs[1].set_xlabel("$x$")
   
 plt.show()  
 ```
@@ -162,7 +166,7 @@ The citation for the current public version is:
 
 ```bibtex
 @software{Minterpy_0_3_0,
-  author       = {Hernandez Acosta, Uwe and THekke Veettil, Sachin Krishnan and Wicaksono, Damar Canggih and Michelfeit, Jannik and Hecht, Michael},
+  author       = {Hernandez Acosta, Uwe and Thekke Veettil, Sachin Krishnan and Wicaksono, Damar Canggih and Michelfeit, Jannik and Hecht, Michael},
   title        = {{Minterpy} - multivariate polynomial interpolation},
   month        = dec,
   year         = 2024,
