@@ -208,7 +208,7 @@ The multi-index set $A$ determines polynomial coefficients, unisolvent nodes,
 and function evaluations.
 In Minterpy, the default is a downward-closed set $A_{m, n, p}$
 with spatial dimension $m \in \mathbb{N}_{> 0}$, 
-polynomial degree $n \in \mathbb{N}$, and $l_p$-degree $p \in \mathbb{R}_{> 0}$.
+polynomial degree $n \in \mathbb{N}$, and $\ell_p$-degree $p \in \mathbb{R}_{> 0}$.
 The set is defined as
 $$  
 A_{m, n, p} = \{ \boldsymbol{\alpha} \in \mathbb{N}^m: \lVert \boldsymbol{\alpha} \rVert_p = (\alpha_1^p + \cdots + \alpha_m^p)^{1/p} \leq n \}.  
@@ -268,7 +268,7 @@ a pitfall in high-degree interpolation with equispaced points.
 ![The comparison of Minterpy interpolating polynomials, approximating the Runge function in dimension $m = 3, 4$, with alternative methods from designated packages.\label{fig:convergence}](convergence.png)
 
 \autoref{fig:convergence} shows the accuracy of Minterpy interpolating polynomials
-for three different $l_p$-degrees in dimension $m = 3, 4$[^machine].
+for three different $\ell_p$-degrees in dimension $m = 3, 4$[^machine].
 The horizontal axis shows the number of coefficients (and function evaluations),
 directly linked to the polynomial degree, to enable comparisons with other methods.
 The infinity norm of the difference between the function and its approximation,
@@ -288,8 +288,19 @@ Equadratures, whose results are comparable to Minterpy,
 (softly) limits multi-index cardinality to $5 \times 10^4$ due to computational expense,
 while Chaospy struggles with tensor-product grids[^sparse].
 
-The results show Minterpy polynomials provide accurate function approximation
-with stability and convergence up to $10^{-14}$, outperforming competing tools.
+The results show Minterpy polynomials achieve highly accurate function approximation,
+with numerical stability and convergence reaching up to $10^{-14}$, outperforming competing tools.
+However, global polynomials are generally more expensive to evaluate
+than local piecewise polynomials or B-splines
+due to their lack of compact support---evaluating a global polynomial typically
+requires computing all terms in the expansion.
+Additionally, the evaluation cost depends on the size of the multi-index set
+(i.e., the number of basis functions),
+which grows with the spatial dimension $m$,
+the polynomial degree $n$, and the choice of $\ell_p$-norm used to define the index set.
+Unlike in local piecewise polynomials and tensorized B-splines,
+which often use lower-degree polynomials,
+the size of the set can become large for high-degree global polynomials.
 
 ## Operations on the Minterpy polynomials
 
