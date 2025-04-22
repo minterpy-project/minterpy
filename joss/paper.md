@@ -372,7 +372,7 @@ downward-closed multi-index sets to construct interpolating polynomials.
 [^machine]: The numerical experiment was conducted on a machine equipped
 with a 32-core AMD EPYC processor, 256 GB of RAM,
 running Python v3.9.19 on Debian 12 Linux.
-The results of the experiment are archived in [RODARE](https://rodare.hzdr.de/record/3379).
+The results of the experiment are archived in [@Wicaksono2025].
 [^sparse]: Both Chaospy and equadratures support sparse polynomial construction,
 which can help reduce the number of coefficients.
 Comparing these approaches, however, is beyond the scope of this work.
