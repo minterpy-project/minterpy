@@ -182,8 +182,9 @@ that would normally require direct manipulation of function values.
 
 # Package overview
 
-Minterpy interpolates $m$-dimensional function $f: \square^m \subset \mathbb{R}^m \to \mathbb{R}$
-defined on a multidimensional hypercube using a polynomial expansion in the Lagrange basis:
+Minterpy interpolates $m$-dimensional function $f: [a_1, b_1] \times \ldots \times [a_m, b_m] \subset \mathbb{R}^m \to \mathbb{R}$,
+where $a_i$ and $b_i$ are the lower and upper bounds of the $i$-th dimension, respectively.
+The interpolation is performed using a polynomial expansion in the Lagrange basis:
 \begin{equation}
 \label{eq:interpolating-polynomial}
 f (\boldsymbol{x}) \approx Q (\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A} f(\boldsymbol{p}_{\boldsymbol{\alpha}}) \, L_{\boldsymbol{\alpha}} (\boldsymbol{x}),
