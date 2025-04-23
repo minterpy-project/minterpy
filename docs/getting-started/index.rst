@@ -50,7 +50,7 @@ What's next?
 If you're brand new to Minterpy and simply want to approximate a function using
 polynomial interpolations, start with:
 
-:doc:`functions-approximation`
+:doc:`function-approximations`
 
 While approximating functions using polynomials is a main feature of Minterpy,
 it also offers multi-dimensional polynomials in Python.
@@ -88,7 +88,7 @@ a particular task, be sure to check out the :doc:`/how-to/index`!
    :maxdepth: 1
    :hidden:
 
-   Functions approximation <functions-approximation>
+   Function Approximations <function-approximations>
    1D Polynomial Interpolation <1d-polynomial-interpolation>
    mD Polynomial Interpolation <md-polynomial-interpolation>
    Arithmetic with Polynomials <arithmetic-operations-with-polynomials>
