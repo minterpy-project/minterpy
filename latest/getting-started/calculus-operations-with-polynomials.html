@@ -59,7 +59,7 @@
     <link rel="prev" title="Basic Arithmetic Operations with Polynomials" href="arithmetic-operations-with-polynomials.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5567a30" />
+  <meta name="docsearch:version" content="0.1.dev1+g2eff230" />
   </head>
   
   
@@ -598,7 +598,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6.876016483076466e-07
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8.506339674800144e-07
 </pre></div>
 </div>
 </div>
@@ -629,8 +629,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 <p class="admonition-title">Note</p>
 <p>Instances of most polynomial bases in Minterpy support the method <code class="docutils literal notranslate"><span class="pre">integrate_over()</span></code>; if the method is not yet implemented for a particular basis then an exception will be raised.</p>
 </div>
-<p>To specify custom bounds for definite integration in Minterpy, you can pass a list of lists where each inner list contains the lower and upper bounds for each dimension.
-This allows you to compute integrals over particular regions of interest.</p>
+<p>To define custom bounds for definite integration in Minterpy, pass a list of lists, where each inner list specifies the lower and upper bounds for a particular dimension, in the order dimension (i.e., the first inner list corresponds to the first dimension, the second inner list corresponds to the second dimension, and so on). This enables you to compute integrals over specific regions of interest.</p>
 <p>For instance, to compute:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -688,7 +687,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 <p>The second argument is optional; if not specified then it will be set to <span class="math notranslate nohighlight">\(1\)</span> (i.e., first order of derivative).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The spatial dimension specification starts with <span class="math notranslate nohighlight">\(0\)</span>, i.e., <span class="math notranslate nohighlight">\(0\)</span> is index for the first spatial dimension.</p>
+<p>The spatial dimension specification starts with <span class="math notranslate nohighlight">\(0\)</span>, i.e., <span class="math notranslate nohighlight">\(0\)</span> is the index for the first spatial dimension.</p>
 </div>
 <p>Calling <code class="docutils literal notranslate"><span class="pre">partial_diff()</span></code> on an instance of polynomial returns another instance of polynomial.</p>
 <p>For instance, to obtain the polynomial <span class="math notranslate nohighlight">\(\frac{\partial Q}{\partial x_1}\)</span>:</p>
@@ -700,7 +699,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f9ea1894760&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa5a80e8070&gt;
 </pre></div>
 </div>
 </div>
@@ -714,7 +713,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f9ea1897550&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa5a7d84f70&gt;
 </pre></div>
 </div>
 </div>
@@ -779,7 +778,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 <img alt="../_images/56fb4b1e7ac0bf6e18d0b66a1810528eefcebf02475a398700626e8bc2a18532.png" src="../_images/56fb4b1e7ac0bf6e18d0b66a1810528eefcebf02475a398700626e8bc2a18532.png" />
 </div>
 </div>
-<p>The method <a class="reference internal" href="../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.diff" title="minterpy.polynomials.newton_polynomial.NewtonPolynomial.diff"><code class="xref py py-meth docutils literal notranslate"><span class="pre">diff()</span></code></a> allows you to specify the order of derivative for each spatial dimension simultaneously by passing a list or NumPy array.</p>
+<p>The <a class="reference internal" href="../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.diff" title="minterpy.polynomials.newton_polynomial.NewtonPolynomial.diff"><code class="xref py py-meth docutils literal notranslate"><span class="pre">diff()</span></code></a> method enables you to compute the derivatives of varying oders for each spatial dimension simultaneously. To do this, pass a list or a NumPy array specifying the desired order of derivative for each dimension.</p>
 <p>See the following table for examples.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -812,7 +811,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f9ea20ab8e0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa5a3dd9c60&gt;
 </pre></div>
 </div>
 </div>
@@ -826,7 +825,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f9ea20a8e50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa5a621d0f0&gt;
 </pre></div>
 </div>
 </div>
@@ -901,14 +900,14 @@ This allows you to compute integrals over particular regions of interest.</p>
 </ul>
 <p>These operations were demonstrated using a two-dimensional polynomial, but they apply similarly to polynomials of higher dimensions.</p>
 <hr class="docutils" />
-<p>So far, this series of in-depth tutorials have covered:</p>
+<p>Throughout this series of in-depth tutorials, we’ve explored the following topics:</p>
 <ul class="simple">
-<li><p>contructing Minterpy polynomials, from one-dimensional to multi-dimensional cases</p></li>
-<li><p>performing basic arithmetic operations with the polynomials such as addition, subtraction, and multiplication.</p></li>
-<li><p>performing basic calculus operations with the polynomials such as differentiation and definite integration</p></li>
+<li><p>Constructing Minterpy polynomials, from simple <a class="reference internal" href="1d-polynomial-interpolation.html"><span class="doc">one-dimensional</span></a> cases to more complex <a class="reference internal" href="md-polynomial-interpolation.html"><span class="doc">multivariate</span></a> ones;</p></li>
+<li><p>Performing basic <a class="reference internal" href="arithmetic-operations-with-polynomials.html"><span class="doc">arithmetic operations</span></a> with Minterpy polynomials, including addition, subtraction, and multiplication;</p></li>
+<li><p>Applying basic calculus operations to Minterpy polynomials, including differentiation and definite integration (<em>this tutorial</em>).</p></li>
 </ul>
-<p>In all the examples, you began with a polynomial in the Lagrange basis and then transformed it into a polynomial in the Newton basis.</p>
-<p>In fact, polynomials in Minterpy can be represented in different bases (beyond just Lagrange or Newton). The tutorial will provide an overview of the available bases and the transformations between them.</p>
+<p>In the examples we’ve explored so far, we’ve started with a polynomial in the Lagrange basis and then converted it to a polynomial in the Newton basis. However, Minterpy offers more flexibility than that.</p>
+<p>Polynomials can be represented in a variety of bases, extending beyond just Lagrange and Newton. In the next tutorial, we’ll delve into different bases available in Minterpy and discuss how to transform polynomials between the.</p>
 </section>
 </section>
 <hr class="footnotes docutils" />
