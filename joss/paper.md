@@ -220,13 +220,12 @@ $$
 Here, typical choices for $p$ are $1.0$, $2.0$, and $\infty$,
 representing the total, Euclidean, and maximum degree (tensor-product),
 respectively.
-
-Assuming isotropy in the importance of input variables
-(i.e., each variable is treated the same), these values for $p$ correspond
-to polynomial, sub-exponential, and exponential growth of the multi-index size
-as a function of the spatial dimension.
-Consequently, the maximum degree faces a severe curse of dimensionality due
-to the rapid growth of the set size.
+The multi-index set $A_{m, n, p}$ assumes isotropy in the importance
+of input variables (i.e., each variable is treated equally)
+and those values for $p$ correspond to polynomial, sub-exponential,
+and exponential growth of the set size as a function of the spatial dimension.
+Consequently, the maximum degree set faces a severe curse of dimensionality
+due to the rapid growth of the set size.
 
 It has been shown that the Euclidean degree $p = 2.0$ offers the best compromise
 for isotropic functions[^anisotropy],
@@ -291,19 +290,19 @@ Equadratures, whose results are comparable to Minterpy,
 while Chaospy struggles with tensor-product grids[^sparse].
 
 The results show that Minterpy polynomials provide highly accurate function approximation,
-exhibiting numerical stability and convergence down to $10^{-14}$,
+demonstrating numerical stability and convergence down to $10^{-14}$,
 and outperforming selected competing tools.
 However, global polynomials are generally more computationally expensive to evaluate
 than local piecewise polynomials or B-splines,
 as they require more floating-point operations.
 There are two primary reasons for this.
 First, global polynomials lack compact support; evaluating them typically involves
-computing all terms in the expansion.
+computing all terms (i.e., coefficient-basis function pairs) in the expansion.
 Second, they often require high polynomial degrees,
-resulting in a large number of terms—--i.e.,
-a large multi-index set—--compared to local methods,
+resulting in a large number of terms compared to local methods,
 which usually employ low-degree polynomials.
-Moreover, each term in a high-degree global polynomial involves numerous multiplications,
+Moreover, the basis functions in a high-degree global polynomial involve
+numerous multiplications,
 further increasing the computational cost.
 
 ## Operations on the Minterpy polynomials
