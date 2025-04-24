@@ -59,7 +59,7 @@
     <link rel="prev" title="Polynomial Bases and Transformations" href="polynomial-bases-and-transformations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gb92470b" />
+  <meta name="docsearch:version" content="0.1.dev1+g88a5edf" />
   </head>
   
   
@@ -636,7 +636,7 @@ In other words, ordinary least squares will subsequently be used to estimate the
 </section>
 <section id="fit-the-regression-polynomial">
 <h3>Fit the regression polynomial<a class="headerlink" href="#fit-the-regression-polynomial" title="Link to this heading">#</a></h3>
-<p>You have so far constructed a regression polynomial by defining the structure of the underling polynomial. For now, however, its coefficients remain unknown.</p>
+<p>You have so far constructed a regression polynomial by defining the structure of the underlying polynomial. For now, however, its coefficients remain unknown.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_poly</span><span class="o">.</span><span class="n">coeffs</span> <span class="ow">is</span> <span class="kc">None</span>
@@ -654,7 +654,7 @@ In other words, ordinary least squares will subsequently be used to estimate the
 \[
 \hat{\boldsymbol{c}} = \underset{\boldsymbol{c}}{\mathrm{arg min}} \lVert \boldsymbol{R} \boldsymbol{c} - \boldsymbol{y} \rVert_2^2
 \]</div>
-<p>where: <span class="math notranslate nohighlight">\(\lVert \cdot \rVert_2^2\)</span> denotes the square of the Euclidian norm.</p>
+<p>where: <span class="math notranslate nohighlight">\(\lVert \cdot \rVert_2^2\)</span> denotes the square of the Euclidean norm.</p>
 <p>You can use the method <a class="reference internal" href="../api/extras/regression/ordinary_regression.html#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.fit" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> to solve the above problem on the given regression polynomial instance.
 The method requires a pair of inputs and the corresponding output are required. As these are already constructed above:</p>
 <div class="cell docutils container">

@@ -437,7 +437,7 @@
    "source": [
     "### Fit the regression polynomial\n",
     "\n",
-    "You have so far constructed a regression polynomial by defining the structure of the underling polynomial. For now, however, its coefficients remain unknown."
+    "You have so far constructed a regression polynomial by defining the structure of the underlying polynomial. For now, however, its coefficients remain unknown."
    ]
   },
   {
@@ -484,7 +484,7 @@
     "\\hat{\\boldsymbol{c}} = \\underset{\\boldsymbol{c}}{\\mathrm{arg min}} \\lVert \\boldsymbol{R} \\boldsymbol{c} - \\boldsymbol{y} \\rVert_2^2\n",
     "$$\n",
     "\n",
-    "where: $\\lVert \\cdot \\rVert_2^2$ denotes the square of the Euclidian norm.\n",
+    "where: $\\lVert \\cdot \\rVert_2^2$ denotes the square of the Euclidean norm.\n",
     "\n",
     "\n",
     "You can use the method {py:meth}`fit() <.extras.regression.ordinary_regression.OrdinaryRegression.fit>` to solve the above problem on the given regression polynomial instance.\n",
