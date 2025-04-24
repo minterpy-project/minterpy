@@ -24,7 +24,7 @@ jobs:
     - name: Upload the report
       uses: actions/upload-artifact@v4
       with:
-        name: report-pytest-with-numba.xml
+        name: report-pytest-with-numba
         path: ./report-pytest-with-numba.xml
   
   tests-without-numba:
@@ -44,7 +44,7 @@ jobs:
       - name: Upload the report
         uses: actions/upload-artifact@v4
         with:
-          name: report-pytest-without-numba.xml
+          name: report-pytest-without-numba
           path: ./report-pytest-without-numba.xml
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
@@ -95,9 +95,10 @@ jobs:
       - name: Build the wheel
         run: python -m build --wheel
       - name: Upload the wheel
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: ./dist/*.whl
+          name: wheel
 
   build-sdist:
     name: Build sdist on latest Linux
@@ -112,6 +113,7 @@ jobs:
       - name: Build the source distribution
         run: python -m build --sdist
       - name: Upload the wheel
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: ./dist/*.tar.gz
+          name: sdist
