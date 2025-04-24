@@ -26,7 +26,7 @@ Installation
 
        .. code-block:: bash
 
-          git clone -b dev https://github.com/casus/minterpy
+          git clone -b dev https://github.com/minterpy-project/minterpy
 
        After moving inside the cloned directory, the package can be installed
        from source with ``pip``:
@@ -35,9 +35,9 @@ Installation
 
           pip install [-e] .
 
-A best practice is to create a virtual environment so as not to install
-external package to the your base Python environment.
-You can do this with the help of, among others:
+As a best practice, it is recommended to create a virtual environment
+to avoid installing external packages directly into your base Python environment.
+You can accomplish this using tools such as:
 
 - `venv`_
 - `virtualenv`_
@@ -52,10 +52,10 @@ polynomial interpolations, start with:
 
 :doc:`function-approximations`
 
-While approximating functions using polynomials is a main feature of Minterpy,
-it also offers multi-dimensional polynomials in Python.
-These polynomials have a consistent interface that allows for advanced
-manipulation such arithmetic and calculus operations.
+While function approximation using polynomials is a key feature of Minterpy,
+the package also provides a powerful implementation of multivariate polynomials in Python.
+These polynomials have a consistent interface that makes it easy
+to perform advanced manipulations like arithmetic and calculus operations.
 
 To learn more about these features of Minterpy, follow the series of tutorials
 below. We recommend that you go through these tutorials in sequence.
@@ -65,9 +65,10 @@ below. We recommend that you go through these tutorials in sequence.
 
    * - If you want to...
      - Go to...
-   * - understand Minterpy polynomials through approximating a 1D function
+   * - understand Minterpy polynomials by approximating a 1D function
      - :doc:`1d-polynomial-interpolation`
-   * - learn how to approximate mD function with polynomial interpolation
+   * - learn how to approximate multidimensional function using
+       polynomial interpolation
      - :doc:`md-polynomial-interpolation`
    * - know more about the supported *arithmetic operations*
        with Minterpy polynomials
