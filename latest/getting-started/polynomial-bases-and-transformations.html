@@ -59,7 +59,7 @@
     <link rel="prev" title="Basic Calculus Operations with Polynomials" href="calculus-operations-with-polynomials.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g2eff230" />
+  <meta name="docsearch:version" content="0.1.dev1+gc97db51" />
   </head>
   
   
@@ -459,12 +459,13 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="polynomial-bases-and-transformations">
 <h1>Polynomial Bases and Transformations<a class="headerlink" href="#polynomial-bases-and-transformations" title="Link to this heading">#</a></h1>
-<p>The Minterpy polynomials you’ve encountered so far have been represented in the Lagrange and Newton bases.
-Minterpy supports a range of polynomial bases, each with a consistent interface, meaning that polynomials in different bases behave and can be manipulated in similar ways.</p>
+<p>Up until now, you’ve encountered Minterpy polynomials represented in the Lagrange and Newton bases.
+Minterpy supports a range of polynomial bases, all of which share a consistent interface.
+This means that regardless of the basis, polynomials can be manipulated and behave in a similar manner, making it easy to switch between different representations.</p>
 <p>In this in-depth tutorial, you’ll explore:</p>
 <ul class="simple">
-<li><p>various polynomial bases supported by Minterpy</p></li>
-<li><p>transformation between bases</p></li>
+<li><p>Various polynomial bases supported by Minterpy;</p></li>
+<li><p>Transformation between those bases.</p></li>
 </ul>
 <p>For simplicity, this tutorial uses examples in one and two dimensions, but the principles apply to polynomials of higher dimensions as well.</p>
 <p>Before diving in, make sure to import the necessary packages:</p>
@@ -482,7 +483,7 @@ Minterpy supports a range of polynomial bases, each with a consistent interface,
 </div>
 <section id="polynomials-in-minterpy">
 <h2>Polynomials in Minterpy<a class="headerlink" href="#polynomials-in-minterpy" title="Link to this heading">#</a></h2>
-<p>Polynomials in Minterpy are multidimensional polynomials defined on <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> where <span class="math notranslate nohighlight">\(m\)</span> is the spatial dimension:</p>
+<p>Polynomials in Minterpy are multivariate polynomials defined on <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> where <span class="math notranslate nohighlight">\(m\)</span> is the spatial dimension:</p>
 <div class="math notranslate nohighlight">
 \[
 Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A} c_{\cdot, \boldsymbol{\alpha}} \Psi_{\cdot, \boldsymbol{\alpha}} (\boldsymbol{x}),
@@ -518,7 +519,7 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A} c_{\cdot, \boldsymbol{\alph
 </div>
 <section id="lagrange-basis">
 <h3>Lagrange basis<a class="headerlink" href="#lagrange-basis" title="Link to this heading">#</a></h3>
-<p>The Lagrange basis was the first polynomial basis you encountered in this series of tutorials. In Minterpy, the multidimensional Lagrange basis polynomial associated with the multi-index element <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> is defined as a polynomial that satisfies the following condition:</p>
+<p>The Lagrange basis was the first polynomial basis you encountered in this series of tutorials. In Minterpy, the multivariate Lagrange basis polynomial associated with the multi-index element <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> is defined as a polynomial that satisfies the following condition:</p>
 <div class="math notranslate nohighlight">
 \[
 \Psi_{\mathrm{lag}, \boldsymbol{\alpha}} (\boldsymbol{p}_{\boldsymbol{\beta}}) = \delta_{\boldsymbol{\alpha}, \boldsymbol{\beta}}, \;\; \boldsymbol{p}_{\boldsymbol{\beta}} \in P_{A}, \;\; \boldsymbol{\alpha}, \boldsymbol{\beta} \in A,
@@ -533,17 +534,17 @@ Indeed in Minterpy, Lagrange basis polynomials are conceptual basis polynomials 
 Specifically, the coefficient corresponding to the multi-index element <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> of an interpolating polynomial approximating a function <span class="math notranslate nohighlight">\(f\)</span> is</p>
 <div class="math notranslate nohighlight">
 \[
-c_{\mathrm{lag}, \boldsymbol{\alpha}} = f(\boldsymbol{p}_{\boldsymbol{\alpha}}).
+c_{\mathrm{lag}, \boldsymbol{\alpha}} = f(\boldsymbol{p}_{\boldsymbol{\alpha}}), \;\; \boldsymbol{p}_{\boldsymbol{\alpha}} \in P_{A}, \;\; \boldsymbol{\alpha} \in A,
 \]</div>
 <p>In other words, the coefficients are simply the values of the function at the unisolvent nodes.</p>
-<p>To do more with polynomials in the Lagrange basis, such as evaluation or manipulation, you need to transform them to another basis. This process will be covered in a later section of this tutorial.</p>
+<p>To do more with the polynomials, such as evaluation or manipulation, you need to transform them to another basis. This process will be covered in a later section of this tutorial.</p>
 </section>
 <section id="newton-basis">
 <h3>Newton basis<a class="headerlink" href="#newton-basis" title="Link to this heading">#</a></h3>
-<p>You’ve also seen the Newton basis by following these tutorials. The multidimensional Newton basis polynomial associated with multi-index element <span class="math notranslate nohighlight">\(\alpha\)</span> is defined as:</p>
+<p>You’ve also seen the Newton basis by following these tutorials. The multivariate Newton basis polynomial associated with multi-index element <span class="math notranslate nohighlight">\(\alpha\)</span> is defined as:</p>
 <div class="math notranslate nohighlight">
 \[
-\Psi_{\mathrm{nwt}, \boldsymbol{\alpha}} (\boldsymbol{x}) = \prod_{j = 1}^m \prod_{i = 0}^{\alpha - 1} (x_j - p_{i, j}),
+\Psi_{\mathrm{nwt}, \boldsymbol{\alpha}} (\boldsymbol{x}) = \prod_{j = 1}^m \prod_{i = 0}^{\alpha_j - 1} (x_j - p_{i, j}),
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(p_{i, j}\)</span>’s are the interpolation points along dimension <span class="math notranslate nohighlight">\(j\)</span> (i.e., the so-called <a class="reference internal" href="../fundamentals/interpolation-at-unisolvent-nodes.html#generating-points"><span class="std std-ref">generating points / nodes</span></a> which in multiple dimensions are not the same as the unisolvent nodes).</p>
 <div class="admonition note">
@@ -613,14 +614,14 @@ A = \{ (0, 0), (1, 0), (2, 0), (3, 0), (0, 1), (1, 1), (2, 1), (0, 2) \}.
 </section>
 <section id="canonical-basis">
 <h3>Canonical basis<a class="headerlink" href="#canonical-basis" title="Link to this heading">#</a></h3>
-<p>The canonical basis is arguably the most familiar polynomial basis of them all. The multidimensional canonical basis polynomial associated with the multi-index element <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> is defined as:</p>
+<p>The canonical basis is arguably the most familiar polynomial basis of them all. The multivariate canonical basis polynomial associated with the multi-index element <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> is defined as:</p>
 <div class="math notranslate nohighlight">
 \[
 \Psi_{\mathrm{can}, \boldsymbol{\alpha}} (\boldsymbol{x}) = x_1^{\alpha_1} \cdots x_m^{\alpha_m} = \prod_{j = 1}^m x_j^{\alpha_j}.
 \]</div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>While polynomials in the canonical basis can be evaluated at a set of query points, high-degree polynomials in the canonical basis in Minterpy become numerically unstable to evaluate and therefore is not recommended.</p>
+<p>Although polynomials in the canonical basis can be evaluated at a set of query points, it’s essential to note that high-degree polynomials in the canonical basis can become numerically unstable when evaluated. As a result, we strongly advise against using the canonical basis for high-degree polynomials due to potential numerical issues.</p>
 </div>
 <p>As an example, consider the two-dimensional multi-index set:</p>
 <div class="math notranslate nohighlight">
@@ -659,13 +660,13 @@ A = \{ (0, 0) , (1, 0), (2, 0), (0, 1), (1, 1), (2, 1) \}.
 </section>
 <section id="chebyshev-basis">
 <h3>Chebyshev basis<a class="headerlink" href="#chebyshev-basis" title="Link to this heading">#</a></h3>
-<p>The multidimensional Chebyshev basis polynomial (of the first kind) associated with the multi-index element <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> is defined as:</p>
+<p>The multivariate Chebyshev basis polynomial (of the first kind) associated with the multi-index element <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> is defined as:</p>
 <div class="math notranslate nohighlight">
 \[
 \Psi_{\mathrm{cheb}, \boldsymbol{\alpha}} (\boldsymbol{x}) = T_{\alpha_1} (x_1) \cdots T_{\alpha_m} (x_m) = \prod_{j = 1}^m T_{\alpha_j} (x_j),
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(T_{\alpha_j} (x_j)\)</span> is the <span class="math notranslate nohighlight">\(\alpha_j\)</span>th-degree (one-dimensional) Chebyshev polynomial of the first kind associated with the <span class="math notranslate nohighlight">\(j\)</span>th-dimension.</p>
-<p>The one-dimensional Chebyshev polynomial of the first kind satisfies the following three-term recurrence (TTR) relation:</p>
+<p>where <span class="math notranslate nohighlight">\(T_{\alpha_j} (x_j)\)</span> is the <span class="math notranslate nohighlight">\(\alpha_j\)</span>th-degree univariate Chebyshev polynomial of the first kind associated with the <span class="math notranslate nohighlight">\(j\)</span>th-dimension.</p>
+<p>The univariate Chebyshev polynomial of the first kind satisfies the following three-term recurrence (TTR) relation:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{aligned}
@@ -778,7 +779,7 @@ A = \{ (0, 0) , (1, 0), (2, 0), (0, 1), (1, 1) \}.
 <p>Consider the following one-dimensional polynomial:</p>
 <div class="math notranslate nohighlight">
 \[
-Q(x) = 10 + 4.5 x - 3 x^2 + 1.5 x^3 - 1.2 x^4, x \in [-1, 1].
+Q(x) = 5 + 2.5 x - 2.0 x^2 - 5.0 x^3 + 1.0 x^4, x \in [-1, 1].
 \]</div>
 <p>This polynomial is readily expressed in the canonical basis.</p>
 <p>First, create the multi-index set of the polynomial:</p>
@@ -789,10 +790,10 @@ Q(x) = 10 + 4.5 x - 3 x^2 + 1.5 x^3 - 1.2 x^4, x \in [-1, 1].
 </div>
 </div>
 </div>
-<p>Then store the coefficients in an array:</p>
+<p>Then store the coefficients in an array with the order that corresponds to the above multi-index set:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coeffs_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coeffs_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -806,7 +807,7 @@ Q(x) = 10 + 4.5 x - 3 x^2 + 1.5 x^3 - 1.2 x^4, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.canonical_polynomial.CanonicalPolynomial at 0x7f4938aed210&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.canonical_polynomial.CanonicalPolynomial at 0x7f7198c3e050&gt;
 </pre></div>
 </div>
 </div>
@@ -834,7 +835,7 @@ Q(x) = 10 + 4.5 x - 3 x^2 + 1.5 x^3 - 1.2 x^4, x \in [-1, 1].
 </div>
 <p>The same polynomial can be expressed in a different basis using the help of a transformation class.
 Note that all instance of the transformation class must be called to carry out the actual transformation that returns a polynomial in the new basis.</p>
-<p>The one-dimensional canonical basis polynomial are shown in the plots below.</p>
+<p>The univariate canonical basis polynomial are shown in the plots below.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1263,8 +1264,8 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 <img alt="../_images/c5166f2581821661f042ca1a0c9b7392e9c2d008d60244da537ebbc8659936b6.png" src="../_images/c5166f2581821661f042ca1a0c9b7392e9c2d008d60244da537ebbc8659936b6.png" />
 </div>
 </div>
-<p>Because the function is not a polynomial (a square root is involved), creating a polynomial that approximates the function is much more intuitive in the Lagrange basis. In the other basis, it is not straightforward to intuit what the coefficient values should be.</p>
-<p>First, create a two-dimensional multi-index of specified degree:</p>
+<p>Since the function involves a square root and therefore is not a polynomial, constructing a polynomial approximation is much more intuitive in the Lagrange basis. In contrast, it’s not immediately clear what the coefficient values should be in other bases, making the Lagrange basis a more natural choce for this type of approximation.</p>
+<p>First, create a two-dimensional multi-index with the following choices of <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(p\)</span>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mi_2d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">MultiIndexSet</span><span class="o">.</span><span class="n">from_degree</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
@@ -1296,7 +1297,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Interpolation grid</span>
 <span class="n">grd_2d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Grid</span><span class="p">(</span><span class="n">mi_2d</span><span class="p">)</span>
 <span class="c1"># Coefficients of the Lagrange polynomial</span>
-<span class="n">coeffs_2d</span> <span class="o">=</span> <span class="n">grd_2d</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
+<span class="n">lag_coeffs_2d</span> <span class="o">=</span> <span class="n">grd_2d</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1304,7 +1305,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 <p>Finally, construct a polynomial in the Lagrange basis given the grid and coefficients:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lag_poly_2d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">LagrangePolynomial</span><span class="o">.</span><span class="n">from_grid</span><span class="p">(</span><span class="n">grd_2d</span><span class="p">,</span> <span class="n">coeffs_2d</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lag_poly_2d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">LagrangePolynomial</span><span class="o">.</span><span class="n">from_grid</span><span class="p">(</span><span class="n">grd_2d</span><span class="p">,</span> <span class="n">lag_coeffs_2d</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1568,7 +1569,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 <section id="in-the-2d-newton-basis">
 <h3>In the (2D) Newton basis<a class="headerlink" href="#in-the-2d-newton-basis" title="Link to this heading">#</a></h3>
-<p>You can transform a Minterpy polynomial in the Lagrange basis to another polynomial in the Newton with the help of <a class="reference internal" href="../api/transformations/transformation-lagrange.html#minterpy.transformations.lagrange.LagrangeToNewton" title="minterpy.transformations.lagrange.LagrangeToNewton"><code class="xref py py-class docutils literal notranslate"><span class="pre">LagrangeToNewton</span></code></a>:</p>
+<p>You can transform a Minterpy polynomial in the Lagrange basis to another polynomial in the Newton basis with the help of <a class="reference internal" href="../api/transformations/transformation-lagrange.html#minterpy.transformations.lagrange.LagrangeToNewton" title="minterpy.transformations.lagrange.LagrangeToNewton"><code class="xref py py-class docutils literal notranslate"><span class="pre">LagrangeToNewton</span></code></a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nwt_poly_2d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">LagrangeToNewton</span><span class="p">(</span><span class="n">lag_poly_2d</span><span class="p">)()</span>
@@ -2451,8 +2452,8 @@ table below.</p>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <p>In this tutorial, you’ve explored the different polynomial bases supported by Minterpy. Depending on the problem at hand, it may be more intuitive to construct a polynomial in a specific basis.</p>
-<p>Once a polynomial has been constructed in one basis, it can be transformed into another. The result of this transformation is a polynomial that is equivalent to the original but represented in a different basis.</p>
-<p>Note, however, that Minterpy has different supported features for each polynomial basis as summarized by the following table.</p>
+<p>One of the powerful features of Minterpy is the ability to transform a polynomial from one basis to another. This transformation produces a new polynomial that is mathematically equivalent to the original, but expressed in a different basis.</p>
+<p>Keep in mind that Minterpy’s supported features vary across different polynomial bases. The following table provides a summary of the available features for each basis.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head text-left"><p>Operations</p></th>
@@ -2527,13 +2528,13 @@ table below.</p>
 </table>
 </div>
 <hr class="docutils" />
-<p>So far, you’ve learned:</p>
+<p>To recap, you’ve now acquired a solid foundation in working with Minterpy polynomials, including:</p>
 <ul class="simple">
-<li><p>how to construct Minterpy polynomials in one or more dimensions</p></li>
-<li><p>what operations you can perform with Minterpy polynomials (arithmetic and calculus operations)</p></li>
-<li><p>the different polynomial bases and how to transform between them</p></li>
+<li><p>Constructing polynomials in <a class="reference internal" href="1d-polynomial-interpolation.html"><span class="doc">one</span></a> or <a class="reference internal" href="md-polynomial-interpolation.html"><span class="doc">more</span></a> dimensions;</p></li>
+<li><p>Performing various operations with polynomials, such as <a class="reference internal" href="arithmetic-operations-with-polynomials.html"><span class="doc">arithmetic</span></a> and <a class="reference internal" href="calculus-operations-with-polynomials.html"><span class="doc">calculus</span></a> operations;</p></li>
+<li><p>Understanding the different polynomial bases and transforming between them (<em>this tutorial</em>).</p></li>
 </ul>
-<p>In all these tutorials, you typically start with a given function of interest, where you can evaluate it at chosen locations (i.e., the unisolvent nodes) to construct an interpolating polynomial.</p>
+<p>In all these tutorials, you typically start with a given function of interest, where you can evaluate it at specifically chosen locations (i.e., the unisolvent nodes) to construct an interpolating polynomial.</p>
 <p>One important problem remains: <em>How do you construct a polynomial from a given set of scattered data?</em></p>
 </section>
 </section>

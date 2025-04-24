@@ -59,7 +59,7 @@
     <link rel="prev" title="Quick Start Guide to Function Approximations with Minterpy" href="function-approximations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g2eff230" />
+  <meta name="docsearch:version" content="0.1.dev1+gc97db51" />
   </head>
   
   
@@ -687,7 +687,7 @@ Q(p_{\alpha}) = f(p_{\alpha}), \forall p_{\alpha} \in P_A,
 \[
 Q(x) = \sum_{\alpha \in A} c_{\mathrm{lag}, \alpha} \Psi_{\mathrm{lag}, \alpha}(x),
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(A\)</span> is the multi-index set and <span class="math notranslate nohighlight">\(\Psi_{\alpha}\)</span>’s are monomials of the Lagrange basis that satisfy:</p>
+<p>where <span class="math notranslate nohighlight">\(A\)</span> is the multi-index set and <span class="math notranslate nohighlight">\(\Psi_{\alpha}\)</span>’s are Lagrange basis polynomials, each of which satisfies:</p>
 <div class="math notranslate nohighlight">
 \[
 \Psi_{\mathrm{lag}, \alpha}(p_{\beta}) = \delta_{\alpha, \beta}, p_\beta \in P_A,
@@ -716,7 +716,7 @@ In the Newton basis, the polynomial takes the form:</p>
 \[
 Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alpha}(x),
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(c_{\mathrm{nwt}, \alpha}\)</span>’s are the coefficients of the polynomial in the Newton basis and <span class="math notranslate nohighlight">\(\Psi_{\mathrm{nwt}, \alpha}\)</span> is the monomial of the Newton basis associated with multi-index element <span class="math notranslate nohighlight">\(\alpha\)</span>:</p>
+<p>where <span class="math notranslate nohighlight">\(c_{\mathrm{nwt}, \alpha}\)</span>’s are the coefficients of the polynomial in the Newton basis and <span class="math notranslate nohighlight">\(\Psi_{\mathrm{nwt}, \alpha}\)</span> is the the Newton basis polynomial associated with multi-index element <span class="math notranslate nohighlight">\(\alpha\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[
 \Psi_{\mathrm{nwt}, \alpha}(x) = \prod_{i = 0}^{\alpha - 1} (x - p_i),
@@ -1011,7 +1011,7 @@ in-depth tutorial.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f482d0265f0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f38e5113a30&gt;
 </pre></div>
 </div>
 </div>
