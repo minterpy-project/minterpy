@@ -1,0 +1,1162 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "60f73f47",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "# Basic Arithmetic Operations with Polynomials"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9250bb6bcb0da956",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Once you have constructed a polynomial in Minterpy, you can perform various operations on it, depending on the basis in which the polynomial is represented.\n",
+    "For instance, as demonstrated in the previous tutorials, you can evaluate a Minterpy polynomial (in the Newton basis) at a set of query points.\n",
+    "\n",
+    "This tutorial will show you how to extend beyond evaluation by performing arithmetic operations with Minterpy polynomials.\n",
+    "Specifically, you'll learn that Minterpy polynomials can be:\n",
+    "\n",
+    "- added or subtracted from other polynomials\n",
+    "- multiplied by other polynomials or real scalar numbers\n",
+    "- raised to a non-negative integer power\n",
+    "\n",
+    "These operations result in another Minterpy polynomial (in the same basis).\n",
+    "In other words, Minterpy polynomials are _closed_ under the following arithmetic operations:\n",
+    "\n",
+    "- polynomial-polynomial multiplication\n",
+    "- polynomial-scalar multiplication\n",
+    "- polynomial-polynomial addition and subtraction\n",
+    "- polynomial-scalar addition and subtraction\n",
+    "- exponentiation by a non-negative integer\n",
+    "\n",
+    "For clarity, this in-depth tutorial uses one-dimensional polynomials as examples.\n",
+    "However, the principles and behaviors described are consistent across all dimensions.\n",
+    "\n",
+    "Before you start, make sure to import the necessary packages to follow along with this guide."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "aa387b47-58fc-453c-b738-662bc24ff0fc",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import minterpy as mp\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "52ea8534-a3d0-4b98-807b-25777b4594f0",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## Motivating functions\n",
+    "\n",
+    "Consider the following two one-dimensional functions.\n",
+    "\n",
+    "The first is the sine function:\n",
+    "\n",
+    "$$\n",
+    "f_1(x) = \\sin{(5 \\pi x)}, x \\in [-1, 1].\n",
+    "$$\n",
+    "\n",
+    "You can define the above function as a lambda function in Python:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ac0bd3b3-7f93-4b14-a602-e599a6a15b61",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "fun_1 = lambda xx: np.sin(5 * np.pi * xx)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2b1494bb-0cf1-40bf-acd1-ea5cf0932fa0",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": "Following the examples given in the {doc}`previous guide <1d-polynomial-interpolation>`, you can construct an interpolating polynomial of the function above as follows:"
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7f1183d3-97ef-4d22-9bb9-b62707addbf7",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Multi-index set of polynomial degree 30\n",
+    "mi_1 = mp.MultiIndexSet.from_degree(1, 30)\n",
+    "# Interpolation grid\n",
+    "grd_1 = mp.Grid(mi_1)\n",
+    "# Coefficients of the Lagrange polynomial\n",
+    "coeffs_1 = grd_1(fun_1)\n",
+    "# Lagrange polynomial given grid and coefficients\n",
+    "lag_poly_1 = mp.LagrangePolynomial.from_grid(grd_1, coeffs_1)\n",
+    "# Transformation to the Newton basis\n",
+    "poly_1 = mp.LagrangeToNewton(lag_poly_1)()                 "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "25997eb3-91f8-46b1-b217-80f272ac825d",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "You can check the infinity norm of the polynomial to decide if the approximation is good enough."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "402fc35c-47f6-40ad-92de-f391ff92e04e",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "xx_test = -1 + 2 * np.random.rand(10000)\n",
+    "yy_test_1 = fun_1(xx_test)\n",
+    "yy_poly_1 = poly_1(xx_test)\n",
+    "print(np.max(np.abs(yy_poly_1 - yy_test_1)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "fee8b3a0-e71f-4d7f-8211-59d99d09e848",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "```{note}\n",
+    "The choice of polynomial degree above is arbitrary; in practice, you will decide whether the accuracy of an interpolating polynomial is good enough to your use case. Note also that, infinity norm is not the only measure accuracy typically used; for instance, mean-squared error is also widely used.\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ad076661-ef45-4e31-9a9f-81d5a55af4ad",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The second is the exponential function:\n",
+    "\n",
+    "$$\n",
+    "f_2(x) = 2.0 \\, e^{-2.5 (x + 1)}, x \\in [-1, 1].\n",
+    "$$\n",
+    "\n",
+    "As before, you can define the function as a lambda function:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8757499a-09ee-4b7a-9931-d01812ae1bc9",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "fun_2 = lambda xx: 2.0 * np.exp(-2.5 * (xx + 1))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "58fcb3ec-eccf-415f-b20d-86a4b55f35af",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "and then the interpolating polynomial:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2929ff59-0958-4978-8020-46994ec2c03c",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Multi-index set of polynomial degree 15\n",
+    "mi_2 = mp.MultiIndexSet.from_degree(1, 15)\n",
+    "# Interpolation grid\n",
+    "grd_2 = mp.Grid(mi_2)\n",
+    "# Coefficients of the Lagrange polynomial\n",
+    "coeffs_2 = grd_2(fun_2)\n",
+    "# Lagrange polynomial given grid and coefficients\n",
+    "lag_poly_2 = mp.LagrangePolynomial.from_grid(grd_2, coeffs_2)\n",
+    "# Transformation to the Newton basis\n",
+    "poly_2 = mp.LagrangeToNewton(lag_poly_2)()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "04d7e58a-fa62-4358-9f9e-dee396d6877b",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Finally, check the infinity norm to decide if the approximation is accurate enough."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0930943a-11c7-448d-b698-064f9cd94a7f",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "yy_test_2 = fun_2(xx_test)\n",
+    "yy_poly_2 = poly_2(xx_test)\n",
+    "print(np.max(np.abs(yy_poly_2 - yy_test_2)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3d599462-db63-4659-8474-fe7a33c864cb",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The plots of both interpolating polynomials are shown below."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0c7629d0-361d-4d2a-b644-7a721d2aed58",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "xx_plot = np.linspace(-1, 1, 1000)\n",
+    "\n",
+    "fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))\n",
+    "\n",
+    "axs[0].plot(xx_plot, fun_1(xx_plot), label=\"true function\")\n",
+    "axs[0].plot(xx_plot, poly_1(xx_plot), label=\"polynomial ($Q$)\")\n",
+    "axs[0].scatter(grd_1.unisolvent_nodes[:, 0], coeffs_1)\n",
+    "axs[0].set_xlabel(\"$x$\", fontsize=14);\n",
+    "axs[0].set_ylabel(\"$f_1(x)$\", fontsize=14);\n",
+    "axs[0].set_title(\"Sine\", fontsize=16);\n",
+    "axs[0].tick_params(axis='both', which='major', labelsize=12)\n",
+    "\n",
+    "\n",
+    "axs[1].plot(xx_plot, fun_2(xx_plot), label=\"true function ($f$)\")\n",
+    "axs[1].plot(xx_plot, poly_2(xx_plot), label=\"polynomial ($Q$)\")\n",
+    "axs[1].scatter(grd_2.unisolvent_nodes[:, 0], coeffs_2)\n",
+    "axs[1].set_xlabel(\"$x$\", fontsize=14);\n",
+    "axs[1].set_ylabel(\"$f_2(x)$\", fontsize=14);\n",
+    "axs[1].set_title(\"Exponential\", fontsize=16)\n",
+    "axs[1].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[1].legend(fontsize=14)\n",
+    "\n",
+    "fig.tight_layout()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9fc60940-4a89-4cb8-b937-0fdb59ec5342",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The plots show that are no notable differences between the two true functions and their corresponding interpolating polynomials.\n",
+    "\n",
+    "---\n",
+    "\n",
+    "With the two interpolating polynomials defined, you are now ready to do some arithmetic operations with them."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "78ab9b99-b44a-49ac-83ff-4013b4219395",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## Addition and subtraction\n",
+    "\n",
+    "Minterpy polynomials may be added or subtracted by a real scalar number; this operation returns another polynomial.\n",
+    "\n",
+    "For instance:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "11ca8d18-aab1-4dbe-a350-553cdeded640",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_scalar_add = poly_1 + 5\n",
+    "poly_scalar_add"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "78ab35a8-cae3-488a-b43a-a613b701e9d2",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "or:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e811d720-9e9c-4409-be12-905c4d52c39c",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_scalar_sub = poly_1 - 5\n",
+    "poly_scalar_sub"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "590039e8-cebd-4eb1-9179-2b0d6751e3ed",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Adding (resp. subtracting) a real scalar number uniformly shifts the polynomial up (resp. down):"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "513635ba-953c-4cbb-84b7-15b777112e25",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "xx_plot = np.linspace(-1, 1, 1000)\n",
+    "\n",
+    "fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))\n",
+    "\n",
+    "axs[0].plot(xx_plot, poly_1(xx_plot), label=\"$Q_1$\")\n",
+    "axs[0].plot(xx_plot, poly_scalar_add(xx_plot), label=\"$Q_1 + 5.0$\")\n",
+    "axs[0].set_xlabel(\"$x$\", fontsize=14)\n",
+    "axs[0].set_ylabel(\"$y$\", fontsize=14)\n",
+    "axs[0].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[0].legend(fontsize=14, loc=\"lower right\")\n",
+    "axs[0].set_ylim([-6.5, 6.5])\n",
+    "\n",
+    "axs[1].plot(xx_plot, poly_1(xx_plot), label=\"$Q_1$\")\n",
+    "axs[1].plot(xx_plot, poly_scalar_sub(xx_plot), label=\"$Q_1 - 5.0$\")\n",
+    "axs[1].set_xlabel(\"$x$\", fontsize=14);\n",
+    "axs[1].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[1].legend(fontsize=14, loc=\"upper right\")\n",
+    "axs[1].set_ylim([-6.5, 6.5])\n",
+    "\n",
+    "fig.tight_layout();"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2795c779-f521-4aba-b11d-033b806015ed",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Polynomials may also be added or subtracted from each other; the result is once again another polynomial.\n",
+    "\n",
+    "For instance, $Q_{\\mathrm{add}} (x) = Q_1(x) + Q_2(x)$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a6ed95bc-230a-4151-a69c-4903da5cab41",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_add = poly_1 + poly_2\n",
+    "poly_add"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ccaf40e1-5140-41c3-9bbc-e041e7edf2d4",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "or $Q_{\\mathrm{sub}} (x) = Q_1(x) - Q_2(x)$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b3e5744e-6cd0-4cc6-b6ec-f2aba785e570",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_sub = poly_1 - poly_2\n",
+    "poly_sub"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5f616094-1ee9-4772-b87f-84b9f7d4197d",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The plots of the two polynomials are shown below."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5dfac906-7c38-44f8-bfe9-45a63cb1fb7b",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "xx_plot = np.linspace(-1, 1, 1000)\n",
+    "\n",
+    "fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))\n",
+    "\n",
+    "axs[0].plot(xx_plot, poly_1(xx_plot), label=\"$Q_1$\")\n",
+    "axs[0].plot(xx_plot, poly_add(xx_plot), label=\"$Q_1 + Q_2$\")\n",
+    "axs[0].set_xlabel(\"$x$\", fontsize=14)\n",
+    "axs[0].set_ylabel(\"$y$\", fontsize=14)\n",
+    "axs[0].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[0].legend(fontsize=14, loc=\"lower right\")\n",
+    "axs[0].set_ylim([-2.75, 2.75])\n",
+    "\n",
+    "axs[1].plot(xx_plot, poly_1(xx_plot), label=\"$Q_1$\")\n",
+    "axs[1].plot(xx_plot, poly_sub(xx_plot), label=\"$Q_1 - Q_2$\")\n",
+    "axs[1].set_xlabel(\"$x$\", fontsize=14);\n",
+    "axs[1].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[1].legend(fontsize=14, loc=\"lower right\")\n",
+    "axs[1].set_ylim([-2.75, 2.75])\n",
+    "\n",
+    "fig.tight_layout();"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "51453789-8664-4a5b-8939-f1d0250e67a5",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## Multiplication\n",
+    "\n",
+    "Minterpy polynomials may also be multiplied by a real scalar number; the operation returns another polynomial.\n",
+    "\n",
+    "Consider $5 \\times Q_2(x)$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "af4ca70c-6db6-4388-a826-2bc2221fcb69",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_scalar_mul = 5.0 * poly_2\n",
+    "poly_scalar_mul"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1e597744-f945-497e-8f21-0d8f9e90c4fd",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Scalar multiplication uniformly and vertically stretches the polynomial across its domain as shown in the plot below."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7001e394-da1f-48ec-9c0e-2677a6c8ab8a",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5, 4))\n",
+    "\n",
+    "ax.plot(xx_plot, poly_2(xx_plot), label=\"$Q_2$\")\n",
+    "ax.plot(xx_plot, poly_scalar_mul(xx_plot), label=\"$5 \\\\times Q_2$\")\n",
+    "ax.set_xlabel(\"$x$\", fontsize=14)\n",
+    "ax.set_ylabel(\"$y$\", fontsize=14)\n",
+    "ax.tick_params(axis='both', which='major', labelsize=12)\n",
+    "ax.legend(fontsize=14);"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b68c0bb9-31de-43d5-ab60-d73ee237ca27",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Furthermore, a multiplication between Minterpy polynomials is also a valid operation that returns a polynomial.\n",
+    "\n",
+    "For instance $Q_1 \\times Q_2$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b211c9b0-f251-4391-9c8e-f1edd7afc912",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_mul = poly_1 * poly_2\n",
+    "poly_mul"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "de757d8f-d5e8-4ff2-bd57-c3e111f5eeaa",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "The plot of the product polynomial is shown below:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "aeff6008-c5a8-4d51-a9de-8502fd12b670",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "xx_plot = np.linspace(-1, 1, 1000)\n",
+    "\n",
+    "fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(12, 4))\n",
+    "\n",
+    "axs[0].plot(xx_plot, poly_1(xx_plot), label=\"$Q_1$\")\n",
+    "axs[0].set_xlabel(\"$x$\", fontsize=14)\n",
+    "axs[0].set_ylabel(\"$y$\", fontsize=14)\n",
+    "axs[0].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[0].legend(fontsize=14, loc=\"upper right\")\n",
+    "axs[0].set_ylim([-2.0, 2.25])\n",
+    "\n",
+    "axs[1].plot(xx_plot, poly_2(xx_plot), label=\"$Q_2$\")\n",
+    "axs[1].set_xlabel(\"$x$\", fontsize=14);\n",
+    "axs[1].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[1].legend(fontsize=14, loc=\"upper right\")\n",
+    "axs[1].set_ylim([-2.0, 2.25])\n",
+    "\n",
+    "axs[2].plot(xx_plot, poly_mul(xx_plot), label=\"$Q_1 \\\\times Q_2$\")\n",
+    "axs[2].set_xlabel(\"$x$\", fontsize=14)\n",
+    "axs[2].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[2].legend(fontsize=14);\n",
+    "axs[2].legend(fontsize=14, loc=\"upper right\")\n",
+    "axs[2].set_ylim([-2.0, 2.25])\n",
+    "\n",
+    "fig.tight_layout();"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4059ecd9-adec-4eaf-81dd-b948ae46e4ab",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "source": [
+    "As expected the product polynomial is an exponentially decaying sine function."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "198d78b7-e734-4bd5-af51-4285a83e5c4a",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## Division\n",
+    "\n",
+    "Minterpy polynomials may be divided by a real scalar number; this operation returns another polynomial.\n",
+    "\n",
+    "For instance $Q_1(x) / 4.0$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ffe6db29-58d5-4968-add4-3252aeddf179",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_scalar_div = poly_1 / 4.0\n",
+    "poly_scalar_div"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c86078b8-21af-47fa-965e-78361d02898c",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Division by a real scalar number uniformly and vertically contracts the polynomial across its domain as shown in the plot below."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3623e039-ea04-4ac1-b5af-8b1b77f1184d",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5, 4))\n",
+    "\n",
+    "ax.plot(xx_plot, poly_1(xx_plot), label=\"$Q_1$\")\n",
+    "ax.plot(xx_plot, poly_scalar_div(xx_plot), label=\"$\\\\frac{Q_1}{4.0}$\")\n",
+    "ax.set_xlabel(\"$x$\", fontsize=14)\n",
+    "ax.set_ylabel(\"$y$\", fontsize=14)\n",
+    "ax.tick_params(axis='both', which='major', labelsize=12)\n",
+    "ax.legend(fontsize=14);"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "00c992b2-8c27-4342-bab3-990888c5b510",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Minterpy, however, does **not support** polynomial-polynomial division (rational function). Minterpy cannot evaluate the resulting function of the expression:\n",
+    "\n",
+    "$$\n",
+    "Q_3(x) = \\frac{Q_1(x)}{Q_2(x)}\n",
+    "$$\n",
+    "\n",
+    "and return the resulting rational function."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bff03961-ca16-4b77-9ac4-25e541b36e74",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "```{note}\n",
+    "That being said, you can still evaluate the evaluation of the expression above at a given set of query points (as long as $Q_2(x) \\neq 0$).\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a14e306e-3157-4a65-ab0e-4feb1b268db8",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "source": [
+    "## Exponentiation\n",
+    "\n",
+    "Finally, Minterpy polynomials may also be exponentiated by a **non-negative integer**. As all the other arithmetic operations above, polynomial exponentiation returns another polynomial.\n",
+    "\n",
+    "For instance $Q_1^2(x)$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "dbea9f91-a939-4d8f-9f94-195d29d80acf",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_exp = poly_1**2\n",
+    "poly_exp"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "79ee5e99-4f1d-4ad5-890c-40e882955b09",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5, 4))\n",
+    "\n",
+    "ax.plot(xx_plot, poly_1(xx_plot), label=\"$Q_1$\")\n",
+    "ax.plot(xx_plot, poly_exp(xx_plot), label=\"$Q_1^2$\")\n",
+    "ax.set_xlabel(\"$x$\", fontsize=14)\n",
+    "ax.set_ylabel(\"$y$\", fontsize=14)\n",
+    "ax.tick_params(axis='both', which='major', labelsize=12)\n",
+    "ax.legend(fontsize=14);"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "680f76a2-b7d5-4785-a48e-33665dbb5cb3",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Polynomial exponentiation by a non-negative integer is a syntactic sugar for multiple polynomial self multiplications.\n",
+    "\n",
+    "For instance, $Q_2^2(x) = Q_2(x) \\times Q_2(x)$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a95ebc35-bdae-42d3-af74-c3e0a67f6588",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_2**2 == poly_2 * poly_2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8570761d-ee68-4d88-a34e-915b5b76071a",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "or $Q_2^3(x) = Q_2(x) \\times Q_2(x) \\times Q_2(x)$:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c5d8915a-6c29-4315-b054-0a1593be61d8",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_2**3 == poly_2 * poly_2 * poly_2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4e38f21e-e90f-44d1-b66d-68ce7df60867",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "Finally, polynomial exponentiation by $0$ returns a constant polynomial with the value of $1.0$."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "fcbfc482-126d-4578-aeab-7461b66c4c3d",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "poly_1_exp_0 = poly_1**0\n",
+    "poly_2_exp_0 = poly_2**0"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5ed5bc5f-d0ea-4a12-9af9-cdc5e7b6ec48",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "xx_plot = np.linspace(-1, 1, 1000)\n",
+    "\n",
+    "fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))\n",
+    "\n",
+    "axs[0].plot(xx_plot, poly_1(xx_plot), label=\"$Q_1$\")\n",
+    "axs[0].plot(xx_plot, poly_1_exp_0(xx_plot), label=\"$Q_1^0$\")\n",
+    "axs[0].set_xlabel(\"$x$\", fontsize=14)\n",
+    "axs[0].set_ylabel(\"$y$\", fontsize=14)\n",
+    "axs[0].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[0].legend(fontsize=14, loc=\"lower right\")\n",
+    "axs[0].set_ylim([-1.5, 2.25])\n",
+    "\n",
+    "axs[1].plot(xx_plot, poly_2(xx_plot), label=\"$Q_1$\")\n",
+    "axs[1].plot(xx_plot, poly_2_exp_0(xx_plot), label=\"$Q_1^0$\")\n",
+    "axs[1].set_xlabel(\"$x$\", fontsize=14);\n",
+    "axs[1].tick_params(axis='both', which='major', labelsize=12)\n",
+    "axs[1].legend(fontsize=14, loc=\"lower right\")\n",
+    "axs[1].set_ylim([-1.5, 2.25])\n",
+    "\n",
+    "fig.tight_layout();"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b348e8e3-be72-413f-a90a-9489eb2b90c9",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "```{warning}\n",
+    "Minterpy polynomials cannot be exponentiated by another polynomial, a negative number, or a non-integer. Attempting to carry out these operations will raise an exception.\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "26198996-a7bb-435c-bef8-4e63dd1292f6",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "source": [
+    "## Summary\n",
+    "\n",
+    "In this in-depth tutorial, you've learned about the basic arithmetic operations involving Minterpy polynomials.\n",
+    "Minterpy polynomials are closed under the following arithmetic operations, meaning that performing these operations results in another Minterpy polynomial:\n",
+    "\n",
+    "- Polynomial-scalar addition and subtraction\n",
+    "- Polynomial-polynomial addition and subtraction\n",
+    "- Polynomial-scalar multiplication\n",
+    "- Polynomial-polynomial multiplication\n",
+    "- Polynomial-scalar division\n",
+    "- Polynomial exponentiation by a non-negative integer\n",
+    "\n",
+    "Throughout the tutorial, one-dimensional polynomials were used for illustration, but the principles apply similarly to Minterpy polynomials of higher dimensions.\n",
+    "\n",
+    "Please note that Minterpy currently does not support:\n",
+    "\n",
+    "- Polynomial-polynomial division (i.e., forming _rational functions_)\n",
+    "- Polynomial exponentiation by a real scalar (including negative integers and non-integer numbers)\n",
+    "\n",
+    "---\n",
+    "\n",
+    "In the next tutorial, you will explore additional features of Minterpy, including basic calculus operations such as differentiation and integration."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.16"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
