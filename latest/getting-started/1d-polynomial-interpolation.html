@@ -55,11 +55,11 @@
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Multidimensional Polynomial Interpolation" href="md-polynomial-interpolation.html" />
+    <link rel="next" title="Multivariate Polynomial Interpolation" href="md-polynomial-interpolation.html" />
     <link rel="prev" title="Quick Start Guide to Function Approximations with Minterpy" href="function-approximations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g3801b9e" />
+  <meta name="docsearch:version" content="0.1.dev1+g666aec4" />
   </head>
   
   
@@ -926,14 +926,14 @@ The function returns a callable object that you can use to evaluate the (underly
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">poly_degrees</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">);</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$|| f - Q ||_\infty$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Polynomial degree&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Polynomial degree ($n$)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/3668ba59b76b415c25013297e52f824108b29099cc7ed0fc02153152e1e4e7cd.png" src="../_images/3668ba59b76b415c25013297e52f824108b29099cc7ed0fc02153152e1e4e7cd.png" />
+<img alt="../_images/02f90aeeb5591f90f01124a87dcad107dce3fb3ff941d069b88f43c94472e278.png" src="../_images/02f90aeeb5591f90f01124a87dcad107dce3fb3ff941d069b88f43c94472e278.png" />
 </div>
 </div>
 <p>The absolute error of the degree 64 polynomials in the domain is shown below:</p>
@@ -996,7 +996,7 @@ These methods are summarized in the table below.</p>
 <td class="text-center"><p><a class="reference internal" href="../api/polynomials/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial" title="minterpy.polynomials.canonical_polynomial.CanonicalPolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">CanonicalPolynomial</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p><a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.Interpolant.to_chebyshev" title="minterpy.interpolation.Interpolant.to_chebyshev"><code class="xref py py-meth docutils literal notranslate"><span class="pre">to_chebyshev()</span></code></a></p></td>
-<td class="text-center"><p><a class="reference internal" href="../api/polynomials/chebyshev.html#minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial" title="minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">CanonicalPolynomial</span></code></a></p></td>
+<td class="text-center"><p><a class="reference internal" href="../api/polynomials/chebyshev.html#minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial" title="minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChebyshevPolynomial</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1011,7 +1011,7 @@ in-depth tutorial.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa66118e9b0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa848662b00&gt;
 </pre></div>
 </div>
 </div>
@@ -1060,7 +1060,7 @@ in-depth tutorial.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Multidimensional Polynomial Interpolation</p>
+        <p class="prev-next-title">Multivariate Polynomial Interpolation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
