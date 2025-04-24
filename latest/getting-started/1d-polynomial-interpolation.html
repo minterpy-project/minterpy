@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -59,7 +59,7 @@
     <link rel="prev" title="Quick Start Guide to Function Approximations with Minterpy" href="functions-approximation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -469,7 +469,7 @@ You can do a wide range of arithmetic and calculus operations with Minterpy poly
 <p>After installing <a class="reference internal" href="index.html"><span class="doc">installing Minterpy</span></a>, you can import it as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">minterpy</span> <span class="k">as</span> <span class="nn">mp</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">minterpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
 </pre></div>
 </div>
 </div>
@@ -478,8 +478,8 @@ You can do a wide range of arithmetic and calculus operations with Minterpy poly
 <p>You will also need to import NumPy and Matplotlib to follow along with this guide.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -514,7 +514,7 @@ f(x) = \frac{1}{1 + 25 x^2}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/478e7f6005e0e9586e630e6f9bef26de9029aa0d8fff90e09bacf085eb24f4d5.png" src="../_images/478e7f6005e0e9586e630e6f9bef26de9029aa0d8fff90e09bacf085eb24f4d5.png" />
+<img alt="../_images/af10d8d6fa7534a4309617824472ec4b39bf01434cb3576c4ada4eb069075912.png" src="../_images/af10d8d6fa7534a4309617824472ec4b39bf01434cb3576c4ada4eb069075912.png" />
 </div>
 </div>
 <p>With the function of interest defined, you are now ready to create a polynomial that approximates it.</p>
@@ -636,7 +636,7 @@ For the chosen polynomial degree, these nodes are:</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/e3e96bcda98441dac4d453d5bbb9ffef67fd8e4e81024b86034d8084feebd0f9.png" src="../_images/e3e96bcda98441dac4d453d5bbb9ffef67fd8e4e81024b86034d8084feebd0f9.png" />
+<img alt="../_images/f15752a36c9f56ae691f3946558a5c8e5328372967084481d3f444d3ba9efac5.png" src="../_images/f15752a36c9f56ae691f3946558a5c8e5328372967084481d3f444d3ba9efac5.png" />
 </div>
 </div>
 <p>Notice that there are more points in the boundaries of the domain.</p>
@@ -808,7 +808,7 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/710fa999ab661c962c913bf953e9b515fb8e9d123928eb97beba097af53c4e0a.png" src="../_images/710fa999ab661c962c913bf953e9b515fb8e9d123928eb97beba097af53c4e0a.png" />
+<img alt="../_images/d4c203920d437b628c3052a7cce45562a127058edd28b32040d1ce96dea47e0b.png" src="../_images/d4c203920d437b628c3052a7cce45562a127058edd28b32040d1ce96dea47e0b.png" />
 </div>
 </div>
 <p>Shown also in the plot are the location of unisolvent nodes and the corresponding function values.</p>
@@ -899,7 +899,7 @@ This call returns a callable object that can be used with a set of query points.
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/3ebbd611808cf4531cff7cf15b5b9a0e6911fe607bcb076cee3ccfadaedf34bb.png" src="../_images/3ebbd611808cf4531cff7cf15b5b9a0e6911fe607bcb076cee3ccfadaedf34bb.png" />
+<img alt="../_images/833072a894cd0bdfe0eb23344f81ed76dbc551c3d3e73666d27126abb5613b25.png" src="../_images/833072a894cd0bdfe0eb23344f81ed76dbc551c3d3e73666d27126abb5613b25.png" />
 </div>
 </div>
 <p>The convergence of the error is shown below:</p>
@@ -924,7 +924,7 @@ This call returns a callable object that can be used with a set of query points.
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/030edba1efe30d7893989f52e4fca10a4fdfbb9b7f97d43946eac32eeb2b148f.png" src="../_images/030edba1efe30d7893989f52e4fca10a4fdfbb9b7f97d43946eac32eeb2b148f.png" />
+<img alt="../_images/c9bd926473b69255411cad1b3c80108843fdd603d549c1e1b5ae85a6077f90d4.png" src="../_images/c9bd926473b69255411cad1b3c80108843fdd603d549c1e1b5ae85a6077f90d4.png" />
 </div>
 </div>
 <p>The absolute error of the degree 64 polynomials in the domain is shown below:</p>
@@ -943,7 +943,7 @@ This call returns a callable object that can be used with a set of query points.
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/355e7824975e9043b30829564e4fc254fd8ad5046fb941623ad1e5d648c108e0.png" src="../_images/355e7824975e9043b30829564e4fc254fd8ad5046fb941623ad1e5d648c108e0.png" />
+<img alt="../_images/4089842ef925ccf9ef97b3f8dfb50057fbea2f4f1d6591042f64739a4689926c.png" src="../_images/4089842ef925ccf9ef97b3f8dfb50057fbea2f4f1d6591042f64739a4689926c.png" />
 </div>
 </div>
 <p>The seemingly random behavior of the (very small) absolute error indicates that machine precision has been reached. Compare it with the absolute error of degree 4 polynomials:</p>
@@ -955,7 +955,7 @@ This call returns a callable object that can be used with a set of query points.
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/35c33eb5b7ab6c8ee40f35fe750f1d01b8a4a5ecae8bcb32920ded27e5a60efd.png" src="../_images/35c33eb5b7ab6c8ee40f35fe750f1d01b8a4a5ecae8bcb32920ded27e5a60efd.png" />
+<img alt="../_images/48202815e37967d249200bbc9bcaab1ebd6369d3bb0cfbf59e1aaf6b06db1636.png" src="../_images/48202815e37967d249200bbc9bcaab1ebd6369d3bb0cfbf59e1aaf6b06db1636.png" />
 </div>
 </div>
 </section>
@@ -998,7 +998,7 @@ in-depth tutorial.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f61f0bc8310&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fcca5bf3a90&gt;
 </pre></div>
 </div>
 </div>

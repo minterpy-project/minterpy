@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -443,10 +443,10 @@
 <span class="sd">  non-negative integer arrays. There is no explicit check of this conditions</span>
 <span class="sd">  in the following functions.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">void</span>
-<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">void</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">B_1D</span><span class="p">,</span>
     <span class="n">B_DTYPE</span><span class="p">,</span>
     <span class="n">B_TYPE</span><span class="p">,</span>
@@ -461,7 +461,7 @@
 <div class="viewcode-block" id="cross_and_sum">
 <a class="viewcode-back" href="../../../api/internal/jit_compiled/multi-index.html#minterpy.jit_compiled.multi_index.cross_and_sum">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">I_2D</span><span class="p">(</span><span class="n">I_2D</span><span class="p">,</span> <span class="n">I_2D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">cross_and_sum</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cross_and_sum</span><span class="p">(</span>
     <span class="n">indices_1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">indices_2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -504,7 +504,7 @@
 <div class="viewcode-block" id="unique_indices">
 <a class="viewcode-back" href="../../../api/internal/jit_compiled/multi-index.html#minterpy.jit_compiled.multi_index.unique_indices">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">B_1D</span><span class="p">(</span><span class="n">I_2D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">unique_indices</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">unique_indices</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the boolean mask of unique elements from an array of multi-indices.</span>
 
 <span class="sd">    Parameters</span>
@@ -544,7 +544,7 @@
 <div class="viewcode-block" id="is_lex_smaller_or_equal">
 <a class="viewcode-back" href="../../../api/internal/jit_compiled/multi-index.html#minterpy.jit_compiled.multi_index.is_lex_smaller_or_equal">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">B_TYPE</span><span class="p">(</span><span class="n">I_1D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">is_lex_smaller_or_equal</span><span class="p">(</span><span class="n">index_1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">index_2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_lex_smaller_or_equal</span><span class="p">(</span><span class="n">index_1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">index_2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an index is lexicographically smaller than or equal to another.</span>
 
 <span class="sd">    Parameters</span>
@@ -598,7 +598,7 @@
 <div class="viewcode-block" id="is_lex_sorted">
 <a class="viewcode-back" href="../../../api/internal/jit_compiled/multi-index.html#minterpy.jit_compiled.multi_index.is_lex_sorted">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">B_TYPE</span><span class="p">(</span><span class="n">I_2D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">is_lex_sorted</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_lex_sorted</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an array of multi-indices is lexicographically sorted.</span>
 
 <span class="sd">    Parameters</span>
@@ -658,7 +658,7 @@
 <div class="viewcode-block" id="search_lex_sorted">
 <a class="viewcode-back" href="../../../api/internal/jit_compiled/multi-index.html#minterpy.jit_compiled.multi_index.search_lex_sorted">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">INT</span><span class="p">(</span><span class="n">I_2D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">search_lex_sorted</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">search_lex_sorted</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the position of a given entry within an array of multi-indices.</span>
 
 <span class="sd">    Parameters</span>
@@ -740,7 +740,7 @@
 <div class="viewcode-block" id="is_index_contained">
 <a class="viewcode-back" href="../../../api/internal/jit_compiled/multi-index.html#minterpy.jit_compiled.multi_index.is_index_contained">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">B_TYPE</span><span class="p">(</span><span class="n">I_2D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">is_index_contained</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_index_contained</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a multi-index entry is present in a set of multi-indices.</span>
 
 <span class="sd">    Parameters</span>
@@ -786,7 +786,7 @@
 <div class="viewcode-block" id="all_indices_are_contained">
 <a class="viewcode-back" href="../../../api/internal/jit_compiled/multi-index.html#minterpy.jit_compiled.multi_index.all_indices_are_contained">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">B_TYPE</span><span class="p">(</span><span class="n">I_2D</span><span class="p">,</span> <span class="n">I_2D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">all_indices_are_contained</span><span class="p">(</span><span class="n">subset_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">all_indices_are_contained</span><span class="p">(</span><span class="n">subset_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if a set of indices is a subset of (or equal to) another set of indices.</span>
 
 <span class="sd">    :param subset_indices: one set of multi indices.</span>
@@ -821,7 +821,7 @@
 <div class="viewcode-block" id="fill_match_positions">
 <a class="viewcode-back" href="../../../api/internal/jit_compiled/multi-index.html#minterpy.jit_compiled.multi_index.fill_match_positions">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">void</span><span class="p">(</span><span class="n">I_2D</span><span class="p">,</span> <span class="n">I_2D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">fill_match_positions</span><span class="p">(</span><span class="n">larger_idx_set</span><span class="p">,</span> <span class="n">smaller_idx_set</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fill_match_positions</span><span class="p">(</span><span class="n">larger_idx_set</span><span class="p">,</span> <span class="n">smaller_idx_set</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Finds matching positions (array indices) for multi index entries in two multi indices.</span>
 
 <span class="sd">    :param larger_idx_set: the larger set of multi indices</span>
@@ -846,7 +846,7 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
 </pre></div>
 

@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -59,7 +59,7 @@
     <link rel="prev" title="Getting Started with Minterpy" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -467,7 +467,7 @@ This guide will quickly show you how to do that using Minterpy.</p>
 <p>After installing <a class="reference internal" href="index.html#installation"><span class="std std-ref">installing Minterpy</span></a>, you can import it as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">minterpy</span> <span class="k">as</span> <span class="nn">mp</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">minterpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
 </pre></div>
 </div>
 </div>
@@ -477,8 +477,8 @@ You’re free to choose any shorthand you prefer, but we find <code class="docu
 <p>While you’re at it, you will also need to import Numpy and Matplotlib to follow along with this guide.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -523,7 +523,7 @@ f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/4314dbe6149ad15fdbd91df1307f9f0a8ddcf0bd7cb8e7a7d944fa40998b4987.png" src="../_images/4314dbe6149ad15fdbd91df1307f9f0a8ddcf0bd7cb8e7a7d944fa40998b4987.png" />
+<img alt="../_images/97da9095c8fc9c605ddaf684f9aab63a5091d1e65c3e2d316ebee027766492f5.png" src="../_images/97da9095c8fc9c605ddaf684f9aab63a5091d1e65c3e2d316ebee027766492f5.png" />
 </div>
 </div>
 <section id="one-dimensional-interpolant">
@@ -586,7 +586,7 @@ f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/8a68e37e771c7b53193610ec6e862e3d069074a95c2d9f976de0b8adc362b9d6.png" src="../_images/8a68e37e771c7b53193610ec6e862e3d069074a95c2d9f976de0b8adc362b9d6.png" />
+<img alt="../_images/d183b9c33ae44d223ddddf642626c84210aff9a2cbbb8347db918b4b2e91bed4.png" src="../_images/d183b9c33ae44d223ddddf642626c84210aff9a2cbbb8347db918b4b2e91bed4.png" />
 </div>
 </div>
 <p>It seems that the interpolant still a bit off and does not approximate the function nicely.</p>
@@ -642,7 +642,7 @@ f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/26679311fb434d061597cca18ea79fbe8b0380586a5a889d2824af9736448b4f.png" src="../_images/26679311fb434d061597cca18ea79fbe8b0380586a5a889d2824af9736448b4f.png" />
+<img alt="../_images/7becc1324fc4e0d161e96ee252f06b5a0cbc28ee5702fbb615170c2dcd923828.png" src="../_images/7becc1324fc4e0d161e96ee252f06b5a0cbc28ee5702fbb615170c2dcd923828.png" />
 </div>
 </div>
 <p>Visually, there is no notable difference between the interpolant of degree <span class="math notranslate nohighlight">\(32\)</span> and the original function.
@@ -678,7 +678,7 @@ f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
 <p>Below is the code to define the function above in Python as a regular function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fun_2d</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fun_2d</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">xx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">xx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]))</span>
 </pre></div>
 </div>
@@ -692,7 +692,7 @@ f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
 <span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
@@ -739,7 +739,7 @@ f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/b399b5cb60e8ac6b8e42440fa274a44d23c3f1a1f3f376cbc7191baa71bae4c6.png" src="../_images/b399b5cb60e8ac6b8e42440fa274a44d23c3f1a1f3f376cbc7191baa71bae4c6.png" />
+<img alt="../_images/07111effcefedd46974bbacee9a389072054a885e40eed590a43ce776da27c0b.png" src="../_images/07111effcefedd46974bbacee9a389072054a885e40eed590a43ce776da27c0b.png" />
 </div>
 </div>
 <section id="two-dimension-interpolant">
@@ -766,7 +766,7 @@ f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
 <span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
@@ -813,7 +813,7 @@ f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/0d089cbea41b521f0ddbdaa947c92b87c16380d42e752d1a51500bc69b9d0fb8.png" src="../_images/0d089cbea41b521f0ddbdaa947c92b87c16380d42e752d1a51500bc69b9d0fb8.png" />
+<img alt="../_images/05b3ca58d9e1c852c9ffb4f74acfbb66e9644b316d266331b9d6bcfdd50121a0.png" src="../_images/05b3ca58d9e1c852c9ffb4f74acfbb66e9644b316d266331b9d6bcfdd50121a0.png" />
 </div>
 </div>
 </section>

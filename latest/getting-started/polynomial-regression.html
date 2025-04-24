@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -59,7 +59,7 @@
     <link rel="prev" title="Polynomial Bases and Transformations" href="polynomial-bases-and-transformations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -468,9 +468,9 @@ Despite this limitation, it is still possible to derive a polynomial that best f
 <p>As usual, before you begin, you’ll need to import the necessary packages to follow along with this guide.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">minterpy</span> <span class="k">as</span> <span class="nn">mp</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">minterpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -495,13 +495,13 @@ f_2(x) &amp; = \frac{2 x}{\sqrt{\pi}} f_1(x),
 <p>First, define the above functions in Python:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fun_1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fun_1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">fun_2</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fun_2</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">fun_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">fun_1</span><span class="p">(</span><span class="n">xx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">fun_1</span><span class="p">(</span><span class="n">xx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">fun_2</span><span class="p">(</span><span class="n">xx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">fun_2</span><span class="p">(</span><span class="n">xx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -525,7 +525,7 @@ f_2(x) &amp; = \frac{2 x}{\sqrt{\pi}} f_1(x),
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
 <span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
@@ -580,7 +580,7 @@ f_2(x) &amp; = \frac{2 x}{\sqrt{\pi}} f_1(x),
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/678314ded14336d0f2f7a0147949cc7682cd07b131a5d481e116023f59683c69.png" src="../_images/678314ded14336d0f2f7a0147949cc7682cd07b131a5d481e116023f59683c69.png" />
+<img alt="../_images/56ea17af53dfe6cb88b463d619deb466b7825671349f27a38b0e0dfce80f9aa9.png" src="../_images/56ea17af53dfe6cb88b463d619deb466b7825671349f27a38b0e0dfce80f9aa9.png" />
 </div>
 </div>
 </section>
@@ -764,7 +764,7 @@ That being said, the LOO-CV error is usually a more robust estimate of the gener
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
 <span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
@@ -836,7 +836,7 @@ That being said, the LOO-CV error is usually a more robust estimate of the gener
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/5e3dc35e55e97eb180ae931942e077db75103c4455e0bb563dbe6e3a31b2c82c.png" src="../_images/5e3dc35e55e97eb180ae931942e077db75103c4455e0bb563dbe6e3a31b2c82c.png" />
+<img alt="../_images/2016379e8fc23d4a7038a140069f5eb625aa6f24b0b84d3126358ade1d04c658.png" src="../_images/2016379e8fc23d4a7038a140069f5eb625aa6f24b0b84d3126358ade1d04c658.png" />
 </div>
 </div>
 <p>The plots show that the regression polynomial captures the overall behavior of the original function well. This indicates that the chosen polynomial structure and the available data are sufficient. Furthermore, the error plot shows that the differences between the regression polynomial and the original function are small across the function domain.</p>
@@ -851,7 +851,7 @@ That being said, the LOO-CV error is usually a more robust estimate of the gener
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fe287d550c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f82fa264490&gt;
 </pre></div>
 </div>
 </div>

@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -444,22 +444,22 @@
 <span class="sd">   - Consider if making separate modules for some relevant functions</span>
 <span class="sd">     makes any sense</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">no_type_check</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">no_type_check</span>
 
-<span class="kn">from</span> <span class="nn">minterpy.core.ABC</span> <span class="kn">import</span> <span class="n">OperatorABC</span><span class="p">,</span> <span class="n">TransformationABC</span>
-<span class="kn">from</span> <span class="nn">minterpy.dds</span> <span class="kn">import</span> <span class="n">dds</span>
-<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="n">ARRAY</span><span class="p">,</span> <span class="n">DEBUG</span><span class="p">,</span> <span class="n">FLOAT_DTYPE</span>
-<span class="kn">from</span> <span class="nn">minterpy.jit_compiled.transformations</span> <span class="kn">import</span> <span class="n">compute_vandermonde_n2c</span>
-<span class="kn">from</span> <span class="nn">minterpy.schemes.barycentric.precomp</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.ABC</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperatorABC</span><span class="p">,</span> <span class="n">TransformationABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.dds</span><span class="w"> </span><span class="kn">import</span> <span class="n">dds</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARRAY</span><span class="p">,</span> <span class="n">DEBUG</span><span class="p">,</span> <span class="n">FLOAT_DTYPE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.jit_compiled.transformations</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_vandermonde_n2c</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.schemes.barycentric.precomp</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_build_lagrange_to_newton_bary</span><span class="p">,</span>
     <span class="n">_build_newton_to_lagrange_bary</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">minterpy.schemes.matrix_operator</span> <span class="kn">import</span> <span class="n">MatrixOperator</span>
-<span class="kn">from</span> <span class="nn">minterpy.utils.polynomials.newton</span> <span class="kn">import</span> <span class="n">eval_newton_monomials</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.schemes.matrix_operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatrixOperator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.polynomials.newton</span><span class="w"> </span><span class="kn">import</span> <span class="n">eval_newton_monomials</span>
 
-<span class="kn">from</span> <span class="nn">minterpy.utils.polynomials.chebyshev</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.polynomials.chebyshev</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">evaluate_monomials</span> <span class="k">as</span> <span class="n">evaluate_monomials_chebyshev</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -468,7 +468,7 @@
 <span class="c1"># see: # https://stackoverflow.com/questions/10698858/built-in-range-or-numpy-arange-which-is-more-efficient</span>
 
 
-<span class="k">def</span> <span class="nf">invert_triangular</span><span class="p">(</span><span class="n">triangular_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">invert_triangular</span><span class="p">(</span><span class="n">triangular_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="c1"># FIXME: triangular inversion is not working! required when using barycentric transforms?</span>
     <span class="c1"># i, j = triangular_matrix.shape  # square matrix</span>
     <span class="c1"># inverted_matrix = solve_triangular(triangular_matrix, np.identity(i))</span>
@@ -476,7 +476,7 @@
     <span class="k">return</span> <span class="n">inverted_matrix</span>
 
 
-<span class="k">def</span> <span class="nf">_build_n2l_array</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">multi_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_invertible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ARRAY</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_n2l_array</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">multi_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_invertible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ARRAY</span><span class="p">:</span>
     <span class="c1"># NOTE: the indices might be different from the ones used in the grid!</span>
     <span class="c1"># -&gt; just some &quot;active&quot; Lagrange polynomials</span>
     <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">require_invertible</span><span class="p">:</span>
@@ -499,7 +499,7 @@
     <span class="k">return</span> <span class="n">transformation_matrix</span>
 
 
-<span class="k">def</span> <span class="nf">_build_newton_to_lagrange_naive</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_newton_to_lagrange_naive</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MatrixOperator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;computes the Newton to Lagrange transformation given by an array</span>
@@ -525,7 +525,7 @@
     <span class="k">return</span> <span class="n">transformation_operator</span>
 
 
-<span class="k">def</span> <span class="nf">build_l2n_matrix_dds</span><span class="p">(</span><span class="n">grid</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_l2n_matrix_dds</span><span class="p">(</span><span class="n">grid</span><span class="p">):</span>
     <span class="n">num_monomials</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">multi_index</span><span class="p">)</span>
     <span class="n">lagr_coeff_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">num_monomials</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT_DTYPE</span><span class="p">)</span>
     <span class="n">tree</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">tree</span>
@@ -533,7 +533,7 @@
     <span class="k">return</span> <span class="n">lagrange_to_newton</span>
 
 
-<span class="k">def</span> <span class="nf">_build_lagrange_to_newton_naive</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_lagrange_to_newton_naive</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MatrixOperator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;computes the Lagrange to Newton transformation given by an array</span>
@@ -551,7 +551,7 @@
     <span class="k">return</span> <span class="n">transformation_operator</span>
 
 
-<span class="k">def</span> <span class="nf">_build_c2n_array</span><span class="p">(</span><span class="n">transformation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ARRAY</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_c2n_array</span><span class="p">(</span><span class="n">transformation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ARRAY</span><span class="p">:</span>
     <span class="n">multi_index</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">multi_index</span>
     <span class="n">num_monomials</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
     <span class="n">V_n2c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">num_monomials</span><span class="p">,</span> <span class="n">num_monomials</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT_DTYPE</span><span class="p">)</span>
@@ -563,7 +563,7 @@
     <span class="k">return</span> <span class="n">c2n</span>
 
 
-<span class="k">def</span> <span class="nf">_build_n2c_array</span><span class="p">(</span><span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ARRAY</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_n2c_array</span><span class="p">(</span><span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ARRAY</span><span class="p">:</span>
     <span class="c1"># TODO achieve by calling inverse(n2c_operator)</span>
     <span class="k">return</span> <span class="n">invert_triangular</span><span class="p">(</span><span class="n">_build_c2n_array</span><span class="p">(</span><span class="n">transformation</span><span class="p">))</span>
 
@@ -572,7 +572,7 @@
 <div class="viewcode-block" id="build_lagrange_to_newton_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_lagrange_to_newton_operator">[docs]</a>
 <span class="nd">@no_type_check</span>
-<span class="k">def</span> <span class="nf">build_lagrange_to_newton_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_lagrange_to_newton_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Lagrange-to-Newton transformation operator.</span>
@@ -610,7 +610,7 @@
 
 <div class="viewcode-block" id="build_lagrange_to_canonical_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_lagrange_to_canonical_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_lagrange_to_canonical_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_lagrange_to_canonical_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Lagrange-to-Canonical transformation operator.</span>
@@ -644,7 +644,7 @@
 
 <div class="viewcode-block" id="build_lagrange_to_chebyshev_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_lagrange_to_chebyshev_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_lagrange_to_chebyshev_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_lagrange_to_chebyshev_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the Lagrange-to-Chebyshev transformation.</span>
@@ -698,7 +698,7 @@
 <div class="viewcode-block" id="build_newton_to_lagrange_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_newton_to_lagrange_operator">[docs]</a>
 <span class="nd">@no_type_check</span>
-<span class="k">def</span> <span class="nf">build_newton_to_lagrange_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_newton_to_lagrange_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Newton-to-Lagrange transformation operator.</span>
@@ -735,7 +735,7 @@
 
 <div class="viewcode-block" id="build_newton_to_canonical_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_newton_to_canonical_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_newton_to_canonical_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_newton_to_canonical_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Newton-to-Canonical transformation operator.</span>
@@ -761,7 +761,7 @@
 
 <div class="viewcode-block" id="build_newton_to_chebyshev_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_newton_to_chebyshev_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_newton_to_chebyshev_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_newton_to_chebyshev_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Newton-to-Chebyshev transformation operator.</span>
@@ -791,7 +791,7 @@
 <span class="c1"># --- From CanonicalPolynomial</span>
 <div class="viewcode-block" id="build_canonical_to_newton_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_canonical_to_newton_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_canonical_to_newton_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_canonical_to_newton_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Canonical-to-Newton transformation operator.</span>
@@ -817,7 +817,7 @@
 
 <div class="viewcode-block" id="build_canonical_to_lagrange_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_canonical_to_lagrange_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_canonical_to_lagrange_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_canonical_to_lagrange_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Canonical-to-Lagrange transformation operator.</span>
@@ -846,7 +846,7 @@
 
 <div class="viewcode-block" id="build_canonical_to_chebyshev_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_canonical_to_chebyshev_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_canonical_to_chebyshev_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_canonical_to_chebyshev_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Canonical-to-Chebyshev transformation operator.</span>
@@ -878,7 +878,7 @@
 <span class="c1"># --- From ChebyshevPolynomial</span>
 <div class="viewcode-block" id="build_chebyshev_to_lagrange_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_chebyshev_to_lagrange_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_chebyshev_to_lagrange_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_chebyshev_to_lagrange_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Chebyshev to Lagrange transformation operator.</span>
@@ -927,7 +927,7 @@
 
 <div class="viewcode-block" id="build_chebyshev_to_newton_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_chebyshev_to_newton_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_chebyshev_to_newton_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_chebyshev_to_newton_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Chebyshev-to-Newton transformation operator.</span>
@@ -956,7 +956,7 @@
 
 <div class="viewcode-block" id="build_chebyshev_to_canonical_operator">
 <a class="viewcode-back" href="../../../api/internal/trafoutils.html#minterpy.transformations.utils.build_chebyshev_to_canonical_operator">[docs]</a>
-<span class="k">def</span> <span class="nf">build_chebyshev_to_canonical_operator</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_chebyshev_to_canonical_operator</span><span class="p">(</span>
     <span class="n">transformation</span><span class="p">:</span> <span class="n">TransformationABC</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorABC</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the Chebyshev-to-Canonical transformation operator.</span>

@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -59,7 +59,7 @@
     <link rel="prev" title="One-Dimensional Polynomial Interpolation" href="1d-polynomial-interpolation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -467,9 +467,9 @@ We use a two-dimensional example for ease of visualization, but the main steps y
 <p>Before we begin, let’s import the necessary packages to follow along with this guide.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">minterpy</span> <span class="k">as</span> <span class="nn">mp</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">minterpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -494,7 +494,7 @@ We use a two-dimensional example for ease of visualization, but the main steps y
 <p>The function can be defined in Python as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
     <span class="n">xx0</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">xx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">xx1</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">xx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
@@ -521,7 +521,7 @@ We use a two-dimensional example for ease of visualization, but the main steps y
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
 <span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
@@ -568,7 +568,7 @@ We use a two-dimensional example for ease of visualization, but the main steps y
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/5766c06cb6f612cd769a0d562e3726c0b0d491ba4d746511b4829fa35e30c398.png" src="../_images/5766c06cb6f612cd769a0d562e3726c0b0d491ba4d746511b4829fa35e30c398.png" />
+<img alt="../_images/f3f4d6ffd29a241618a48b82d53aaaa3166f4fe269861a82e516418e59d03181.png" src="../_images/f3f4d6ffd29a241618a48b82d53aaaa3166f4fe269861a82e516418e59d03181.png" />
 </div>
 </div>
 </section>
@@ -683,7 +683,7 @@ The illustration below shows the difference between these three different choice
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/4792cc4d034abc881b14fa7a2871276580af9de854f7c7703f88978de6ab11d4.png" src="../_images/4792cc4d034abc881b14fa7a2871276580af9de854f7c7703f88978de6ab11d4.png" />
+<img alt="../_images/b78e76ab316f1715865663c1b9c00d7f8669600bd10499be328693015319f599.png" src="../_images/b78e76ab316f1715865663c1b9c00d7f8669600bd10499be328693015319f599.png" />
 </div>
 </div>
 </section>
@@ -771,7 +771,7 @@ These are the points at which the function of interest is evaluated; the results
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/d873ef2baf6108e193571e8dbc715fcb224bb64d9e9b80ad18838e48f80d7606.png" src="../_images/d873ef2baf6108e193571e8dbc715fcb224bb64d9e9b80ad18838e48f80d7606.png" />
+<img alt="../_images/9ef21995afe07f1d3efdda4709102df49a4228c6294d4377a9aa0c9002d34f2a.png" src="../_images/9ef21995afe07f1d3efdda4709102df49a4228c6294d4377a9aa0c9002d34f2a.png" />
 </div>
 </div>
 </section>
@@ -869,7 +869,7 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A_{m, n, p}} c_{\mathrm{nwt}, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.48421837, 0.00073757, 0.56317513, 0.19518264, 0.4443948 ])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.08832019, 0.41847843, 0.00270592, 0.01026749, 0.71126916])
 </pre></div>
 </div>
 </div>
@@ -883,7 +883,7 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A_{m, n, p}} c_{\mathrm{nwt}, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.36640234, -0.02444977,  0.64007636,  0.65261716,  0.32427051])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.72941012,  0.93659628, -0.00460103,  0.05025581,  0.54902072])
 </pre></div>
 </div>
 </div>
@@ -961,7 +961,7 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A_{m, n, p}} c_{\mathrm{nwt}, 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/446b0b699f19d018f7c4bc26c0cd2a337464f31090719c190670234ba0fc3483.png" src="../_images/446b0b699f19d018f7c4bc26c0cd2a337464f31090719c190670234ba0fc3483.png" />
+<img alt="../_images/64f8b0308268d7bbfcb96fc88a3f97efff06ca98fb8137655111cc54aa2d64ac.png" src="../_images/64f8b0308268d7bbfcb96fc88a3f97efff06ca98fb8137655111cc54aa2d64ac.png" />
 </div>
 </div>
 </section>
@@ -982,7 +982,7 @@ The norm is defined as:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.8684783197777911)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.8672456069034211)
 </pre></div>
 </div>
 </div>
@@ -1054,7 +1054,7 @@ Let’s investigate the convergence of interpolating polynomials with increasing
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/da6ecf9a79d88c85882aba9896057529ab8f6f9fdfb06f08a2e9cc6336b3ff5a.png" src="../_images/da6ecf9a79d88c85882aba9896057529ab8f6f9fdfb06f08a2e9cc6336b3ff5a.png" />
+<img alt="../_images/193d0257ef59217570eec198757e524781f5ce12a988b2c09d7d038b75e7cd95.png" src="../_images/193d0257ef59217570eec198757e524781f5ce12a988b2c09d7d038b75e7cd95.png" />
 </div>
 </div>
 <p>The surface plots of the original function and the interpolating polynomial for <span class="math notranslate nohighlight">\(n = 100\)</span> and <span class="math notranslate nohighlight">\(p = 2.0\)</span> (which according to the plots above is numerically converged) are shown below.</p>
@@ -1065,7 +1065,7 @@ Let’s investigate the convergence of interpolating polynomials with increasing
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
 <span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">250</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
@@ -1117,7 +1117,7 @@ Let’s investigate the convergence of interpolating polynomials with increasing
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/eb2dfc93a65e4823a6f281c9dc1686ee6a38aa8ee8476e6bf991588a91c12e86.png" src="../_images/eb2dfc93a65e4823a6f281c9dc1686ee6a38aa8ee8476e6bf991588a91c12e86.png" />
+<img alt="../_images/9db4467e534c72623b28358610083934700ab0705888dcc234850514570ce09f.png" src="../_images/9db4467e534c72623b28358610083934700ab0705888dcc234850514570ce09f.png" />
 </div>
 </div>
 </section>
@@ -1161,7 +1161,7 @@ in-depth tutorial.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fc532664250&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f0ff0ac51e0&gt;
 </pre></div>
 </div>
 </div>

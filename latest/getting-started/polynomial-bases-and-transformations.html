@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -59,7 +59,7 @@
     <link rel="prev" title="Basic Calculus Operations with Polynomials" href="calculus-operations-with-polynomials.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -470,11 +470,11 @@ Minterpy supports a range of polynomial bases, each with a consistent interface,
 <p>Before diving in, make sure to import the necessary packages:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">minterpy</span> <span class="k">as</span> <span class="nn">mp</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">minterpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -806,7 +806,7 @@ Q(x) = 10 + 4.5 x - 3 x^2 + 1.5 x^3 - 1.2 x^4, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.canonical_polynomial.CanonicalPolynomial at 0x7f95b0707130&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.canonical_polynomial.CanonicalPolynomial at 0x7fb0201b61a0&gt;
 </pre></div>
 </div>
 </div>
@@ -829,7 +829,7 @@ Q(x) = 10 + 4.5 x - 3 x^2 + 1.5 x^3 - 1.2 x^4, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/49973dfabb3d8a00a3d10457481276963f8c0c14421a9f5cfc9d806efc564860.png" src="../_images/49973dfabb3d8a00a3d10457481276963f8c0c14421a9f5cfc9d806efc564860.png" />
+<img alt="../_images/030fa32eafa672cc36f5a6889ee3db779ac76440b0c575c37666c204a6081c5e.png" src="../_images/030fa32eafa672cc36f5a6889ee3db779ac76440b0c575c37666c204a6081c5e.png" />
 </div>
 </div>
 <p>The same polynomial can be expressed in a different basis using the help of a transformation class.
@@ -892,7 +892,7 @@ Note that all instance of the transformation class must be called to carry out t
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/f952b9b83fb6f36c5acce03da8d162205950d75524b729157523e9e06a8f7f15.png" src="../_images/f952b9b83fb6f36c5acce03da8d162205950d75524b729157523e9e06a8f7f15.png" />
+<img alt="../_images/ab62be31f5cff195ad39b207386112881f2a85d0957f23e20bbc0fe319ca0a0f.png" src="../_images/ab62be31f5cff195ad39b207386112881f2a85d0957f23e20bbc0fe319ca0a0f.png" />
 </div>
 </div>
 <section id="in-the-1d-lagrange-basis">
@@ -992,7 +992,7 @@ Note that all instance of the transformation class must be called to carry out t
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/e78ef04784774c14d5f2e16b165c0676a296542cd654590d0976b33c3dd8a10b.png" src="../_images/e78ef04784774c14d5f2e16b165c0676a296542cd654590d0976b33c3dd8a10b.png" />
+<img alt="../_images/8e85af43789bdf6757019f367caf15a7f43d6c749bbc593fb2ecb8ba7d068a2b.png" src="../_images/8e85af43789bdf6757019f367caf15a7f43d6c749bbc593fb2ecb8ba7d068a2b.png" />
 </div>
 </div>
 </section>
@@ -1098,7 +1098,7 @@ Q(x) = 1.5 - 2.5 (x - 1) - 1 (x - 1) (x + 1) - 4.29289322 (x - 1) (x + 1) x + (x
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/35077ecfbd7e3f064ba7f41ea867b00e6a91c7f6b2effab971384e6ec2cdc8b5.png" src="../_images/35077ecfbd7e3f064ba7f41ea867b00e6a91c7f6b2effab971384e6ec2cdc8b5.png" />
+<img alt="../_images/c2e7f3d709c1adfac134bbdc3e2cfcbb4d5a2afeaafdea64ad9bac4930c964ff.png" src="../_images/c2e7f3d709c1adfac134bbdc3e2cfcbb4d5a2afeaafdea64ad9bac4930c964ff.png" />
 </div>
 </div>
 </section>
@@ -1185,7 +1185,7 @@ Q(x) = 4.375 - 1.25 T_1 (x) - 0.5 T_2 (x) - 1.25 T_3 (x) + 0.125 T_4(x).
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/f5f33ea35b86e0cfc62f762575661f7f2f43fef24d4678efa6e47700c9620c27.png" src="../_images/f5f33ea35b86e0cfc62f762575661f7f2f43fef24d4678efa6e47700c9620c27.png" />
+<img alt="../_images/8c7d5995ae11de8851119ec6422f1ee61e8586ad1a5d298a38c13f89f9fd2b55.png" src="../_images/8c7d5995ae11de8851119ec6422f1ee61e8586ad1a5d298a38c13f89f9fd2b55.png" />
 </div>
 </div>
 </section>
@@ -1200,7 +1200,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 <p>The function is defined in Python as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">25</span> <span class="o">-</span> <span class="p">(</span><span class="n">xx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="n">xx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1213,7 +1213,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
 <span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
@@ -1260,7 +1260,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/f3af08f6f032e3070bd732b6d951dea52a9f105bd77da69f70295e4e2d7e7de0.png" src="../_images/f3af08f6f032e3070bd732b6d951dea52a9f105bd77da69f70295e4e2d7e7de0.png" />
+<img alt="../_images/c5166f2581821661f042ca1a0c9b7392e9c2d008d60244da537ebbc8659936b6.png" src="../_images/c5166f2581821661f042ca1a0c9b7392e9c2d008d60244da537ebbc8659936b6.png" />
 </div>
 </div>
 <p>Because the function is not a polynomial (a square root is involved), creating a polynomial that approximates the function is much more intuitive in the Lagrange basis. In the other basis, it is not straightforward to intuit what the coefficient values should be.</p>
@@ -1367,7 +1367,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/a24f99c2a55d61686081d38287584be7632b141f8c77e1ccb840c6d1ad1bd6c7.png" src="../_images/a24f99c2a55d61686081d38287584be7632b141f8c77e1ccb840c6d1ad1bd6c7.png" />
+<img alt="../_images/271f31911269dee218b715f262f9a26ab87dfe59492cfa5840e1c6c7455ed716.png" src="../_images/271f31911269dee218b715f262f9a26ab87dfe59492cfa5840e1c6c7455ed716.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1416,7 +1416,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/75242ef3d415bc0b5dbae19cc80fe006cdab01c92fd38e1d0697cd423caa0ec7.png" src="../_images/75242ef3d415bc0b5dbae19cc80fe006cdab01c92fd38e1d0697cd423caa0ec7.png" />
+<img alt="../_images/3024a6c0a14346de26bf7c24084c0101be926abe91694a2d0e2a5a0ef69cdff1.png" src="../_images/3024a6c0a14346de26bf7c24084c0101be926abe91694a2d0e2a5a0ef69cdff1.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1465,7 +1465,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/123982a0683befbc2d9fdaa0bd176b4655f8a28baf32db4bd975af52aab2de88.png" src="../_images/123982a0683befbc2d9fdaa0bd176b4655f8a28baf32db4bd975af52aab2de88.png" />
+<img alt="../_images/b403d7f56ec3da0d5b22777376b31634746882b93aeae2b01eee8bf40f627e6b.png" src="../_images/b403d7f56ec3da0d5b22777376b31634746882b93aeae2b01eee8bf40f627e6b.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1514,7 +1514,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/a6e64e415d0b510f494e4e090c68d25b497a6ecbc296517ba0c9b0e2199ad7c9.png" src="../_images/a6e64e415d0b510f494e4e090c68d25b497a6ecbc296517ba0c9b0e2199ad7c9.png" />
+<img alt="../_images/7c2fef60d525d8e1108bd075ad74da888725ad0fc91ac7206e431d00a93d8f77.png" src="../_images/7c2fef60d525d8e1108bd075ad74da888725ad0fc91ac7206e431d00a93d8f77.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1563,7 +1563,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/4d90f33852c9b27130f0529d38ef8206b57a38bba4d1db9e36b60c7d13d9cd99.png" src="../_images/4d90f33852c9b27130f0529d38ef8206b57a38bba4d1db9e36b60c7d13d9cd99.png" />
+<img alt="../_images/a29fa88e14a3c415d3875f8dc90ab4e7dec99301c11aa59b4ba554fe4574eca1.png" src="../_images/a29fa88e14a3c415d3875f8dc90ab4e7dec99301c11aa59b4ba554fe4574eca1.png" />
 </div>
 </div>
 <section id="in-the-2d-newton-basis">
@@ -1648,7 +1648,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/e0f2f9b4cccdb355b64bfbd6d98030d071a2d507ee99a330d5cb784c7f672e56.png" src="../_images/e0f2f9b4cccdb355b64bfbd6d98030d071a2d507ee99a330d5cb784c7f672e56.png" />
+<img alt="../_images/a9a696c028bc1763eb14afea18dfa2efee00429894e93d87e0c104a053e5c5f5.png" src="../_images/a9a696c028bc1763eb14afea18dfa2efee00429894e93d87e0c104a053e5c5f5.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1697,7 +1697,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/95f4469b484e875508bb8c8d5f94df97d64b89560227e5fddc354a23c7c7d95d.png" src="../_images/95f4469b484e875508bb8c8d5f94df97d64b89560227e5fddc354a23c7c7d95d.png" />
+<img alt="../_images/88686bba2c3616cb03aa2ce8501c78e1d2e94688ee8db7429b387ba403f107f6.png" src="../_images/88686bba2c3616cb03aa2ce8501c78e1d2e94688ee8db7429b387ba403f107f6.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1746,7 +1746,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/1197745f80d112dcfb310354cbfab9f086a263117934d8cd20297063dae573ec.png" src="../_images/1197745f80d112dcfb310354cbfab9f086a263117934d8cd20297063dae573ec.png" />
+<img alt="../_images/5a23e704ce7d54c20d118961424f78b641c314d2b6be286c0791f6aee0efe2ad.png" src="../_images/5a23e704ce7d54c20d118961424f78b641c314d2b6be286c0791f6aee0efe2ad.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1795,7 +1795,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/3f34e42db787c58507e845a10457f6d10adc7d335aa0f46a5c50e914de300c9a.png" src="../_images/3f34e42db787c58507e845a10457f6d10adc7d335aa0f46a5c50e914de300c9a.png" />
+<img alt="../_images/a6465c2211f5814f36ea1e12954ccb0aed8e1ab53352070d9fefe1fdbfd0d056.png" src="../_images/a6465c2211f5814f36ea1e12954ccb0aed8e1ab53352070d9fefe1fdbfd0d056.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1844,7 +1844,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/b22a8382ff146664bc773250da46dbfb1666d1443cf9cee029762882dec1ac7d.png" src="../_images/b22a8382ff146664bc773250da46dbfb1666d1443cf9cee029762882dec1ac7d.png" />
+<img alt="../_images/874e566cdd40632dfcfd356fee254db1450b1559c0f8a424d4c86f8eeb369521.png" src="../_images/874e566cdd40632dfcfd356fee254db1450b1559c0f8a424d4c86f8eeb369521.png" />
 </div>
 </div>
 </section>
@@ -1932,7 +1932,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/482f63a97ac61775103172a3075dccf1948e2444a1739f2f5eb7e9e126dbb5bf.png" src="../_images/482f63a97ac61775103172a3075dccf1948e2444a1739f2f5eb7e9e126dbb5bf.png" />
+<img alt="../_images/00cde596ff0b0e6a1f6b33659f1e1443f00fd850f13bdce869e52b39d5863a89.png" src="../_images/00cde596ff0b0e6a1f6b33659f1e1443f00fd850f13bdce869e52b39d5863a89.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1981,7 +1981,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/0bf01b6bfeeb7ed43ea1bdf1632642d2d90bc6399da6562ed0deee04cbc6caf2.png" src="../_images/0bf01b6bfeeb7ed43ea1bdf1632642d2d90bc6399da6562ed0deee04cbc6caf2.png" />
+<img alt="../_images/9d4e7c73a94f57b38f70cb5cd9b187841c3c5ac2894445a5993bdb869bc06a69.png" src="../_images/9d4e7c73a94f57b38f70cb5cd9b187841c3c5ac2894445a5993bdb869bc06a69.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -2030,7 +2030,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/67fc8215eb3a09be70b6fcd9d5ea647f079ee0d083e1d816e0ba09c80c0b4c15.png" src="../_images/67fc8215eb3a09be70b6fcd9d5ea647f079ee0d083e1d816e0ba09c80c0b4c15.png" />
+<img alt="../_images/c56e11ead5c4b0e09845fd79eac0047945d8baf7ffa01722c5a82329ca1b430b.png" src="../_images/c56e11ead5c4b0e09845fd79eac0047945d8baf7ffa01722c5a82329ca1b430b.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -2079,7 +2079,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/0113a906f9c3738ee2d68a5bcafd10df2a5509414175955e1a3fe4f4194ba652.png" src="../_images/0113a906f9c3738ee2d68a5bcafd10df2a5509414175955e1a3fe4f4194ba652.png" />
+<img alt="../_images/9a8591ce4731d6d36d213b5421a539132c07fa01c25c6ab1f99527b845afda45.png" src="../_images/9a8591ce4731d6d36d213b5421a539132c07fa01c25c6ab1f99527b845afda45.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -2128,7 +2128,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/a20683008e9bb2a3b7115cd578f048374ffcd036b26b0f236d3534f2991d638b.png" src="../_images/a20683008e9bb2a3b7115cd578f048374ffcd036b26b0f236d3534f2991d638b.png" />
+<img alt="../_images/42bdb95d5b31a80dd4500104ca241e161907cef1e52696faf7e99da41f3f1e90.png" src="../_images/42bdb95d5b31a80dd4500104ca241e161907cef1e52696faf7e99da41f3f1e90.png" />
 </div>
 </div>
 </section>
@@ -2213,7 +2213,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/2fca9fd713d8bb9321c7a81a03042f97adcef0774b56102e6736c9e4b784bd4b.png" src="../_images/2fca9fd713d8bb9321c7a81a03042f97adcef0774b56102e6736c9e4b784bd4b.png" />
+<img alt="../_images/120a69de43e06b592d668ff59152e4ad975f3796459c7823f71763bf0929d771.png" src="../_images/120a69de43e06b592d668ff59152e4ad975f3796459c7823f71763bf0929d771.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -2262,7 +2262,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/805e64e2433a89b03dd3dff9c7f18856abaf2b9dc4d12fe5ad7328b5730e7e85.png" src="../_images/805e64e2433a89b03dd3dff9c7f18856abaf2b9dc4d12fe5ad7328b5730e7e85.png" />
+<img alt="../_images/0d6e045147ff3cc2c81d867fc0123c5ef95cf22462ecb460f6de16ff6b44f069.png" src="../_images/0d6e045147ff3cc2c81d867fc0123c5ef95cf22462ecb460f6de16ff6b44f069.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -2311,7 +2311,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/f77bb928742d5eede9c826321ed302a43ee9fe2db875191603dc0cc84b4f4f2b.png" src="../_images/f77bb928742d5eede9c826321ed302a43ee9fe2db875191603dc0cc84b4f4f2b.png" />
+<img alt="../_images/437d6255fd5f2cc56af6290b9b8824873ca3c04a28a35598a76981bd9407a2b8.png" src="../_images/437d6255fd5f2cc56af6290b9b8824873ca3c04a28a35598a76981bd9407a2b8.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -2360,7 +2360,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/2093dc3bfefb255f79255c9d59a7da8585cf6bfe04eeb1f10cc7fda2f50b4c7a.png" src="../_images/2093dc3bfefb255f79255c9d59a7da8585cf6bfe04eeb1f10cc7fda2f50b4c7a.png" />
+<img alt="../_images/1ae1e7ce4adcb9282da562daa6262b944212c574bd155de16c36347c8a0c0748.png" src="../_images/1ae1e7ce4adcb9282da562daa6262b944212c574bd155de16c36347c8a0c0748.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -2409,7 +2409,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/eb65e65df76ec4992852aed52630733f62e35bacebbb2689133a2fe5c2261079.png" src="../_images/eb65e65df76ec4992852aed52630733f62e35bacebbb2689133a2fe5c2261079.png" />
+<img alt="../_images/2f03054e5922ba83b8148cbe817e399ead7e99fab885f2fb8662157f5b88aded.png" src="../_images/2f03054e5922ba83b8148cbe817e399ead7e99fab885f2fb8662157f5b88aded.png" />
 </div>
 </div>
 </section>

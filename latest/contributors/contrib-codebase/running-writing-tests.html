@@ -30,7 +30,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -57,7 +57,7 @@
     <link rel="prev" title="Pre-Commits" href="pre-commits.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -624,10 +624,10 @@ in either <em>functional</em> style (single standing function) or <em>class-base
 Minterpy uses <em>class-based</em> simply for organization purposes, i.e.,
 to collect similar tests together and nothing more.</p>
 <p>So for example, consider the following snippet:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TestEquality</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TestEquality</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;All tests related to the equality check between polynomial instances.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">test_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly_class_all</span><span class="p">,</span> <span class="n">multi_index_mnp</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly_class_all</span><span class="p">,</span> <span class="n">multi_index_mnp</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Test equality between two instances with one set of coefficients.&quot;&quot;&quot;</span>
         <span class="c1"># Generate random coefficient values</span>
         <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">multi_index_mnp</span><span class="p">))</span>
@@ -641,7 +641,7 @@ to collect similar tests together and nothing more.</p>
         <span class="k">assert</span> <span class="n">poly_1</span> <span class="o">==</span> <span class="n">poly_2</span>  <span class="c1"># But equal in values</span>
         <span class="k">assert</span> <span class="n">poly_2</span> <span class="o">==</span> <span class="n">poly_1</span>  <span class="c1"># Symmetric property</span>
 
-    <span class="k">def</span> <span class="nf">test_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly_class_all</span><span class="p">,</span> <span class="n">multi_index_mnp</span><span class="p">,</span> <span class="n">num_polynomials</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly_class_all</span><span class="p">,</span> <span class="n">multi_index_mnp</span><span class="p">,</span> <span class="n">num_polynomials</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Test equality between two instances with multiple sets of coeffs.&quot;&quot;&quot;</span>
         <span class="c1"># Generate random coefficient values</span>
         <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">multi_index_mnp</span><span class="p">),</span> <span class="n">num_polynomials</span><span class="p">)</span>

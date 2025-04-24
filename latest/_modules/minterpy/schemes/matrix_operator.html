@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -444,20 +444,20 @@
 <span class="sd">----</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">minterpy.core.ABC</span> <span class="kn">import</span> <span class="n">OperatorABC</span>
-<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="n">ARRAY</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.ABC</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperatorABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARRAY</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;MatrixOperator&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="MatrixOperator">
 <a class="viewcode-back" href="../../../api/transformation-operators/operator-matrix.html#minterpy.schemes.matrix_operator.MatrixOperator">[docs]</a>
-<span class="k">class</span> <span class="nc">MatrixOperator</span><span class="p">(</span><span class="n">OperatorABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MatrixOperator</span><span class="p">(</span><span class="n">OperatorABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Concrete implementation of a Operator constructed as a matrix.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MatrixOperator.__matmul__">
 <a class="viewcode-back" href="../../../api/transformation-operators/operator-matrix.html#minterpy.schemes.matrix_operator.MatrixOperator.__matmul__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__matmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__matmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">OperatorABC</span><span class="p">):</span>
             <span class="c1"># the input is another transformation</span>
             <span class="c1"># instead of an array return another Matrix transformation operator constructed from the matrix product</span>
@@ -471,7 +471,7 @@
 
 <div class="viewcode-block" id="MatrixOperator._get_array_repr">
 <a class="viewcode-back" href="../../../api/transformation-operators/operator-matrix.html#minterpy.schemes.matrix_operator.MatrixOperator._get_array_repr">[docs]</a>
-    <span class="k">def</span> <span class="nf">_get_array_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ARRAY</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_array_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ARRAY</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the matrix representation of the transformation.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformation_data</span></div>
 </div>

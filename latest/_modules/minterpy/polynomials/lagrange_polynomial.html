@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -468,20 +468,20 @@
 <span class="sd">----</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="n">SCALAR</span>
-<span class="kn">from</span> <span class="nn">minterpy.core.ABC</span> <span class="kn">import</span> <span class="n">MultivariatePolynomialSingleABC</span>
-<span class="kn">from</span> <span class="nn">minterpy.utils.polynomials.lagrange</span> <span class="kn">import</span> <span class="n">integrate_monomials_lagrange</span>
-<span class="kn">from</span> <span class="nn">minterpy.utils.verification</span> <span class="kn">import</span> <span class="n">dummy</span><span class="p">,</span> <span class="n">verify_domain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">SCALAR</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.ABC</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultivariatePolynomialSingleABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.polynomials.lagrange</span><span class="w"> </span><span class="kn">import</span> <span class="n">integrate_monomials_lagrange</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.verification</span><span class="w"> </span><span class="kn">import</span> <span class="n">dummy</span><span class="p">,</span> <span class="n">verify_domain</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LagrangePolynomial&quot;</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">scalar_add_lagrange</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">scalar_add_lagrange</span><span class="p">(</span>
     <span class="n">poly</span><span class="p">:</span> <span class="s2">&quot;LagrangePolynomial&quot;</span><span class="p">,</span>
     <span class="n">scalar</span><span class="p">:</span> <span class="n">SCALAR</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LagrangePolynomial&quot;</span><span class="p">:</span>
@@ -514,7 +514,7 @@
     <span class="k">return</span> <span class="n">poly_sum</span>
 
 
-<span class="k">def</span> <span class="nf">integrate_over_lagrange</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">integrate_over_lagrange</span><span class="p">(</span>
     <span class="n">poly</span><span class="p">:</span> <span class="s2">&quot;LagrangePolynomial&quot;</span><span class="p">,</span>
     <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -545,7 +545,7 @@
 
 <div class="viewcode-block" id="LagrangePolynomial">
 <a class="viewcode-back" href="../../../api/polynomials/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial">[docs]</a>
-<span class="k">class</span> <span class="nc">LagrangePolynomial</span><span class="p">(</span><span class="n">MultivariatePolynomialSingleABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LagrangePolynomial</span><span class="p">(</span><span class="n">MultivariatePolynomialSingleABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Concrete implementation of polynomials in the Lagrange basis.</span>
 
 <span class="sd">    A polynomial in the Lagrange basis is the sum of so-called Lagrange</span>
@@ -594,7 +594,7 @@
 
 
 <span class="c1"># --- Internal utility functions</span>
-<span class="k">def</span> <span class="nf">_compute_quad_weights</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_quad_weights</span><span class="p">(</span>
     <span class="n">poly</span><span class="p">:</span> <span class="n">LagrangePolynomial</span><span class="p">,</span>
     <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>

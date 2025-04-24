@@ -29,7 +29,7 @@
   <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -437,19 +437,19 @@
 <span class="sd">This module provides computational routines relevant to polynomials</span>
 <span class="sd">in the Newton basis.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">minterpy.utils.quad</span> <span class="kn">import</span> <span class="n">gauss_leg</span>
-<span class="kn">from</span> <span class="nn">minterpy.utils.verification</span> <span class="kn">import</span> <span class="n">check_dtype</span>
-<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="n">FLOAT_DTYPE</span><span class="p">,</span> <span class="n">INT_DTYPE</span><span class="p">,</span> <span class="n">DEBUG</span>
-<span class="kn">from</span> <span class="nn">minterpy.jit_compiled.newton.eval</span> <span class="kn">import</span> <span class="n">eval_newton_monomials_multiple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.quad</span><span class="w"> </span><span class="kn">import</span> <span class="n">gauss_leg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.verification</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_dtype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">FLOAT_DTYPE</span><span class="p">,</span> <span class="n">INT_DTYPE</span><span class="p">,</span> <span class="n">DEBUG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.jit_compiled.newton.eval</span><span class="w"> </span><span class="kn">import</span> <span class="n">eval_newton_monomials_multiple</span>
 
 
 <div class="viewcode-block" id="eval_newton_monomials">
 <a class="viewcode-back" href="../../../../api/internal/utils/poly-newton.html#minterpy.utils.polynomials.newton.eval_newton_monomials">[docs]</a>
-<span class="k">def</span> <span class="nf">eval_newton_monomials</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_newton_monomials</span><span class="p">(</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">generating_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -525,7 +525,7 @@
 
 <div class="viewcode-block" id="eval_newton_polynomials">
 <a class="viewcode-back" href="../../../../api/internal/utils/poly-newton.html#minterpy.utils.polynomials.newton.eval_newton_polynomials">[docs]</a>
-<span class="k">def</span> <span class="nf">eval_newton_polynomials</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_newton_polynomials</span><span class="p">(</span>
     <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">coefficients</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -624,7 +624,7 @@
 
 <div class="viewcode-block" id="eval_newton_polynomials_batch">
 <a class="viewcode-back" href="../../../../api/internal/utils/poly-newton.html#minterpy.utils.polynomials.newton.eval_newton_polynomials_batch">[docs]</a>
-<span class="k">def</span> <span class="nf">eval_newton_polynomials_batch</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_newton_polynomials_batch</span><span class="p">(</span>
     <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">coefficients</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -686,7 +686,7 @@
 
 <div class="viewcode-block" id="deriv_newt_eval">
 <a class="viewcode-back" href="../../../../api/internal/utils/poly-newton.html#minterpy.utils.polynomials.newton.deriv_newt_eval">[docs]</a>
-<span class="k">def</span> <span class="nf">deriv_newt_eval</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coefficients</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">deriv_newt_eval</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coefficients</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                     <span class="n">generating_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">derivative_order_along</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate the derivative of a polynomial in the Newton form.</span>
 
@@ -811,7 +811,7 @@
 
 <div class="viewcode-block" id="integrate_monomials_newton">
 <a class="viewcode-back" href="../../../../api/internal/utils/poly-newton.html#minterpy.utils.polynomials.newton.integrate_monomials_newton">[docs]</a>
-<span class="k">def</span> <span class="nf">integrate_monomials_newton</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">integrate_monomials_newton</span><span class="p">(</span>
     <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">generating_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Integrate the monomials in the Newton basis given a set of exponents.</span>

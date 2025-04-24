@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -59,7 +59,7 @@
     <link rel="prev" title="Basic Arithmetic Operations with Polynomials" href="arithmetic-operations-with-polynomials.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -465,9 +465,9 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 <p>As usual, before you begin, you’ll need to import the necessary packages to follow along with this guide.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">minterpy</span> <span class="k">as</span> <span class="nn">mp</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">minterpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -492,7 +492,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 <p>The function can be defined in Python as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
     <span class="n">xx0</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">xx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">xx1</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">xx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
@@ -519,7 +519,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
 <span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
@@ -567,7 +567,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/5fd433f26515a9e9ce85c34e827edb370b27f4e05facc6a23859d978de674147.png" src="../_images/5fd433f26515a9e9ce85c34e827edb370b27f4e05facc6a23859d978de674147.png" />
+<img alt="../_images/45c6dee98476f068b3ed13565bb0200d5c2af4413ec6075866adf17086819604.png" src="../_images/45c6dee98476f068b3ed13565bb0200d5c2af4413ec6075866adf17086819604.png" />
 </div>
 </div>
 <p>You can construct a (Newton) polynomial that approximates the above function with the following:</p>
@@ -598,7 +598,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.340432700236963e-07
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.133598371343239e-07
 </pre></div>
 </div>
 </div>
@@ -700,7 +700,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fb9e6077d60&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7feb504147c0&gt;
 </pre></div>
 </div>
 </div>
@@ -714,7 +714,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fb9e6077ee0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7feb504176a0&gt;
 </pre></div>
 </div>
 </div>
@@ -776,7 +776,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/7164f1c93067e93657e4f6811dcd8a97bc8e93004c3fcc6dcf4b79dcddde7ba8.png" src="../_images/7164f1c93067e93657e4f6811dcd8a97bc8e93004c3fcc6dcf4b79dcddde7ba8.png" />
+<img alt="../_images/56fb4b1e7ac0bf6e18d0b66a1810528eefcebf02475a398700626e8bc2a18532.png" src="../_images/56fb4b1e7ac0bf6e18d0b66a1810528eefcebf02475a398700626e8bc2a18532.png" />
 </div>
 </div>
 <p>The method <a class="reference internal" href="../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.diff" title="minterpy.polynomials.newton_polynomial.NewtonPolynomial.diff"><code class="xref py py-meth docutils literal notranslate"><span class="pre">diff()</span></code></a> allows you to specify the order of derivative for each spatial dimension simultaneously by passing a list or NumPy array.</p>
@@ -812,7 +812,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fb9e1c9f610&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7feb507ec7c0&gt;
 </pre></div>
 </div>
 </div>
@@ -826,7 +826,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fb9e053feb0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7feb54de3670&gt;
 </pre></div>
 </div>
 </div>
@@ -888,7 +888,7 @@ This allows you to compute integrals over particular regions of interest.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/778506ca96fd82d5bb376a83489f47a32fa6ca8f260aec8a0c2a032b747d5a76.png" src="../_images/778506ca96fd82d5bb376a83489f47a32fa6ca8f260aec8a0c2a032b747d5a76.png" />
+<img alt="../_images/ea34108ce7069fce231330c603fe7594f4c57a7f585791085d6abfc847e8ba9c.png" src="../_images/ea34108ce7069fce231330c603fe7594f4c57a7f585791085d6abfc847e8ba9c.png" />
 </div>
 </div>
 </section>

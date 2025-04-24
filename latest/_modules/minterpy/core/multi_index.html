@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g5bc53d6" />
+  <meta name="docsearch:version" content="0.1.dev1+gc446a00" />
   </head>
   
   
@@ -469,23 +469,23 @@
 <span class="sd">----</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ARRAY</span><span class="p">,</span>
     <span class="n">INT_DTYPE</span><span class="p">,</span>
     <span class="n">DEFAULT_LP_DEG</span><span class="p">,</span>
     <span class="n">NOT_FOUND</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">minterpy.jit_compiled.multi_index</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.jit_compiled.multi_index</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">search_lex_sorted</span><span class="p">,</span>
     <span class="n">all_indices_are_contained</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">minterpy.utils.arrays</span> <span class="kn">import</span> <span class="n">expand_dim</span> <span class="k">as</span> <span class="n">expand_dim_</span>
-<span class="kn">from</span> <span class="nn">minterpy.utils.multi_index</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_dim</span> <span class="k">as</span> <span class="n">expand_dim_</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.multi_index</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_poly_degree</span><span class="p">,</span>
     <span class="n">get_exponent_matrix</span><span class="p">,</span>
     <span class="n">is_complete</span><span class="p">,</span>
@@ -498,7 +498,7 @@
     <span class="n">multiply_indices</span><span class="p">,</span>
     <span class="n">union_indices</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">minterpy.utils.verification</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.verification</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">check_dimensionality</span><span class="p">,</span>
     <span class="n">check_values</span><span class="p">,</span>
     <span class="n">verify_lp_degree</span><span class="p">,</span>
@@ -511,7 +511,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet">[docs]</a>
-<span class="k">class</span> <span class="nc">MultiIndexSet</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiIndexSet</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to represent the set of multi-indices.</span>
 
 <span class="sd">    The instances of this class provide the data structure for the exponents</span>
@@ -540,7 +540,7 @@
 <span class="sd">      the :math:`l_p`-degree.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 
         <span class="c1"># Verify the given lp_degree</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lp_degree</span> <span class="o">=</span> <span class="n">verify_lp_degree</span><span class="p">(</span><span class="n">lp_degree</span><span class="p">)</span>
@@ -582,7 +582,7 @@
 <div class="viewcode-block" id="MultiIndexSet.from_degree">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.from_degree">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_degree</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_degree</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">poly_degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -627,7 +627,7 @@
 
     <span class="c1"># --- Properties</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">exponents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exponents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Array of exponents in the form of multi-indices.</span>
 
 <span class="sd">        Returns</span>
@@ -646,7 +646,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exponents</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">lp_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lp_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;:math:`p` of :math:`l_p`-norm used to define the multi-index set.</span>
 
 <span class="sd">        Returns</span>
@@ -660,7 +660,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lp_degree</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">poly_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">poly_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The polynomial degree of the multi-index set.</span>
 
 <span class="sd">        Returns</span>
@@ -672,7 +672,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_poly_degree</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">spatial_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spatial_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The dimension of the domain space.</span>
 
 <span class="sd">        Returns</span>
@@ -687,7 +687,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exponents</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``True`` if the ``exponents`` array is complete.</span>
 
 <span class="sd">        Returns</span>
@@ -711,7 +711,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_complete</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_downward_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_downward_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``True`` if the ``exponents`` array is downward-closed.</span>
 
 <span class="sd">        Returns</span>
@@ -736,7 +736,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_downward_closed</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">max_exponent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_exponent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The maximum exponent of the multi-index set.</span>
 
 <span class="sd">        Returns</span>
@@ -751,7 +751,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exponents</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">max_exponents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_exponents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The maximum exponents per dimension of the multi-index set.</span>
 
 <span class="sd">        Returns</span>
@@ -769,7 +769,7 @@
     <span class="c1"># --- Instance methods</span>
 <div class="viewcode-block" id="MultiIndexSet.add_exponents">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.add_exponents">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_exponents</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_exponents</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -853,7 +853,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.contains_these_exponents">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.contains_these_exponents">[docs]</a>
-    <span class="k">def</span> <span class="nf">contains_these_exponents</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">contains_these_exponents</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">expand_dim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -890,7 +890,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.expand_dim">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.expand_dim">[docs]</a>
-    <span class="k">def</span> <span class="nf">expand_dim</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">expand_dim</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">target_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -962,7 +962,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.is_disjoint">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.is_disjoint">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_disjoint</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_disjoint</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">,</span>
         <span class="n">expand_dim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1009,7 +1009,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.is_subset">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.is_subset">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_subset</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_subset</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">,</span>
         <span class="n">expand_dim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1047,7 +1047,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.is_propsubset">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.is_propsubset">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_propsubset</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_propsubset</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">,</span>
         <span class="n">expand_dim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1082,7 +1082,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.is_superset">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.is_superset">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_superset</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_superset</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">,</span>
         <span class="n">expand_dim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1120,7 +1120,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.is_propsuperset">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.is_propsuperset">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_propsuperset</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_propsuperset</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">,</span>
         <span class="n">expand_dim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1155,7 +1155,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.make_complete">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.make_complete">[docs]</a>
-    <span class="k">def</span> <span class="nf">make_complete</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_complete</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">]:</span>
@@ -1220,7 +1220,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.make_downward_closed">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.make_downward_closed">[docs]</a>
-    <span class="k">def</span> <span class="nf">make_downward_closed</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_downward_closed</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">]:</span>
@@ -1284,7 +1284,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.multiply">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.multiply">[docs]</a>
-    <span class="k">def</span> <span class="nf">multiply</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">,</span>
         <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1337,7 +1337,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.union">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.union">[docs]</a>
-    <span class="k">def</span> <span class="nf">union</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">,</span>
         <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1407,7 +1407,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__str__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__str__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">cls_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cls_name</span><span class="si">}</span><span class="s2">(m=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -1419,7 +1419,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__repr__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__repr__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">cls_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="n">exponents</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exponents</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
         <span class="n">exponents</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">_</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">exponents</span><span class="p">])</span>
@@ -1433,14 +1433,14 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__len__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__len__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the cardinality of the multi-index set.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exponents</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="MultiIndexSet.__contains__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__contains__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if an element is contained by a `MultiIndexSet` instance.</span>
 
 <span class="sd">        Parameters</span>
@@ -1500,7 +1500,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__eq__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__eq__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the equality of `MultiIndexSet` instances via ``==`` operator.</span>
 
 <span class="sd">        Two instances of :class:`MultiIndexSet` class is equal in value if and</span>
@@ -1536,7 +1536,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__mul__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__mul__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiply an instance of `MultiIndexSet` with another via ``*`` op.</span>
 
 <span class="sd">        Parameters</span>
@@ -1559,7 +1559,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__imul__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__imul__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiply inplace an instance of `MultiIndexSet` with another.</span>
 
 <span class="sd">        Parameters</span>
@@ -1585,7 +1585,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__ge__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__ge__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if this instance is a subset of another via ``&gt;=`` operator.</span>
 
 <span class="sd">        Notes</span>
@@ -1602,7 +1602,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__gt__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__gt__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if this instance is a subset of another via ``&gt;`` operator.</span>
 
 <span class="sd">        Notes</span>
@@ -1619,7 +1619,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__le__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__le__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if this instance is a subset of another via ``&lt;=`` operator.</span>
 
 <span class="sd">        Notes</span>
@@ -1636,7 +1636,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__lt__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__lt__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if this instance is a proper subset of another via ``&lt;`` op.</span>
 
 <span class="sd">        Notes</span>
@@ -1653,7 +1653,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__or__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__or__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Combine an instance of `MultiIndexSet` with another via ``|`` oper.</span>
 
 <span class="sd">        Parameters</span>
@@ -1676,7 +1676,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__ior__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__ior__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Combine an instance of `MultiIndexSet` with another inplace via op.</span>
 
 <span class="sd">        Parameters</span>
@@ -1701,7 +1701,7 @@
 
 <div class="viewcode-block" id="MultiIndexSet.__deepcopy__">
 <a class="viewcode-back" href="../../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.__deepcopy__">[docs]</a>
-    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create of a deepcopy.</span>
 
 <span class="sd">        This function is called, if one uses the top-level function</span>
