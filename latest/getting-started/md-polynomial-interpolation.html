@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Multivariate Polynomial Interpolation &#8212; Minterpy 0.1</title>
+    <title>Multivariate Polynomial Interpolation &#8212; Minterpy 0.3</title>
   
   
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="One-Dimensional Polynomial Interpolation" href="1d-polynomial-interpolation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gea11192" />
+  <meta name="docsearch:version" content="0.3.1.dev44+gf9e5cbd" />
   </head>
   
   
@@ -125,8 +125,8 @@
       
     
     
-    <img src="../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.3 - Home"/>
+    <img src="../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.3 - Home"/>
   
   
 </a></div>
@@ -873,7 +873,8 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A_{m, n, p}} c_{\mathrm{nwt}, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.00221309, 0.01045035, 0.0070828 , 0.70204689, 0.06328034])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 4.15587322e-03,  2.84897181e-01,  3.18106534e-01, -1.24984993e-04,
+        1.47153010e-01])
 </pre></div>
 </div>
 </div>
@@ -887,7 +888,7 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A_{m, n, p}} c_{\mathrm{nwt}, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.00852601, -0.01309057, -0.01951951,  0.81637759,  0.08673647])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.16482098, 0.96137777, 0.81141047, 0.43699393, 0.12037966])
 </pre></div>
 </div>
 </div>
@@ -986,7 +987,7 @@ The norm is defined as:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.8682537734754737)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.868515483628165)
 </pre></div>
 </div>
 </div>
@@ -1058,7 +1059,7 @@ Let’s investigate the convergence of interpolating polynomials with increasing
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/43ae60039e328a226e2b38777e600cc9a664a95111d27cac627b5333c65c78d7.png" src="../_images/43ae60039e328a226e2b38777e600cc9a664a95111d27cac627b5333c65c78d7.png" />
+<img alt="../_images/5e950f41942a702e6189946012d660472dcf80c459de1728217841a3a723c29b.png" src="../_images/5e950f41942a702e6189946012d660472dcf80c459de1728217841a3a723c29b.png" />
 </div>
 </div>
 <p>Below are the surface plots of the original function and the interpolating polynomial with <span class="math notranslate nohighlight">\(n = 100\)</span> and <span class="math notranslate nohighlight">\(p = 2.0\)</span>, which appears to be numerically converged based on the above plots.</p>
@@ -1165,7 +1166,7 @@ in-depth tutorial.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f8742a9a7d0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f933b0d0df0&gt;
 </pre></div>
 </div>
 </div>
