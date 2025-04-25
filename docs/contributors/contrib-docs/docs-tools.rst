@@ -23,7 +23,7 @@ Documentation generator
 We use the `Sphinx documentation generator`_ to build the documentation
 as HTML files [#]_
 These HTML files can be viewed or deployed (published) as a static website
-using a hosting service such as `Read the Docs`_ [#]_.
+using a hosting service such as `Read the Docs`_ or `GitHub Pages`_.
 
 reStructuredText markup language
 ================================
@@ -69,7 +69,7 @@ Building and deploying the documentation
 ========================================
 
 The figure below illustrates the different components and processes involved
-in building the ``minterpy`` docs.
+in building the Minterpy documentation.
 
 .. figure:: /assets/images/contributors/documentation-tooling.png
   :align: center
@@ -91,13 +91,12 @@ while Jupyter notebooks use Markdown.
 
 .. rubric:: Footnotes
 .. [#] Other formats like PDF are also possible.
-.. [#] `Read the Docs`_ actually runs an instance of Sphinx to build the docs
-       online before serving it.
 
 .. _docs-like-code framework: https://www.docslikecode.com/
 .. _same repository: https://gitlab.hzdr.de/interpol/minterpy
 .. _Sphinx documentation generator: https://www.sphinx-doc.org/en/master/
 .. _Read the Docs: https://readthedocs.org/
+.. _GitHub Pages: https://pages.github.com
 .. _reStructuredText (reST): https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
 .. _docstrings: https://www.python.org/dev/peps/pep-0257/
 .. _PEP 287: https://www.python.org/dev/peps/pep-0287/
