@@ -92,7 +92,7 @@ and code reviews.
         <td align="center"><a href="https://www.casus.science/team-members/daniel-kotik/"><img src="https://gitlab.hzdr.de/uploads/-/system/user/avatar/577/avatar.png" width="100px;" alt=""/><br /><sub><b>Daniel Kotik</b></sub></a><br />
             <a href="#infra-kotik79" title="Infrastructure">🚇</a>
         </td>
-        <td align="center"><a href="https://www.casus.science/de-de/team-members/1119-2/"><img src="https://www.casus.science/wp-content/uploads/elementor/thumbs/Michal-Bajda-qtlth4bpkblwb6yqzo50r16g1m8t17omsfeahji5t4.png" width="100px;" alt=""/><br /><sub><b>Michał Bajda</b></sub></a><br />
+        <td align="center"><a href="https://www.casus.science/de-de/team-members/1119-2/"><img src="https://www.casus.science/backend/wp-content/uploads/2020/10/Michal_Bajda_.jpg" width="68px;" alt=""/><br /><sub><b>Michał Bajda</b></sub></a><br />
             <a href="#logo-michal" title="Logo design">🎨</a>
         </td>
       </tr>
