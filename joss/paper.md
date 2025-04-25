@@ -219,16 +219,13 @@ A_{m, n, p} = \{ \boldsymbol{\alpha} \in \mathbb{N}^m: \lVert \boldsymbol{\alpha
 $$
 Here, typical choices for $p$ are $1.0$, $2.0$, and $\infty$,
 representing the total, Euclidean, and maximum degree (tensor-product),
-respectively.
-The multi-index set $A_{m, n, p}$ assumes isotropy in the importance
-of input variables (i.e., each variable is treated equally)
-and those values for $p$ correspond to polynomial, sub-exponential,
+respectively. These values for $p$ correspond to polynomial, sub-exponential,
 and exponential growth of the set size as a function of the spatial dimension.
 Consequently, the maximum degree set faces a severe curse of dimensionality
 due to the rapid growth of the set size.
 
 It has been shown that the Euclidean degree $p = 2.0$ offers the best compromise
-for isotropic functions[^anisotropy],
+for isotropic functions (where each variable has the same importance)[^anisotropy],
 as its convergence rate matches that of $p = \infty$ with respect
 to the polynomial degree, yet with a significantly smaller multi-index set.
 In contrast, while the size of the multi-index set for $p = 2.0$
