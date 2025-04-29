@@ -114,9 +114,8 @@ several misconceptions [@Trefethen2011;@Trefethen2016;@Trefethen2017]:
 - They are said to generally fail to converge to the approximated function
   as the degree increases, with Faber's theorem often cited
   to justify this assertion.
-  This view, frequently illustrated by Runge's phenomenon, has contributed
-  to a more generally pessimistic outlook on the use of interpolating
-  polynomials for function approximation.
+  This view has contributed to a more generally pessimistic outlook
+  on the use of interpolating polynomials for function approximation.
 
 Minterpy addresses these issues by:
 
@@ -230,8 +229,7 @@ as its convergence rate matches that of $p = \infty$ with respect
 to the polynomial degree, yet with a significantly smaller multi-index set.
 In contrast, while the size of the multi-index set for $p = 2.0$
 is larger than that for $p = 1.0$, the gain in accuracy more than compensates
-for the increased cost, making it comparable to $p = \infty$ in accuracy
-[@Trefethen2017a;@Hecht2020].
+for the increased cost [@Trefethen2017a;@Hecht2025].
 
 Deriving multidimensional Lagrange bases for non-tensorial grids is challenging.
 Minterpy uses the Newton basis for efficient evaluation and differentiation
@@ -246,7 +244,7 @@ Using Leja-ordered Chebyshev-Lobatto interpolation nodes by default,
 Newton basis offers numerical stability [@Reichel1990;@TalEzer1991;@Breuss2018].
 Computing Newton coefficients, based on the Lagrange coefficients and interpolation grid,
 via a multidimensional divided-difference scheme (DDS) is a key step
-in Minterpy [@Hecht2020].
+in Minterpy [@Hecht2025].
 
 Minterpy also supports other polynomial bases,
 including the canonical (monomial) and Chebyshev (first kind) bases,
@@ -337,11 +335,9 @@ to [CRediT](https://credit.niso.org).
 
 # Acknowledgments
 
-The authors express their gratitude to
-Michael Bussmann for his support and invaluable suggestions;
-Michał Bajda for designing the Minterpy logo;
-Janina Schreiber for the thorough code review
-during the development process.
+The authors express their gratitude to Michael Bussmann for his support
+and suggestions; Michał Bajda for the Minterpy logo design;
+and Janina Schreiber for the code review.
 
 The work is partly funded by the Center for Advanced Systems Understanding ([CASUS](https://www.casus.science))
 which is financed by Germany's Federal Ministry of Education and Research (BMBF)
