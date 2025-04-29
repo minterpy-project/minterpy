@@ -135,7 +135,7 @@ While Faber's theorem shows that no _interpolating polynomial_ can converge
 for _all_ continuous functions, it has been demonstrated that if the function
 is reasonably smooth, the interpolating polynomials do converge
 at high algebraic rates for common regular (Lipschitz continuous[^lipschitz])
-functions and at at geometric rates for analytic functions [@Trefethen2017a].
+functions and at geometric rates for analytic functions [@Trefethen2017a].
 
 Minterpy shares similar objectives and functionality with Chebfun [@Driscoll2014],
 a popular MATLAB package[^chebfun-ports] designed for numerical computations
