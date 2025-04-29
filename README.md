@@ -207,7 +207,7 @@ at the Center for Advanced Systems Understanding ([CASUS]):
 - [Steve Schmerler](https://orcid.org/0000-0003-1354-0578) ([HZDR])
 - Vidya Chandrashekar ([TU Dresden](https://tu-dresden.de/))
 
-### Acknowledgement
+### Acknowledgements
 
 - [Klaus Steiniger](https://orcid.org/0000-0001-8965-1149) ([HZDR]/[CASUS](https://www.casus.science/?page_id=4353))
 - [Patrick Stiller](https://scholar.google.com/citations?user=nOtYbWMAAAAJ&hl=de) ([HZDR])
