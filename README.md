@@ -1,11 +1,12 @@
 ![](./docs/assets/Wordmark-color.png)
 
 [![DOI](https://rodare.hzdr.de/badge/DOI/10.14278/rodare.2062.svg)](https://rodare.hzdr.de/record/2062)
+[![status](https://joss.theoj.org/papers/96208a133980e518cdfdc36abdc504de/status.svg)](https://joss.theoj.org/papers/96208a133980e518cdfdc36abdc504de)
 [![Code style: black][black-badge]][black-link]
 [![License](https://img.shields.io/github/license/minterpy-project/minterpy)](https://choosealicense.com/licenses/mit/)
 [![PyPI](https://img.shields.io/pypi/v/minterpy)](https://pypi.org/project/minterpy/)
 
-# Minterpy
+# Minterpy: Multivariate Polynomial Interpolation in Python
 
 |                                 Branches                                  | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | :-----------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
