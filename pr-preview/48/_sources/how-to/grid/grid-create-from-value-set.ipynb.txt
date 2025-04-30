@@ -1,0 +1,259 @@
+{
+ "cells": [
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": "# Create a Grid from an Array of Generating Values",
+   "id": "30fda6830c7191f2"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": [
+    "import numpy as np\n",
+    "import minterpy as mp\n",
+    "import matplotlib.pyplot as plt"
+   ],
+   "id": "284f17796016b5b",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "Minterpy interpolating polynomials (i.e., in the Lagrange or Newton basis)\n",
+    "lives on a grid that holds the so-called _unisolvent nodes_.\n",
+    "An interpolating multi-dimensional polynomial of a given multi-index set of\n",
+    "exponents is uniquely\n",
+    "determined on the corresponding unisolvent nodes.\n",
+    "\n",
+    "An instance of `Grid` can be constructed via different constructors:\n",
+    "\n",
+    "- {py:meth}`.Grid.from_value_set`: create an instance based on an array of generating values (this page)\n",
+    "- {py:meth}`.Grid.from_function`: create an instance with a generating function (see the {doc}`example <grid-create-from-function>`)\n",
+    "- {py:meth}`.Grid.from_points`: create an instance with an array of generating points (see the {doc}`example <grid-create-from-points>`)\n",
+    "- {py:meth}`.Grid.from_degree`: create an instance with a complete multi-index set (see the {doc}`example <grid-create-from-degree>`)\n",
+    "- {py:class}`.Grid`: the default constructor (see the {doc}`example <grid-create-default-constructor>`)\n",
+    "\n",
+    "This guide provides an example on how to construct a `Grid` instance based\n",
+    "on a given array of generating values (i.e., one-dimensional interpolation\n",
+    "points) using the `from_value_set()` method."
+   ],
+   "id": "b6943bbbd9caee2b"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "## About generating values\n",
+    "\n",
+    "_Generating values_ in Minterpy convention, are one-dimensional interpolation\n",
+    "points. When used to define a grid to support multi-dimensional polynomials,\n",
+    "the generating values will be converted to an array of generating points\n",
+    "via tiling procedure.\n",
+    " \n",
+    "Valid generating values to create an instance of `Grid` are given as\n",
+    "a one-dimensional array of floats that must additionally satisfy the following\n",
+    "conditions:\n",
+    "\n",
+    "- the length must be $n + 1$ where $n$ is the maximum polynomial degree\n",
+    "  across all dimensions that the grid must support.\n",
+    "- the values of the array must be unique, that is, it contains no repeats.\n",
+    "- the length must be equal to or larger than the maximum exponents\n",
+    "  of the grid's multi-index set in any dimension.\n",
+    "\n",
+    "\n",
+    "```{note}\n",
+    "Generating values may also be provided as a two-dimensional array as long\n",
+    "as the array only has either one colum or one row.\n",
+    "```"
+   ],
+   "id": "799ba4eb511bf60e"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "## About  the `from_value_set()` factory method\n",
+    "\n",
+    "The method `from_value_set()` of the `Grid` class returns an instance of `Grid`\n",
+    "based on a given generating values.\n",
+    "\n",
+    "The method accepts two mandatory arguments, namely, the multi-index set\n",
+    "of exponents that defines the polynomials that grid can support,\n",
+    "and the generating values as required by the multi-index set.\n",
+    "\n",
+    "As explained above, the array of generating values must satisfy\n",
+    "several conditions for it to be valid.\n",
+    "\n",
+    "In many applications, a single set of one-dimensional interpolation points\n",
+    "is used for different dimensions.\n",
+    "The `from_value_set()` method is a shortcut to create a grid with\n",
+    "a specific one-dimensional interpolation points that are replicated\n",
+    "in every dimension."
+   ],
+   "id": "eedf18386c3eba2f"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "## Example: Two-dimensional interpolation grid\n",
+    "\n",
+    "Create an interpolation grid in $[-1, 1]^2$ to support two-dimensional\n",
+    "polynomials having a multi-index set \n",
+    "$A = \\{ (0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2), (0, 3) \\}$\n",
+    "(defined with respect to $l_p$-degree $1.0$).\n",
+    "The interpolation grid has Leja points in every dimension."
+   ],
+   "id": "b5abd137fddfa0e6"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "### Multi-index set\n",
+    "\n",
+    "Create an instance of `MultiIndexSet` following the above specification:"
+   ],
+   "id": "63f066280abf5c9e"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": [
+    "exponents = np.array([\n",
+    "    [0, 0],\n",
+    "    [1, 0],\n",
+    "    [2, 0],\n",
+    "    [0, 1],\n",
+    "    [1, 1],\n",
+    "    [2, 1],\n",
+    "    [0, 2],\n",
+    "    [1, 2],\n",
+    "    [2, 2],\n",
+    "    [0, 3],\n",
+    "])"
+   ],
+   "id": "591af982cc982d0e",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": "mi = mp.MultiIndexSet(exponents, lp_degree=1.0)",
+   "id": "7c107f6e46ee336a",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": "print(mi)",
+   "id": "eaaa8b707cee089b",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "### Generating values\n",
+    "\n",
+    "The required generating values as required by the grid are given as follows:"
+   ],
+   "id": "c0ff0c1f9f06f7b2"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": "gen_values = np.array([0, -1, 1, 0.57735035])",
+   "id": "1b946b0c6700c900",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "Because the maximum exponents in the multi-indices across all dimensions is $3$,\n",
+    "the required number of generating values is $3 + 1 = 4$."
+   ],
+   "id": "f6b35e3ac281ca6d"
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": [
+    "### Grid instance\n",
+    "\n",
+    "An instance of `Grid` given the multi-index set and the array of generating values\n",
+    "can  be constructed via `from_value_set()` method as follows:"
+   ],
+   "id": "def5222540d869d0"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": "grd = mp.Grid.from_value_set(mi, gen_values)",
+   "id": "3a11686f15dd0cc3",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": "The grid has the following unisolvent nodes:",
+   "id": "cb165b42ba414cbd"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": "print(grd.unisolvent_nodes)",
+   "id": "bd81d11f9e3842d",
+   "outputs": [],
+   "execution_count": null
+  },
+  {
+   "metadata": {},
+   "cell_type": "markdown",
+   "source": "The two-dimensional interpolation grid is plotted below:",
+   "id": "24eb3e4afee3e70b"
+  },
+  {
+   "metadata": {},
+   "cell_type": "code",
+   "source": [
+    "plt.scatter(grd.unisolvent_nodes[:, 0], grd.unisolvent_nodes[:, 1])\n",
+    "plt.xlabel(\"$x_1$\", fontsize=16)\n",
+    "plt.ylabel(\"$x_2$\", fontsize=16);"
+   ],
+   "id": "80b67f24678953a9",
+   "outputs": [],
+   "execution_count": null
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.6"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
