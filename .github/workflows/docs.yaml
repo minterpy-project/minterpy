@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # important: gets all history and tags
       - name: Install Minterpy with docs extras
         uses: ./.github/actions/install-minterpy
         with:

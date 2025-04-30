@@ -1,6 +1,28 @@
 # Changelog
 
-## Version 0.3.0
+All notable changes to the Minterpy project is documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [Version 0.3.1] - 2025-04-30
+
+This minor release incorporates feedback from the review process of
+the Minterpy submission to the Journal of Open Source Software (JOSS).
+There are no changes to the package's functionality.
+
+### Added
+
+- Included the source code and manuscript for the JOSS paper in the repository.
+
+### Changed
+
+- Revised and updated several documentation components, including `README.md`,
+  `CONTRIBUTING.md`, and the Getting Started guides.
+
+## Version 0.3.0 - 2024-12-20
 
 ### Added
 
@@ -171,7 +193,7 @@
   coupling with the Newton polynomial class and the corresponding
   transformation class.
 
-# Version 0.2.0-alpha
+# Version 0.2.0-alpha - 2023-01-06
 
 This is the next alpha release of `minterpy`, which adds several
 new functionalities and enhances code quality and performance.
@@ -209,3 +231,6 @@ in multiple dimensions:
 This code is still highly experimental and there is no assurance,
 that neither everything works as expected,
 nor if further releases will break the current API.
+
+[Unreleased]: https://github.com/minterpy-project/minterpy/compare/main...dev
+[0.3.1]: https://github.com/minterpy-project/minterpy/compare/v0.3.0...v0.3.1
