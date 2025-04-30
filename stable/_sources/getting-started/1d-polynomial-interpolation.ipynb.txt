@@ -32,7 +32,7 @@
     "\n",
     "_But how to create such polynomials in the first place?_\n",
     "\n",
-    "This tutorial demonstrates how you can create such a polynomial in the most typical use case."
+    "This tutorial demonstrates how you can create such a polynomial from scratch in the most typical use case: interpolating a function."
    ]
   },
   {
@@ -129,8 +129,7 @@
    "source": [
     "## Motivating function\n",
     "\n",
-    "In Minterpy, the polynomials are typically (but not always) interpolating polynomials that approximate functions of interest.\n",
-    "In fact, this is one of the main objective of Minterpy: approximating a (multi-dimensional) function using a polynomial.\n",
+    "In Minterpy, polynomials are typically used to approximate functions of interest by interpolating them. This is actually one of the main goals of Minterpy: to approximate a (multidimensional) function using a polynomial.\n",
     "\n",
     "For now, however, consider the following one-dimensional function:\n",
     "\n",
@@ -180,7 +179,9 @@
     "slideshow": {
      "slide_type": ""
     },
-    "tags": []
+    "tags": [
+     "hide-input"
+    ]
    },
    "outputs": [],
    "source": [
@@ -202,7 +203,7 @@
     "tags": []
    },
    "source": [
-    "With the function of interest defined, you are now ready to create a polynomial that approximates it."
+    "Now that you've defined your function, you're ready to create a polynomial that approximates it."
    ]
   },
   {
@@ -225,9 +226,9 @@
     "3. **Evaluate the function of interest at the grid points**: Compute the function values at the grid points (also known as the unisolvent nodes)\n",
     "4. **Create a polynomial in the Lagrange basis**: Construct the interpolating polynomial in the Lagrange basis based on the evaluated points.\n",
     "\n",
-    "To perform additional operations with the interpolating polynomial, such as evaluating it a set of query points, follow this extra step:\n",
+    "To perform additional operations with the interpolating polynomial, such as evaluating it at a set of query points, follow this extra step:\n",
     "\n",
-    "5. **Transform the polynomial to another basis**: Change the basis of the interpolating polynomial from the Lagrange basis to another basis, preferably the Newton asis, for convenient evaluation and manipulation.\n",
+    "5. **Transform the polynomial to another basis**: Change the basis of the interpolating polynomial from the Lagrange basis to another basis, preferably the Newton basis, for convenient evaluation and manipulation.\n",
     "\n",
     "Let’s go through these steps one at a time."
    ]
@@ -314,7 +315,7 @@
    "source": [
     "### Construct an interpolation grid\n",
     "\n",
-    "An interpolation grid is where an interpolating polynomial lives on. The bases of interpolating polynomials, such as the Lagrange or the Newton basis, are defined with respect to these grids.\n",
+    "An interpolation grid is where an interpolating polynomial lives on. The bases of interpolating polynomials, such as the Lagrange or the Newton basis, are built with respect to these grids.\n",
     "\n",
     "In Minterpy, interpolation grids are represented by the {py:class}`Grid <.core.grid.Grid>` class.\n",
     "The default constructor allows you to create an interpolation grid for a specified multi-index set (the first argument).\n",
@@ -483,19 +484,19 @@
    "source": [
     "### Create a Lagrange polynomial\n",
     "\n",
-    "The function values at the unisolvent nodes are the same as the coefficients $c_{L, \\alpha}$ of a polynomial in the Lagrange basis:\n",
+    "The function values at the unisolvent nodes are equal to the coefficients of a polynomial in the Lagrange basis $c_{\\mathrm{lag}, \\alpha}$:\n",
     "\n",
     "$$\n",
     "Q(x) = \\sum_{\\alpha \\in A} c_{\\mathrm{lag}, \\alpha} \\Psi_{\\mathrm{lag}, \\alpha}(x),\n",
     "$$\n",
     "\n",
-    "where $A$ is the multi-index set and $\\Psi_{\\alpha}$'s are monomials of the Lagrange basis that satisfy:\n",
+    "where $A$ is the multi-index set and $\\Psi_{\\alpha}$'s are Lagrange basis polynomials, each of which satisfies:\n",
     "\n",
     "$$\n",
     "\\Psi_{\\mathrm{lag}, \\alpha}(p_{\\beta}) = \\delta_{\\alpha, \\beta}, p_\\beta \\in P_A,\n",
     "$$\n",
     "\n",
-    "where $\\delta{\\cdot, \\cdots}$ denotes the Kronecker delta.\n",
+    "where $\\delta{\\cdot, \\cdot}$ denotes the Kronecker delta.\n",
     "\n",
     "Polynomials in the Lagrange basis are represented by the {py:class}`LagrangePolynomial <.polynomials.lagrange_polynomial.LagrangePolynomial>` class in Minterpy.\n",
     "You can create an instance of {py:class}`LagrangePolynomial <.polynomials.lagrange_polynomial.LagrangePolynomial>` class with various constructors.\n",
@@ -529,7 +530,7 @@
     "tags": []
    },
    "source": [
-    "Congratulations! You've just made your first polynomial in Minterpy."
+    "Congratulations! You've just made your first polynomial in Minterpy from scratch."
    ]
   },
   {
@@ -557,7 +558,7 @@
     "Q(x) = \\sum_{\\alpha \\in A} c_{\\mathrm{nwt}, \\alpha} \\, \\Psi_{\\mathrm{nwt}, \\alpha}(x),\n",
     "$$\n",
     "\n",
-    "where $c_{\\mathrm{nwt}, \\alpha}$'s are the coefficients of the polynomial in the Newton basis and $\\Psi_{\\mathrm{nwt}, \\alpha}$ is the monomial of the Newton basis associated with multi-index element $\\alpha$:\n",
+    "where $c_{\\mathrm{nwt}, \\alpha}$'s are the coefficients of the polynomial in the Newton basis and $\\Psi_{\\mathrm{nwt}, \\alpha}$ is the the Newton basis polynomial associated with multi-index element $\\alpha$:\n",
     "\n",
     "$$\n",
     "\\Psi_{\\mathrm{nwt}, \\alpha}(x) = \\prod_{i = 0}^{\\alpha - 1} (x - p_i),\n",
@@ -624,7 +625,7 @@
    },
    "source": [
     "```{note}\n",
-    "There are other basis in Minterpy, but for many practical applications we recommend to use the Newton basis.\n",
+    "Minterpy offers other polynomial bases as well, but for most practical purposes, we recommend to use the Newton basis.\n",
     "```"
    ]
   },
@@ -639,9 +640,9 @@
     "tags": []
    },
    "source": [
-    "### Evaluate the polynomial on a set of query points\n",
+    "### Evaluate the polynomial at a set of query points\n",
     "\n",
-    "Once a polynomial in the Newton basis is obtained, you can evaluate it on a set of query points; this one of the most routine task involving polynomial approximation.\n",
+    "Once a polynomial in the Newton basis is obtained, you can evaluate it at a set of query points; this one of the most routine tasks involving polynomial approximation.\n",
     "\n",
     "First, create a set of equally spaced test points in $[-1, 1]$:"
    ]
@@ -765,7 +766,7 @@
    },
    "source": [
     "```{note}\n",
-    "For evaluation, an instance of polynomial expects as its input an array; as the polynomial is one dimensional the array should either be one-dimensional or two-dimensional with a single column (the column of a two-dimensional array indicates the values along each spatial dimension).\n",
+    "For evaluation, an instance of polynomial expects as its input an array; as the polynomial is one dimensional, the array should either be one-dimensional or two-dimensional with a single column (the column of a two-dimensional array indicates the values along each spatial dimension).\n",
     "```"
    ]
   },
@@ -780,7 +781,7 @@
     "tags": []
    },
    "source": [
-    "We can compare the results of the interpolating polynomial against the given function in the plot before:"
+    "Let's compare the results of the interpolating polynomial with the original function."
    ]
   },
   {
@@ -818,7 +819,7 @@
     "tags": []
    },
    "source": [
-    "Shown also in the plot are the location of unisolvent nodes and the corresponding function values."
+    "The plot also shows the location of the unisolvent nodes and their corresponding function values; the interpolant is indeed interpolatory."
    ]
   },
   {
@@ -897,7 +898,7 @@
     "- the degree of polynomial interpolant\n",
     "\n",
     "All in a single function call.\n",
-    "This call returns a callable object that can be used with a set of query points.\n",
+    "The function returns a callable object that you can use to evaluate the (underlying) interpolating polynomial at a set of query points.\n",
     "\n",
     "To create an interpolant using the {py:func}`.interpolate` function with the same structure as before, use the following command:"
    ]
@@ -959,7 +960,7 @@
     "tags": []
    },
    "source": [
-    "With this short-cut to create an interpolant where evaluation is all that is needed, let's investigate the convergence of interpolating polynomials with increasing polynomial degrees.,"
+    "With this shortcut to create an interpolant where evaluation is all that is needed, let's investigate the convergence of interpolating polynomials with increasing polynomial degrees.,"
    ]
   },
   {
@@ -1014,6 +1015,8 @@
     "plt.plot(xx_test, yy_test);\n",
     "for i, n in enumerate(poly_degrees):\n",
     "    plt.plot(xx_test, yy_poly[:, i], label=\"degree = {}\".format(n))\n",
+    "plt.xlabel(\"$x$\", fontsize=14)\n",
+    "plt.ylabel(\"$y$\", fontsize=14)\n",
     "plt.legend();"
    ]
   },
@@ -1063,6 +1066,8 @@
    "outputs": [],
    "source": [
     "plt.plot(poly_degrees, errors, '-x');\n",
+    "plt.ylabel(r\"$|| f - Q ||_\\infty$\", fontsize=14)\n",
+    "plt.xlabel(\"Polynomial degree ($n$)\", fontsize=14)\n",
     "plt.yscale(\"log\");"
    ]
   },
@@ -1097,6 +1102,8 @@
    "source": [
     "plt.plot(xx_test, np.abs(yy_test - yy_poly[:, -1]))\n",
     "plt.ylim(1e-18,1)\n",
+    "plt.ylabel(r\"$| f - Q |$\", fontsize=14)\n",
+    "plt.xlabel(\"$x$\", fontsize=14)\n",
     "plt.yscale(\"log\");"
    ]
   },
@@ -1115,19 +1122,34 @@
    ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "outputs": [],
    "execution_count": null,
+   "id": "5ddc236432458232",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
+   "outputs": [],
    "source": [
     "plt.plot(xx_test, np.abs(yy_test - yy_poly[:, 0]))\n",
+    "plt.ylabel(r\"$| f - Q |$\", fontsize=14)\n",
+    "plt.xlabel(\"$x$\", fontsize=14)\n",
     "plt.yscale(\"log\");"
-   ],
-   "id": "5ddc236432458232"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "692e6d3992a02e39",
+   "metadata": {
+    "editable": true,
+    "slideshow": {
+     "slide_type": ""
+    },
+    "tags": []
+   },
    "source": [
     "## From Interpolant to polynomial\n",
     "\n",
@@ -1143,22 +1165,23 @@
     "|    {py:meth}`to_newton() <.interpolation.Interpolant.to_newton>`    |     {py:class}`NewtonPolynomial <.polynomials.newton_polynomial.NewtonPolynomial>`      |\n",
     "|  {py:meth}`to_lagrange() <.interpolation.Interpolant.to_lagrange>`  |  {py:class}`LagrangePolynomial <.polynomials.lagrange_polynomial.LagrangePolynomial>`   |\n",
     "| {py:meth}`to_canonical() <.interpolation.Interpolant.to_canonical>` | {py:class}`CanonicalPolynomial <.polynomials.canonical_polynomial.CanonicalPolynomial>` |\n",
-    "| {py:meth}`to_chebyshev() <.interpolation.Interpolant.to_chebyshev>` | {py:class}`CanonicalPolynomial <.polynomials.chebyshev_polynomial.ChebyshevPolynomial>` |\n",
+    "| {py:meth}`to_chebyshev() <.interpolation.Interpolant.to_chebyshev>` | {py:class}`ChebyshevPolynomial <.polynomials.chebyshev_polynomial.ChebyshevPolynomial>` |\n",
     "\n",
     "These bases will be the topic of {doc}`/getting-started/polynomial-bases-and-transformations`\n",
     "in-depth tutorial.\n",
     "\n",
     "For now to obtain the interpolating polynomial in the Newton basis, call:"
-   ],
-   "id": "692e6d3992a02e39"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "outputs": [],
    "execution_count": null,
-   "source": "fx_interp.to_newton()",
-   "id": "2b3192c790d330ae"
+   "id": "2b3192c790d330ae",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fx_interp.to_newton()"
+   ]
   },
   {
    "cell_type": "markdown",
@@ -1189,9 +1212,9 @@
     "\n",
     "---\n",
     "\n",
-    "Minterpy, as its name implies, supports the construction of multivariate (multi-dimensional) polynomials as well. The process for constructing these polynomials follows similar steps to those described here.\n",
+    "Minterpy, as its name implies, supports the construction of multivariate polynomials as well. The process for constructing these polynomials follows similar steps to those described here.\n",
     "\n",
-    "In the next tutorial, you'll learn how to create multi-dimensional polynomials in Minterpy."
+    "In the next tutorial, you'll learn how to create multivariate polynomials to interpolate multidimensional functions using Minterpy."
    ]
   }
  ],
@@ -1211,7 +1234,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.8.16"
+   "version": "3.9.19"
   }
  },
  "nbformat": 4,

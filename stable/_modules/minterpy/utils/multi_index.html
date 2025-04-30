@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>minterpy.utils.multi_index &#8212; Minterpy 0.1</title>
+    <title>minterpy.utils.multi_index &#8212; Minterpy 0.3</title>
   
   
   
@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
+  <meta name="docsearch:version" content="0.3.1.dev51+g615adfe8" />
   </head>
   
   
@@ -120,8 +120,8 @@
       
     
     
-    <img src="../../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.3 - Home"/>
+    <img src="../../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.3 - Home"/>
   
   
 </a></div>
@@ -436,18 +436,18 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains numerical routines for manipulating multi-indices.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">ROUND_HALF_UP</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">no_type_check</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">ROUND_HALF_UP</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">ceil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">no_type_check</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="n">INT_DTYPE</span><span class="p">,</span> <span class="n">NOT_FOUND</span>
-<span class="kn">from</span> <span class="nn">minterpy.jit_compiled.multi_index</span> <span class="kn">import</span> <span class="n">is_index_contained</span><span class="p">,</span> <span class="n">search_lex_sorted</span><span class="p">,</span> <span class="n">is_lex_smaller_or_equal</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">INT_DTYPE</span><span class="p">,</span> <span class="n">NOT_FOUND</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.jit_compiled.multi_index</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_index_contained</span><span class="p">,</span> <span class="n">search_lex_sorted</span><span class="p">,</span> <span class="n">is_lex_smaller_or_equal</span><span class="p">,</span> \
     <span class="n">fill_match_positions</span><span class="p">,</span> <span class="n">cross_and_sum</span><span class="p">,</span> <span class="n">unique_indices</span>
-<span class="kn">from</span> <span class="nn">minterpy.utils.arrays</span> <span class="kn">import</span> <span class="n">lp_norm</span><span class="p">,</span> <span class="n">cartesian_product</span><span class="p">,</span> <span class="n">lp_sum</span><span class="p">,</span> <span class="n">expand_dim</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">lp_norm</span><span class="p">,</span> <span class="n">cartesian_product</span><span class="p">,</span> <span class="n">lp_sum</span><span class="p">,</span> <span class="n">expand_dim</span>
 
 <span class="c1"># if TYPE_CHECKING:</span>
 <span class="c1">#    from .tree import MultiIndexTree</span>
@@ -455,7 +455,7 @@
 
 <div class="viewcode-block" id="get_poly_degree">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.get_poly_degree">[docs]</a>
-<span class="k">def</span> <span class="nf">get_poly_degree</span><span class="p">(</span><span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_poly_degree</span><span class="p">(</span><span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the polynomial degree from a multi-index set for a given lp-degree.</span>
 
 <span class="sd">    Parameters</span>
@@ -490,7 +490,7 @@
 
 <div class="viewcode-block" id="get_exponent_matrix">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.get_exponent_matrix">[docs]</a>
-<span class="k">def</span> <span class="nf">get_exponent_matrix</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_exponent_matrix</span><span class="p">(</span>
     <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">poly_degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -542,7 +542,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_gen_multi_index_exponents_recur</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">gamma2</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_gen_multi_index_exponents_recur</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">gamma2</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;DEPRECATED. only for reference. TODO remove</span>
 <span class="sd">    NOTE: this is slow for larger problem instances!</span>
 
@@ -610,7 +610,7 @@
     <span class="k">return</span> <span class="n">out</span>
 
 
-<span class="k">def</span> <span class="nf">_gen_multi_index_exponents</span><span class="p">(</span><span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">poly_degree</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_gen_multi_index_exponents</span><span class="p">(</span><span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">poly_degree</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    creates the array of exponents for the MultiIndex class</span>
 <span class="sd">    DEPRECATED: reference implementations for tests TODO remove</span>
@@ -625,7 +625,7 @@
 <span class="n">NORM_FCT</span> <span class="o">=</span> <span class="n">lp_norm</span>
 
 
-<span class="k">def</span> <span class="nf">iterate_indices</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">iterate_indices</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">indices</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># just a single index</span>
         <span class="k">yield</span> <span class="n">indices</span>
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># already iterable as is:</span>
@@ -634,7 +634,7 @@
 
 <div class="viewcode-block" id="gen_backward_neighbors">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.gen_backward_neighbors">[docs]</a>
-<span class="k">def</span> <span class="nf">gen_backward_neighbors</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_backward_neighbors</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield the backward neighbors of a given multi-index set element.</span>
 
 <span class="sd">    Parameters</span>
@@ -674,7 +674,7 @@
 
 <div class="viewcode-block" id="gen_missing_backward_neighbors">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.gen_missing_backward_neighbors">[docs]</a>
-<span class="k">def</span> <span class="nf">gen_missing_backward_neighbors</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_missing_backward_neighbors</span><span class="p">(</span>
     <span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield all the missing backward neighbors for an array of multi-indices.</span>
@@ -743,7 +743,7 @@
 
 <div class="viewcode-block" id="is_complete">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.is_complete">[docs]</a>
-<span class="k">def</span> <span class="nf">is_complete</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_complete</span><span class="p">(</span>
     <span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">poly_degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span>
@@ -811,7 +811,7 @@
 
 <div class="viewcode-block" id="is_disjoint">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.is_disjoint">[docs]</a>
-<span class="k">def</span> <span class="nf">is_disjoint</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_disjoint</span><span class="p">(</span>
     <span class="n">indices_1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">indices_2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">expand_dim_</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -894,7 +894,7 @@
 
 <div class="viewcode-block" id="is_downward_closed">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.is_downward_closed">[docs]</a>
-<span class="k">def</span> <span class="nf">is_downward_closed</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_downward_closed</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an array of multi-indices is downward-closed.</span>
 
 <span class="sd">    Parameters</span>
@@ -946,7 +946,7 @@
 <div class="viewcode-block" id="list_insert_single">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.list_insert_single">[docs]</a>
 <span class="nd">@no_type_check</span>
-<span class="k">def</span> <span class="nf">list_insert_single</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_insert_single</span><span class="p">(</span>
     <span class="n">list_of_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="n">index2insert</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">check_for_inclusion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -976,14 +976,14 @@
 
 
 <span class="nd">@no_type_check</span>
-<span class="k">def</span> <span class="nf">to_index_list</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_index_list</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">indices</span>  <span class="c1"># already is a list</span>
     <span class="n">list_of_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterate_indices</span><span class="p">(</span><span class="n">indices</span><span class="p">))</span>  <span class="c1"># include all existing indices</span>
     <span class="k">return</span> <span class="n">list_of_indices</span>
 
 
-<span class="k">def</span> <span class="nf">to_index_array</span><span class="p">(</span><span class="n">list_of_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_index_array</span><span class="p">(</span><span class="n">list_of_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="c1"># NOTE: shape is: (N, m)</span>
     <span class="n">index_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">list_of_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">INT_DTYPE</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">index_array</span>
@@ -991,7 +991,7 @@
 
 <div class="viewcode-block" id="insert_lexicographically">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.insert_lexicographically">[docs]</a>
-<span class="k">def</span> <span class="nf">insert_lexicographically</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">insert_lexicographically</span><span class="p">(</span>
     <span class="n">indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">indices2insert</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1022,7 +1022,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">insert_partial_derivatives</span><span class="p">(</span><span class="n">list_of_indices</span><span class="p">,</span> <span class="n">exponent_vector</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">insert_partial_derivatives</span><span class="p">(</span><span class="n">list_of_indices</span><span class="p">,</span> <span class="n">exponent_vector</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">deriv_vect</span> <span class="ow">in</span> <span class="n">gen_backward_neighbors</span><span class="p">(</span>
         <span class="n">exponent_vector</span>
     <span class="p">):</span>  <span class="c1"># all vectors &quot;smaller by 1&quot;</span>
@@ -1031,7 +1031,7 @@
 
 <div class="viewcode-block" id="make_derivable">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.make_derivable">[docs]</a>
-<span class="k">def</span> <span class="nf">make_derivable</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_derivable</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;inserts all missing multi index vectors &quot;smaller by one&quot; &quot;&quot;&quot;</span>
     <span class="n">list_of_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">nr_exponents</span><span class="p">,</span> <span class="n">spatial_dimension</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span>
@@ -1046,7 +1046,7 @@
 
 <div class="viewcode-block" id="make_complete">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.make_complete">[docs]</a>
-<span class="k">def</span> <span class="nf">make_complete</span><span class="p">(</span><span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_complete</span><span class="p">(</span><span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a complete exponents from a given array of exponents.</span>
 
 <span class="sd">    A complete set of exponents contains all monomials, whose :math:`l_p`-norm</span>
@@ -1102,7 +1102,7 @@
 
 <div class="viewcode-block" id="make_downward_closed">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.make_downward_closed">[docs]</a>
-<span class="k">def</span> <span class="nf">make_downward_closed</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_downward_closed</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an array of multi-indices downward-closed.</span>
 
 <span class="sd">    Parameters</span>
@@ -1188,7 +1188,7 @@
 
 <div class="viewcode-block" id="find_match_between">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.find_match_between">[docs]</a>
-<span class="k">def</span> <span class="nf">find_match_between</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_match_between</span><span class="p">(</span>
     <span class="n">smaller_idx_set</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">larger_idx_set</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;find the positions of each multi_index of the smaller set in the larger set</span>
@@ -1206,7 +1206,7 @@
 
 <div class="viewcode-block" id="lex_sort">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.lex_sort">[docs]</a>
-<span class="k">def</span> <span class="nf">lex_sort</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lex_sort</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Lexicographically sort an array of multi-indices.</span>
 
 <span class="sd">    Parameters</span>
@@ -1244,7 +1244,7 @@
 
 <div class="viewcode-block" id="multiply_indices">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.multiply_indices">[docs]</a>
-<span class="k">def</span> <span class="nf">multiply_indices</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">multiply_indices</span><span class="p">(</span>
     <span class="n">indices_1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">indices_2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1334,7 +1334,7 @@
 
 <div class="viewcode-block" id="union_indices">
 <a class="viewcode-back" href="../../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.union_indices">[docs]</a>
-<span class="k">def</span> <span class="nf">union_indices</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">union_indices</span><span class="p">(</span>
     <span class="n">indices_1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">indices_2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1409,7 +1409,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_missing_backward_neighbors</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_missing_backward_neighbors</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a lexicographically sorted array of missing backward neighbors.</span>
 
 <span class="sd">    Parameters</span>
@@ -1448,7 +1448,7 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
 </pre></div>
 

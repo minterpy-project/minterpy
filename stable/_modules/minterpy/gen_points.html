@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>minterpy.gen_points &#8212; Minterpy 0.1</title>
+    <title>minterpy.gen_points &#8212; Minterpy 0.3</title>
   
   
   
@@ -29,7 +29,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
+  <meta name="docsearch:version" content="0.3.1.dev51+g615adfe8" />
   </head>
   
   
@@ -120,8 +120,8 @@
       
     
     
-    <img src="../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.3 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.3 - Home"/>
   
   
 </a></div>
@@ -445,14 +445,14 @@
 <span class="sd">the generating points in each dimension and the multi-index set of polynomial</span>
 <span class="sd">exponents.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="n">FLOAT_DTYPE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">FLOAT_DTYPE</span>
 
 
 <div class="viewcode-block" id="gen_points_chebyshev">
 <a class="viewcode-back" href="../../api/internal/gen-points.html#minterpy.gen_points.gen_points_chebyshev">[docs]</a>
-<span class="k">def</span> <span class="nf">gen_points_chebyshev</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_points_chebyshev</span><span class="p">(</span>
     <span class="n">poly_degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -470,7 +470,7 @@
 
 <div class="viewcode-block" id="gen_points_from_values">
 <a class="viewcode-back" href="../../api/internal/gen-points.html#minterpy.gen_points.gen_points_from_values">[docs]</a>
-<span class="k">def</span> <span class="nf">gen_points_from_values</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_points_from_values</span><span class="p">(</span>
     <span class="n">generating_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -500,7 +500,7 @@
 
 <div class="viewcode-block" id="chebychev_2nd_order">
 <a class="viewcode-back" href="../../api/internal/gen-points.html#minterpy.gen_points.chebychev_2nd_order">[docs]</a>
-<span class="k">def</span> <span class="nf">chebychev_2nd_order</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># 2nd order</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">chebychev_2nd_order</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># 2nd order</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function of Chebychev points of the second kind.</span>
 
 <span class="sd">    :param n: Degree of the point set, i.e. number of Chebychev points.</span>
@@ -523,7 +523,7 @@
 
 <div class="viewcode-block" id="gen_chebychev_2nd_order_leja_ordered">
 <a class="viewcode-back" href="../../api/internal/gen-points.html#minterpy.gen_points.gen_chebychev_2nd_order_leja_ordered">[docs]</a>
-<span class="k">def</span> <span class="nf">gen_chebychev_2nd_order_leja_ordered</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_chebychev_2nd_order_leja_ordered</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function of Leja ordered Chebychev points of the second kind.</span>
 
 <span class="sd">    :param n: Degree of the point set, i.e. number of Chebychev points (plus one!).</span>

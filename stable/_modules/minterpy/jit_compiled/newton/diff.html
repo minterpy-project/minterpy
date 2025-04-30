@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>minterpy.jit_compiled.newton.diff &#8212; Minterpy 0.1</title>
+    <title>minterpy.jit_compiled.newton.diff &#8212; Minterpy 0.3</title>
   
   
   
@@ -29,7 +29,7 @@
   <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
+  <meta name="docsearch:version" content="0.3.1.dev51+g615adfe8" />
   </head>
   
   
@@ -120,8 +120,8 @@
       
     
     
-    <img src="../../../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../../../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../../../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.3 - Home"/>
+    <img src="../../../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.3 - Home"/>
   
   
 </a></div>
@@ -441,12 +441,12 @@
 <span class="sd">- The most &quot;fine-grained&quot; functions must be defined first in order for Numba</span>
 <span class="sd">  to properly infer the function types.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span><span class="p">,</span> <span class="n">void</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">prange</span><span class="p">,</span> <span class="n">void</span>
 
-<span class="kn">from</span> <span class="nn">minterpy.global_settings</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">F_2D</span><span class="p">,</span>
     <span class="n">F_1D</span><span class="p">,</span>
     <span class="n">I_1D</span><span class="p">,</span>
@@ -456,7 +456,7 @@
     <span class="n">I_2D</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">minterpy.jit_compiled.common</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.jit_compiled.common</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">combinations_iter</span><span class="p">,</span>
     <span class="n">dot</span><span class="p">,</span>
     <span class="n">get_max_columnwise</span><span class="p">,</span>
@@ -469,7 +469,7 @@
 <div class="viewcode-block" id="create_lut_difference">
 <a class="viewcode-back" href="../../../../api/internal/jit_compiled/newton-diff.html#minterpy.jit_compiled.newton.diff.create_lut_difference">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">F_2D</span><span class="p">(</span><span class="n">F_1D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">create_lut_difference</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_lut_difference</span><span class="p">(</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">generating_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -517,7 +517,7 @@
 <div class="viewcode-block" id="create_lua_differentiated">
 <a class="viewcode-back" href="../../../../api/internal/jit_compiled/newton-diff.html#minterpy.jit_compiled.newton.diff.create_lua_differentiated">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">FLOAT</span><span class="p">(</span><span class="n">I_2D</span><span class="p">,</span> <span class="n">F_1D</span><span class="p">,</span> <span class="n">F_1D</span><span class="p">,</span> <span class="n">F_1D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">create_lua_differentiated</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_lua_differentiated</span><span class="p">(</span>
     <span class="n">combinations</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">lua_difference</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">prev_lua_prod</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -598,7 +598,7 @@
 <div class="viewcode-block" id="create_lut_differentiated">
 <a class="viewcode-back" href="../../../../api/internal/jit_compiled/newton-diff.html#minterpy.jit_compiled.newton.diff.create_lut_differentiated">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">void</span><span class="p">(</span><span class="n">F_1D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">))</span>
-<span class="k">def</span> <span class="nf">create_lut_differentiated</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_lut_differentiated</span><span class="p">(</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">max_exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">generating_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -733,7 +733,7 @@
 <div class="viewcode-block" id="compute_monomials_from_lut">
 <a class="viewcode-back" href="../../../../api/internal/jit_compiled/newton-diff.html#minterpy.jit_compiled.newton.diff.compute_monomials_from_lut">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">void</span><span class="p">(</span><span class="n">I_2D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">,</span> <span class="n">F_1D</span><span class="p">))</span>
-<span class="k">def</span> <span class="nf">compute_monomials_from_lut</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_monomials_from_lut</span><span class="p">(</span>
     <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">lut_diff</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">derivative_order_along</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -796,7 +796,7 @@
 <div class="viewcode-block" id="eval_monomials_single_query">
 <a class="viewcode-back" href="../../../../api/internal/jit_compiled/newton-diff.html#minterpy.jit_compiled.newton.diff.eval_monomials_single_query">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">void</span><span class="p">(</span><span class="n">F_1D</span><span class="p">,</span> <span class="n">I_2D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">,</span> <span class="n">F_1D</span><span class="p">))</span>
-<span class="k">def</span> <span class="nf">eval_monomials_single_query</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_monomials_single_query</span><span class="p">(</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">max_exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -883,7 +883,7 @@
 <div class="viewcode-block" id="eval_multiple_query">
 <a class="viewcode-back" href="../../../../api/internal/jit_compiled/newton-diff.html#minterpy.jit_compiled.newton.diff.eval_multiple_query">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">F_2D</span><span class="p">(</span><span class="n">F_2D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">,</span> <span class="n">I_2D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">eval_multiple_query</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_multiple_query</span><span class="p">(</span>
     <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">coefficients</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -982,7 +982,7 @@
 <div class="viewcode-block" id="eval_multiple_query_par">
 <a class="viewcode-back" href="../../../../api/internal/jit_compiled/newton-diff.html#minterpy.jit_compiled.newton.diff.eval_multiple_query_par">[docs]</a>
 <span class="nd">@njit</span><span class="p">(</span><span class="n">F_2D</span><span class="p">(</span><span class="n">F_2D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">,</span> <span class="n">I_2D</span><span class="p">,</span> <span class="n">F_2D</span><span class="p">,</span> <span class="n">I_1D</span><span class="p">),</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nogil</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">eval_multiple_query_par</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_multiple_query_par</span><span class="p">(</span>
     <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">coefficients</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>

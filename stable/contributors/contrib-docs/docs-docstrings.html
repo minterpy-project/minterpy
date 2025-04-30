@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Writing Docstrings for API Documentation &#8212; Minterpy 0.1</title>
+    <title>Writing Docstrings for API Documentation &#8212; Minterpy 0.3</title>
   
   
   
@@ -30,7 +30,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -57,7 +57,7 @@
     <link rel="prev" title="Writing Jupyter Notebooks" href="docs-ipynb.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
+  <meta name="docsearch:version" content="0.3.1.dev51+g615adfe8" />
   </head>
   
   
@@ -123,8 +123,8 @@
       
     
     
-    <img src="../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.3 - Home"/>
+    <img src="../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.3 - Home"/>
   
   
 </a></div>
@@ -479,7 +479,7 @@ These are multi-line comments beneath a module, function, class, or method
 that details their functionality.
 All public components of Minterpy must have their own docstrings.</p>
 <p>Below is a snippet of a Minterpy function that shows its docstring.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_poly_degree</span><span class="p">(</span><span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_poly_degree</span><span class="p">(</span><span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the polynomial degree of a multi-index set for a given lp-degree.</span>
 
 <span class="sd">    Parameters</span>
@@ -627,7 +627,7 @@ If the function or method has no parameter, then the section is excluded.</p>
 not include the <strong>Name</strong>.
 Instead, it directly provides the type and description of the return value.</p>
 <p>For instance:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_exponents</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add_exponents</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -659,7 +659,7 @@ in the one-line summary.</p>
 <p>Below is an example of a <strong>Detailed description</strong> section taken from the
 <a class="reference internal" href="../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.make_complete" title="minterpy.utils.multi_index.make_complete"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_complete()</span></code></a>
 function.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_complete</span><span class="p">(</span><span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">make_complete</span><span class="p">(</span><span class="n">exponents</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a complete exponents from a given array of exponents.</span>
 
 <span class="sd">    A complete set of exponents contains all monomials, whose :math:`l_p`-norm</span>
@@ -681,7 +681,7 @@ might raise.</p>
 <p>Below is an example of a <strong>Raises</strong> section taken from the
 <a class="reference internal" href="../../api/internal/utils/verification.html#minterpy.utils.verification.verify_spatial_dimension" title="minterpy.utils.verification.verify_spatial_dimension"><code class="xref py py-func docutils literal notranslate"><span class="pre">verify_spatial_dimension()</span></code></a>
 function.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">verify_spatial_dimension</span><span class="p">(</span><span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">verify_spatial_dimension</span><span class="p">(</span><span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify if the value of a given spatial dimension is valid.</span>
 
 <span class="sd">    ...</span>
@@ -716,7 +716,7 @@ illustrating what the code will return
 or how it will behave given specific inputs.</p>
 <p>Below is an example of a <strong>Examples</strong> section taken from the
 <a class="reference internal" href="../../api/internal/utils/multi-index.html#minterpy.utils.multi_index.lex_sort" title="minterpy.utils.multi_index.lex_sort"><code class="xref py py-func docutils literal notranslate"><span class="pre">lex_sort()</span></code></a> function.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lex_sort</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">lex_sort</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Lexicographically sort an array of multi-indices.</span>
 
 <span class="sd">    Examples</span>
@@ -766,7 +766,7 @@ that doesn’t fit neatly into other sections.</p>
 </ul>
 <p>For instance, the <a class="reference internal" href="../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.is_disjoint" title="minterpy.core.multi_index.MultiIndexSet.is_disjoint"><code class="xref py py-meth docutils literal notranslate"><span class="pre">is_disjoint()</span></code></a>
 method of the <a class="reference internal" href="../../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">minterpy.core.multi_index.MultiIndexSet</span></code></a> has the following notes</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_disjoint</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">is_disjoint</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MultiIndexSet&quot;</span><span class="p">,</span>
     <span class="n">expand_dim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -797,7 +797,7 @@ Furthermore, the <strong>Parameters</strong> section contains the list of parame
 used to create an instance via the default constructor.</p>
 <p>Below is an example of a docstring for
 the <a class="reference internal" href="../../api/core/grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></a> class</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Grid</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Grid</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class representing the nodes on which interpolating polynomials live.</span>
 
 <span class="sd">    Instances of this class provide the data structure for the unisolvent</span>
@@ -851,7 +851,7 @@ their getter.</p>
 <p>For example, the <a class="reference internal" href="../../api/core/grid.html#minterpy.core.grid.Grid.generating_points" title="minterpy.core.grid.Grid.generating_points"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generating_points</span></code></a>
 property of the <a class="reference internal" href="../../api/core/grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></a> class:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@property</span>
-<span class="k">def</span> <span class="nf">generating_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generating_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The generating points of the interpolation Grid.</span>
 
 <span class="sd">    The generating points of the interpolation grid are one two main</span>

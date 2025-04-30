@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>minterpy.transformations.lagrange &#8212; Minterpy 0.1</title>
+    <title>minterpy.transformations.lagrange &#8212; Minterpy 0.3</title>
   
   
   
@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gc3f60a4" />
+  <meta name="docsearch:version" content="0.3.1.dev51+g615adfe8" />
   </head>
   
   
@@ -120,8 +120,8 @@
       
     
     
-    <img src="../../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.1 - Home"/>
-    <img src="../../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.1 - Home"/>
+    <img src="../../../_static/Wordmark-color.png" class="logo__image only-light" alt="Minterpy 0.3 - Home"/>
+    <img src="../../../_static/Wordmark-color.png" class="logo__image only-dark pst-js-only" alt="Minterpy 0.3 - Home"/>
   
   
 </a></div>
@@ -447,14 +447,14 @@
 <span class="sd">  :ref:`Chebyshev basis &lt;fundamentals/polynomial-bases:Chebyshev basis&gt;`</span>
 <span class="sd">  of the first kind)</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">minterpy.core.ABC</span> <span class="kn">import</span> <span class="n">TransformationABC</span>
-<span class="kn">from</span> <span class="nn">minterpy.polynomials</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.ABC</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformationABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.polynomials</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">LagrangePolynomial</span><span class="p">,</span>
     <span class="n">NewtonPolynomial</span><span class="p">,</span>
     <span class="n">CanonicalPolynomial</span><span class="p">,</span>
     <span class="n">ChebyshevPolynomial</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">minterpy.transformations.utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.transformations.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">build_lagrange_to_canonical_operator</span><span class="p">,</span>
     <span class="n">build_lagrange_to_newton_operator</span><span class="p">,</span>
     <span class="n">build_lagrange_to_chebyshev_operator</span><span class="p">,</span>
@@ -465,7 +465,7 @@
 
 <div class="viewcode-block" id="LagrangeToNewton">
 <a class="viewcode-back" href="../../../api/transformations/transformation-lagrange.html#minterpy.transformations.lagrange.LagrangeToNewton">[docs]</a>
-<span class="k">class</span> <span class="nc">LagrangeToNewton</span><span class="p">(</span><span class="n">TransformationABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LagrangeToNewton</span><span class="p">(</span><span class="n">TransformationABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transformation from the Lagrange basis to the Newton basis.&quot;&quot;&quot;</span>
 
     <span class="n">origin_type</span> <span class="o">=</span> <span class="n">LagrangePolynomial</span>
@@ -476,7 +476,7 @@
 
 <div class="viewcode-block" id="LagrangeToCanonical">
 <a class="viewcode-back" href="../../../api/transformations/transformation-lagrange.html#minterpy.transformations.lagrange.LagrangeToCanonical">[docs]</a>
-<span class="k">class</span> <span class="nc">LagrangeToCanonical</span><span class="p">(</span><span class="n">TransformationABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LagrangeToCanonical</span><span class="p">(</span><span class="n">TransformationABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transformation from the Lagrange basis to the canonical basis.&quot;&quot;&quot;</span>
 
     <span class="n">origin_type</span> <span class="o">=</span> <span class="n">LagrangePolynomial</span>
@@ -487,7 +487,7 @@
 
 <div class="viewcode-block" id="LagrangeToChebyshev">
 <a class="viewcode-back" href="../../../api/transformations/transformation-lagrange.html#minterpy.transformations.lagrange.LagrangeToChebyshev">[docs]</a>
-<span class="k">class</span> <span class="nc">LagrangeToChebyshev</span><span class="p">(</span><span class="n">TransformationABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LagrangeToChebyshev</span><span class="p">(</span><span class="n">TransformationABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transformation from the Lagrange basis to the Chebyshev basis.&quot;&quot;&quot;</span>
 
     <span class="n">origin_type</span> <span class="o">=</span> <span class="n">LagrangePolynomial</span>
