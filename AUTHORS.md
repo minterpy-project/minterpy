@@ -10,7 +10,7 @@
 
 - [Michael Hecht](https://orcid.org/0000-0001-9214-8253) ([HZDR]/[CASUS](https://www.casus.science/?page_id=4528)) <m.hecht@hzdr.de>
 
-## Former Members and Contributions
+## Former members and contributors
 
 - [Sachin Krishnan Thekke Veettil](https://orcid.org/0000-0003-4852-2839)
 - [Jannik Kissinger](https://orcid.org/0000-0002-1819-6975)
