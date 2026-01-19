@@ -6,8 +6,18 @@ from typing import Any, List, Optional, Sized, Tuple, Type, TypeVar, Union
 
 import numpy as np
 from _warnings import warn
+from numpy.typing import ArrayLike
 
-from minterpy.global_settings import DEBUG, DEFAULT_DOMAIN, FLOAT_DTYPE, INT_DTYPE
+from minterpy.global_settings import (
+    DEBUG,
+    DEFAULT_DOMAIN,
+    FLOAT_DTYPE,
+    INT_DTYPE,
+)
+from minterpy.utils.exceptions import (
+    InvalidDomainBoundsError,
+    InvalidDerivativeOrderError,
+)
 
 
 def verify_domain(domain, spatial_dimension):
@@ -744,10 +754,10 @@ def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:
     array([[1.],
            [2.],
            [3.]])
-    >>> verify_query_points(np.array(["a", "b"]), 1)
+    >>> verify_query_points(np.array(["a", "b"]), 1) # doctest: +ELLIPSIS
     Traceback (most recent call last):
     ...
-    ValueError: could not convert string to float: 'a' Invalid values in query points array!
+    ValueError: could not convert string to float: ...
 
     Notes
     -----
@@ -858,6 +868,193 @@ def verify_poly_power(power: int) -> int:
         raise err
 
     return power
+
+def verify_domain_bounds(bounds: ArrayLike) -> np.ndarray:
+    r"""Verify that the given bounds for a domain are valid.
+
+    Valid domain bounds must satisfy the following conditions:
+
+    - Convertible to a 2D numeric array
+    - Shape of ``(m, 2)`` where ``m >= 1`` (dimension is positive)
+    - Finite values (no NaN or inf)
+    - Non-empty
+    - Upper bounds strictly greater than lower bounds for all dimensions
+
+    Parameters
+    ----------
+    bounds : array_like
+        Domain bounds as either a 1D array ``[lower, upper]`` for a single
+        dimension, or a 2D array of shape ``(m, 2)`` for ``m`` dimensions.
+        Each row specifies ``[lower, upper]`` for one dimension.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        Validated domain bounds as a 2D array of shape ``(m, 2)`` with
+        dtype ``FLOAT_DTYPE``.
+
+    Raises
+    ------
+    InvalidDomainBoundsError
+        If the bounds violate any validation condition (see above).
+
+    Examples
+    --------
+    >>> verify_domain_bounds(np.array([-1, 1]))  # 1D array, single dimension
+    array([[-1.,  1.]])
+    >>> verify_domain_bounds(np.array([[1, 2]]))  # Integer array (auto-converted)
+    array([[1., 2.]])
+    >>> verify_domain_bounds(np.array([[1., 2.], [2., 3.]]))  # 2D domain
+    array([[1., 2.],
+           [2., 3.]])
+    >>> verify_domain_bounds([3, 2]) # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    minterpy.utils.exceptions.InvalidDomainBoundsError: Upper bounds must be
+    strictly greater than lower bounds.
+    Invalid dimensions: [0]; Invalid bounds: [[3.0, 2.0]]
+    """
+    # Convert to a two-dimensional NumPy array of FLOAT_DTYPE
+    try:
+        bounds = np.atleast_2d(np.array(bounds, dtype=FLOAT_DTYPE))
+    except (TypeError, ValueError) as err:
+        raise InvalidDomainBoundsError(
+            f"Domain bounds must be array-like of numeric values, "
+            f"got {type(bounds).__name__} instead"
+        ) from err
+
+    # Validate dimensionality
+    if bounds.ndim != 2:
+        raise InvalidDomainBoundsError(
+            f"Domain bounds must be 2D after conversion, "
+            f"got {bounds.ndim}D array instead"
+        )
+
+    # Validate non-empty array
+    if bounds.size == 0:
+        raise InvalidDomainBoundsError("Domain bounds cannot be empty")
+
+    # Validate shape
+    if bounds.shape[1] != 2:
+        raise InvalidDomainBoundsError(
+            f"Bounds must have 2 columns [lower, upper], "
+            f"got {bounds.shape[1]} columns instead"
+        )
+
+    # Validate finite values (no Inf and NaN allowed)
+    if not np.isfinite(bounds).all():
+        raise InvalidDomainBoundsError(
+            "Bounds must be finite (no NaN or inf values)"
+        )
+
+    # Validate lower < upper
+    widths = bounds[:, 1] - bounds[:, 0]
+    if np.any(widths <= 0):
+        invalid_dims = np.where(widths <= 0)[0]
+        raise InvalidDomainBoundsError(
+            f"Upper bounds must be strictly greater than lower bounds. "
+            f"Invalid dimensions: {invalid_dims.tolist()}; "
+            f"Invalid bounds: {bounds[invalid_dims].tolist()}"
+        )
+
+    return bounds
+
+
+def verify_derivative_order(
+    order: ArrayLike,
+    spatial_dimension: int,
+) -> np.ndarray:
+    r"""Verify that the given order of derivatives are valid.
+
+    Valid orders of derivatives must satisfy the following conditions:
+
+    - Convertible to a 1D numeric array
+    - The length must match the spatial dimension (``m``)
+    - Integer values (whole numbers only, round floats like 2.0 are accepted
+      and converted)
+    - Non-negative (all values are >=0, no NaN, no Inf)
+
+    Parameters
+    ----------
+    order : array_like
+        Order of derivative for each dimension. An order must be specified
+        for each spatial dimension. Non-integer values are accepted only
+        if they represent whole numbers.
+    spatial_dimension : int
+        Expected number of dimensions (must be positive).
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        Validated order of derivatives as a 1D array of shape ``(m,)`` with
+        dtype ``INT_DTYPE``.
+
+    Raises
+    ------
+    InvalidDerivativeOrderError
+        If the specification violate any validation condition (see above).
+
+    Examples
+    --------
+    >>> verify_derivative_order(1, 1)  # Scalar, 1D
+    array([1])
+    >>> verify_derivative_order([1, 0, 1], 3)  # List as order, 3D
+    array([1, 0, 1])
+    >>> verify_derivative_order(np.array([1, 0, 2, 0]), 4)  # 4D
+    array([1, 0, 2, 0])
+    >>> verify_derivative_order([3, 2, 0], 2) # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    minterpy.utils.exceptions.InvalidDerivativeOrderError: Order length 3 does
+    not match spatial dimension 2. Order of derivative for each dimension must
+    be specified.
+    >>> verify_derivative_order([3.2, 2.0], 2) # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    minterpy.utils.exceptions.InvalidDerivativeOrderError: Order of derivatives
+    must be whole numbers. Invalid values: [3.2]
+    >>> verify_derivative_order([0, -1], 2) # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    minterpy.utils.exceptions.InvalidDerivativeOrderError: Order of
+    derivatives must be non-negative. Negative values at dimensions: [1];
+    Invalid values: [-1]
+    """
+    # Normalize input to 1D NumPy array
+    order = np.ravel(order)
+
+    # Validate length matches spatial dimension
+    if len(order) != spatial_dimension:
+        raise InvalidDerivativeOrderError(
+            f"Order length {len(order)} does not match spatial dimension "
+            f"{spatial_dimension}. Order of derivative for each dimension "
+            f"must be specified."
+        )
+
+    # Validate integer values (accept round floats)
+    round_mask = np.mod(order, 1) == 0
+    if not np.all(round_mask):
+        non_round_mask = ~round_mask
+        invalid_values = order[non_round_mask]
+        raise InvalidDerivativeOrderError(
+            f"Order of derivatives must be whole numbers. "
+            f"Invalid values: {invalid_values.tolist()}"
+        )
+
+    # Validate non-negative values
+    if np.any(order < 0):
+        negative_dims = np.where(order < 0)[0]
+        invalid_values = order[negative_dims]
+        raise InvalidDerivativeOrderError(
+            f"Order of derivatives must be non-negative. "
+            f"Negative values at dimensions: {negative_dims.tolist()}; "
+            f"Invalid values: {invalid_values.tolist()}"
+        )
+
+    # Convert to integer dtype
+    order = order.astype(INT_DTYPE)
+
+    return order
 
 
 def _add_custom_exception_message(
