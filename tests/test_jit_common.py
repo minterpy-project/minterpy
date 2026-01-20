@@ -4,6 +4,7 @@ import pytest
 from itertools import combinations
 from math import comb
 
+from minterpy.global_settings import INT_DTYPE
 from minterpy.jit_compiled.common import (
     n_choose_r,
     combinations_iter,
@@ -74,7 +75,12 @@ def test_get_max_columnwise():
     """Test getting the column-wise max of a two-dimensional integer array."""
     num_rows = np.random.randint(low=100, high=1000)
     num_cols = np.random.randint(low=1, high=10)
-    xx = np.random.randint(low=0, high=100, size=(num_rows, num_cols))
+    xx = np.random.randint(
+        low=0,
+        high=100,
+        size=(num_rows, num_cols),
+        dtype=INT_DTYPE,
+    )
 
     # Maximum by NumPy
     max_ref = np.max(xx, axis=0)
