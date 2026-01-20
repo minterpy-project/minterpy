@@ -32,6 +32,11 @@ from .multi_index import *  # noqa
 
 __all__ += multi_index.__all__
 
+from . import domain  # noqa
+from .domain import *  # noqa
+
+__all__ += domain.__all__
+
 from . import grid  # noqa
 from .grid import *  # noqa
 
