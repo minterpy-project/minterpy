@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="Basic Calculus Operations with Polynomials" href="calculus-operations-with-polynomials.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -807,17 +807,17 @@ Q(x) = 5 + 2.5 x - 2.0 x^2 - 5.0 x^3 + 1.0 x^4, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.canonical_polynomial.CanonicalPolynomial at 0x7f11812b29b0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.canonical_polynomial.CanonicalPolynomial at 0x7f5db01c42e0&gt;
 </pre></div>
 </div>
 </div>
 </div>
 <p>The plot of the polynomial is shown below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
@@ -830,17 +830,17 @@ Q(x) = 5 + 2.5 x - 2.0 x^2 - 5.0 x^3 + 1.0 x^4, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/030fa32eafa672cc36f5a6889ee3db779ac76440b0c575c37666c204a6081c5e.png" src="../_images/030fa32eafa672cc36f5a6889ee3db779ac76440b0c575c37666c204a6081c5e.png" />
+<img alt="../_images/4f828f590b1671eec23deae0c9e78ed7535d8bda45f982dc729babbc94a85939.png" src="../_images/4f828f590b1671eec23deae0c9e78ed7535d8bda45f982dc729babbc94a85939.png" />
 </div>
 </div>
 <p>The same polynomial can be expressed in a different basis using the help of a transformation class.
 Note that all instance of the transformation class must be called to carry out the actual transformation that returns a polynomial in the new basis.</p>
 <p>The univariate canonical basis polynomial are shown in the plots below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">can_monomials_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span>
@@ -893,7 +893,7 @@ Note that all instance of the transformation class must be called to carry out t
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/ab62be31f5cff195ad39b207386112881f2a85d0957f23e20bbc0fe319ca0a0f.png" src="../_images/ab62be31f5cff195ad39b207386112881f2a85d0957f23e20bbc0fe319ca0a0f.png" />
+<img alt="../_images/dbfe4636b31dab34faa4e9ea691d0f3aab1d3ed89a3e300bdbb637eefda9fd8e.png" src="../_images/dbfe4636b31dab34faa4e9ea691d0f3aab1d3ed89a3e300bdbb637eefda9fd8e.png" />
 </div>
 </div>
 <section id="in-the-1d-lagrange-basis">
@@ -938,10 +938,10 @@ Note that all instance of the transformation class must be called to carry out t
 </div>
 <p>The one-dimensional Lagrange basis polynomials are shown in the plots below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lag_monomials_newt_basis</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">NewtonPolynomial</span><span class="p">(</span>
@@ -993,7 +993,7 @@ Note that all instance of the transformation class must be called to carry out t
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/8e85af43789bdf6757019f367caf15a7f43d6c749bbc593fb2ecb8ba7d068a2b.png" src="../_images/8e85af43789bdf6757019f367caf15a7f43d6c749bbc593fb2ecb8ba7d068a2b.png" />
+<img alt="../_images/ab5cd06379d44e5b7a9cbf0228626a10a59bb33cca181fbebe643f9dc4a37b4e.png" src="../_images/ab5cd06379d44e5b7a9cbf0228626a10a59bb33cca181fbebe643f9dc4a37b4e.png" />
 </div>
 </div>
 </section>
@@ -1045,10 +1045,10 @@ Q(x) = 1.5 - 2.5 (x - 1) - 1 (x - 1) (x + 1) - 4.29289322 (x - 1) (x + 1) x + (x
 \]</div>
 <p>The one-dimensional Newton basis polynomials are shown in the plots below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nwt_monomials_1d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">polynomials</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">eval_newton_monomials</span><span class="p">(</span>
@@ -1099,7 +1099,7 @@ Q(x) = 1.5 - 2.5 (x - 1) - 1 (x - 1) (x + 1) - 4.29289322 (x - 1) (x + 1) x + (x
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/c2e7f3d709c1adfac134bbdc3e2cfcbb4d5a2afeaafdea64ad9bac4930c964ff.png" src="../_images/c2e7f3d709c1adfac134bbdc3e2cfcbb4d5a2afeaafdea64ad9bac4930c964ff.png" />
+<img alt="../_images/a5f9a51d932ab35cada1677616b877d59c89ec61636fc46b904ec76921ba4335.png" src="../_images/a5f9a51d932ab35cada1677616b877d59c89ec61636fc46b904ec76921ba4335.png" />
 </div>
 </div>
 </section>
@@ -1133,10 +1133,10 @@ Q(x) = 4.375 - 1.25 T_1 (x) - 0.5 T_2 (x) - 1.25 T_3 (x) + 0.125 T_4(x).
 \]</div>
 <p>The one-dimensional Chebyshev basis polynomials are shown in the plots below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cheb_monomials_1d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">polynomials</span><span class="o">.</span><span class="n">chebyshev</span><span class="o">.</span><span class="n">evaluate_monomials</span><span class="p">(</span>
@@ -1186,7 +1186,7 @@ Q(x) = 4.375 - 1.25 T_1 (x) - 0.5 T_2 (x) - 1.25 T_3 (x) + 0.125 T_4(x).
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/8c7d5995ae11de8851119ec6422f1ee61e8586ad1a5d298a38c13f89f9fd2b55.png" src="../_images/8c7d5995ae11de8851119ec6422f1ee61e8586ad1a5d298a38c13f89f9fd2b55.png" />
+<img alt="../_images/f73aba02229dede5d57277cb829766d0e1136e79186da6adf357801d24d3d741.png" src="../_images/f73aba02229dede5d57277cb829766d0e1136e79186da6adf357801d24d3d741.png" />
 </div>
 </div>
 </section>
@@ -1208,10 +1208,10 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
@@ -1261,7 +1261,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/c5166f2581821661f042ca1a0c9b7392e9c2d008d60244da537ebbc8659936b6.png" src="../_images/c5166f2581821661f042ca1a0c9b7392e9c2d008d60244da537ebbc8659936b6.png" />
+<img alt="../_images/5873db31b2c60902163129d21f9c11404da79db1c86b7a4568c2035b95964a3d.png" src="../_images/5873db31b2c60902163129d21f9c11404da79db1c86b7a4568c2035b95964a3d.png" />
 </div>
 </div>
 <p>Since the function involves a square root and therefore is not a polynomial, constructing a polynomial approximation is much more intuitive in the Lagrange basis. In contrast, it’s not immediately clear what the coefficient values should be in other bases, making the Lagrange basis a more natural choce for this type of approximation.</p>
@@ -1312,10 +1312,10 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 <p>The two-dimensional Lagrange basis polynomials are shown in the plots below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create 2D data</span>
@@ -1368,14 +1368,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/271f31911269dee218b715f262f9a26ab87dfe59492cfa5840e1c6c7455ed716.png" src="../_images/271f31911269dee218b715f262f9a26ab87dfe59492cfa5840e1c6c7455ed716.png" />
+<img alt="../_images/c1de42f30dc57d4a3546361526b3c303ac2489df0be2802214038c62cc411401.png" src="../_images/c1de42f30dc57d4a3546361526b3c303ac2489df0be2802214038c62cc411401.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -1417,14 +1417,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/3024a6c0a14346de26bf7c24084c0101be926abe91694a2d0e2a5a0ef69cdff1.png" src="../_images/3024a6c0a14346de26bf7c24084c0101be926abe91694a2d0e2a5a0ef69cdff1.png" />
+<img alt="../_images/1343519deae152ca01b85c298671c1152b0795b20f3d18692d559c2fb1114822.png" src="../_images/1343519deae152ca01b85c298671c1152b0795b20f3d18692d559c2fb1114822.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -1466,14 +1466,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/b403d7f56ec3da0d5b22777376b31634746882b93aeae2b01eee8bf40f627e6b.png" src="../_images/b403d7f56ec3da0d5b22777376b31634746882b93aeae2b01eee8bf40f627e6b.png" />
+<img alt="../_images/748569132ba2aa3743119097371db262c6e80e77cd85cd1b7d71e11cd1dab947.png" src="../_images/748569132ba2aa3743119097371db262c6e80e77cd85cd1b7d71e11cd1dab947.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -1515,14 +1515,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/7c2fef60d525d8e1108bd075ad74da888725ad0fc91ac7206e431d00a93d8f77.png" src="../_images/7c2fef60d525d8e1108bd075ad74da888725ad0fc91ac7206e431d00a93d8f77.png" />
+<img alt="../_images/ab252a5d8c8554b85ba244bbbb607fdbe014a9fa1edaf8ef0b9059178009a27d.png" src="../_images/ab252a5d8c8554b85ba244bbbb607fdbe014a9fa1edaf8ef0b9059178009a27d.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -1564,7 +1564,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/a29fa88e14a3c415d3875f8dc90ab4e7dec99301c11aa59b4ba554fe4574eca1.png" src="../_images/a29fa88e14a3c415d3875f8dc90ab4e7dec99301c11aa59b4ba554fe4574eca1.png" />
+<img alt="../_images/22ccf04e70a4bc5370a6b292bb704b3210be683cb69367833feb82f026f9f4d6.png" src="../_images/22ccf04e70a4bc5370a6b292bb704b3210be683cb69367833feb82f026f9f4d6.png" />
 </div>
 </div>
 <section id="in-the-2d-newton-basis">
@@ -1594,10 +1594,10 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 <p>The two-dimensional Newton basis polynomials are shown in the plots below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create 2D data</span>
@@ -1649,14 +1649,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/a9a696c028bc1763eb14afea18dfa2efee00429894e93d87e0c104a053e5c5f5.png" src="../_images/a9a696c028bc1763eb14afea18dfa2efee00429894e93d87e0c104a053e5c5f5.png" />
+<img alt="../_images/e80693d1dde0e0e605102874cad7704f048de7fee8717ed836d639d02528bf69.png" src="../_images/e80693d1dde0e0e605102874cad7704f048de7fee8717ed836d639d02528bf69.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -1698,14 +1698,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/88686bba2c3616cb03aa2ce8501c78e1d2e94688ee8db7429b387ba403f107f6.png" src="../_images/88686bba2c3616cb03aa2ce8501c78e1d2e94688ee8db7429b387ba403f107f6.png" />
+<img alt="../_images/50ff09bfab36522b4caffabb0cba03551bcf0a9d9f04a4be8c816a9538c6b7e3.png" src="../_images/50ff09bfab36522b4caffabb0cba03551bcf0a9d9f04a4be8c816a9538c6b7e3.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -1747,14 +1747,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/5a23e704ce7d54c20d118961424f78b641c314d2b6be286c0791f6aee0efe2ad.png" src="../_images/5a23e704ce7d54c20d118961424f78b641c314d2b6be286c0791f6aee0efe2ad.png" />
+<img alt="../_images/c5172c27974ed4c1bced6c0c4f7d2274b7c0ee14f57f670e8766df5dad739109.png" src="../_images/c5172c27974ed4c1bced6c0c4f7d2274b7c0ee14f57f670e8766df5dad739109.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -1796,14 +1796,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/a6465c2211f5814f36ea1e12954ccb0aed8e1ab53352070d9fefe1fdbfd0d056.png" src="../_images/a6465c2211f5814f36ea1e12954ccb0aed8e1ab53352070d9fefe1fdbfd0d056.png" />
+<img alt="../_images/84c584e0d048ae4b7cd7ecc991e4a48022fa81e308ea79aa960d9fa67aedcf40.png" src="../_images/84c584e0d048ae4b7cd7ecc991e4a48022fa81e308ea79aa960d9fa67aedcf40.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -1845,7 +1845,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/874e566cdd40632dfcfd356fee254db1450b1559c0f8a424d4c86f8eeb369521.png" src="../_images/874e566cdd40632dfcfd356fee254db1450b1559c0f8a424d4c86f8eeb369521.png" />
+<img alt="../_images/598572be716df9ec00db11f797b32ee3eb04cd0ba78969a42ce8dc01775fd7f5.png" src="../_images/598572be716df9ec00db11f797b32ee3eb04cd0ba78969a42ce8dc01775fd7f5.png" />
 </div>
 </div>
 </section>
@@ -1876,10 +1876,10 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 <p>The two-dimensional canonical basis polynomials are shown in the plots below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create 2D data</span>
@@ -1933,14 +1933,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/00cde596ff0b0e6a1f6b33659f1e1443f00fd850f13bdce869e52b39d5863a89.png" src="../_images/00cde596ff0b0e6a1f6b33659f1e1443f00fd850f13bdce869e52b39d5863a89.png" />
+<img alt="../_images/26acc5865110a952459592305d51e3b1c6bb3860f5418f82061799021d28c343.png" src="../_images/26acc5865110a952459592305d51e3b1c6bb3860f5418f82061799021d28c343.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -1982,14 +1982,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/9d4e7c73a94f57b38f70cb5cd9b187841c3c5ac2894445a5993bdb869bc06a69.png" src="../_images/9d4e7c73a94f57b38f70cb5cd9b187841c3c5ac2894445a5993bdb869bc06a69.png" />
+<img alt="../_images/4a6d73a014a35cad94b1b4f4e772a9258566bb51f4ca873b23e6736dfefe641c.png" src="../_images/4a6d73a014a35cad94b1b4f4e772a9258566bb51f4ca873b23e6736dfefe641c.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -2031,14 +2031,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/c56e11ead5c4b0e09845fd79eac0047945d8baf7ffa01722c5a82329ca1b430b.png" src="../_images/c56e11ead5c4b0e09845fd79eac0047945d8baf7ffa01722c5a82329ca1b430b.png" />
+<img alt="../_images/7b1276f75e3d0c0d3a969667eda93c0eac3b2560b5824d72aa207e1891928f9c.png" src="../_images/7b1276f75e3d0c0d3a969667eda93c0eac3b2560b5824d72aa207e1891928f9c.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -2080,14 +2080,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/9a8591ce4731d6d36d213b5421a539132c07fa01c25c6ab1f99527b845afda45.png" src="../_images/9a8591ce4731d6d36d213b5421a539132c07fa01c25c6ab1f99527b845afda45.png" />
+<img alt="../_images/19d062dc396f0ede4e66e909b28fa2c7640428ec0d658708df909c51866c3d24.png" src="../_images/19d062dc396f0ede4e66e909b28fa2c7640428ec0d658708df909c51866c3d24.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -2129,7 +2129,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/42bdb95d5b31a80dd4500104ca241e161907cef1e52696faf7e99da41f3f1e90.png" src="../_images/42bdb95d5b31a80dd4500104ca241e161907cef1e52696faf7e99da41f3f1e90.png" />
+<img alt="../_images/1659c88e37998fd519934b395b875ce9281a725824aa00012cc2271cd8bf7a14.png" src="../_images/1659c88e37998fd519934b395b875ce9281a725824aa00012cc2271cd8bf7a14.png" />
 </div>
 </div>
 </section>
@@ -2160,10 +2160,10 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 <p>The two-dimensional Chebyshev basis polynomials (of the first kind) are shown in the plots below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create 2D data</span>
@@ -2214,14 +2214,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/120a69de43e06b592d668ff59152e4ad975f3796459c7823f71763bf0929d771.png" src="../_images/120a69de43e06b592d668ff59152e4ad975f3796459c7823f71763bf0929d771.png" />
+<img alt="../_images/4053425b74a9b28fd81cf9ab1e06d050814e1019bcc01350df2bf8d81f4ee189.png" src="../_images/4053425b74a9b28fd81cf9ab1e06d050814e1019bcc01350df2bf8d81f4ee189.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -2263,14 +2263,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/0d6e045147ff3cc2c81d867fc0123c5ef95cf22462ecb460f6de16ff6b44f069.png" src="../_images/0d6e045147ff3cc2c81d867fc0123c5ef95cf22462ecb460f6de16ff6b44f069.png" />
+<img alt="../_images/5fe000e2d90fffd376acacdd2be9c78d2d0605ae0e620c6c9660bd4b2ead989f.png" src="../_images/5fe000e2d90fffd376acacdd2be9c78d2d0605ae0e620c6c9660bd4b2ead989f.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -2312,14 +2312,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/437d6255fd5f2cc56af6290b9b8824873ca3c04a28a35598a76981bd9407a2b8.png" src="../_images/437d6255fd5f2cc56af6290b9b8824873ca3c04a28a35598a76981bd9407a2b8.png" />
+<img alt="../_images/19388a1dcdcc35399ad057e9e7201fc3dcec84deebe7401540a28cf1de887200.png" src="../_images/19388a1dcdcc35399ad057e9e7201fc3dcec84deebe7401540a28cf1de887200.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -2361,14 +2361,14 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/1ae1e7ce4adcb9282da562daa6262b944212c574bd155de16c36347c8a0c0748.png" src="../_images/1ae1e7ce4adcb9282da562daa6262b944212c574bd155de16c36347c8a0c0748.png" />
+<img alt="../_images/57245ea19ce9b225d563f5175d11e3ff4456e5d8ed96f6521ca68b1e2cffdcb3.png" src="../_images/57245ea19ce9b225d563f5175d11e3ff4456e5d8ed96f6521ca68b1e2cffdcb3.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create two-dimensional plots</span>
@@ -2410,7 +2410,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/2f03054e5922ba83b8148cbe817e399ead7e99fab885f2fb8662157f5b88aded.png" src="../_images/2f03054e5922ba83b8148cbe817e399ead7e99fab885f2fb8662157f5b88aded.png" />
+<img alt="../_images/f7ba66e4a0e213ff700abb555e1a7d3f8109ca74fefdbe65c3788b5a1042e4c5.png" src="../_images/f7ba66e4a0e213ff700abb555e1a7d3f8109ca74fefdbe65c3788b5a1042e4c5.png" />
 </div>
 </div>
 </section>

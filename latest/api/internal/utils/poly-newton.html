@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="polynomials.lagrange" href="poly-lagrange.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -545,8 +545,8 @@ in the Newton basis.</p>
 <li><p><strong>x</strong> (<em>np.ndarray</em>) – The points to evaluate the polynomials on.</p></li>
 <li><p><strong>exponents</strong> (<em>np.ndarray</em>) – the multi indices “alpha” for every Newton polynomial corresponding to the exponents of this “monomial”</p></li>
 <li><p><strong>generating_points</strong> (<em>np.ndarray</em>) – Nodes where the Newton polynomial lives on. (Or the points which generate these nodes?!)</p></li>
-<li><p><strong>verify_input</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – weather the data types of the input should be checked. Turned off by default for performance.</p></li>
-<li><p><strong>triangular</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – weather or not the output will be of lower triangular form. This will skip the evaluation of some values. Defaults to <code class="xref py py-class docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>verify_input</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>) – weather the data types of the input should be checked. Turned off by default for performance.</p></li>
+<li><p><strong>triangular</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>) – weather or not the output will be of lower triangular form. This will skip the evaluation of some values. Defaults to <code class="xref py py-class docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -596,12 +596,12 @@ as the Newton coefficients of all Lagrange monomials of a polynomial without pri
 the values determining the locations of the hyperplanes of the interpolation grid.
 the ordering of the values determine the spacial distribution of interpolation nodes.
 (relevant for the approximation properties and the numerical stability).</p></li>
-<li><p><strong>verify_input</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – weather the data types of the input should be checked. turned off by default for speed.</p></li>
-<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – batch size of query points</p></li>
+<li><p><strong>verify_input</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – weather the data types of the input should be checked. turned off by default for speed.</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – batch size of query points</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If the input <code class="docutils literal notranslate"><span class="pre">generating_points</span></code> do not have <code class="docutils literal notranslate"><span class="pre">dtype</span> <span class="pre">=</span> <span class="pre">float</span></code>.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If the input <code class="docutils literal notranslate"><span class="pre">generating_points</span></code> do not have <code class="docutils literal notranslate"><span class="pre">dtype</span> <span class="pre">=</span> <span class="pre">float</span></code>.</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>(k, p) the value of each input polynomial at each point. TODO squeezed into the expected shape (1D if possible). Notice, format fixed such that the regression can use the result as transformation matrix without transponation</p>
@@ -655,11 +655,11 @@ consider using smaller but not the smallest batch size (i.e., not 1).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>coefficients</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>coefficients</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -719,15 +719,15 @@ for a small problem (small dimension and small polynomial degree).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A set of exponents from a multi-index set that defines the polynomial,
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A set of exponents from a multi-index set that defines the polynomial,
 an <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">M)</span></code> array, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of exponents
 (multi-indices) and <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number of spatial dimensions.
 The number of exponents corresponds to the number of monomials.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A set of generating points of the interpolating polynomial,
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A set of generating points of the interpolating polynomial,
 a <code class="docutils literal notranslate"><span class="pre">(P</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">M)</span></code> array, where <code class="docutils literal notranslate"><span class="pre">P</span></code> is the maximum degree of
 the polynomial in any dimensions and <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number
 of spatial dimensions.</p></li>
-<li><p><strong>bounds</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The bounds (lower and upper) of the definite integration, an <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">2)</span></code>
+<li><p><strong>bounds</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The bounds (lower and upper) of the definite integration, an <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">2)</span></code>
 array, where <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number of spatial dimensions.</p></li>
 </ul>
 </dd>
@@ -736,7 +736,7 @@ array, where <code class="docutils literal notranslate"><span class="pre">M</spa
 the number of monomials (exponents).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

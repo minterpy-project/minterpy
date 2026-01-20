@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="regression" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -616,7 +616,7 @@ This parameter is optional and, by default, is set to the
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.loocv_error">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loocv_error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Tuple" title="(in Python v3.14)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.loocv_error" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loocv_error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Tuple" title="(in Python v3.15)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.loocv_error" title="Link to this definition">#</a></dt>
 <dd><p>Leave-one-out CV error of the fitted polynomial (abs. and norm.).</p>
 <p>The leave-one-out (LOO) cross-validation (CV) error is defined
 as follows:</p>
@@ -639,7 +639,7 @@ of the response data (<span class="math notranslate nohighlight">\(\boldsymbol{y
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_linf_error">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">regfit_linf_error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Tuple" title="(in Python v3.14)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_linf_error" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">regfit_linf_error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Tuple" title="(in Python v3.15)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_linf_error" title="Link to this definition">#</a></dt>
 <dd><p><span class="math notranslate nohighlight">\(L_{\infty}\)</span> regression fit error (in abs. and norm. terms).</p>
 <p>The <span class="math notranslate nohighlight">\(L_{\infty}\)</span> regression fit error is defined as follows:</p>
 <div class="math notranslate nohighlight">
@@ -659,7 +659,7 @@ of the response data (<span class="math notranslate nohighlight">\(\boldsymbol{y
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_l2_error">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">regfit_l2_error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Tuple" title="(in Python v3.14)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_l2_error" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">regfit_l2_error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Tuple" title="(in Python v3.15)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_l2_error" title="Link to this definition">#</a></dt>
 <dd><p><span class="math notranslate nohighlight">\(L_2\)</span> regression fit error (in abs. and norm. terms).</p>
 <p>The <span class="math notranslate nohighlight">\(L_2\)</span> regression fit error is defined as follows:</p>
 <div class="math notranslate nohighlight">
@@ -715,7 +715,7 @@ created and used for prediction.</p></li>
 <dd><p>Get the regression matrix on a set of query points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Evaluation points, an array of shape <span class="math notranslate nohighlight">\(N_e \times M\)</span>, where
+<dd class="field-odd"><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Evaluation points, an array of shape <span class="math notranslate nohighlight">\(N_e \times M\)</span>, where
 <span class="math notranslate nohighlight">\(N_e\)</span> and <span class="math notranslate nohighlight">\(M\)</span> correspond to the number of evaluation
 points and the number of spatial dimensions, respectively.</p>
 </dd>
@@ -726,7 +726,7 @@ an array of shape <span class="math notranslate nohighlight">\(N_e \times N_b\)<
 points and the number of monomials, respectively.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -757,11 +757,11 @@ from the following relation:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Input matrix, also known as the training inputs.</p></li>
-<li><p><strong>yy</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Response vector, observed or evaluated at <code class="docutils literal notranslate"><span class="pre">xx</span></code>.</p></li>
-<li><p><strong>weights</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – Individual weights for each input points.
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Input matrix, also known as the training inputs.</p></li>
+<li><p><strong>yy</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Response vector, observed or evaluated at <code class="docutils literal notranslate"><span class="pre">xx</span></code>.</p></li>
+<li><p><strong>weights</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – Individual weights for each input points.
 The default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>lstsq_solver</strong> (Union[<a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <code class="docutils literal notranslate"><span class="pre">Callable</span></code>], optional) – <p>Least-square solver. The default is <code class="docutils literal notranslate"><span class="pre">&quot;lstsq&quot;</span></code> from <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html">SciPy</a>.
+<li><p><strong>lstsq_solver</strong> (Union[<a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <code class="docutils literal notranslate"><span class="pre">Callable</span></code>], optional) – <p>Least-square solver. The default is <code class="docutils literal notranslate"><span class="pre">&quot;lstsq&quot;</span></code> from <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html">SciPy</a>.
 The additional following linear solvers are available
 as pre-defined:</p>
 <ul>
@@ -774,7 +774,7 @@ as pre-defined:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;svd&quot;</span></code>: SVD-based solver (NumPy)</p></li>
 </ul>
 </p></li>
-<li><p><strong>compute_loocv</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Flag to compute the leave-one-out cross-validation (LOO-CV) error.
+<li><p><strong>compute_loocv</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Flag to compute the leave-one-out cross-validation (LOO-CV) error.
 For a problem of certain size, the LOO-CV computation
 may be costly.
 The default is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
@@ -803,7 +803,7 @@ of the solver for the list of supported keyword arguments.</p></li>
 <dd><p>Predict using the fitted polynomial model a set of points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Query points, a two-dimensional array of shape
+<dd class="field-odd"><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Query points, a two-dimensional array of shape
 <span class="math notranslate nohighlight">\(N_q \times M\)</span>, where <span class="math notranslate nohighlight">\(N_q\)</span> and <span class="math notranslate nohighlight">\(M\)</span> correspond to
 the number of query points and the number of spatial dimensions,
 respectively.</p>
@@ -813,7 +813,7 @@ respectively.</p>
 array of length <span class="math notranslate nohighlight">\(N_q\)</span>, the number of query points.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>

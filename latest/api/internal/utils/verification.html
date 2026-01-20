@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="quad" href="quad.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -544,7 +544,7 @@ passed. If None is passed, the default domain is build from [-1,1].</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>domain</strong> (<em>array_like</em><em>, </em><em>None</em>) – Either one-dimensional domain <code class="docutils literal notranslate"><span class="pre">(min,max)</span></code>, or a stack of domains for each domain with shape <code class="docutils literal notranslate"><span class="pre">(spatial_dimension,2)</span></code>. If <code class="xref py py-class docutils literal notranslate"><span class="pre">None</span></code> is passed, the <code class="docutils literal notranslate"><span class="pre">DEFAULT_DOMAIN</span></code> is repeated for each spatial dimentsion.</p></li>
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Dimentsion of the domain space.</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Dimentsion of the domain space.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return verified_domain<span class="colon">:</span></dt>
@@ -554,7 +554,7 @@ passed. If None is passed, the default domain is build from [-1,1].</p>
 <dd class="field-odd"><p>np.ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If no domain with the expected shape can be constructed from the input.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If no domain with the expected shape can be constructed from the input.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -571,7 +571,7 @@ passed. If None is passed, the default domain is build from [-1,1].</p>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If the given instance is not of the expected type.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If the given instance is not of the expected type.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -599,11 +599,11 @@ the codebase.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>a</strong> (<em>np.ndarray</em>) – Array to be checked.</p></li>
-<li><p><strong>expected_dtype</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#type" title="(in Python v3.14)"><em>type</em></a>) – The dtype which is check against.</p></li>
+<li><p><strong>expected_dtype</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#type" title="(in Python v3.15)"><em>type</em></a>) – The dtype which is check against.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – if input array hasn’t the expected dtype.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – if input array hasn’t the expected dtype.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -617,13 +617,13 @@ the codebase.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>xx</strong> (<em>np.ndarray</em>) – A given array to verify.</p></li>
-<li><p><strong>dimensionality</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em>) – The expected dimensionality (i.e., the number of dimensions)
+<li><p><strong>dimensionality</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>]</em>) – The expected dimensionality (i.e., the number of dimensions)
 of the array. If given in a list then multiple dimensionality is
 allowed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the input array is not of the expected dimension.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the input array is not of the expected dimension.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -655,11 +655,11 @@ is known.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>xx</strong> (<em>np.ndarray</em>) – A given array to verify.</p></li>
-<li><p><strong>shape</strong> (<em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>...</em><em>]</em>) – The expected shape of the array.</p></li>
+<li><p><strong>shape</strong> (<em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>...</em><em>]</em>) – The expected shape of the array.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the input array is not of the expected shape.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the input array is not of the expected shape.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -688,7 +688,7 @@ is known.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (Union[int, float, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>]) – The scalar or array to be checked.</p></li>
+<li><p><strong>xx</strong> (Union[int, float, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>]) – The scalar or array to be checked.</p></li>
 <li><p><strong>**kwargs</strong> – Keyword arguments with Boolean as values, if <code class="docutils literal notranslate"><span class="pre">True</span></code> then the invalid
 value is allowed. The keys are <code class="docutils literal notranslate"><span class="pre">nan</span></code> (check for <code class="docutils literal notranslate"><span class="pre">NaN</span></code> values),
 <code class="docutils literal notranslate"><span class="pre">inf</span></code> (check for <code class="docutils literal notranslate"><span class="pre">inf</span></code> values), <code class="docutils literal notranslate"><span class="pre">zero</span></code> (check for 0 values),
@@ -700,7 +700,7 @@ zero or negative values are allowed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the scalar value or the given array contains any of the specified
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the scalar value or the given array contains any of the specified
     invalid values(e.g., <code class="docutils literal notranslate"><span class="pre">NaN</span></code>, <code class="docutils literal notranslate"><span class="pre">inf</span></code>, zero, or negative).</p>
 </dd>
 </dl>
@@ -736,8 +736,8 @@ zero or negative values are allowed.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – if the grid points do not fit into the domain <span class="math notranslate nohighlight">\([-1;1]^m\)</span>.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – if less than one point is passed.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – if the grid points do not fit into the domain <span class="math notranslate nohighlight">\([-1;1]^m\)</span>.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – if less than one point is passed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -749,14 +749,14 @@ zero or negative values are allowed.</p></li>
 <dd><p>Check if a given value is a real scalar number.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.integer" title="(in NumPy v2.2)"><em>numpy.integer</em></a><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.2)"><em>numpy.floating</em></a><em>]</em>) – The variable to be checked.</p>
+<dd class="field-odd"><p><strong>x</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.integer" title="(in NumPy v2.4)"><em>numpy.integer</em></a><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><em>numpy.floating</em></a><em>]</em>) – The variable to be checked.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the variable is a scalar (an <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>,
-<a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.integer" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.integer</span></code></a>, or <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.floating</span></code></a>), <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+<a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.integer" title="(in NumPy v2.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.integer</span></code></a>, or <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v2.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.floating</span></code></a>), <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -782,7 +782,7 @@ zero or negative values are allowed.</p></li>
 <dd><p>Shape the output of polynomial evaluation according to the convention.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>eval_output</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The output of polynomial evaluation as a one- or two-dimensional array
+<dd class="field-odd"><p><strong>eval_output</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The output of polynomial evaluation as a one- or two-dimensional array
 to be shaped. The length of the array is <code class="docutils literal notranslate"><span class="pre">N</span></code>, i.e., the number of
 query points.</p>
 </dd>
@@ -794,7 +794,7 @@ is the number of coefficient sets. Both have length of the number
 of query points.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -819,7 +819,7 @@ of query points.</p>
 <dd><p>Verify if the value of a given spatial dimension is valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Spatial dimension to verify; the value of a spatial dimension must be
+<dd class="field-odd"><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Spatial dimension to verify; the value of a spatial dimension must be
 strictly positive (&gt; 0). <code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> may not necessarily be
 an <em class="xref py py-obj">int</em> but it must be a single whole number.</p>
 </dd>
@@ -828,14 +828,14 @@ an <em class="xref py py-obj">int</em> but it must be a single whole number.</p>
 the function does a type conversion to an <em class="xref py py-obj">int</em> if possible.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> is not of a correct type, i.e., its
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> is not of a correct type, i.e., its
     strict-positiveness cannot be verified or the conversion to <em class="xref py py-obj">int</em>
     cannot be carried out.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> is, for example, not a positive
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> is, for example, not a positive
     or a whole number.</p></li>
 </ul>
 </dd>
@@ -857,7 +857,7 @@ the function does a type conversion to an <em class="xref py py-obj">int</em> if
 <dd><p>Verify if the value of a given polynomial degree is valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Polynomial degree to verify; the value of a polynomial degree must be
+<dd class="field-odd"><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Polynomial degree to verify; the value of a polynomial degree must be
 non-negative (&gt;= 0). <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> may not necessarily be
 an <em class="xref py py-obj">int</em> but it must be a single whole number.</p>
 </dd>
@@ -866,14 +866,14 @@ an <em class="xref py py-obj">int</em> but it must be a single whole number.</p>
 the function does a type conversion to an <em class="xref py py-obj">int</em> if possible.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> is not of a correct type, i.e., its
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> is not of a correct type, i.e., its
     non-negativeness cannot be verified or the conversion to <em class="xref py py-obj">int</em>
     cannot be carried out.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> is, for example, not a positive
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> is, for example, not a positive
     or a whole number.</p></li>
 </ul>
 </dd>
@@ -895,7 +895,7 @@ the function does a type conversion to an <em class="xref py py-obj">int</em> if
 <dd><p>Verify that the value of a given lp-degree is valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – A given <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
+<dd class="field-odd"><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – A given <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
 to verify. The value of an <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> must be strictly positive, but
 may not necessarily be a <em class="xref py py-obj">float</em>.</p>
 </dd>
@@ -904,14 +904,14 @@ may not necessarily be a <em class="xref py py-obj">float</em>.</p>
 does a type conversion to a <em class="xref py py-obj">float</em> if possible.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> is not of correct type, i.e., its strict-positiveness
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> is not of correct type, i.e., its strict-positiveness
     cannot be verified or the conversion to <em class="xref py py-obj">float</em> cannot be carried
     out.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> is, for example, a non strictly positive value.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> is, for example, a non strictly positive value.</p></li>
 </ul>
 </dd>
 </dl>
@@ -933,27 +933,27 @@ does a type conversion to a <em class="xref py py-obj">float</em> if possible.</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>coeffs</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The polynomial coefficients to verify. Other container sequences
+<li><p><strong>coeffs</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The polynomial coefficients to verify. Other container sequences
 may be accepted as long as it can be converted to a
-<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> of <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.float64</span></code></a>.</p></li>
-<li><p><strong>num_monomials</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of monomials in the polynomials, used as the basis
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> of <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="(in NumPy v2.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.float64</span></code></a>.</p></li>
+<li><p><strong>num_monomials</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The number of monomials in the polynomials, used as the basis
 to verify the length of the coefficients.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Verified polynomial coefficients. If the input is not of
-<a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.float64</span></code></a>, the function does a type conversion
+<a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="(in NumPy v2.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.float64</span></code></a>, the function does a type conversion
 to the type if possible. This type is expected by Numba functions.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">coeffs</span></code> is not of correct type or the conversion to
-    <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.float64</span></code></a>
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">coeffs</span></code> is not of correct type or the conversion to
+    <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="(in NumPy v2.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.float64</span></code></a>
     cannot be carried out.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">coeffs</span></code> contains inf or nan’s or if the dimensionality of
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">coeffs</span></code> contains inf or nan’s or if the dimensionality of
     the coefficients is incorrect (not 1 or 2).</p></li>
 </ul>
 </dd>
@@ -993,12 +993,12 @@ to the type if possible. This type is expected by Numba functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1010,25 +1010,25 @@ to the type if possible. This type is expected by Numba functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A one- or two-dimensional array of query points at which a polynomial
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A one- or two-dimensional array of query points at which a polynomial
 is evaluated. The length of the array is <code class="docutils literal notranslate"><span class="pre">N</span></code>, i.e., the number
 of query points.</p></li>
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The spatial dimension of the polynomial (<code class="docutils literal notranslate"><span class="pre">m</span></code>).
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The spatial dimension of the polynomial (<code class="docutils literal notranslate"><span class="pre">m</span></code>).
 The shape of the query points array must be consistent with this.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A two-dimensional array of <code class="docutils literal notranslate"><span class="pre">numpy.float64</span></code> with a length of <code class="docutils literal notranslate"><span class="pre">N</span></code>
 and a number of columns of <code class="docutils literal notranslate"><span class="pre">m</span></code>. If the dtype of the array is not of
-<a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.float64</span></code></a>, the function does a type conversion if possible.</p>
+<a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="(in NumPy v2.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.float64</span></code></a>, the function does a type conversion if possible.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">xx</span></code> is not of a correct type.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">xx</span></code> is, for example, has an inconsistent number of columns or
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">xx</span></code> is not of a correct type.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">xx</span></code> is, for example, has an inconsistent number of columns or
     it contains nan’s.</p></li>
 </ul>
 </dd>
@@ -1074,7 +1074,7 @@ routines rely on Numba whose input types are pre-determined.</p></li>
 <code class="docutils literal notranslate"><span class="pre">poly**power</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>power</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Polynomial power to verify; the value of a polynomial power must be
+<dd class="field-odd"><p><strong>power</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Polynomial power to verify; the value of a polynomial power must be
 a scalar non-negative (&gt;= 0). <code class="docutils literal notranslate"><span class="pre">poly_power</span></code> may not necessarily be
 an <em class="xref py py-obj">int</em> but it must be a single whole number.</p>
 </dd>
@@ -1083,14 +1083,14 @@ an <em class="xref py py-obj">int</em> but it must be a single whole number.</p>
 the function does a type conversion to an <em class="xref py py-obj">int</em> if possible.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">poly_power</span></code> is not of a correct type, e.g., it’s not a real
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">poly_power</span></code> is not of a correct type, e.g., it’s not a real
     scalar, or its non-negativeness cannot be verified,
     or the conversion to <em class="xref py py-obj">int</em> cannot be carried out.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> is, for example, not a positive
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> is, for example, not a positive
     or a whole number.</p></li>
 </ul>
 </dd>
@@ -1116,7 +1116,7 @@ the function does a type conversion to an <em class="xref py py-obj">int</em> if
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#NotImplementedError" title="(in Python v3.14)"><strong>NotImplementedError</strong></a> – Any time this function or method is called.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#NotImplementedError" title="(in Python v3.15)"><strong>NotImplementedError</strong></a> – Any time this function or method is called.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>

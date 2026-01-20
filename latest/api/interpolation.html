@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="API Reference" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -562,9 +562,9 @@ for the interpolation of any functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -628,7 +628,7 @@ for the interpolation of any functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fct</strong> (<a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Callable" title="(in Python v3.14)"><em>Callable</em></a>)</p></li>
+<li><p><strong>fct</strong> (<a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Callable" title="(in Python v3.15)"><em>Callable</em></a>)</p></li>
 <li><p><strong>interpolator</strong> (<a class="reference internal" href="#minterpy.interpolation.Interpolator" title="minterpy.interpolation.Interpolator"><em>Interpolator</em></a>)</p></li>
 </ul>
 </dd>
@@ -661,9 +661,9 @@ for the interpolation of any functions.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fct</strong> (<em>Callable</em>) – Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If <em class="xref py py-obj">arr</em> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">arr.shape</span> <span class="pre">==</span> <span class="pre">(N,spatial_dimension)</span></code>, the signature needs to be <code class="docutils literal notranslate"><span class="pre">fct(arr)</span> <span class="pre">-&gt;</span> <span class="pre">res</span></code>, where <code class="docutils literal notranslate"><span class="pre">res</span></code> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>.</p></li>
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – dimension of the domain space.</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – degree of the interpolation polynomials</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – degree of the <span class="math notranslate nohighlight">\(l_p\)</span> norm used to determine the <a class="reference internal" href="#minterpy.interpolation.Interpolant.poly_degree" title="minterpy.interpolation.Interpolant.poly_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">poly_degree</span></code></a>.</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – dimension of the domain space.</p></li>
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – degree of the interpolation polynomials</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – degree of the <span class="math notranslate nohighlight">\(l_p\)</span> norm used to determine the <a class="reference internal" href="#minterpy.interpolation.Interpolant.poly_degree" title="minterpy.interpolation.Interpolant.poly_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">poly_degree</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -682,7 +682,7 @@ for the interpolation of any functions.</p>
 <p>This is the propagated attribute from <code class="docutils literal notranslate"><span class="pre">self.interpolator</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -694,7 +694,7 @@ for the interpolation of any functions.</p>
 <p>This is the propagated attribute from <code class="docutils literal notranslate"><span class="pre">self.interpolator</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -706,7 +706,7 @@ for the interpolation of any functions.</p>
 <p>This is the propagated attribute from <code class="docutils literal notranslate"><span class="pre">self.interpolator</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -752,9 +752,9 @@ for the interpolation of any functions.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fct</strong> (<em>Callable</em>) – Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If <em class="xref py py-obj">arr</em> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">arr.shape</span> <span class="pre">==</span> <span class="pre">(N,spatial_dimension)</span></code>, the signature needs to be <code class="docutils literal notranslate"><span class="pre">fct(arr)</span> <span class="pre">-&gt;</span> <span class="pre">res</span></code>, where <code class="docutils literal notranslate"><span class="pre">res</span></code> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>.</p></li>
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – dimension of the domain space.</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – degree of the interpolation polynomials</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – degree of the <span class="math notranslate nohighlight">\(l_p\)</span> norm used to determine the <em class="xref py py-obj">poly_degree</em>.</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – dimension of the domain space.</p></li>
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – degree of the interpolation polynomials</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – degree of the <span class="math notranslate nohighlight">\(l_p\)</span> norm used to determine the <em class="xref py py-obj">poly_degree</em>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles.css?v=a88e7498" />
   
@@ -57,7 +57,7 @@
     <link rel="prev" title="multi_index" href="multi-index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -539,11 +539,11 @@ in the Lagrange basis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A set of exponents from a multi-index set that defines the polynomial,
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A set of exponents from a multi-index set that defines the polynomial,
 an <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">M)</span></code> array, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of exponents
 (multi-indices) and <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number of spatial dimensions.
 The number of exponents corresponds to the number of monomials.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A set of generating points of the interpolating polynomial,
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A set of generating points of the interpolating polynomial,
 a <code class="docutils literal notranslate"><span class="pre">(P</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">M)</span></code> array, where <code class="docutils literal notranslate"><span class="pre">P</span></code> is the maximum degree of
 the polynomial in any dimensions and <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number
 of spatial dimensions.</p></li>
@@ -551,7 +551,7 @@ of spatial dimensions.</p></li>
 <li><p><strong>subtree_sizes</strong> (<em>TYPED_LIST</em>) – The subtree sizes of the multi-index tree.</p></li>
 <li><p><strong>masks</strong> (<em>ARRAY_DICT</em>) – The masks that define the correspondence between left and right parts
 of the tree.</p></li>
-<li><p><strong>bounds</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The bounds (lower and upper) of the definite integration, an <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">2)</span></code>
+<li><p><strong>bounds</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The bounds (lower and upper) of the definite integration, an <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">2)</span></code>
 array, where <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number of spatial dimensions.</p></li>
 </ul>
 </dd>
@@ -560,7 +560,7 @@ array, where <code class="docutils literal notranslate"><span class="pre">M</spa
 is the number of monomials (exponents).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>

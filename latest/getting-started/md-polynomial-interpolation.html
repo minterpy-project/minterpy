@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="One-Dimensional Polynomial Interpolation" href="1d-polynomial-interpolation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -515,10 +515,10 @@ We use a two-dimensional example for ease of visualization, but the main steps y
 </div>
 <p>The surface and contour plots of the function are shown below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
@@ -568,7 +568,7 @@ We use a two-dimensional example for ease of visualization, but the main steps y
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/f3f4d6ffd29a241618a48b82d53aaaa3166f4fe269861a82e516418e59d03181.png" src="../_images/f3f4d6ffd29a241618a48b82d53aaaa3166f4fe269861a82e516418e59d03181.png" />
+<img alt="../_images/6c5e2ffca4367b504fecc29588fc68929caebc0f6f04ebfcd7c1f5a26dde3035.png" src="../_images/6c5e2ffca4367b504fecc29588fc68929caebc0f6f04ebfcd7c1f5a26dde3035.png" />
 </div>
 </div>
 </section>
@@ -646,10 +646,10 @@ A_{m, n, p} = \{ \boldsymbol{\alpha} \in \mathbb{N}^m: \lVert \boldsymbol{\alpha
 <p>Several common choices for <span class="math notranslate nohighlight">\(l_p\)</span>-degree are <span class="math notranslate nohighlight">\(1.0\)</span> (<em>total-degree set</em>), <span class="math notranslate nohighlight">\(2.0\)</span> (<em>Euclidean-degree set</em>), and <span class="math notranslate nohighlight">\(\infty\)</span> (<em>maximum-degree set</em>).
 The illustration below shows the difference between these three different choices of <span class="math notranslate nohighlight">\(l_p\)</span>-degree (for the same spatial dimension and polynomial degree) in relation to the exponents as multi-indices.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mi_1</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">MultiIndexSet</span><span class="o">.</span><span class="n">from_degree</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
@@ -683,7 +683,7 @@ The illustration below shows the difference between these three different choice
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/b78e76ab316f1715865663c1b9c00d7f8669600bd10499be328693015319f599.png" src="../_images/b78e76ab316f1715865663c1b9c00d7f8669600bd10499be328693015319f599.png" />
+<img alt="../_images/76f6f516cae3f3a4a86e31d5d0d39be62551244d8fa4721a436bf5075fa0a8e5.png" src="../_images/76f6f516cae3f3a4a86e31d5d0d39be62551244d8fa4721a436bf5075fa0a8e5.png" />
 </div>
 </div>
 </section>
@@ -732,10 +732,10 @@ The unisolvent nodes that correspond to the multi-index set are:</p>
 These are the points at which the function of interest is evaluated; the results are then used construct an interpolating polynomial.</p>
 <p>The plots below show three different two-dimensional unisolvent nodes that correspond to three different <span class="math notranslate nohighlight">\(l_p\)</span>-degrees with the same spatial dimension and polynomial degree.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mi_1</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">MultiIndexSet</span><span class="o">.</span><span class="n">from_degree</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
@@ -771,7 +771,7 @@ These are the points at which the function of interest is evaluated; the results
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/9ef21995afe07f1d3efdda4709102df49a4228c6294d4377a9aa0c9002d34f2a.png" src="../_images/9ef21995afe07f1d3efdda4709102df49a4228c6294d4377a9aa0c9002d34f2a.png" />
+<img alt="../_images/914344fabd48eda09f30295fe8142a4c6dfff2f1c77a56d74aa5511f2a5c7516.png" src="../_images/914344fabd48eda09f30295fe8142a4c6dfff2f1c77a56d74aa5511f2a5c7516.png" />
 </div>
 </div>
 </section>
@@ -873,8 +873,7 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A_{m, n, p}} c_{\mathrm{nwt}, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-5.18334636e-02,  1.94882488e-04,  4.40893812e-01,  3.69023165e-01,
-        3.37517229e-01])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.08943133, 0.04832919, 0.06163693, 0.0202703 , 0.00027234])
 </pre></div>
 </div>
 </div>
@@ -888,7 +887,7 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A_{m, n, p}} c_{\mathrm{nwt}, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.31722202, 0.23428465, 0.36587898, 0.45969671, 0.18409597])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.08083245,  0.03953408,  0.05757204, -0.04436301, -0.00395075])
 </pre></div>
 </div>
 </div>
@@ -909,10 +908,10 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A_{m, n, p}} c_{\mathrm{nwt}, 
 </div>
 <p>We can compare the surface plot of the original function with that of the interpolating polynomial, which also includes the interpolating nodes:</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create 2D data</span>
@@ -966,7 +965,7 @@ Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A_{m, n, p}} c_{\mathrm{nwt}, 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/64f8b0308268d7bbfcb96fc88a3f97efff06ca98fb8137655111cc54aa2d64ac.png" src="../_images/64f8b0308268d7bbfcb96fc88a3f97efff06ca98fb8137655111cc54aa2d64ac.png" />
+<img alt="../_images/d9395d7e9adbd5ffb01c031b4790f62f81d320c1e13595b6b2e71b522c4fd6f1.png" src="../_images/d9395d7e9adbd5ffb01c031b4790f62f81d320c1e13595b6b2e71b522c4fd6f1.png" />
 </div>
 </div>
 </section>
@@ -987,7 +986,7 @@ The norm is defined as:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.8665783737670003)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.8660105343331169)
 </pre></div>
 </div>
 </div>
@@ -1021,10 +1020,10 @@ Let’s investigate the convergence of interpolating polynomials with increasing
 </div>
 <p>The convergence of the error is shown below:</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -1059,15 +1058,15 @@ Let’s investigate the convergence of interpolating polynomials with increasing
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/312539cae46fdd21d9f0598156479b34f62b5992e425dc71bb1c8e41a0b9f81e.png" src="../_images/312539cae46fdd21d9f0598156479b34f62b5992e425dc71bb1c8e41a0b9f81e.png" />
+<img alt="../_images/9d1c60daa78de704c560b421210c8b30fac4404b8654bd95c236aa106a8f9428.png" src="../_images/9d1c60daa78de704c560b421210c8b30fac4404b8654bd95c236aa106a8f9428.png" />
 </div>
 </div>
 <p>Below are the surface plots of the original function and the interpolating polynomial with <span class="math notranslate nohighlight">\(n = 100\)</span> and <span class="math notranslate nohighlight">\(p = 2.0\)</span>, which appears to be numerically converged based on the above plots.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
@@ -1122,7 +1121,7 @@ Let’s investigate the convergence of interpolating polynomials with increasing
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/9db4467e534c72623b28358610083934700ab0705888dcc234850514570ce09f.png" src="../_images/9db4467e534c72623b28358610083934700ab0705888dcc234850514570ce09f.png" />
+<img alt="../_images/ffbfd1a2dce6d03da602345bc4c1532f7c4b4366f0a2fc6bd819aa491c5d6b76.png" src="../_images/ffbfd1a2dce6d03da602345bc4c1532f7c4b4366f0a2fc6bd819aa491c5d6b76.png" />
 </div>
 </div>
 </section>
@@ -1166,7 +1165,7 @@ in-depth tutorial.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7ff78e6b3e20&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f98b3893e20&gt;
 </pre></div>
 </div>
 </div>

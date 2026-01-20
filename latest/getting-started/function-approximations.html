@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="Getting Started with Minterpy" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -504,10 +504,10 @@ f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
 </div>
 <p>When plotted, the function looks like this:</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
@@ -522,7 +522,7 @@ f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/97da9095c8fc9c605ddaf684f9aab63a5091d1e65c3e2d316ebee027766492f5.png" src="../_images/97da9095c8fc9c605ddaf684f9aab63a5091d1e65c3e2d316ebee027766492f5.png" />
+<img alt="../_images/b6d9b6465c543c10810e8715805e3feceee4c0789504780505afff59b2df4d73.png" src="../_images/b6d9b6465c543c10810e8715805e3feceee4c0789504780505afff59b2df4d73.png" />
 </div>
 </div>
 <section id="one-dimensional-interpolant">
@@ -568,10 +568,10 @@ f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
 </div>
 <p>The plot of the interpolant is shown below along with the original function:</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">fun_1d</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;original&quot;</span><span class="p">)</span>
@@ -585,7 +585,7 @@ f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/d183b9c33ae44d223ddddf642626c84210aff9a2cbbb8347db918b4b2e91bed4.png" src="../_images/d183b9c33ae44d223ddddf642626c84210aff9a2cbbb8347db918b4b2e91bed4.png" />
+<img alt="../_images/e3c588113b817773960fe19069c9c50d105eba0a0704d11fd63ffeabbc2717ef.png" src="../_images/e3c588113b817773960fe19069c9c50d105eba0a0704d11fd63ffeabbc2717ef.png" />
 </div>
 </div>
 <p>However, the interpolant doesn’t quite match the function as closely as we’d like.</p>
@@ -623,10 +623,10 @@ f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
 </div>
 <p>The plot of the interpolant is shown below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">fun_1d</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;original&quot;</span><span class="p">)</span>
@@ -641,16 +641,16 @@ f(x) = x \, \sin{(12 x)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/7becc1324fc4e0d161e96ee252f06b5a0cbc28ee5702fbb615170c2dcd923828.png" src="../_images/7becc1324fc4e0d161e96ee252f06b5a0cbc28ee5702fbb615170c2dcd923828.png" />
+<img alt="../_images/6aa43ff5f0b28925a0682226da1b3574746b7db5812b09833251ff5361d8b235.png" src="../_images/6aa43ff5f0b28925a0682226da1b3574746b7db5812b09833251ff5361d8b235.png" />
 </div>
 </div>
 <p>Looking at the graph, it’s hard to see any difference between the interpolant of degree <span class="math notranslate nohighlight">\(32\)</span> and the original function.</p>
 <p>Looking at the infinity norm:</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fun_1d</span><span class="p">(</span><span class="n">xx_test_1d</span><span class="p">)</span> <span class="o">-</span> <span class="n">interp_1d_32</span><span class="p">(</span><span class="n">xx_test_1d</span><span class="p">)))</span>
@@ -685,10 +685,10 @@ f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
 </div>
 <p>The surface and contour plots of the function are given below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
@@ -738,7 +738,7 @@ f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/07111effcefedd46974bbacee9a389072054a885e40eed590a43ce776da27c0b.png" src="../_images/07111effcefedd46974bbacee9a389072054a885e40eed590a43ce776da27c0b.png" />
+<img alt="../_images/82ddbbe04ce9fecafa5ed7fe57300e8f4f4b493c5fc0259f8188009a12e98b00.png" src="../_images/82ddbbe04ce9fecafa5ed7fe57300e8f4f4b493c5fc0259f8188009a12e98b00.png" />
 </div>
 </div>
 <section id="two-dimension-interpolant">
@@ -759,10 +759,10 @@ f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
 </div>
 <p>The surface and contour plots of the interpolant are shown below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
@@ -812,7 +812,7 @@ f(x_1, x_2) = \sin{\pi (1.5 x_1 + 2.5 x_2)}, x_1, x_2 \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/05b3ca58d9e1c852c9ffb4f74acfbb66e9644b316d266331b9d6bcfdd50121a0.png" src="../_images/05b3ca58d9e1c852c9ffb4f74acfbb66e9644b316d266331b9d6bcfdd50121a0.png" />
+<img alt="../_images/abc64cdb482b136c3c9932b821c3824d61c53195c7dcd15041f2f70132e7a117.png" src="../_images/abc64cdb482b136c3c9932b821c3824d61c53195c7dcd15041f2f70132e7a117.png" />
 </div>
 </div>
 </section>

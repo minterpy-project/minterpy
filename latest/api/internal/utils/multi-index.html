@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="arrays" href="arrays.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -541,7 +541,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>exponents</strong> (<em>np.ndarray</em>) – An array of exponents of a multi-index set.</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The lp-degree of the multi-index set.</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The lp-degree of the multi-index set.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -549,7 +549,7 @@
 for the given lp-degree.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -561,9 +561,9 @@ for the given lp-degree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Dimension of the domain space.</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Polynomial degree described by the resulting exponent matrix.</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Degree of the used lp-norm. This can be any integer bigger than one or <code class="xref py py-obj docutils literal notranslate"><span class="pre">np.inf</span></code>.</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Dimension of the domain space.</p></li>
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Polynomial degree described by the resulting exponent matrix.</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Degree of the used lp-norm. This can be any integer bigger than one or <code class="xref py py-obj docutils literal notranslate"><span class="pre">np.inf</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -581,7 +581,7 @@ for the given lp-degree.</p>
 <dd><p>Yield the backward neighbors of a given multi-index set element.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Multi-index set element (i.e., a vector of multi-indices),
+<dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Multi-index set element (i.e., a vector of multi-indices),
 a one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>, where <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial
 dimensions.</p>
 </dd>
@@ -590,7 +590,7 @@ dimensions.</p>
 of multi-indices “smaller by 1”) of the given multi-index element.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Iterable</span></code> [<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>]</p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Iterable</span></code> [<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>]</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -610,7 +610,7 @@ of multi-indices “smaller by 1”) of the given multi-index element.</p>
 <dd><p>Yield all the missing backward neighbors for an array of multi-indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of lexicographically sorted multi-indices, a two-dimensional
+<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of lexicographically sorted multi-indices, a two-dimensional
 non-negative integer array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is
 the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number
 of spatial dimensions.</p>
@@ -621,7 +621,7 @@ of spatial dimensions.</p>
 of the array of multi-indices.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Iterable</span></code> [<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>]</p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Iterable</span></code> [<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>]</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -655,12 +655,12 @@ must make sure that the array is sorted beforehand.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of lexicographically sorted multi-indices, a two-dimensional
+<li><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of lexicographically sorted multi-indices, a two-dimensional
 non-negative integer array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is
 the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number
 of spatial dimensions.</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Polynomial degree supported by the multi-index set.</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(p\)</span> in the <span class="math notranslate nohighlight">\(l_p\)</span>-norm with respect to which
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Polynomial degree supported by the multi-index set.</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(p\)</span> in the <span class="math notranslate nohighlight">\(l_p\)</span>-norm with respect to which
 the multi-index set is defined.</p></li>
 </ul>
 </dd>
@@ -671,7 +671,7 @@ multi-indices is not lexicographically sorted (including containing
 any duplicate entries).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -707,15 +707,15 @@ of the Minterpy Documentation.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>indices_1</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional integer array of shape <code class="docutils literal notranslate"><span class="pre">(N1,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N1</span></code> is
+<li><p><strong>indices_1</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional integer array of shape <code class="docutils literal notranslate"><span class="pre">(N1,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N1</span></code> is
 the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number
 of spatial dimensions.</p></li>
-<li><p><strong>indices_2</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional integer array of shape <code class="docutils literal notranslate"><span class="pre">(N2,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N2</span></code> is
+<li><p><strong>indices_2</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional integer array of shape <code class="docutils literal notranslate"><span class="pre">(N2,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N2</span></code> is
 the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number
 of spatial dimensions.</p></li>
-<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension (i.e., the number of columns) of
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension (i.e., the number of columns) of
 the indices to be expanded if there is a difference.</p></li>
-<li><p><strong>expand_dim_</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+<li><p><strong>expand_dim_</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -724,7 +724,7 @@ otherwise. The function also returns <code class="docutils literal notranslate">
 are different and <code class="docutils literal notranslate"><span class="pre">expand_dim</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -759,7 +759,7 @@ are different and <code class="docutils literal notranslate"><span class="pre">e
 <dd><p>Check if an array of multi-indices is downward-closed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of lexicographically sorted multi-indices, a two-dimensional
+<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of lexicographically sorted multi-indices, a two-dimensional
 non-negative integer array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is
 the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number
 of spatial dimensions.</p>
@@ -771,7 +771,7 @@ multi-indices is not lexicographically sorted (including containing
 any duplicate entries).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -805,9 +805,9 @@ its spatial dimensions.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>list_of_indices</strong> (<a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>)</p></li>
+<li><p><strong>list_of_indices</strong> (<a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><em>np.ndarray</em><em>]</em>)</p></li>
 <li><p><strong>index2insert</strong> (<em>np.ndarray</em>)</p></li>
-<li><p><strong>check_for_inclusion</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+<li><p><strong>check_for_inclusion</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -826,12 +826,12 @@ its spatial dimensions.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>indices</strong> (<a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em>] </em><em>| </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>indices2insert</strong> (<a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Iterable" title="(in Python v3.14)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>indices</strong> (<a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em>] </em><em>| </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>indices2insert</strong> (<a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Iterable" title="(in Python v3.15)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -842,10 +842,10 @@ its spatial dimensions.</p></li>
 <dd><p>inserts all missing multi index vectors “smaller by one”</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p>
+<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -859,8 +859,8 @@ of the exponents are smaller or equal to the polynomial degree of the set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A given exponent array to be completed.</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) – A given <span class="math notranslate nohighlight">\(l_p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the lp-degree)
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A given exponent array to be completed.</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) – A given <span class="math notranslate nohighlight">\(l_p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the lp-degree)
 for the completion.</p></li>
 </ul>
 </dd>
@@ -869,7 +869,7 @@ for the completion.</p></li>
 <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -903,7 +903,7 @@ degree with respect to the <code class="docutils literal notranslate"><span clas
 <dd><p>Make an array of multi-indices downward-closed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of lexicographically sorted multi-indices, a two-dimensional
+<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of lexicographically sorted multi-indices, a two-dimensional
 non-negative integer array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is
 the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of spatial
 dimensions.</p>
@@ -915,7 +915,7 @@ the number of multi-indices in the downward-closed set and
 <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of spatial dimensions.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -962,12 +962,12 @@ NOTE: this function is required for ‘rebasing’ a polynomial onto complete mu
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>smaller_idx_set</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>larger_idx_set</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>smaller_idx_set</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
+<li><p><strong>larger_idx_set</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -978,14 +978,14 @@ NOTE: this function is required for ‘rebasing’ a polynomial onto complete mu
 <dd><p>Lexicographically sort an array of multi-indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional array of multi-indices to be sorted.</p>
+<dd class="field-odd"><p><strong>indices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional array of multi-indices to be sorted.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Lexicographically sorted array, having the same type as <code class="docutils literal notranslate"><span class="pre">indices</span></code>.
 Only unique entries are kept in the sorted array.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1012,10 +1012,10 @@ Only unique entries are kept in the sorted array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>indices_1</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional array of multi-indices of shape <code class="docutils literal notranslate"><span class="pre">(N1,</span> <span class="pre">m2)</span></code> where
+<li><p><strong>indices_1</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional array of multi-indices of shape <code class="docutils literal notranslate"><span class="pre">(N1,</span> <span class="pre">m2)</span></code> where
 <code class="docutils literal notranslate"><span class="pre">N1</span></code> is the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m2</span></code> is the number of
 dimensions of the first array.</p></li>
-<li><p><strong>indices_2</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Another two-dimensional array of multi-indices of shape <code class="docutils literal notranslate"><span class="pre">(N2,</span> <span class="pre">m2)</span></code>
+<li><p><strong>indices_2</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Another two-dimensional array of multi-indices of shape <code class="docutils literal notranslate"><span class="pre">(N2,</span> <span class="pre">m2)</span></code>
 where <code class="docutils literal notranslate"><span class="pre">N2</span></code> is the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m2</span></code> is the number
 of dimensions of the second array.</p></li>
 </ul>
@@ -1026,7 +1026,7 @@ where <code class="docutils literal notranslate"><span class="pre">m3</span></co
 array is lexicographically sorted.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1077,10 +1077,10 @@ array is lexicographically sorted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>indices_1</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional array of multi-indices of shape <code class="docutils literal notranslate"><span class="pre">(N1,</span> <span class="pre">m2)</span></code> where
+<li><p><strong>indices_1</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Two-dimensional array of multi-indices of shape <code class="docutils literal notranslate"><span class="pre">(N1,</span> <span class="pre">m2)</span></code> where
 <code class="docutils literal notranslate"><span class="pre">N1</span></code> is the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m2</span></code> is the number of
 dimensions of the first array.</p></li>
-<li><p><strong>indices_2</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Another two-dimensional array of multi-indices of shape <code class="docutils literal notranslate"><span class="pre">(N2,</span> <span class="pre">m2)</span></code>
+<li><p><strong>indices_2</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Another two-dimensional array of multi-indices of shape <code class="docutils literal notranslate"><span class="pre">(N2,</span> <span class="pre">m2)</span></code>
 where <code class="docutils literal notranslate"><span class="pre">N2</span></code> is the number of multi-indices and <code class="docutils literal notranslate"><span class="pre">m2</span></code> is the number
 of dimensions of the second array.</p></li>
 </ul>
@@ -1091,7 +1091,7 @@ where <code class="docutils literal notranslate"><span class="pre">m3</span></co
 The union is lexicographically sorted.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>

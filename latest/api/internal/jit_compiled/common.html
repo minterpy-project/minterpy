@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="minterpy.jit_compiled" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -544,8 +544,8 @@ within a JIT-compiled function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The total number of elements to choose from.</p></li>
-<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of elements to form the combinations.</p></li>
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The total number of elements to choose from.</p></li>
+<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The number of elements to form the combinations.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -553,17 +553,17 @@ within a JIT-compiled function.</p>
 (i.e., the binomial coefficient).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#OverflowError" title="(in Python v3.14)"><strong>OverflowError</strong></a> – If any of the arguments is signed (which does not make any sense
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#OverflowError" title="(in Python v3.15)"><strong>OverflowError</strong></a> – If any of the arguments is signed (which does not make any sense
     anyway).</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>This iterative implementation is an alternative to <a class="reference external" href="https://docs.python.org/dev/library/math.html#math.comb" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.comb()</span></code></a>
-(from the <a class="reference external" href="https://docs.python.org/dev/library/math.html#module-math" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">math</span></code></a> module) such that it can be used inside
+<li><p>This iterative implementation is an alternative to <a class="reference external" href="https://docs.python.org/dev/library/math.html#math.comb" title="(in Python v3.15)"><code class="xref py py-func docutils literal notranslate"><span class="pre">math.comb()</span></code></a>
+(from the <a class="reference external" href="https://docs.python.org/dev/library/math.html#module-math" title="(in Python v3.15)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">math</span></code></a> module) such that it can be used inside
 a Numba JIT-ted function.</p></li>
 </ul>
 </dd></dl>
@@ -575,8 +575,8 @@ a Numba JIT-ted function.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A one-dimensional array of integers to select from.</p></li>
-<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of elements to select from the array of integers.</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A one-dimensional array of integers to select from.</p></li>
+<li><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The number of elements to select from the array of integers.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -586,17 +586,17 @@ where <span class="math notranslate nohighlight">\(n\)</span> is the length of t
 The r-length combinations are sorted lexicographically.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
 <li><p>This is iterative implementation is suitable for Numba as an alternative
-to <a class="reference external" href="https://docs.python.org/dev/library/itertools.html#itertools.combinations" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">itertools.combinations()</span></code></a> (from the <a class="reference external" href="https://docs.python.org/dev/library/itertools.html#module-itertools" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">itertools</span></code></a>
+to <a class="reference external" href="https://docs.python.org/dev/library/itertools.html#itertools.combinations" title="(in Python v3.15)"><code class="xref py py-func docutils literal notranslate"><span class="pre">itertools.combinations()</span></code></a> (from the <a class="reference external" href="https://docs.python.org/dev/library/itertools.html#module-itertools" title="(in Python v3.15)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">itertools</span></code></a>
 module).</p></li>
 <li><p>This is not a generator function; all possible combinations
 of length <code class="docutils literal notranslate"><span class="pre">r</span></code> will be returned at once. Unlike the function
-<a class="reference external" href="https://docs.python.org/dev/library/itertools.html#itertools.combinations" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">itertools.combinations()</span></code></a>, the output of this function is
+<a class="reference external" href="https://docs.python.org/dev/library/itertools.html#itertools.combinations" title="(in Python v3.15)"><code class="xref py py-func docutils literal notranslate"><span class="pre">itertools.combinations()</span></code></a>, the output of this function is
 a two-dimensional array instead of a <em>tuple</em> generator.</p></li>
 <li><p>This function is created to avoid using a generator function inside
 a Numba JIT-ted function; generator functions causes memory leaks.</p></li>
@@ -613,15 +613,15 @@ in the number of elements.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">n</span></code>.</p></li>
-<li><p><strong>bb</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">m)</span></code>.</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">n</span></code>.</p></li>
+<li><p><strong>bb</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">m)</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -632,19 +632,19 @@ in the number of elements.</p></li>
 <dd><p>Get the maximum from each column of a two-dimensional integers array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A two-dimensional integer array.</p>
+<dd class="field-odd"><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A two-dimensional integer array.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A one-dimensional integer array, each element contains the maximum
 of each column of the input array.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>This is to imitate a particular way of calling <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.max.html#numpy.max" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.max()</span></code></a>,
+<li><p>This is to imitate a particular way of calling <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.max.html#numpy.max" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.max()</span></code></a>,
 that is, <code class="docutils literal notranslate"><span class="pre">np.max(arr,</span> <span class="pre">axis=0)</span></code>. Such a call cannot be used inside
 a Numba JIT-ted function as Numba does not support passing the second
 argument.</p></li>

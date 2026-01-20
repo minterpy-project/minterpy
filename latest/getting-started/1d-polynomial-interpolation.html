@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="Quick Start Guide to Function Approximations with Minterpy" href="function-approximations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -503,10 +503,10 @@ f(x) = \frac{1}{1 + 25 x^2}, x \in [-1, 1].
 </div>
 <p>The plot of the function is shown below.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
@@ -519,7 +519,7 @@ f(x) = \frac{1}{1 + 25 x^2}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/af10d8d6fa7534a4309617824472ec4b39bf01434cb3576c4ada4eb069075912.png" src="../_images/af10d8d6fa7534a4309617824472ec4b39bf01434cb3576c4ada4eb069075912.png" />
+<img alt="../_images/9b5fef40f2e45fd92ddfe2646ad8971c6a25114c94b0a56fba38646b50b03063.png" src="../_images/9b5fef40f2e45fd92ddfe2646ad8971c6a25114c94b0a56fba38646b50b03063.png" />
 </div>
 </div>
 <p>Now that you’ve defined your function, you’re ready to create a polynomial that approximates it.</p>
@@ -622,10 +622,10 @@ For the chosen polynomial degree, these nodes are:</p>
 </div>
 <p>which distributed like the following:</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -641,7 +641,7 @@ For the chosen polynomial degree, these nodes are:</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/f15752a36c9f56ae691f3946558a5c8e5328372967084481d3f444d3ba9efac5.png" src="../_images/f15752a36c9f56ae691f3946558a5c8e5328372967084481d3f444d3ba9efac5.png" />
+<img alt="../_images/57a559ec1d123be81040505ee6c2584cf995ad2f243fc851e900084264f40491.png" src="../_images/57a559ec1d123be81040505ee6c2584cf995ad2f243fc851e900084264f40491.png" />
 </div>
 </div>
 <p>Notice that there are more points in the boundaries of the domain.</p>
@@ -795,10 +795,10 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 </div>
 <p>Let’s compare the results of the interpolating polynomial with the original function.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_test</span><span class="p">,</span> <span class="n">yy_test</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true function ($f$)&quot;</span><span class="p">)</span>
@@ -813,7 +813,7 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/d4c203920d437b628c3052a7cce45562a127058edd28b32040d1ce96dea47e0b.png" src="../_images/d4c203920d437b628c3052a7cce45562a127058edd28b32040d1ce96dea47e0b.png" />
+<img alt="../_images/5b628ceb34b224a08bbaee5136934e4b69dd4b40af84b6d46a48b9b0d03834f2.png" src="../_images/5b628ceb34b224a08bbaee5136934e4b69dd4b40af84b6d46a48b9b0d03834f2.png" />
 </div>
 </div>
 <p>The plot also shows the location of the unisolvent nodes and their corresponding function values; the interpolant is indeed interpolatory.</p>
@@ -889,10 +889,10 @@ The function returns a callable object that you can use to evaluate the (underly
 </div>
 <p>The interpolants of increasing degrees looks like:</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_test</span><span class="p">,</span> <span class="n">yy_test</span><span class="p">);</span>
@@ -906,7 +906,7 @@ The function returns a callable object that you can use to evaluate the (underly
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/1ce777da8b71b1be223d0e1f18a22e16f24df6945f9077acd44be151bcb1b79d.png" src="../_images/1ce777da8b71b1be223d0e1f18a22e16f24df6945f9077acd44be151bcb1b79d.png" />
+<img alt="../_images/3bf3f5501a3edf05f4d44335db50f998db9ace408ea2daf3402b93e55e28979d.png" src="../_images/3bf3f5501a3edf05f4d44335db50f998db9ace408ea2daf3402b93e55e28979d.png" />
 </div>
 </div>
 <p>The convergence of the error is shown below:</p>
@@ -918,10 +918,10 @@ The function returns a callable object that you can use to evaluate the (underly
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">poly_degrees</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">);</span>
@@ -933,15 +933,15 @@ The function returns a callable object that you can use to evaluate the (underly
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/02f90aeeb5591f90f01124a87dcad107dce3fb3ff941d069b88f43c94472e278.png" src="../_images/02f90aeeb5591f90f01124a87dcad107dce3fb3ff941d069b88f43c94472e278.png" />
+<img alt="../_images/1aff905c09d0e17f91f91b3a8c58993885178a8467eff675048dbf278e8f14db.png" src="../_images/1aff905c09d0e17f91f91b3a8c58993885178a8467eff675048dbf278e8f14db.png" />
 </div>
 </div>
 <p>The absolute error of the degree 64 polynomials in the domain is shown below:</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_test</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yy_test</span> <span class="o">-</span> <span class="n">yy_poly</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
@@ -954,7 +954,7 @@ The function returns a callable object that you can use to evaluate the (underly
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/322d5f7fa25edc00c25a3ccfc25308e076b245a9a1a7f4d15f27ce08ee77a583.png" src="../_images/322d5f7fa25edc00c25a3ccfc25308e076b245a9a1a7f4d15f27ce08ee77a583.png" />
+<img alt="../_images/adc67afb9e2f40d63076321de90d49150f8bdaea14a3a752e535cb6e35a4c4b2.png" src="../_images/adc67afb9e2f40d63076321de90d49150f8bdaea14a3a752e535cb6e35a4c4b2.png" />
 </div>
 </div>
 <p>The seemingly random behavior of the (very small) absolute error indicates that machine precision has been reached. Compare it with the absolute error of degree 4 polynomials:</p>
@@ -968,7 +968,7 @@ The function returns a callable object that you can use to evaluate the (underly
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/ad25c9856bfe9db9da52cdb517a76c9a8fe8997084f00ab0bdbe421148890dbb.png" src="../_images/ad25c9856bfe9db9da52cdb517a76c9a8fe8997084f00ab0bdbe421148890dbb.png" />
+<img alt="../_images/0cde25b0e6afbaf60d9b1141cedd9258efa575801c601246cce4366fa8096af0.png" src="../_images/0cde25b0e6afbaf60d9b1141cedd9258efa575801c601246cce4366fa8096af0.png" />
 </div>
 </div>
 </section>
@@ -1011,7 +1011,7 @@ in-depth tutorial.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fbf615f18a0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f7a307acb80&gt;
 </pre></div>
 </div>
 </div>

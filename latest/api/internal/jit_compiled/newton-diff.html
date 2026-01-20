@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="multi_index" href="multi-index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -548,9 +548,9 @@ is the <span class="math notranslate nohighlight">\(i\)</span>-th generating poi
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The query point, a one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>, where <code class="docutils literal notranslate"><span class="pre">m</span></code>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The query point, a one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>, where <code class="docutils literal notranslate"><span class="pre">m</span></code>
 is the spatial dimension of the polynomial.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
 array of shape <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the maximum polynomial
 degree in all dimensions.</p></li>
 </ul>
@@ -561,7 +561,7 @@ between the query point and the generating points (size <code class="docutils li
 in each dimension (size <code class="docutils literal notranslate"><span class="pre">m</span></code>).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -586,13 +586,13 @@ and modifies in-place the product array to be re-used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>combinations</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The combination of terms to multiply, the information regarding
+<li><p><strong>combinations</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The combination of terms to multiply, the information regarding
 the degree of monomials and the order of derivative is encoded here
 and does not appear explicitly in this function.</p></li>
-<li><p><strong>lua_difference</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The one-dimensional array containing the difference between
+<li><p><strong>lua_difference</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The one-dimensional array containing the difference between
 a query point and the generating points in one dimension.</p></li>
-<li><p><strong>prev_lua_prod</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The products of difference from previous computation (degree).</p></li>
-<li><p><strong>lua_prod</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The products of difference for the current computation; it is passed
+<li><p><strong>prev_lua_prod</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The products of difference from previous computation (degree).</p></li>
+<li><p><strong>lua_prod</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The products of difference for the current computation; it is passed
 to avoid reinitialization.</p></li>
 </ul>
 </dd>
@@ -602,7 +602,7 @@ the generating points for a differentiated one-dimensional Newton
 monomial of a given degree and a given order of derivative.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -629,18 +629,18 @@ evaluated on a single query point for all dimensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A single query point at which the derivative is evaluated;
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A single query point at which the derivative is evaluated;
 the values are given in a one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>.</p></li>
-<li><p><strong>max_exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The maximum exponents in the multi-index set for each dimension given
+<li><p><strong>max_exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The maximum exponents in the multi-index set for each dimension given
 as one-dimensional non-negative integer array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
 array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n</span> <span class="pre">+</span> <span class="pre">1)</span></code>.</p></li>
-<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
+<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
 as a one-dimensional non-negative integer array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>.
 For example, the array <code class="docutils literal notranslate"><span class="pre">np.array([2,</span> <span class="pre">3,</span> <span class="pre">1])</span></code> specifies the 2nd-order,
 3rd-order, and 1st-order derivatives along the 1st, 2nd, and 3rd
 dimension, respectively.</p></li>
-<li><p><strong>products_placeholder</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A placeholder for a look-up table containing differentiated Newton
+<li><p><strong>products_placeholder</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A placeholder for a look-up table containing differentiated Newton
 monomials per dimension; the differentiated monomials are products
 of difference terms.</p></li>
 </ul>
@@ -651,7 +651,7 @@ consists of the derivative value of one-dimensional Newton monomials
 at the (single) query point.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -681,17 +681,17 @@ on a query point from a look-up table of differentiated monomial terms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
 of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>.</p></li>
-<li><p><strong>lut_diff</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A look-up table that consists of the one-dimensional differentiated
+<li><p><strong>lut_diff</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A look-up table that consists of the one-dimensional differentiated
 Newton monomials evaluated on a single query point.
 The table is a two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(n_max,</span> <span class="pre">m)</span></code>.</p></li>
-<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
+<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
 as a one-dimensional non-negative integer array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>.
 For example, the array <code class="docutils literal notranslate"><span class="pre">np.array([2,</span> <span class="pre">3,</span> <span class="pre">1])</span></code> specifies the 2nd-order,
 3rd-order, and 1st-order derivatives along the 1st, 2nd, and 3rd
 dimension, respectively.</p></li>
-<li><p><strong>monomials_placeholder</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The placeholder for all the differentiated monomials values evaluated
+<li><p><strong>monomials_placeholder</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The placeholder for all the differentiated monomials values evaluated
 at a single query point. The placeholder is a one-dimensional array of
 length <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p></li>
 </ul>
@@ -717,23 +717,23 @@ length <code class="docutils literal notranslate"><span class="pre">N</span></co
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A single query point at which the derivative is evaluated;
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A single query point at which the derivative is evaluated;
 the values are given in a one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>.</p></li>
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
 of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>.</p></li>
-<li><p><strong>max_exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The maximum exponent values in each dimension as a one-dimensional
+<li><p><strong>max_exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The maximum exponent values in each dimension as a one-dimensional
 array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>; this is to avoid re-computation.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
 array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n</span> <span class="pre">+</span> <span class="pre">1)</span></code>.</p></li>
-<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
+<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
 as a one-dimensional non-negative integer array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>.
 For example, the array <code class="docutils literal notranslate"><span class="pre">np.array([2,</span> <span class="pre">3,</span> <span class="pre">1])</span></code> specifies the 2nd-order,
 3rd-order, and 1st-order derivatives along the 1st, 2nd, and 3rd
 dimension, respectively.</p></li>
-<li><p><strong>products_placeholder</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A placeholder for a look-up table containing differentiated Newton
+<li><p><strong>products_placeholder</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A placeholder for a look-up table containing differentiated Newton
 monomials per dimension; the differentiated monomials are products
 of difference terms.</p></li>
-<li><p><strong>monomials_placeholder</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The differentiated Newton monomials evaluated on a single query point.
+<li><p><strong>monomials_placeholder</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The differentiated Newton monomials evaluated on a single query point.
 The array is of shape <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p></li>
 </ul>
 </dd>
@@ -742,7 +742,7 @@ The array is of shape <code class="docutils literal notranslate"><span class="pr
 as a one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">np</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -776,15 +776,15 @@ to another (e.g., canonical) basis.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The set of query points at which the derivative is evaluated;
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The set of query points at which the derivative is evaluated;
 the values are given in a two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code>.</p></li>
-<li><p><strong>coefficients</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The coefficients of the Newton polynomial;
+<li><p><strong>coefficients</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The coefficients of the Newton polynomial;
 the values are given in a two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">np)</span></code>.</p></li>
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
 of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
 array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n</span> <span class="pre">+</span> <span class="pre">1)</span></code>.</p></li>
-<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
+<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
 as a one-dimensional non-negative integer array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>.
 For example, the array <code class="docutils literal notranslate"><span class="pre">np.array([2,</span> <span class="pre">3,</span> <span class="pre">1])</span></code> specifies the 2nd-order,
 3rd-order, and 1st-order derivatives along the 1st, 2nd, and 3rd
@@ -796,7 +796,7 @@ dimension, respectively.</p></li>
 as a two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">np)</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -831,15 +831,15 @@ in parallel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The set of query points at which the derivative is evaluated;
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The set of query points at which the derivative is evaluated;
 the values are given in a two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code>.</p></li>
-<li><p><strong>coefficients</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The coefficients of the Newton polynomial;
+<li><p><strong>coefficients</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The coefficients of the Newton polynomial;
 the values are given in a two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">np)</span></code>.</p></li>
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
 of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Interpolation points for each dimension given as a two-dimensional
 array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n</span> <span class="pre">+</span> <span class="pre">1)</span></code>.</p></li>
-<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
+<li><p><strong>derivative_order_along</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Specification of the orders of derivative along each dimension given
 as a one-dimensional non-negative integer array of length <code class="docutils literal notranslate"><span class="pre">m</span></code>.
 For example, the array <code class="docutils literal notranslate"><span class="pre">np.array([2,</span> <span class="pre">3,</span> <span class="pre">1])</span></code> specifies the 2nd-order,
 3rd-order, and 1st-order derivatives along the 1st, 2nd, and 3rd
@@ -851,7 +851,7 @@ dimension, respectively.</p></li>
 as a two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">np)</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>

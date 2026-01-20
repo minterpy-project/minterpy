@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="minterpy.core" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -559,7 +559,7 @@ class demonstrating their usages and features.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.core.multi_index.</span></span><span class="sig-name descname"><span class="pre">MultiIndexSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exponents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/multi_index.html#MultiIndexSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/dev/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/dev/library/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A class to represent the set of multi-indices.</p>
 <p>The instances of this class provide the data structure for the exponents
 of multi-dimensional polynomials independently of the chosen basis in
@@ -567,12 +567,12 @@ the polynomial space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Set of exponents given as a two-dimensional non-negative integer array
 of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of multi-index elements
 (i.e., exponents) and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of spatial dimension.
 Each row of the array indicates the vector of exponents.
 To create an empty set, an empty two-dimensional array may be passed.</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
 that is used to define the multi-index set. The value of
 <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> must be a positive float (<span class="math notranslate nohighlight">\(p &gt; 0\)</span>).</p></li>
 </ul>
@@ -668,11 +668,11 @@ the <span class="math notranslate nohighlight">\(l_p\)</span>-degree.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Spatial dimension of the multi-index set (<span class="math notranslate nohighlight">\(m\)</span>); the value of
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Spatial dimension of the multi-index set (<span class="math notranslate nohighlight">\(m\)</span>); the value of
 <code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> must be a positive integer (<span class="math notranslate nohighlight">\(m &gt; 0\)</span>).</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Polynomial degree of the multi-index set (<span class="math notranslate nohighlight">\(n\)</span>); the value of
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Polynomial degree of the multi-index set (<span class="math notranslate nohighlight">\(n\)</span>); the value of
 <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> must be a non-negative integer (<span class="math notranslate nohighlight">\(n \geq 0\)</span>).</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
 that is used to define the multi-index set. The value of
 <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> must be a positive float (<span class="math notranslate nohighlight">\(p &gt; 0\)</span>).
 If not specified, <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> is assigned with the value of
@@ -692,7 +692,7 @@ with respect to the given <code class="docutils literal notranslate"><span class
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.exponents">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exponents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.exponents" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exponents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.exponents" title="Link to this definition">#</a></dt>
 <dd><p>Array of exponents in the form of multi-indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -701,7 +701,7 @@ lexicographically sorted (ordered) multi-indices.
 This is a read-only property and defined at construction.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -714,7 +714,7 @@ of a given dimension of a multi-dimensional polynomial basis.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.lp_degree">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lp_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.lp_degree" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lp_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.lp_degree" title="Link to this definition">#</a></dt>
 <dd><p><span class="math notranslate nohighlight">\(p\)</span> of <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define the multi-index set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -724,14 +724,14 @@ the multi-index set. This property is read-only
 and defined at construction.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.poly_degree">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poly_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.poly_degree" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poly_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.poly_degree" title="Link to this definition">#</a></dt>
 <dd><p>The polynomial degree of the multi-index set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -739,14 +739,14 @@ and defined at construction.</p>
 read-only and inferred from a given multi-index set and lp-degree.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.spatial_dimension">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spatial_dimension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.spatial_dimension" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spatial_dimension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.spatial_dimension" title="Link to this definition">#</a></dt>
 <dd><p>The dimension of the domain space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -757,14 +757,14 @@ of multi-indices (i.e., the number of columns of the array
 of multi-indices)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.is_complete">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_complete</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.is_complete" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_complete</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.is_complete" title="Link to this definition">#</a></dt>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">exponents</span></code> array is complete.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -772,7 +772,7 @@ of multi-indices)</p>
 otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -793,7 +793,7 @@ of the Minterpy Documentation.</p></li>
 <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -809,7 +809,7 @@ for the definition of
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.max_exponent">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_exponent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.max_exponent" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_exponent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.max_exponent" title="Link to this definition">#</a></dt>
 <dd><p>The maximum exponent of the multi-index set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -817,14 +817,14 @@ for the definition of
 If the index set is empty, <em class="xref py py-obj">None</em> is returned.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a>, optional</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.multi_index.MultiIndexSet.max_exponents">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_exponents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.max_exponents" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_exponents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></em><a class="headerlink" href="#minterpy.core.multi_index.MultiIndexSet.max_exponents" title="Link to this definition">#</a></dt>
 <dd><p>The maximum exponents per dimension of the multi-index set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -833,7 +833,7 @@ as one-dimensional array of length <code class="docutils literal notranslate"><s
 If the index set is empty, <em class="xref py py-obj">None</em> is returned.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional</p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -847,7 +847,7 @@ If the index set is empty, <em class="xref py py-obj">None</em> is returned.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>exponents</strong> (<em class="xref py py-obj">numpy:numpy.ndarray</em>) – Array of exponents to be added. The set of exponents must be of
 integer type.</p></li>
-<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
 in-place with the complete exponents. If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>,
 a new <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
 The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
@@ -880,9 +880,9 @@ to <code class="docutils literal notranslate"><span class="pre">False</span></co
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A two-dimensional array of exponents (multi-indices) to be
+<li><p><strong>exponents</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A two-dimensional array of exponents (multi-indices) to be
 checked.</p></li>
-<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the dimension of an instance is expanded if there is
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the dimension of an instance is expanded if there is
 a difference.</p></li>
 </ul>
 </dd>
@@ -891,7 +891,7 @@ a difference.</p></li>
 in the current instance; <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -904,9 +904,9 @@ in the current instance; <code class="docutils literal notranslate"><span class=
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The new spatial dimension. It must be larger than or equal
+<li><p><strong>target_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The new spatial dimension. It must be larger than or equal
 to the current spatial dimension of the multi-index set.</p></li>
-<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
 in-place with the expanded dimension. If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>,
 a new <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
 The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
@@ -921,7 +921,7 @@ is carried out in-place without an explicit output.</p>
 <dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>, optional</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the new dimension is smaller than the current spatial
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the new dimension is smaller than the current spatial
     dimension of the <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance.</p>
 </dd>
 </dl>
@@ -941,16 +941,16 @@ to <code class="docutils literal notranslate"><span class="pre">False</span></co
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The other instance of multi-index set.</p></li>
-<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
 if there is a difference.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the number of spatial dimensions of the two sets
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the number of spatial dimensions of the two sets
     are not the same and <code class="docutils literal notranslate"><span class="pre">expand_dim</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -968,7 +968,7 @@ empty.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The superset instance.</p></li>
-<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
 if there is a difference.</p></li>
 </ul>
 </dd>
@@ -977,7 +977,7 @@ if there is a difference.</p></li>
 <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -995,7 +995,7 @@ empty.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The superset instance.</p></li>
-<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the dimension of an instance is expanded if there is
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the dimension of an instance is expanded if there is
 a difference.</p></li>
 </ul>
 </dd>
@@ -1004,7 +1004,7 @@ a difference.</p></li>
 <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1022,7 +1022,7 @@ empty.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The subset instance.</p></li>
-<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
 if there is a difference.</p></li>
 </ul>
 </dd>
@@ -1031,7 +1031,7 @@ if there is a difference.</p></li>
 <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1049,7 +1049,7 @@ empty.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The subset instance.</p></li>
-<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
+<li><p><strong>expand_dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to allow the spatial dimension of an instance to be expanded
 if there is a difference.</p></li>
 </ul>
 </dd>
@@ -1058,7 +1058,7 @@ if there is a difference.</p></li>
 <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1074,7 +1074,7 @@ empty.</p></li>
 <dd><p>Create a complete multi-index set from the current exponents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+<dd class="field-odd"><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
 in-place with the complete exponents. If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>,
 a new <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
 The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
@@ -1102,7 +1102,7 @@ a shallow copy.</p></li>
 <dd><p>Create a downward-closed multi-index set from the current exponents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+<dd class="field-odd"><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
 in-place with the downward-closed set of exponents.
 If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>, a new <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>
 instance is created.
@@ -1134,7 +1134,7 @@ a shallow copy.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The second operand of the multi-index set multiplication (i.e.,
 <code class="docutils literal notranslate"><span class="pre">other</span></code> in <code class="docutils literal notranslate"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">other</span></code>).</p></li>
-<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified in-place
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified in-place
 with the product of the two multi-indices.
 If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, a new
 <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
@@ -1161,7 +1161,7 @@ is carried out in-place without an explicit output.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a>) – The second operand of the multi-index set union (i.e., <code class="docutils literal notranslate"><span class="pre">other</span></code> in
 <code class="docutils literal notranslate"><span class="pre">self</span> <span class="pre">|</span> <span class="pre">other</span></code>).</p></li>
-<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Flag to determine whether the current instance is modified
 in-place with the union of the two multi-indices.
 If <code class="docutils literal notranslate"><span class="pre">inplace</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, a new
 <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> instance is created.
@@ -1219,7 +1219,7 @@ to check whether it is contained in this
 and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1249,7 +1249,7 @@ with the current instance.</p>
 otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1315,7 +1315,7 @@ is carried out.</p></li>
 <dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1337,7 +1337,7 @@ is carried out.</p></li>
 <dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1364,7 +1364,7 @@ is carried out.</p></li>
 <dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1392,7 +1392,7 @@ is carried out.</p></li>
 <dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1458,14 +1458,14 @@ of the set with the larger dimension.</p>
 <p class="rubric">Notes</p>
 <ul class="simple">
 <li><p>Some properties of <a class="reference internal" href="#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> are lazily evaluated,
-this custom implementation of <a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.deepcopy" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.deepcopy</span></code></a> allows the values of
+this custom implementation of <a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.deepcopy" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.deepcopy</span></code></a> allows the values of
 already computed properties to be copied.</p></li>
 <li><p>A deep copy contains a deep copy of the property exponents.</p></li>
 </ul>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.deepcopy" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.deepcopy</span></code></a></dt><dd><p>copy operator form the python standard library.</p>
+<dt><a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.deepcopy" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.deepcopy</span></code></a></dt><dd><p>copy operator form the python standard library.</p>
 </dd>
 </dl>
 </div>

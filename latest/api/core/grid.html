@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="multi_index" href="multi_index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev50+gcb5a78bc" />
+  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
   </head>
   
   
@@ -563,13 +563,13 @@ a multi-dimensional interpolating polynomial
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>multi_index</strong> (<a class="reference internal" href="multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – The multi-index set of exponents of multi-dimensional polynomials
 that the Grid should support.</p></li>
-<li><p><strong>generating_function</strong> (<em>Union</em><em>[</em><em>GEN_FUNCTION</em><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – The generating function to construct an array of generating points.
+<li><p><strong>generating_function</strong> (<em>Union</em><em>[</em><em>GEN_FUNCTION</em><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – The generating function to construct an array of generating points.
 One of the built-in generating functions may be selected via
 a string as a key to a dictionary.
 This parameter is optional; if neither this parameter nor
 <code class="docutils literal notranslate"><span class="pre">generating_points</span></code> is specified, the default generating function
 based on the Leja-ordered Chebyshev-Lobatto nodes is selected.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – The generating points of the interpolation grid, a two-dimensional
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – The generating points of the interpolation grid, a two-dimensional
 array of floats whose columns are the generating points
 per spatial dimension. The shape of the array is <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">m)</span></code>
 where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the maximum degree of all one-dimensional polynomials
@@ -685,20 +685,20 @@ such that the <span class="math notranslate nohighlight">\(l_p\)</span>-norm
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Spatial dimension of the multi-index set (<span class="math notranslate nohighlight">\(m\)</span>); the value of
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Spatial dimension of the multi-index set (<span class="math notranslate nohighlight">\(m\)</span>); the value of
 <code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> must be a positive integer (<span class="math notranslate nohighlight">\(m &gt; 0\)</span>).</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Polynomial degree of the multi-index set (<span class="math notranslate nohighlight">\(n\)</span>); the value of
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Polynomial degree of the multi-index set (<span class="math notranslate nohighlight">\(n\)</span>); the value of
 <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> must be a non-negative integer (<span class="math notranslate nohighlight">\(n \geq 0\)</span>).</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
 that is used to define the multi-index set. The value of
 <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> must be a positive float (<span class="math notranslate nohighlight">\(p &gt; 0\)</span>).</p></li>
-<li><p><strong>generating_function</strong> (<em>Union</em><em>[</em><em>GEN_FUNCTION</em><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – The generating function to construct an array of generating points.
+<li><p><strong>generating_function</strong> (<em>Union</em><em>[</em><em>GEN_FUNCTION</em><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – The generating function to construct an array of generating points.
 One of the built-in generating functions may be selected via
 a string key.
 This parameter is optional; if neither this parameter nor
 <code class="docutils literal notranslate"><span class="pre">generating_points</span></code> is specified, the default generating function
 based on the Leja-ordered Chebyshev-Lobatto nodes is selected.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – The generating points of the interpolation grid, a two-dimensional
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – The generating points of the interpolation grid, a two-dimensional
 array of floats whose columns are the generating points
 per spatial dimension. The shape of the array is <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">m)</span></code>
 where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the maximum degree of all one-dimensional
@@ -729,7 +729,7 @@ generating function and generating points.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>multi_index</strong> (<a class="reference internal" href="multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – The multi-index set of exponents of multi-dimensional polynomials
 that the Grid should support.</p></li>
-<li><p><strong>generating_function</strong> (<em>Union</em><em>[</em><em>GEN_FUNCTION</em><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – The generating function to construct an array of generating points.
+<li><p><strong>generating_function</strong> (<em>Union</em><em>[</em><em>GEN_FUNCTION</em><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em>) – The generating function to construct an array of generating points.
 The function should accept as its arguments two integers, namely,
 the maximum exponent of the multi-index set of exponents and
 the spatial dimension and returns an array of shape <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">m)</span></code>
@@ -758,7 +758,7 @@ generating function.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>multi_index</strong> (<a class="reference internal" href="multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – The multi-index set of exponents of multi-dimensional polynomials
 that the Grid should support.</p></li>
-<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The generating points of the interpolation grid, a two-dimensional
+<li><p><strong>generating_points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The generating points of the interpolation grid, a two-dimensional
 array of floats whose columns are the generating points
 per spatial dimension. The shape of the array is <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">m)</span></code>
 where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the maximum polynomial degree in all dimensions
@@ -786,7 +786,7 @@ with the given multi-index set and generating points.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>multi_index</strong> (<a class="reference internal" href="multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – The multi-index set of polynomial exponents that defines the Grid.
 The set, in turn, defines the polynomials the Grid can support.</p></li>
-<li><p><strong>generating_values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The one-dimensional generating points of the interpolation grid,
+<li><p><strong>generating_values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The one-dimensional generating points of the interpolation grid,
 a one-dimensional array of floats of length <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">)</span></code>
 where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the maximum exponent of the multi-index set.
 The values in the array must be unique.</p></li>
@@ -825,7 +825,7 @@ polynomial the Grid can support.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.generating_function">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generating_function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.generating_function" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generating_function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Callable" title="(in Python v3.15)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.generating_function" title="Link to this definition">#</a></dt>
 <dd><p>The generating function of the interpolation Grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -845,7 +845,7 @@ manipulated that results in a grid of a higher degree or dimension.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.generating_points">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generating_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.generating_points" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generating_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.generating_points" title="Link to this definition">#</a></dt>
 <dd><p>The generating points of the interpolation Grid.</p>
 <p>The generating points of the interpolation grid are one two main
 ingredients of constructing unisolvent nodes (the other being the
@@ -858,14 +858,14 @@ is <code class="docutils literal notranslate"><span class="pre">(n</span> <span 
 multi-index set of exponents and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.max_exponent">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_exponent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.max_exponent" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_exponent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.max_exponent" title="Link to this definition">#</a></dt>
 <dd><p>The maximum exponent of the interpolation grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -873,14 +873,14 @@ multi-index set of exponents and <code class="docutils literal notranslate"><spa
 degree of any one-dimensional polynomials the grid can support.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.unisolvent_nodes">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unisolvent_nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.unisolvent_nodes" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unisolvent_nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.unisolvent_nodes" title="Link to this definition">#</a></dt>
 <dd><p>The array of unisolvent nodes.</p>
 <p>For a definition of unisolvent nodes, see
 <a class="reference internal" href="../../fundamentals/unisolvence.html"><span class="doc">The Notion of Unisolvence</span></a>
@@ -892,7 +892,7 @@ The shape of the array is <code class="docutils literal notranslate"><span class
 elements in the multi-index set and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -907,7 +907,7 @@ elements in the multi-index set and <code class="docutils literal notranslate"><
 <dd class="field-odd"><p>The dimension of the domain space, where the polynomial will live on.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -928,7 +928,7 @@ elements in the multi-index set and <code class="docutils literal notranslate"><
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.has_generating_function">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_generating_function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.has_generating_function" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_generating_function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.has_generating_function" title="Link to this definition">#</a></dt>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance has a generating function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -936,14 +936,14 @@ elements in the multi-index set and <code class="docutils literal notranslate"><
 and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.is_complete">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_complete</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.is_complete" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_complete</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.is_complete" title="Link to this definition">#</a></dt>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance has a complete multi-index set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -951,14 +951,14 @@ and <code class="docutils literal notranslate"><span class="pre">False</span></c
 is a complete index set and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.is_downward_closed">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_downward_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.is_downward_closed" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_downward_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.is_downward_closed" title="Link to this definition">#</a></dt>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance has a downward-closed multi-indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -966,7 +966,7 @@ is a complete index set and <code class="docutils literal notranslate"><span cla
 is a downward-closed set and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1002,7 +1002,7 @@ the number of columns</p>
 <dd><p>Expand the dimension of the Grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>target_dimension</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em>) – The new spatial dimension. It must be larger than or equal
+<dd class="field-odd"><p><strong>target_dimension</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>]</em>) – The new spatial dimension. It must be larger than or equal
 to the current dimension of the Grid. Alternatively,
 another instance of Grid whose dimension is higher can also
 be specified as a target dimension.</p>
@@ -1014,7 +1014,7 @@ be specified as a target dimension.</p>
 <dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If an instance is expanded to a dimension that cannot be supported
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If an instance is expanded to a dimension that cannot be supported
     either by the available generating function or generating points.
     If the target dimension is a <a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a>, the exception is raised
     when there are inconsistencies in either generating function
@@ -1039,7 +1039,7 @@ instance.</p>
 instance; <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1105,7 +1105,7 @@ is returned.</p></li>
 <dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the generating functions of the instances are incompatible
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the generating functions of the instances are incompatible
     with each other (if both are specified) or if the generating points
     are incompatible with each other (if an instance is missing
     a generating function).</p>
@@ -1129,7 +1129,7 @@ is returned.</p></li>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.copy" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.copy</span></code></a></dt><dd><p>copy operator form the python standard library.</p>
+<dt><a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.copy" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.copy</span></code></a></dt><dd><p>copy operator form the python standard library.</p>
 </dd>
 </dl>
 </div>
@@ -1153,7 +1153,7 @@ multi-index set and the generating points are deepcopied.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.deepcopy" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.deepcopy</span></code></a></dt><dd><p>copy function from the Python standard library.</p>
+<dt><a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.deepcopy" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.deepcopy</span></code></a></dt><dd><p>copy function from the Python standard library.</p>
 </dd>
 </dl>
 </div>
@@ -1178,7 +1178,7 @@ an array of the same length as the input array.</p></li>
 (i.e., the coefficients of the polynomial in the Lagrange basis).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1203,7 +1203,7 @@ the current instance.</p>
 <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1257,7 +1257,7 @@ where <code class="docutils literal notranslate"><span class="pre">n</span></cod
 exponents and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1269,10 +1269,10 @@ exponents and <code class="docutils literal notranslate"><span class="pre">m</sp
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the points are not of the correct dimension, contains
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the points are not of the correct dimension, contains
     NaN’s or inf’s, do not fit the standard domain, or the values
     per column are not unique.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If the points are not given in the correct type.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If the points are not given in the correct type.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1284,7 +1284,7 @@ exponents and <code class="docutils literal notranslate"><span class="pre">m</sp
 <dd><p>Verify if the generation function and points match.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the generating function generates different points than
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the generating function generates different points than
     then ones that are provided.</p>
 </dd>
 </dl>
@@ -1296,7 +1296,7 @@ exponents and <code class="docutils literal notranslate"><span class="pre">m</sp
 <dd><p>Verify if the Grid max. exponent is consistent with the multi-index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the maximum exponent of the Grid is smaller than the maximum
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the maximum exponent of the Grid is smaller than the maximum
     exponent of the multi-index set of polynomial exponents.</p>
 </dd>
 </dl>
