@@ -12,6 +12,7 @@ from conftest import (
 )
 from numpy.testing import assert_, assert_equal, assert_raises
 
+from minterpy.global_settings import INT_DTYPE
 from minterpy.utils.arrays import expand_dim
 from minterpy.utils.multi_index import (
     find_match_between,
@@ -135,9 +136,14 @@ def test_lex_smaller_or_equal(SpatialDimension, PolyDegree):
     """Test lexicographically comparing two different multi-index elements."""
     # Create a random multi-indices
     if PolyDegree == 0:
-        indices_1 = np.zeros(SpatialDimension, dtype=int)
+        indices_1 = np.zeros(SpatialDimension, dtype=INT_DTYPE)
     else:
-        indices_1 = np.random.randint(0, PolyDegree, SpatialDimension)
+        indices_1 = np.random.randint(
+            low=0,
+            high=PolyDegree,
+            size=SpatialDimension,
+            dtype=INT_DTYPE,
+        )
 
     # Assertion: Equal multi-indices
     assert is_lex_smaller_or_equal(indices_1, indices_1)
@@ -162,7 +168,7 @@ def test_is_lex_sorted(SpatialDimension, PolyDegree, LpDegree):
 
 def test_is_lex_sorted_single():
     """Test if a single entry multi-index set is lexicographically sorted."""
-    index = np.random.randint(1, 5, (1, 10))
+    index = np.random.randint(1, 5, (1, 10), dtype=INT_DTYPE)
 
     # Assertion: Always lexicographical
     assert is_lex_sorted(index)
@@ -171,7 +177,7 @@ def test_is_lex_sorted_single():
 def test_is_lex_sorted_random():
     """Test if a random integer array is lexicographically sorted."""
     # Generate randomly, big enough so there's no chance it will be sorted
-    indices = np.random.randint(1, 5, (5, 12))
+    indices = np.random.randint(1, 5, (5, 12), dtype=INT_DTYPE)
 
     # Assertion - Not lexicographical
     assert not is_lex_sorted(indices)
@@ -179,7 +185,7 @@ def test_is_lex_sorted_random():
 
 def test_is_lex_sorted_duplicates():
     """Test if a multi-index set with duplicate entries is lexicographical."""
-    indices = np.array([[0, 0], [2, 0], [2, 0]])
+    indices = np.array([[0, 0], [2, 0], [2, 0]], dtype=INT_DTYPE)
 
     # Assertion: Not lexicographical
     assert not is_lex_sorted(indices)
