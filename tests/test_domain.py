@@ -2,7 +2,10 @@ import numpy as np
 import pytest
 
 from minterpy import Domain
-from minterpy.utils.exceptions import InvalidDomainBoundsError
+from minterpy.utils.exceptions import (
+    DomainMismatchError,
+    InvalidDomainBoundsError,
+)
 
 INVALID_BOUNDS = [
     {"type": "empty", "bounds": np.array([])},
@@ -444,3 +447,158 @@ class TestContains:
 
         # Assertion
         assert not np.any(my_dom.contains(xx))
+
+
+class TestUnion:
+    """All tests related to the union operation."""
+
+    def test_identical(self, random_bounds_valid):
+        """Test union of identical instances."""
+        my_dom_1 = Domain(random_bounds_valid)
+
+        my_dom_2 = my_dom_1 | my_dom_1
+
+        # Assertions
+        assert my_dom_1 == my_dom_2
+        assert my_dom_1 is not my_dom_2
+
+    def test_equal(self, random_bounds_valid):
+        """Test union of equal instances."""
+        my_dom_1 = Domain(random_bounds_valid)
+        my_dom_2 = Domain(random_bounds_valid)
+
+        my_dom_3 = my_dom_1 | my_dom_2
+        my_dom_4 = my_dom_2 | my_dom_1
+
+        # Assertions
+        assert my_dom_3 == my_dom_4
+        assert my_dom_3 is not my_dom_4
+
+    def test_expansion(self, random_bounds_valid):
+        """Test union of an instance with a higher dimension."""
+        bounds_1 = random_bounds_valid
+        bounds_2 = np.vstack([bounds_1, bounds_1[-1]])
+
+        my_dom_1 = Domain(bounds_1)
+        my_dom_2 = Domain(bounds_2)
+        my_dom_3 = my_dom_1 | my_dom_2
+        my_dom_4 = my_dom_2 | my_dom_1
+
+        # Assertions
+        assert my_dom_2 == my_dom_3
+        assert my_dom_2 == my_dom_4
+
+    def test_chaining(self, random_bounds_valid):
+        """Test union of three instances."""
+        bounds_1 = random_bounds_valid
+        bounds_2 = np.vstack([bounds_1, bounds_1[-1]])
+        bounds_3 = np.vstack([bounds_2, bounds_2[-1]])
+
+        my_dom_1 = Domain(bounds_1)
+        my_dom_2 = Domain(bounds_2)
+        my_dom_3 = Domain(bounds_3)
+
+        # Assertions
+        assert my_dom_3 == my_dom_1 | my_dom_2 | my_dom_3
+        assert my_dom_3 == my_dom_2 | my_dom_3 | my_dom_1
+        assert my_dom_3 == my_dom_3 | my_dom_2 | my_dom_1
+
+    def test_invalid(self, random_bounds_pair):
+        """Test union of instances with mismatching dimensions."""
+        bounds_1, bounds_2 = random_bounds_pair
+        my_dom_1 = Domain(bounds_1)
+        my_dom_2 = Domain(bounds_2)
+
+        with pytest.raises(DomainMismatchError):
+            _ = my_dom_1 | my_dom_2
+
+
+class TestExpandDim:
+    """All tests related to the expansion of the domain."""
+
+    def test_to_target_int_normalized(self, SpatialDimension):
+        """Test expanding the dimension to an integer target dimension."""
+        my_dom_1 = Domain.normalized(SpatialDimension)
+
+        my_dom_2 = my_dom_1.expand_dim(SpatialDimension + 1)
+
+        # Assertions
+        assert my_dom_1 is not my_dom_2
+        assert my_dom_1 != my_dom_2
+        assert my_dom_2 == Domain.normalized(SpatialDimension + 1)
+
+    def test_to_target_int_contraction(self, SpatialDimension):
+        """Test contracting the dimension to an integer target dimension."""
+        my_dom = Domain.normalized(SpatialDimension)
+
+        with pytest.raises(ValueError):
+            _ = my_dom.expand_dim(SpatialDimension - 1)
+
+    def test_to_target_int_unnormalized(self, random_bounds_valid):
+        """Test expanding the dimension to an integer target dimension."""
+        my_dom = Domain(random_bounds_valid)
+
+        with pytest.raises(ValueError):
+            _ = my_dom.expand_dim(my_dom.spatial_dimension + 1)
+
+    def test_to_target_domain_identical(self, random_bounds_valid):
+        """Test expanding the dimension to the same domain."""
+        my_dom = Domain(random_bounds_valid)
+
+        # Assertions
+        assert my_dom.expand_dim(my_dom) is not my_dom
+        assert my_dom.expand_dim(my_dom) == my_dom
+
+    def test_to_target_domain_equal(self, random_bounds_valid):
+        """Test expanding the dimension to a domain with the same bounds."""
+        my_dom_1 = Domain(random_bounds_valid)
+        my_dom_2 = Domain(random_bounds_valid)
+
+        # Assertions
+        assert my_dom_1.expand_dim(my_dom_2) is not my_dom_1
+        assert my_dom_2.expand_dim(my_dom_1) is not my_dom_2
+        assert my_dom_1.expand_dim(my_dom_2) == my_dom_1
+        assert my_dom_2.expand_dim(my_dom_1) == my_dom_2
+
+    def test_to_target_domain_expansion(self, random_bounds_valid):
+        """Test expanding the dimension to a domain with a higher dimension."""
+        bounds_1 = random_bounds_valid
+        bounds_2 = np.vstack([bounds_1, bounds_1[-1]])
+
+        my_dom_1 = Domain(bounds_1)
+        my_dom_2 = Domain(bounds_2)
+
+        # Assertions
+        assert my_dom_1.expand_dim(my_dom_2) is not my_dom_1
+        assert my_dom_1.expand_dim(my_dom_2) is not my_dom_2
+        assert my_dom_1.expand_dim(my_dom_2) == my_dom_2
+
+    def test_to_target_domain_contraction(self, random_bounds_valid):
+        """Test expanding the dimension to a domain with a lower dimension."""
+        bounds_1 = random_bounds_valid
+        bounds_1 = np.vstack([bounds_1, bounds_1[-1]])
+        bounds_2 = random_bounds_valid
+
+
+        my_dom_1 = Domain(bounds_1)
+        my_dom_2 = Domain(bounds_2)
+
+        # Assertions
+        with pytest.raises(ValueError):
+            _ = my_dom_1.expand_dim(my_dom_2)
+
+    def test_to_target_domain_mismatch(self, random_bounds_pair):
+        """Test that an exception is raised for mismatching dimensions."""
+        bounds_1, bounds_2 = random_bounds_pair
+        my_dom_1 = Domain(bounds_1)
+        my_dom_2 = Domain(bounds_2)
+
+        with pytest.raises(DomainMismatchError):
+            _ = my_dom_1.expand_dim(my_dom_2)
+
+    def test_to_target_domain_invalid_type(self, random_bounds_valid):
+        """Test that an exception is raised for invalid target domain."""
+        my_dom = Domain(random_bounds_valid)
+
+        with pytest.raises(TypeError):
+            _ = my_dom.expand_dim([1, 2, 3])

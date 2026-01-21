@@ -15,8 +15,11 @@ affine applied to each dimension separately.
 """
 import numpy as np
 
+from typing import Union
+
 from minterpy.global_settings import FLOAT_DTYPE
 from minterpy.utils.verification import verify_domain_bounds
+from minterpy.utils.exceptions import DomainMismatchError
 
 __all__ = ["Domain"]
 
@@ -293,6 +296,68 @@ class Domain:
                 & np.all(xx <= self.upper_bounds, axis=1)
         )
 
+    def expand_dim(self, target: Union[int, "Domain"]) -> "Domain":
+        """Expand the dimension of the domain.
+
+        Parameters
+        ----------
+        target : Union[int, Domain]
+            The target dimension to expand to. If an integer, it specifies
+            the new dimension. If a Domain instance, it specifies the domain
+            whose dimension to expand to.
+
+        Returns
+        -------
+        Domain
+            A new instance of the :class:`Domain` class with expanded
+            dimension.
+
+        Raises
+        ------
+        ValueError
+            If the target dimension is smaller than the current dimension or
+            an expansion to a target integer is attempted for an unnormalized
+            domain.
+        DomainMismatchError
+            If the target domain does not match the current domain.
+        TypeError
+            If the target is not an instance of Domain or int.
+        """
+        if isinstance(target, int):
+            if target < self.spatial_dimension:
+                raise ValueError(
+                    f"Target dimension {target} cannot be smaller than "
+                    f"the current dimension {self.spatial_dimension}"
+                )
+
+            if not self.is_normalized:
+                raise ValueError(
+                    "Un-normalized domain cannot be expanded due to ambigous "
+                    "bounds for the extra dimension."
+                )
+
+            return self.__class__.normalized(target)
+
+        if isinstance(target, Domain):
+            if not self.partial_matching(target):
+                raise DomainMismatchError(
+                    "Target domain does not match the current domain"
+                )
+
+            if target.spatial_dimension < self.spatial_dimension:
+                raise ValueError(
+                    f"Target dimension {target.spatial_dimension} cannot be "
+                    "smaller than the current dimension "
+                    f"{self.spatial_dimension}"
+                )
+
+            return self.__class__(target.bounds.copy())
+
+        raise TypeError(
+            "Target domain must be an instance of Domain or int, "
+            f"got {type(target)} instead"
+        )
+
 
     # --- Dunder methods
     def __eq__(self, other: "Domain") -> bool:
@@ -313,7 +378,36 @@ class Domain:
             ``True`` if the two instances are equal in value,
             ``False`` otherwise.
         """
-        return (
-            self.spatial_dimension == other.spatial_dimension and
-            np.all(self.bounds == other.bounds)
-        )
+        if self.spatial_dimension != other.spatial_dimension:
+            return False
+
+        return self.partial_matching(other)
+
+
+    def __or__(self, other: "Domain") -> "Domain":
+        """Combine two instances of Domain via the ``|`` operator.
+
+        Two instances of Domain may be combined via the ``|`` operator if they
+        are partially matched.
+
+        Parameters
+        ----------
+        other : Domain
+            An instance of :class:`Domain` that is to be combined with the
+            the current instance.
+
+        Returns
+        -------
+        Domain
+            A new instance of :class:`Domain` that is the result of the
+            combination of the two instances.
+
+        Raises
+        ------
+        DomainMismatchError
+            If the two domains are not partially matched.
+        """
+        if self.spatial_dimension > other.spatial_dimension:
+            return other.expand_dim(self)
+
+        return self.expand_dim(other)
