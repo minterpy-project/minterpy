@@ -10,3 +10,7 @@ class InvalidDomainBoundsError(ValueError):
 class InvalidDerivativeOrderError(ValueError):
     """Raised when order of derivatives specification is invalid."""
     pass
+
+
+class DomainMismatchError(ValueError):
+    """Raised when two instances of Domains do not match."""
