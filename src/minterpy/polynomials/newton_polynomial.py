@@ -557,8 +557,8 @@ def _is_compute_coeffs_poly_sum_via_monomials(
     # If one of the operands is a scalar polynomial
     is_scalar_poly = is_scalar(poly_1) or is_scalar(poly_2)
     # ...or if the grids are compatible
-    is_compatible_grid_1 = poly_1.grid.is_compatible(grid_sum)
-    is_compatible_grid_2 = poly_2.grid.is_compatible(grid_sum)
+    is_compatible_grid_1 = poly_1.grid.has_compatible_gen_points(grid_sum)
+    is_compatible_grid_2 = poly_2.grid.has_compatible_gen_points(grid_sum)
     is_compatible_grids = is_compatible_grid_1 and is_compatible_grid_2
 
     return is_scalar_poly or is_compatible_grids
