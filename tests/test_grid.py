@@ -11,6 +11,7 @@ from minterpy.gen_points import (
 from minterpy.core.domain import Domain
 from minterpy.core.grid import DEFAULT_FUN
 from minterpy.utils.multi_index import get_exponent_matrix
+from minterpy.utils.exceptions import DomainMismatchError
 
 from conftest import create_mi_pair_distinct
 
@@ -1060,6 +1061,20 @@ class TestMultiplication:
         with pytest.raises(AttributeError):
             grd * invalid_value
 
+    def test_invalid_domain(self, multi_index_mnp):
+        """Test taking the product of two instances with different domains."""
+        # Create two different domains
+        dim = multi_index_mnp.spatial_dimension
+        domain_1 = Domain.uniform(dim, 0, 1)
+        domain_2 = Domain.normalized(dim)
+
+        # Create two Grid instances
+        grd_1 = Grid(multi_index_mnp, domain=domain_1)
+        grd_2 = Grid(multi_index_mnp, domain=domain_2)
+
+        # Assertion
+        with pytest.raises(DomainMismatchError):
+            _ = grd_1 * grd_2
 
 class TestUnion:
     """All tests related to taking the union of `Grid` instances."""
@@ -1114,8 +1129,22 @@ class TestUnion:
 
         # Assertion
         with pytest.raises(AttributeError):
-            grd | invalid_value
+            _ = grd | invalid_value
 
+    def test_invalid_domain(self, multi_index_mnp):
+        """Test taking the union of two instances with different domains."""
+        # Create two different domains
+        dim = multi_index_mnp.spatial_dimension
+        domain_1 = Domain.uniform(dim, 0, 1)
+        domain_2 = Domain.normalized(dim)
+
+        # Create two Grid instances
+        grd_1 = Grid(multi_index_mnp, domain=domain_1)
+        grd_2 = Grid(multi_index_mnp, domain=domain_2)
+
+        # Assertion
+        with pytest.raises(DomainMismatchError):
+            _ = grd_1 | grd_2
 
 class TestAddExponents:
     """All tests related to the method to add a set of exponents."""
