@@ -20,10 +20,12 @@ from conftest import (
     POLY_CLASSES,
 )
 from minterpy import (
+    Domain,
     Grid,
     LagrangePolynomial,
     MultiIndexSet,
 )
+from minterpy.utils.exceptions import DomainMismatchError
 
 
 class TestInitialization:
@@ -61,7 +63,7 @@ class TestInitialization:
         assert_call(poly_class_all, multi_index_mnp, grid=grd)
         assert_call(poly_class_all, multi_index_mnp, coeffs, grid=grd)
 
-    def test_with_invalid_grid(
+    def test_with_grid_invalid_smaller(
         self,
         poly_class_all,
         SpatialDimension,
@@ -86,6 +88,38 @@ class TestInitialization:
         with pytest.raises(ValueError):
             poly_class_all(mi, coeffs, grid=grd)
 
+    @pytest.mark.parametrize("invalid_type", ["a", 1, [1, 2, 3]])
+    def test_with_grid_invalid_type(
+        self,
+        poly_class_all,
+        multi_index_mnp,
+        invalid_type,
+    ):
+        """Test initialization with an invalid grid type."""
+        with pytest.raises(TypeError):
+            _ = poly_class_all(multi_index_mnp, grid=invalid_type)
+
+    def test_with_domain_valid(self, poly_class_all, multi_index_mnp):
+        """Test initialization with a domain."""
+        # Create a non-default domain
+        dim = multi_index_mnp.spatial_dimension
+        domain = Domain.uniform(dim, 0, 10)
+        poly = poly_class_all(multi_index_mnp, domain=domain)
+
+        # Assertions
+        assert poly.domain == domain
+
+    def test_with_domain_invalid(self, poly_class_all, multi_index_mnp):
+        """Test initialization with a non-matching domain."""
+        # Create a non-default domain
+        dim = multi_index_mnp.spatial_dimension
+        domain = Domain.uniform(dim, 0, 10)
+
+        # Create a polynomial instance with the default grid
+        grid = Grid(multi_index_mnp)
+        with pytest.raises(DomainMismatchError):
+          _ = poly_class_all(multi_index_mnp, grid=grid, domain=domain)
+
     @pytest.mark.parametrize("spatial_dimension", [0, 1, 5])
     def test_empty_set(self, spatial_dimension, poly_class_all, LpDegree):
         """Test initialization with an empty multi-index set."""
@@ -99,6 +133,18 @@ class TestInitialization:
 
 class TestFrom:
     """All tests related to the different factory methods."""
+    def test_from_degree(self, poly_class_all, multi_index_mnp):
+        """Test creating an instance from the parameters of a complete set.
+        """
+        # Create a polynomial instance
+        m = multi_index_mnp.spatial_dimension
+        n = multi_index_mnp.poly_degree
+        p = multi_index_mnp.lp_degree
+        poly = poly_class_all.from_degree(m, n, p)
+
+        # Assertions
+        assert poly.multi_index == multi_index_mnp
+
     def test_from_grid_uninit(self, poly_class_all, grid_mnp):
         """Test creating an uninitialized polynomial from a Grid instance."""
         # Create a polynomial instance

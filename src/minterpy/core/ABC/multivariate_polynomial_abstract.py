@@ -19,6 +19,7 @@ from copy import copy, deepcopy
 from typing import List, Optional, Tuple, Union
 
 from minterpy.global_settings import ARRAY, SCALAR
+from minterpy.core.domain import Domain
 from minterpy.core.grid import Grid
 from minterpy.core.multi_index import MultiIndexSet
 from minterpy.utils.verification import (
@@ -34,6 +35,7 @@ from minterpy.utils.verification import (
     verify_query_points,
 )
 from minterpy.utils.multi_index import find_match_between
+from minterpy.utils.exceptions import DomainMismatchError
 
 __all__ = ["MultivariatePolynomialABC", "MultivariatePolynomialSingleABC"]
 
@@ -208,25 +210,36 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     Attributes
     ----------
     multi_index : MultiIndexSet
-        The multi-indices of the multivariate polynomial.
+        The multi-index set of the multivariate polynomial.
+    coeffs : np.ndarray, optional
+        Coefficients of the polynomial. If ``None``, the polynomial is
+        uninitialized. Either one-dimensional array of length equal to
+        the number of monomials, or two-dimensional array of shape
+        ``(num_monomials, num_polynomials)`` for multiple polynomials
+        sharing the same multi-index set.
     internal_domain : array_like
-        The domain the polynomial is defined on (basically the domain of the unisolvent nodes).
+        **Deprecated**. The domain the polynomial is defined on
+        (basically the domain of the unisolvent nodes).
         Either one-dimensional domain (min,max), a stack of domains for each
         domain with shape (spatial_dimension,2).
     user_domain : array_like
-        The domain where the polynomial can be evaluated. This will be mapped onto the ``internal_domain``.
+        **Deprecated**. The domain where the polynomial can be evaluated.
+        This will be mapped onto the ``internal_domain``.
         Either one-dimensional domain ``min,max)`` a stack of domains for each
         domain with shape ``(spatial_dimension,2)``.
+    grid : Grid, optional
+        The underlying grid on which the (interpolating) polynomial is defined.
+        If not given, the default Grid instance will be constructed.
+    domain : Domain, optional
+        The domain of the underlying grid. If not given, the domain will be
+        derived from the default Grid instance.
 
     Notes
     -----
-    the grid with the corresponding indices defines the "basis" or polynomial space a polynomial is part of.
-    e.g. also the constraints for a Lagrange polynomial, i.e. on which points they must vanish.
-    ATTENTION: the grid might be defined on other indices than multi_index! e.g. useful for defining Lagrange coefficients with "extra constraints"
-    but all indices from multi_index must be contained in the grid!
-    this corresponds to polynomials with just some of the Lagrange polynomials of the basis being "active"
+    - The multi-index set associated with ``grid`` may be different than
+      ``multi_index``. All indices from ``multi_index`` must be contained
+      in ``grid.multi_index``.
     """
-
     # __doc__ += __doc_attrs__
 
     _coeffs: Optional[ARRAY] = None
@@ -282,19 +295,19 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # no docstring here, since it is given in the concrete implementation
         pass
 
-    @staticmethod
-    def _gen_grid_default(multi_index):
-        """Return the default :class:`Grid` for a given :class:`MultiIndexSet` instance.
-
-        For the default values of the Grid class, see :class:`minterpy.Grid`.
-
-
-        :param multi_index: An instance of :class:`MultiIndexSet` for which the default :class:`Grid` shall be build
-        :type multi_index: MultiIndexSet
-        :return: An instance of :class:`Grid` with the default optional parameters.
-        :rtype: Grid
-        """
-        return Grid(multi_index)
+    # @staticmethod
+    # def _gen_grid_default(multi_index):
+    #     """Return the default :class:`Grid` for a given :class:`MultiIndexSet` instance.
+    #
+    #     For the default values of the Grid class, see :class:`minterpy.Grid`.
+    #
+    #
+    #     :param multi_index: An instance of :class:`MultiIndexSet` for which the default :class:`Grid` shall be build
+    #     :type multi_index: MultiIndexSet
+    #     :return: An instance of :class:`Grid` with the default optional parameters.
+    #     :rtype: Grid
+    #     """
+    #     return Grid(multi_index)
 
     @staticmethod
     @abc.abstractmethod
@@ -432,8 +445,9 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         internal_domain: Optional[ARRAY] = None,
         user_domain: Optional[ARRAY] = None,
         grid: Optional[Grid] = None,
+        domain: Optional[Domain] = None,
     ):
-
+        # Verify and assign multi_index
         if multi_index.__class__ is MultiIndexSet:
             if len(multi_index) == 0:
                 raise ValueError("MultiIndexSet must not be empty!")
@@ -461,18 +475,10 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             user_domain, self.multi_index.spatial_dimension
         )
 
-        # TODO make multi_index input optional? otherwise use the indices from grid
-        # TODO class method from_grid
-        if grid is None:
-            grid = self._gen_grid_default(self.multi_index)
-        if type(grid) is not Grid:
-            raise ValueError(f"unexpected type {type(grid)} of the input grid")
+        # Verify and assign grid
+        self._grid: Grid = _verify_grid(self.multi_index, grid, domain)
 
-        if not grid.multi_index.is_superset(self.multi_index):
-            raise ValueError(
-                "the multi indices of a polynomial must be a subset of the indices of the grid in use"
-            )
-        self.grid: Grid = grid
+        # # TODO make multi_index input optional? otherwise use the indices from grid
         # weather or not the indices are independent from the grid ("basis")
         # TODO this could be enconded by .active_monomials being None
         self.indices_are_separate: bool = self.grid.multi_index != self.multi_index
@@ -489,37 +495,62 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         cls,
         spatial_dimension: int,
         poly_degree: int,
-        lp_degree: int,
+        lp_degree: float,
         coeffs: Optional[ARRAY] = None,
         internal_domain: ARRAY = None,
         user_domain: ARRAY = None,
+        grid: Optional[Grid] = None,
+        domain: Optional[Domain] = None,
     ):
-        """Initialise Polynomial from given coefficients and the default construction for given polynomial degree, spatial dimension and :math:`l_p` degree.
+        r"""Create a polynomial from polynomial degree specifications.
 
-        :param spatial_dimension: Dimension of the domain space of the polynomial.
-        :type spatial_dimension: int
+        This factory method constructs a polynomial with a complete multi-index
+        set :math:`\mathcal{M}_{m, n, p}` defined by the spatial dimension
+        :math:`m`, polynomial degree :math:`n`,
+        and :math:`l_p` degree :math:`p`.
 
-        :param poly_degree: The degree of the polynomial, i.e. the (integer) supremum of the :math:`l_p` norms of the monomials.
-        :type poly_degree: int
+        Parameters
+        ----------
+        spatial_dimension : int
+            Spatial dimension of the multi-index set (:math:`m`); the value of
+            ``spatial_dimension`` must be a positive integer (:math:`m > 0`).
+        poly_degree : int
+            Polynomial degree of the multi-index set (:math:`n`); the value of
+            ``poly_degree`` must be a non-negative integer (:math:`n \geq 0`).
+        lp_degree : float
+            :math:`p` of the :math:`l_p`-norm (i.e., the :math:`l_p`-degree)
+            that is used to define the multi-index set. The value of
+            ``lp_degree`` must be a positive float (:math:`p > 0`).
+        coeffs : np.ndarray, optional
+            Coefficients of the polynomial. If ``None``, the polynomial is
+            uninitialized. Either one-dimensional array of length equal to
+            the number of monomials, or two-dimensional array of shape
+            ``(num_monomials, num_polynomials)`` for multiple polynomials
+            sharing the same multi-index set.
+        internal_domain : np.ndarray, optional
+            **Deprecated**. Use ``domain`` parameter instead.
+        user_domain : np.ndarray, optional
+            **Deprecated**. Use ``domain`` parameter instead.
+        grid : Grid, optional
+            The underlying grid on which the polynomial is defined.
+            If not given, a default Grid instance will be constructed.
+        domain : Domain, optional
+            The domain of the underlying grid. If not given, the domain will be
+            derived from the Grid instance (either provided or constructed).
 
-        :param lp_degree: The :math:`l_p` degree used to determine the polynomial degree.
-        :type lp_degree: int
-
-        :param coeffs: coefficients of the polynomial. These shall be 1D for a single polynomial, where the length of the array is the number of monomials given by the ``multi_index``. For a set of similar polynomials (with the same number of monomials) the array can also be 2D, where the first axis refers to the monomials and the second axis refers to the polynomials.
-        :type coeffs: np.ndarray
-
-        :param internal_domain: the internal domain (factory) where the polynomials are defined on, e.g. :math:`[-1,1]^d` where :math:`d` is the dimension of the domain space. If a ``callable`` is passed, it shall get the dimension of the domain space and returns the ``internal_domain`` as an :class:`np.ndarray`.
-        :type internal_domain: np.ndarray or callable
-        :param user_domain: the domain window (factory), from which the arguments of a polynomial are transformed to the internal domain. If a ``callable`` is passed, it shall get the dimension of the domain space and returns the ``user_domain`` as an :class:`np.ndarray`.
-        :type user_domain: np.ndarray or callable
-
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            A new polynomial instance with the specified parameters of the
+            complete multi-index set.
         """
-        return cls(
-            MultiIndexSet.from_degree(spatial_dimension, poly_degree, lp_degree),
-            coeffs,
-            internal_domain,
-            user_domain,
+        mi = MultiIndexSet.from_degree(
+            spatial_dimension,
+            poly_degree,
+            lp_degree,
         )
+
+        return cls(mi, coeffs, internal_domain, user_domain, grid, domain)
 
     @classmethod
     def from_poly(
@@ -527,24 +558,51 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         polynomial: "MultivariatePolynomialSingleABC",
         new_coeffs: Optional[ARRAY] = None,
     ) -> "MultivariatePolynomialSingleABC":
-        """constructs a new polynomial instance based on the properties of an input polynomial
+        """Create a new polynomial instance based on an existing polynomial.
 
-        useful for copying polynomials of other types
+        This factory method constructs a new polynomial by copying
+        the structure (multi-index set, grid) from an existing polynomial,
+        optionally with new coefficients.
+        Useful for converting between polynomial types or creating polynomials
+        with the same structure but different coefficients.
 
+        Parameters
+        ----------
+        polynomial : MultivariatePolynomialSingleABC
+            Input polynomial instance defining the properties to be reused
+            (multi-index set and grid).
+        new_coeffs : np.ndarray, optional
+            The coefficients the new polynomial should have. If ``None``,
+            uses a copy of ``polynomial.coeffs``.
 
-        :param polynomial: input polynomial instance defining the properties to be reused
-        :param new_coeffs: the coefficients the new polynomials should have. using `polynomial.coeffs` if `None`
-        :return: new polynomial instance with equal properties
+        Returns
+        -------
+        MultivariatePolynomialSingleABC
+            A new polynomial instance with the same structure as the input
+            polynomial.
 
         Notes
         -----
-        The coefficients can also be assigned later.
+        - The coefficients can also be assigned later if the polynomial is
+          created uninitialized.
+
+        TODO
+        ----
+        - Copying the coefficients of the given polynomial if ``new_coeffs``
+          is ``None`` is not safe because the concrete class that calls this
+          method may be different from the class of the given polynomial.
         """
         p = polynomial
         if new_coeffs is None:  # use the same coefficients
-            new_coeffs = p.coeffs
+            new_coeffs = p.coeffs.copy()
 
-        return cls(p.multi_index, new_coeffs, p.internal_domain, p.user_domain, p.grid)
+        return cls(
+            copy(p.multi_index),
+            new_coeffs,
+            p.internal_domain,
+            p.user_domain,
+            copy(p.grid),
+        )
 
     @classmethod
     def from_grid(
@@ -633,6 +691,31 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         self._coeffs = verify_poly_coeffs(value, expected_num_monomials)
 
     @property
+    def grid(self) -> Grid:
+        """The underlying grid of the polynomial(s).
+
+        Returns
+        -------
+        Grid
+            The underlying grid of the polynomial(s). Interpolating polynomials
+            live on a Grid.
+        """
+        return self._grid
+
+    @property
+    def domain(self) -> Domain:
+        """The domain associated with the Grid of the polynomial(s).
+
+        The domain represents the rectangular bounds of the Grid.
+
+        Returns
+        -------
+        Domain
+            The domain of the interpolation grid.
+        """
+        return self._grid.domain
+
+    @property
     def num_active_monomials(self) -> int:
         """The number of active monomials of the polynomial(s).
 
@@ -656,7 +739,8 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         - both are of the same concrete class, *and*
         - the underlying multi-index sets are equal, *and*
-        - the underlying grid instances are equal, *and*
+        - the underlying grid instances are equal (including the underlying
+          domains and multi-index sets), *and*
         - the coefficients of the polynomials are equal.
 
         Parameters
@@ -672,7 +756,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             ``False`` otherwise.
         """
         # The instances are of different concrete classes
-        if not isinstance(self, type(other)):
+        if self.__class__ != other.__class__:
             return False
 
         # The underlying multi-index sets are equal
@@ -1603,6 +1687,67 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         poly_1, poly_2 = self._match_dims(other)
 
         return poly_1, poly_2
+
+
+def _verify_grid(
+    multi_index: MultiIndexSet,
+    grid: Optional[Grid],
+    domain: Optional[Domain]
+) -> Grid:
+    """Verify the given Grid instance.
+
+    Parameters
+    ----------
+    multi_index : MultiIndexSet
+        The multi-index set of the polynomial.
+    grid : Grid, optional
+        Grid to be validated; If ``None``, the default Grid instance will be
+        constructed.
+    domain : Domain, optional
+        Domain to create the grid or validation. If ``grid`` is ``None``,
+        this domain is used to create the grid. If both ``grid``
+        and ``domain`` are provided, they must match.
+
+    Returns
+    -------
+    Grid
+        Validated grid instance.
+
+    Raises
+    ------
+    TypeError
+        If ``grid`` is not a Grid instance.
+    DomainMismatchError
+        If both ``grid`` and ``domain`` are provided, but they don't match.
+    ValueError
+        If ``multi_index`` is not a subset of ``grid.multi_index``.
+    """
+    if grid is not None:
+
+        if not isinstance(grid, Grid):
+            raise TypeError(f"grid must be a Grid instance, got {type(grid)}")
+
+        if domain is not None and domain != grid.domain:
+            raise DomainMismatchError(
+                f"grid domain {grid.domain} does not match "
+                f"the given domain {domain}"
+            )
+
+        # A grid multi-index must be able to support the given polynomial
+        if not grid.multi_index.is_superset(multi_index):
+            raise ValueError(
+                "The given multi-index set must be a subset of "
+                "the indices of the given grid"
+            )
+    else:
+
+        if domain is None:
+            # Create a default grid instance
+            grid = Grid(multi_index)
+        else:
+            grid = Grid(multi_index, domain=domain)
+
+    return grid
 
 
 def _scalar_mul(
