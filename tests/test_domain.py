@@ -170,6 +170,10 @@ class TestProperties:
         assert my_dom_1.is_normalized
         assert my_dom_2.is_normalized
         assert my_dom_3.is_normalized
+        # Normalized domain is always uniform.
+        assert my_dom_1.is_uniform
+        assert my_dom_2.is_uniform
+        assert my_dom_3.is_uniform
 
     def test_not_normalized(self, random_bounds_valid):
         """"Test the normalized property for non-normalized domain."""
@@ -178,6 +182,28 @@ class TestProperties:
         # Assertion
         assert not my_dom.is_normalized
 
+    def test_is_uniform(self, SpatialDimension):
+        """Test the uniform property for uniform domain."""
+        # Create upper and lower bounds for uniform domain
+        upper_bound = np.random.uniform(0, 5)
+        lower_bound = -1 * upper_bound
+
+        # Create domain
+        domain = Domain.uniform(SpatialDimension, lower_bound, upper_bound)
+
+        # Assertions
+        assert domain.is_uniform
+        assert not domain.is_normalized  # In general not normalized.
+
+    def test_is_not_uniform(self, random_bounds_valid):
+        """Test the uniform property for non-uniform domain."""
+        domain = Domain(random_bounds_valid)
+
+        # Assertion
+        if domain.spatial_dimension == 1:
+            pytest.skip("1D domain is always uniform.")
+
+        assert not domain.is_uniform
 
 class TestMapValues:
     """All tests related to the mapping of values."""
@@ -394,6 +420,15 @@ class TestEquality:
         assert my_dom_1 != my_dom_2
         assert my_dom_2 != my_dom_1
 
+    @pytest.mark.parametrize("invalid_type", [None, 1, "string"])
+    def test_not_equal_type(self, random_bounds_valid, invalid_type):
+        """Test equality check with invalid types."""
+
+        dom = Domain(random_bounds_valid)
+
+        # Assertion
+        assert dom != invalid_type
+
 
 class TestPartialMatching:
     """All tests related to partial matching."""
@@ -453,26 +488,28 @@ class TestUnion:
     """All tests related to the union operation."""
 
     def test_identical(self, random_bounds_valid):
-        """Test union of identical instances."""
-        my_dom_1 = Domain(random_bounds_valid)
+        """Test union of identical instances (edge case)."""
+        dom_1 = Domain(random_bounds_valid)
 
-        my_dom_2 = my_dom_1 | my_dom_1
+        dom_2 = dom_1 | dom_1
 
         # Assertions
-        assert my_dom_1 == my_dom_2
-        assert my_dom_1 is not my_dom_2
+        assert dom_1 == dom_2
+        assert dom_1 is dom_2  # Union of identical instances is itself
 
     def test_equal(self, random_bounds_valid):
         """Test union of equal instances."""
-        my_dom_1 = Domain(random_bounds_valid)
-        my_dom_2 = Domain(random_bounds_valid)
+        dom_1 = Domain(random_bounds_valid)
+        dom_2 = Domain(random_bounds_valid)
 
-        my_dom_3 = my_dom_1 | my_dom_2
-        my_dom_4 = my_dom_2 | my_dom_1
+        dom_3 = dom_1 | dom_2
+        dom_4 = dom_2 | dom_1
 
         # Assertions
-        assert my_dom_3 == my_dom_4
-        assert my_dom_3 is not my_dom_4
+        assert dom_1 == dom_2
+        assert dom_2 == dom_3
+        assert dom_3 == dom_4
+        assert dom_3 is not dom_4
 
     def test_expansion(self, random_bounds_valid):
         """Test union of an instance with a higher dimension."""
@@ -516,6 +553,15 @@ class TestUnion:
 class TestExpandDim:
     """All tests related to the expansion of the domain."""
 
+    def test_to_target_int_same(self, SpatialDimension):
+        """Test expanding the dimension to the same target dimension."""
+        dom_1 = Domain.normalized(SpatialDimension)
+        dom_2 = dom_1.expand_dim(SpatialDimension)
+
+        # Assertion
+        assert dom_1 == dom_2
+        assert dom_1 is not dom_2
+
     def test_to_target_int_normalized(self, SpatialDimension):
         """Test expanding the dimension to an integer target dimension."""
         my_dom_1 = Domain.normalized(SpatialDimension)
@@ -534,20 +580,23 @@ class TestExpandDim:
         with pytest.raises(ValueError):
             _ = my_dom.expand_dim(SpatialDimension - 1)
 
-    def test_to_target_int_unnormalized(self, random_bounds_valid):
+    def test_to_target_int_nonuniform(self, random_bounds_valid):
         """Test expanding the dimension to an integer target dimension."""
         my_dom = Domain(random_bounds_valid)
+
+        if my_dom.spatial_dimension == 1:
+            pytest.skip("1D domain can always be expanded.")
 
         with pytest.raises(ValueError):
             _ = my_dom.expand_dim(my_dom.spatial_dimension + 1)
 
     def test_to_target_domain_identical(self, random_bounds_valid):
         """Test expanding the dimension to the same domain."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Assertions
-        assert my_dom.expand_dim(my_dom) is not my_dom
-        assert my_dom.expand_dim(my_dom) == my_dom
+        assert dom.expand_dim(dom) is dom  # Expanding to itself is identity
+        assert dom.expand_dim(dom) == dom
 
     def test_to_target_domain_equal(self, random_bounds_valid):
         """Test expanding the dimension to a domain with the same bounds."""

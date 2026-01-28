@@ -15,13 +15,17 @@ affine applied to each dimension separately.
 """
 import numpy as np
 
-from typing import Union
+from typing import Optional, Union
 
 from minterpy.global_settings import FLOAT_DTYPE
 from minterpy.utils.verification import verify_domain_bounds
 from minterpy.utils.exceptions import DomainMismatchError
 
 __all__ = ["Domain"]
+
+
+DEFAULT_ATOL = 1e-12
+DEFAULT_RTOL = 1e-9
 
 
 class Domain:
@@ -44,7 +48,7 @@ class Domain:
     def __init__(self, bounds: np.ndarray):
 
         # Verify and assign the bounds
-        self.bounds = verify_domain_bounds(bounds)
+        self._bounds = verify_domain_bounds(bounds)
 
     # --- Factory methods
     @classmethod
@@ -105,6 +109,20 @@ class Domain:
 
     # --- Properties
     @property
+    def bounds(self) -> np.ndarray:
+        """The domain bounds.
+
+        Return
+        ------
+        np.ndarray
+            The domain bounds as a 2D array with shape ``(m, 2)``,
+            where ``m`` is the spatial dimension.
+            The first column contains the lower bounds and the second column
+            the upper bounds across dimensions.
+        """
+        return self._bounds
+
+    @property
     def spatial_dimension(self):
         """Dimension of the domain space.
         
@@ -153,17 +171,67 @@ class Domain:
 
     @property
     def is_normalized(self) -> bool:
-        """Check whether the domain is normalized.
+        """Check whether the domain is normalized in :math:`[-1, 1]^m`.
 
         Returns
         -------
         bool
             ``True`` if the domain is normalized, ``False`` otherwise.
+
+        Notes
+        -----
+        - This check uses numerical tolerances (``DEFAULT_RTOL`` and
+          ``DEFAULT_ATOL``) for robustness against floating-point errors.
         """
-        return (
-            np.all(self.lower_bounds == -1.0) and
-            np.all(self.upper_bounds == 1.0)
-        )
+        # Get the default tolerances
+        rtol = DEFAULT_RTOL
+        atol = DEFAULT_ATOL
+
+        # Compute peak-to-peak width of the domain
+        lb = bool(np.isclose(self.lower_bounds, -1.0, rtol, atol).all())
+        ub = bool(np.isclose(self.upper_bounds, 1.0, rtol, atol).all())
+
+        return lb and ub
+
+    @property
+    def is_uniform(self) -> bool:
+        """Check whether the domain is uniform.
+
+        A uniform domain has the same lower and upper bounds in all dimensions,
+        i.e., the domain has the form :math:`[a, b]^m` for some :math:`a`
+        and :math:`b`.
+
+        Returns
+        -------
+        bool
+            ``True`` if the domain is uniform, ``False`` otherwise.
+
+        Notes
+        -----
+        - The dimension of a uniform domain can be expanded by extrapolating
+          the bounds of the extra dimension from the bounds of the other
+          dimensions.
+        - A domain of dimension 1 is always uniform by definition.
+        - This check uses numerical tolerances (``DEFAULT_RTOL`` and
+          ``DEFAULT_ATOL``) for robustness against floating-point errors.
+        """
+        # Get the default tolerances
+        rtol = DEFAULT_RTOL
+        atol = DEFAULT_ATOL
+
+        # Lower bound condition
+        lb = self.lower_bounds[0]
+        lb_c = np.allclose(self.lower_bounds, lb, rtol=rtol, atol=atol)
+
+        # Upper bound condition
+        ub = self.upper_bounds[0]
+        ub_c = np.allclose(self.upper_bounds, ub, rtol=rtol, atol=atol)
+
+        # Compute peak-to-peak width of the domain
+        ptp = np.ptp(self.domain_widths)
+        ptp_c = np.allclose(ptp, 0.0, rtol=rtol, atol=atol)
+
+        return bool(lb_c and ub_c and ptp_c)
 
     # --- Instance methods
     def map_to_normalized(
@@ -258,14 +326,31 @@ class Domain:
 
         return float(np.prod((2.0 / self.domain_widths[idx])**(order[idx])))
 
-    def partial_matching(self, other: "Domain") -> bool:
+    def partial_matching(
+        self,
+        other: "Domain",
+        rtol: Optional[float] = None,
+        atol: Optional[float] = None,
+    ) -> bool:
         """Compare two instances of domain up to the common dimension.
+
+        This method performs approximate equality checking between two domains
+        using numerical tolerances, comparing only up to the minimum spatial
+        dimension of the two domains.
+        This is useful for checking compatibility of domains of different
+        dimensions before, e.g., merging.
 
         Parameters
         ----------
         other : Domain
             An instance of :class:`Domain` that is to be compared with
             the current instance.
+        rtol : float, optional
+            The relative tolerance parameter. If not specified,
+            the module-level default ``DEFAULT_RTOL`` is used.
+        atol : float, optional
+            The absolute tolerance parameter. If not specified,
+            the module-level default ``DEFAULT_ATOL`` is used.
 
         Returns
         -------
@@ -273,9 +358,18 @@ class Domain:
             ``True`` if the two instances matches up to the common dimension,
             ``False`` otherwise.
         """
+        # Get the default tolerances
+        rtol = DEFAULT_RTOL if rtol is None else rtol
+        atol = DEFAULT_ATOL if atol is None else atol
+
         dim = min(self.spatial_dimension, other.spatial_dimension)
 
-        return np.all(self.bounds[:dim, :] == other.bounds[:dim, :])
+        return np.allclose(
+            self.bounds[:dim, :],
+            other.bounds[:dim, :],
+            rtol=rtol,
+            atol=atol,
+        )
 
     def contains(self, xx: np.ndarray) -> np.ndarray:
         """Check whether the input points are contained in the domain.
@@ -322,27 +416,41 @@ class Domain:
             If the target domain does not match the current domain.
         TypeError
             If the target is not an instance of Domain or int.
+
+        Notes
+        -----
+        - If the target domain is the current instance, the current instance
+          is returned.
         """
         if isinstance(target, int):
+
             if target < self.spatial_dimension:
                 raise ValueError(
                     f"Target dimension {target} cannot be smaller than "
                     f"the current dimension {self.spatial_dimension}"
                 )
 
-            if not self.is_normalized:
+            if not self.is_uniform:
                 raise ValueError(
-                    "Un-normalized domain cannot be expanded due to ambigous "
+                    "Non-uniform domain cannot be expanded due to ambiguous "
                     "bounds for the extra dimension."
                 )
 
-            return self.__class__.normalized(target)
+            lb = self.lower_bounds[0]
+            ub = self.upper_bounds[0]
+
+            return self.__class__.uniform(target, lb, ub)
 
         if isinstance(target, Domain):
+
             if not self.partial_matching(target):
                 raise DomainMismatchError(
                     "Target domain does not match the current domain"
                 )
+
+            # If there's no need to expand, return the current instance
+            if self is target:
+                return self
 
             if target.spatial_dimension < self.spatial_dimension:
                 raise ValueError(
@@ -363,8 +471,10 @@ class Domain:
     def __eq__(self, other: "Domain") -> bool:
         """Compare two instances of Domain for exact equality in value.
 
-        Two instances of :class:`Domain` class is equal in value if
-        and only if both the underlying bounds are equal.
+        Two instances of :class:`Domain` class are considered equal in value if
+        and only if their underlying bounds arrays are exactly equal.
+        In other words, this is a strict comparison without any numerical
+        tolerance.
 
         Parameters
         ----------
@@ -378,11 +488,10 @@ class Domain:
             ``True`` if the two instances are equal in value,
             ``False`` otherwise.
         """
-        if self.spatial_dimension != other.spatial_dimension:
+        if not isinstance(other, Domain):
             return False
 
-        return self.partial_matching(other)
-
+        return np.array_equal(self.bounds, other.bounds)
 
     def __or__(self, other: "Domain") -> "Domain":
         """Combine two instances of Domain via the ``|`` operator.
@@ -393,7 +502,7 @@ class Domain:
         Parameters
         ----------
         other : Domain
-            An instance of :class:`Domain` that is to be combined with the
+            An instance of :class:`Domain` that is to be combined with
             the current instance.
 
         Returns
