@@ -247,8 +247,11 @@ def compute_coeffs_poly_sum_via_monomials(
     coeffs_1, coeffs_2 = shape_coeffs(poly_1, poly_2)
 
     # Get the exponents
-    exponents_1 = poly_1.multi_index.exponents
-    exponents_2 = poly_2.multi_index.exponents
+    mi_1 = _match_mi_dim(poly_1.multi_index, multi_index_sum)
+    mi_2 = _match_mi_dim(poly_2.multi_index, multi_index_sum)
+
+    exponents_1 = mi_1.exponents
+    exponents_2 = mi_2.exponents
     exponents_sum = multi_index_sum.exponents
 
     # Create the output array
@@ -325,8 +328,11 @@ def compute_coeffs_poly_prod_via_monomials(
     # Compute the coefficients (use pre-allocated placeholder as output)
     # NOTE: indices may or may not be separate,
     # use the multi-index instead of the one attached to grid
-    exponents_1 = poly_1.multi_index.exponents
-    exponents_2 = poly_2.multi_index.exponents
+    mi_1 = _match_mi_dim(poly_1.multi_index, multi_index_prod)
+    mi_2 = _match_mi_dim(poly_2.multi_index, multi_index_prod)
+
+    exponents_1 = mi_1.exponents
+    exponents_2 = mi_2.exponents
     exponents_prod = multi_index_prod.exponents
     compute_coeffs_poly_prod(
         exponents_1,
@@ -390,3 +396,11 @@ def _create_scalar_poly(
         user_domain=poly.user_domain,
         grid=grd,
     )
+
+
+def _match_mi_dim(mi_1: MultiIndexSet, mi_2: MultiIndexSet) -> MultiIndexSet:
+    """Match the spatial dimension of a multi-index set to another."""
+    if mi_1.spatial_dimension != mi_2.spatial_dimension:
+        mi_1 = mi_1.expand_dim(mi_2.spatial_dimension)
+
+    return mi_1

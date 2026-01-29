@@ -449,10 +449,9 @@ def _compute_data_poly_sum(
     coeffs_sum = _compute_coeffs_poly_sum(poly_1, poly_2, grd_sum, mi_sum)
 
     # --- Process the domains
-    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
-    # matching domains, it does not matter which one to use
-    internal_domain_sum = poly_1.internal_domain
-    user_domain_sum = poly_1.user_domain
+    # Deprecate: the properties will be removed in the future
+    internal_domain_sum = grd_sum.domain.bounds.T
+    user_domain_sum = grd_sum.domain.bounds.T
 
     return PolyData(
         multi_index=mi_sum,
@@ -594,8 +593,10 @@ def _compute_coeffs_poly_sum_via_lagrange(
       matching domains. These conditions have been made sure upstream.
     """
     # Compute the values of the operands at the unisolvent nodes
-    lag_coeffs_1 = grid_sum(poly_1)
-    lag_coeffs_2 = grid_sum(poly_2)
+    # NOTE: The grid may be of higher dimension than one of the polynomials;
+    #       evaluation must ignore the extra dimensions
+    lag_coeffs_1 = grid_sum(poly_1, truncate_cols=True)
+    lag_coeffs_2 = grid_sum(poly_2, truncate_cols=True)
     lag_coeffs_sum = lag_coeffs_1 + lag_coeffs_2
 
     # Transform the Lagrange coefficients into Newton coefficients
@@ -649,10 +650,9 @@ def _compute_data_poly_prod(
     coeffs_prod = _compute_coeffs_poly_prod(poly_1, poly_2, grd_prod, mi_prod)
 
     # --- Process the domains
-    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
-    # matching domains, it does not matter which one to use
-    internal_domain_prod = poly_1.internal_domain
-    user_domain_prod = poly_1.user_domain
+    # Deprecate: the properties will be removed in the future
+    internal_domain_prod = grd_prod.domain.bounds.T
+    user_domain_prod = grd_prod.domain.bounds.T
 
     return PolyData(
         multi_index=mi_prod,
@@ -794,8 +794,10 @@ def _compute_coeffs_poly_prod_via_lagrange(
       matching domains. These conditions have been made sure upstream.
     """
     # Compute the values of the operands at the unisolvent nodes
-    lag_coeffs_1 = grid_prod(poly_1)
-    lag_coeffs_2 = grid_prod(poly_2)
+    # NOTE: The grid may be of higher dimension than one of the polynomials;
+    #       evaluation must ignore the extra dimensions
+    lag_coeffs_1 = grid_prod(poly_1, truncate_cols=True)
+    lag_coeffs_2 = grid_prod(poly_2, truncate_cols=True)
     lag_coeffs_prod = lag_coeffs_1 * lag_coeffs_2
 
     # Transform the Lagrange coefficients into Newton coefficients
