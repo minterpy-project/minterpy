@@ -284,10 +284,9 @@ def _compute_data_poly_sum(
     coeffs_sum = compute_coeffs_poly_sum_via_monomials(poly_1, poly_2, mi_sum)
 
     # --- Process the domains
-    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
-    # matching domains, it does not matter which one to use
-    internal_domain_sum = poly_1.internal_domain
-    user_domain_sum = poly_1.user_domain
+    # Deprecate: the properties will be removed in the future
+    internal_domain_sum = grd_sum.domain.bounds.T
+    user_domain_sum = grd_sum.domain.bounds.T
 
     return PolyData(
         multi_index=mi_sum,
@@ -341,10 +340,9 @@ def _compute_data_poly_prod(
     )
 
     # --- Process the domains
-    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
-    # matching domains, it does not matter which one to use
-    internal_domain_prod = poly_1.internal_domain
-    user_domain_prod = poly_1.user_domain
+    # Deprecate: the properties will be removed in the future
+    internal_domain_prod = grd_prod.domain.bounds.T
+    user_domain_prod = grd_prod.domain.bounds.T
 
     return PolyData(
         multi_index=mi_prod,
