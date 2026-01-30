@@ -734,6 +734,18 @@ def _is_compute_coeffs_poly_prod_via_monomials(
 ) -> bool:
     """Check if the polynomials may be multiplied via the monomials.
 
+    The multiplication can use the monomial approach when the resulting Newton
+    polynomial lives on the same grid (with the same generating points) as one
+    of the operands. This allows reusing the existing Newton basis without
+    recomputation, which is crucial since changing the degree typically alters
+    the generating points for unnested grids (e.g., Chebyshev-Lobatto).
+
+    Because Newton polynomials are not closed under multiplication (i.e., the
+    product of two Newton basis polynomials is not itself a Newton basis
+    polynomial of higher degree), at least one operand must be a scalar
+    polynomial to ensure that the product can be represented
+    in the same Newton basis as the non-scalar operand.
+
     Parameters
     ----------
     poly_1 : NewtonPolynomial
@@ -750,18 +762,67 @@ def _is_compute_coeffs_poly_prod_via_monomials(
         one of them has a scalar monomial and both of the underlying grids are
         compatible with the given product grid; ``False`` otherwise.
     """
-    # Check if one of the operands is a scalar polynomial
+    # Check if either operand is a strictly scalar polynomial
     is_scalar_poly = is_scalar(poly_1) or is_scalar(poly_2)
-    # Check if one of the monomials of the operand is a scalar
-    is_scalar_multi_index_1 = is_scalar(poly_1.multi_index)
-    is_scalar_multi_index_2 = is_scalar(poly_2.multi_index)
-    is_scalar_multi_index = is_scalar_multi_index_1 or is_scalar_multi_index_2
-    # Check if the grids are compatible with the given grid
-    is_compatible_grid_1 = poly_1.grid.is_compatible(grid_prod)
-    is_compatible_grid_2 = poly_2.grid.is_compatible(grid_prod)
-    is_compatible_grids = is_compatible_grid_1 and is_compatible_grid_2
 
-    return is_scalar_poly or (is_scalar_multi_index and is_compatible_grids)
+    # Check grid compatibility based on scalar multi_index
+    poly_1_scalar_idx = is_scalar(poly_1.multi_index)
+    poly_2_scalar_idx = is_scalar(poly_2.multi_index)
+
+    if poly_1_scalar_idx and poly_2_scalar_idx:
+        # Both have scalar multi_index: always compatible
+        grid_compatible = True
+    elif poly_1_scalar_idx:
+        # Only poly_1 has scalar multi_index: check poly_2's grid
+        grid_compatible = poly_2.grid.has_compatible_gen_points(grid_prod)
+    elif poly_2_scalar_idx:
+        # Only poly_2 has scalar multi_index: check poly_1's grid
+        grid_compatible = poly_1.grid.has_compatible_gen_points(grid_prod)
+    else:
+        # Neither has scalar multi_index: not compatible
+        grid_compatible = False
+
+    # Compatible if either operand is scalar OR grids are compatible
+    return is_scalar_poly or grid_compatible
+
+    # # Check if one of the operands is a scalar polynomial
+    # is_scalar_poly = is_scalar(poly_1) or is_scalar(poly_2)
+    #
+    # # Check if one of the monomials of the operand is a scalar
+    # is_scalar_multi_index_1 = is_scalar(poly_1.multi_index)
+    # is_scalar_multi_index_2 = is_scalar(poly_2.multi_index)
+    # is_scalar_multi_index = is_scalar_multi_index_1 or is_scalar_multi_index_2
+    # # Check if the grids are compatible with the given grid
+    # is_compatible_grid_1 = poly_1.grid.has_compatible_gen_points(grid_prod)
+    # is_compatible_grid_2 = poly_2.grid.has_compatible_gen_points(grid_prod)
+    # is_compatible_grids = is_compatible_grid_1 and is_compatible_grid_2
+    #
+    # # If either of the conditions is true then the resulting Newton polynomial
+    # # has exactly the same basis as the non scalar one.
+    # # return is_scalar_poly or (is_scalar_multi_index and is_compatible_grids)
+    #
+    # # if is_scalar(poly_1.multi_index):
+    # #     cond_1 = True
+    # # else:
+    # #     cond_1 = poly_1.grid.has_compatible_gen_points(grid_prod)
+    # #
+    # # if is_scalar(poly_2.multi_index):
+    # #     cond_2 = True
+    # # else:
+    # #     cond_2 = poly_2.grid.has_compatible_gen_points(grid_prod)
+    #
+    # if is_scalar(poly_1.multi_index):
+    #     if is_scalar(poly_2.multi_index):
+    #         cond = True
+    #     else:
+    #         cond = poly_2.grid.has_compatible_gen_points(grid_prod)
+    # else:
+    #     if is_scalar(poly_2.multi_index):
+    #         cond = poly_1.grid.has_compatible_gen_points(grid_prod)
+    #     else:
+    #         cond = False
+    #
+    # return is_scalar_poly or cond #(cond_1 and cond_2)
 
 
 def _compute_coeffs_poly_prod_via_lagrange(
