@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from minterpy import Domain
+from minterpy.global_settings import DEFAULT_DOMAIN
 from minterpy.utils.exceptions import (
     DomainMismatchError,
     InvalidDomainBoundsError,
@@ -138,25 +139,25 @@ class TestProperties:
 
     def test_lower_bounds(self, random_bounds_valid):
         """Test the lower bounds property."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Assertion
-        assert np.all(my_dom.lower_bounds == random_bounds_valid[:, 0])
+        assert np.all(dom.lowers == random_bounds_valid[:, 0])
 
     def test_upper_bounds(self, random_bounds_valid):
         """Test the upper bounds property."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Assertion
-        assert np.all(my_dom.upper_bounds == random_bounds_valid[:, 1])
+        assert np.all(dom.uppers == random_bounds_valid[:, 1])
 
     def test_domain_widths(self, random_bounds_valid):
         """Test the domain widths property."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Assertion
         diff_bounds = random_bounds_valid[:, 1] - random_bounds_valid[:, 0]
-        assert np.all(my_dom.domain_widths == diff_bounds)
+        assert np.all(dom.widths == diff_bounds)
 
     def test_normalized(self, SpatialDimension):
         """Test the normalized property for normalized domain."""
@@ -210,11 +211,11 @@ class TestMapValues:
 
     def test_to_normalized_edges(self, random_bounds_valid):
         """"Test the mapping of the edges to the normalized domain."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Generate values at the edge of the domain
-        xx = np.c_[my_dom.lower_bounds, my_dom.upper_bounds].T
-        yy = my_dom.map_to_normalized(xx)
+        xx = np.c_[dom.lowers, dom.uppers].T
+        yy = dom.map_to_internal(xx)
 
         # Assertions
         assert np.allclose(yy[0], -1.0)
@@ -222,82 +223,84 @@ class TestMapValues:
 
     def test_from_normalized_edges(self, random_bounds_valid):
         """"Test the mapping of the edges from the normalized domain."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Generate values at the edge of the normalized domain
-        dim = my_dom.spatial_dimension
+        dim = dom.spatial_dimension
         xx = np.c_[-1 * np.ones(dim), np.ones(dim)].T
-        yy = my_dom.map_from_normalized(xx)
+        yy = dom.map_from_internal(xx)
 
         # Assertions
-        assert np.allclose(yy[0], my_dom.lower_bounds)
-        assert np.allclose(yy[1], my_dom.upper_bounds)
+        assert np.allclose(yy[0], dom.lowers)
+        assert np.allclose(yy[1], dom.uppers)
 
     def test_to_normalized_extrapolation(self, random_bounds_valid):
         """Test that extrapolation to normalized domain is correctly handled."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Generate out of bounds values in the original domain
         xx = generate_values_outbounds(random_bounds_valid)
-        yy = my_dom.map_to_normalized(xx)
+        yy = dom.map_to_internal(xx)
 
         # Assertion
-        assert np.any(yy <= -1.) or np.any(yy >= 1.)
+        default_lb, default_ub = DEFAULT_DOMAIN
+        assert np.any(yy <= default_lb) or np.any(yy >= default_ub)
 
     def test_from_normalized_extrapolation(self, random_bounds_valid):
         """Test that extrapolation from normalized domain is correctly handled.
         """
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Generate out of bounds values in the normalized domain
-        bounds = np.ones((my_dom.spatial_dimension, 2))
+        bounds = np.ones((dom.spatial_dimension, 2))
         bounds[:, 0] = -1
         xx = generate_values_outbounds(bounds)
-        yy = my_dom.map_from_normalized(xx)
+        yy = dom.map_from_internal(xx)
 
         # Assertion
-        lb, ub = my_dom.lower_bounds, my_dom.upper_bounds
+        lb, ub = dom.lowers, dom.uppers
         assert np.any(yy <= lb) or np.any(yy >= ub)
 
     def test_to_normalized_valid(self, random_bounds_valid):
         """Test transformation to the normalized domain with valid values."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Generate random valid input values
         xx = generate_values_inbounds(random_bounds_valid)
         # All the same for valid input values
-        yy_1 = my_dom.map_to_normalized(xx)
-        yy_2 = my_dom.map_to_normalized(xx, validate=True)
-        yy_3 = my_dom.map_to_normalized(xx, validate=False)
+        yy_1 = dom.map_to_internal(xx)
+        yy_2 = dom.map_to_internal(xx, validate=True)
+        yy_3 = dom.map_to_internal(xx, validate=False)
 
         # Assertion
-        assert np.all(yy_1 >= -1.) and np.all(yy_1 <= 1.)
-        assert np.all(yy_2 >= -1.) and np.all(yy_2 <= 1.)
-        assert np.all(yy_3 >= -1.) and np.all(yy_3 <= 1.)
+        default_lb, default_ub = DEFAULT_DOMAIN
+        assert np.all(yy_1 >= default_lb) and np.all(yy_1 <= default_ub)
+        assert np.all(yy_2 >= default_lb) and np.all(yy_2 <= default_ub)
+        assert np.all(yy_3 >= default_lb) and np.all(yy_3 <= default_ub)
 
     def test_to_normalized_invalid(self, random_bounds_valid):
         """Test transformation to the normalized domain with invalid values."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Generate random invalid input values
         xx = generate_values_outbounds(random_bounds_valid)
 
         with pytest.raises(ValueError):
-            _ = my_dom.map_to_normalized(xx, validate=True)
+            _ = dom.map_to_internal(xx, validate=True)
 
-    def test_from_normalized_valid(self, random_bounds_valid):
-        """Test transformation from the normalized domain with valid values."""
-        my_dom = Domain(random_bounds_valid)
+    def test_from_internal_valid(self, random_bounds_valid):
+        """Test transformation from the internal domain with valid values."""
+        dom = Domain(random_bounds_valid)
 
         # Generate random valid input values in the normalized domain
-        xx = -1 + 2 * np.random.rand(10, my_dom.spatial_dimension)
+        xx = -1 + 2 * np.random.rand(10, dom.spatial_dimension)
         # All the same for valid input values
-        yy_1 = my_dom.map_from_normalized(xx)
-        yy_2 = my_dom.map_from_normalized(xx, validate=True)
-        yy_3 = my_dom.map_from_normalized(xx, validate=False)
+        yy_1 = dom.map_from_internal(xx)
+        yy_2 = dom.map_from_internal(xx, validate=True)
+        yy_3 = dom.map_from_internal(xx, validate=False)
 
         # Assertion
-        lb, ub = my_dom.lower_bounds, my_dom.upper_bounds
+        lb, ub = dom.lowers, dom.uppers
         assert np.all(yy_1 >= lb) and np.all(yy_1 <= ub)
         assert np.all(yy_2 >= lb) and np.all(yy_2 <= ub)
         assert np.all(yy_3 >= lb) and np.all(yy_3 <= ub)
@@ -305,35 +308,35 @@ class TestMapValues:
     def test_from_normalized_validation_invalid(self, random_bounds_valid):
         """Test transformation from the normalized domain with invalid values.
         """
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Generate random invalid input values in the normalized domain
-        xx = -10 + 3 * np.random.rand(10, my_dom.spatial_dimension)
+        xx = -10 + 3 * np.random.rand(10, dom.spatial_dimension)
 
         # Assertion
         with pytest.raises(ValueError):
-            _ = my_dom.map_from_normalized(xx, validate=True)
+            _ = dom.map_from_internal(xx, validate=True)
 
     def test_from_and_to(self, random_bounds_valid):
         """Test that values are correctly mapped from and to normalized."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Generate random valid input values in the normalized domain
-        xx_1 = -1 + 2 * np.random.rand(10, my_dom.spatial_dimension)
-        yy = my_dom.map_from_normalized(xx_1)
-        xx_2 = my_dom.map_to_normalized(yy)
+        xx_1 = -1 + 2 * np.random.rand(10, dom.spatial_dimension)
+        yy = dom.map_from_internal(xx_1)
+        xx_2 = dom.map_to_internal(yy)
 
         # Assertions
         assert np.allclose(xx_1, xx_2)
 
     def test_to_and_from(self, random_bounds_valid):
         """Test that values are correctly mapped to and from normalized."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
 
         # Generate random valid input values in the original domain
         xx_1 = generate_values_inbounds(random_bounds_valid)
-        yy = my_dom.map_to_normalized(xx_1)
-        xx_2 = my_dom.map_from_normalized(yy)
+        yy = dom.map_to_internal(xx_1)
+        xx_2 = dom.map_from_internal(yy)
 
         # Assertions
         assert np.allclose(xx_1, xx_2)
@@ -344,12 +347,12 @@ class TestScalingFactor:
 
     def test_integration(self, random_bounds_valid):
         """Test the integration scaling factor."""
-        my_dom = Domain(random_bounds_valid)
+        dom = Domain(random_bounds_valid)
         diff_bounds = random_bounds_valid[:, 1] - random_bounds_valid[:, 0]
 
         assert np.isclose(
-            my_dom.get_int_factor(),
-            np.prod(diff_bounds) / 2**my_dom.spatial_dimension,
+            dom.get_int_factor(),
+            np.prod(diff_bounds) / 2**dom.spatial_dimension,
         )
 
     def test_integration_normalized(self, SpatialDimension):
@@ -507,6 +510,8 @@ class TestUnion:
 
         # Assertions
         assert dom_1 == dom_2
+        print(np.array_equal(dom_2.bounds, dom_3.bounds))
+        print(np.array_equal(dom_2.internal_bounds, dom_3.internal_bounds))
         assert dom_2 == dom_3
         assert dom_3 == dom_4
         assert dom_3 is not dom_4

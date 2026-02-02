@@ -15,7 +15,7 @@ INT_DTYPE = np.int_
 FLOAT_DTYPE = np.float64  # NOTE: numpy.float_ is deprecated in NumPy v2.0
 B_DTYPE = np.bool_
 
-DEFAULT_DOMAIN = np.array([-1, 1])
+DEFAULT_DOMAIN = np.array([-1, 1], dtype=FLOAT_DTYPE)
 
 # --- Numba types. Must match the Numpy dtypes
 
