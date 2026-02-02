@@ -256,58 +256,6 @@ def check_values(xx: Union[int, float, np.ndarray], **kwargs):
         )
 
 
-DOMAIN_WARN_MSG2 = "the grid points must fit the interpolation domain [-1;1]^m."
-DOMAIN_WARN_MSG = (
-    "this may lead to unexpected behaviour, "
-    "e.g. rank deficiencies in the regression matrices, etc. ."
-)
-
-
-def check_domain_fit(points: np.ndarray):
-    """Checks weather a given array of points is properly formatted and spans the standard domain :math:`[-1,1]^m`.
-
-    .. todo::
-        - maybe remove the warnings.
-        - generalise to custom ``internal_domain``
-
-    :param points: array to be checked. Here ``m`` is the dimenstion of the domain and ``k`` is the number of points.
-    :type points: np.ndarray, shape = (m, k)
-    :raises ValueError: if the grid points do not fit into the domain :math:`[-1;1]^m`.
-    :raises ValueError: if less than one point is passed.
-
-    """
-    # check first if the sample points are valid
-    check_type(points, np.ndarray)
-    check_values(points)
-    # check weather the points lie outside of the domain
-    sample_max = np.max(points, axis=1)
-    if not np.allclose(np.maximum(sample_max, 1.0), 1.0):
-        raise ValueError(DOMAIN_WARN_MSG2 + f"violated max: {sample_max}")
-    sample_min = np.min(points, axis=1)
-    if not np.allclose(np.minimum(sample_min, -1.0), -1.0):
-        raise ValueError(DOMAIN_WARN_MSG2 + f"violated min: {sample_min}")
-    check_dimensionality(points, dimensionality=2)
-    nr_of_points, m = points.shape
-    if nr_of_points == 0:
-        raise ValueError("at least one point must be given")
-    if nr_of_points == 1:
-        return  # one point cannot span the domain
-    if DEBUG:
-        # check weather the points span the hole domain
-        max_grid_val = np.max(sample_max)
-        if not np.isclose(max_grid_val, 1.0):
-            warn(
-                f"the highest encountered value in the given points is {max_grid_val}  (expected 1.0). "
-                + DOMAIN_WARN_MSG
-            )
-        min_grid_val = np.min(sample_min)
-        if not np.isclose(min_grid_val, -1.0):
-            warn(
-                f"the smallest encountered value in the given points is {min_grid_val} (expected -1.0). "
-                + DOMAIN_WARN_MSG
-            )
-
-
 def is_real_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
     """Check if a given value is a real scalar number.
 

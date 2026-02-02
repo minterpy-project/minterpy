@@ -73,7 +73,6 @@ from minterpy.utils.verification import (
     check_type,
     check_values,
     check_dimensionality,
-    check_domain_fit,
 )
 
 __all__ = ["Grid"]
@@ -154,6 +153,12 @@ class Grid:
         # Process and assign the multi-index set argument
         self._multi_index = _process_multi_index(multi_index)
 
+        # Process and assign the domain
+        if domain is None:
+            domain = Domain.normalized(self.multi_index.spatial_dimension)
+
+        self._domain = _process_domain(domain, multi_index)
+
         # If generating_function and points not specified,
         # use the default generating function
         no_gen_function = generating_function is None
@@ -167,19 +172,15 @@ class Grid:
         )
 
         # Assign and verify the generating points argument
+        # Note: Domain is already processed
         if no_gen_points:
             generating_points = self._create_generating_points()
         else:
             # Create a copy to avoid accidental changes from the outside
             generating_points = generating_points.copy()
-        self._generating_points = generating_points
-        self._verify_generating_points()
-
-        # Process and assign the domain
-        if domain is None:
-            domain = Domain.normalized(self.multi_index.spatial_dimension)
-
-        self._domain = _process_domain(domain, multi_index)
+        self._generating_points = self._verify_generating_points(
+            generating_points
+        )
 
         # --- Post-assignment verifications
 
@@ -860,7 +861,7 @@ class Grid:
         if self.domain.is_normalized:
             xx = self.unisolvent_nodes
         else:
-            xx = self.domain.map_from_normalized(self.unisolvent_nodes)
+            xx = self.domain.map_from_internal(self.unisolvent_nodes)
         return fun(xx, *args, **kwargs)
 
     # --- Dunder methods: Rich comparison
@@ -1126,38 +1127,69 @@ class Grid:
         """
         return self.generating_function is not None
 
-    def _verify_generating_points(self):
-        """Verify if the generating points are valid.
+    def _verify_generating_points(
+        self,
+        generating_points: np.ndarray,
+    ) -> np.ndarray:
+        """Validate generating points.
+
+        Parameters
+        ----------
+        generating_points : np.ndarray
+            The given generating points to validate, a 2D array of
+            shape ``(n + 1, m)`` where ``n`` is the maximum degree of the
+            the grid in any dimension and ``m`` is the maximum spatial
+            dimension of the grid.
+
+        Returns
+        -------
+        np.ndarray
+            Validated generating points.
 
         Raises
         ------
         ValueError
-            If the points are not of the correct dimension, contains
-            NaN's or inf's, do not fit the standard domain, or the values
-            per column are not unique.
+            If the points are not of the correct dimension, contain
+            NaN's or inf's, do not match with the dimension of the grid,
+            the values per column are not unique, or the points are not
+            within the internal domain.
         TypeError
             If the points are not given in the correct type.
+
+        Notes
+        -----
+        - Generating points may contain more columns (i.e., spatial dimension)
+          than the grid itself (as defined by the dimension of the multi-index
+          set). If there's no generating function, this indicates the maximum
+          dimension the current grid can be expanded to.
         """
-        # Check array dimension
-        check_dimensionality(self._generating_points, dimensionality=2)
-        # No NaN's and inf's
-        check_values(self._generating_points)
-        # Check domain fit
-        check_domain_fit(self._generating_points)
-        # Check dimension against spatial dimension of the set
-        gen_points_dim = self._generating_points.shape[1]
+        # --- Type and structure checks
+        check_type(generating_points, np.ndarray)
+        check_dimensionality(generating_points, dimensionality=2)
+        check_values(generating_points)  # No NaN's and inf's
+
+        # --- Dimension check
+        gen_points_dim = generating_points.shape[1]
         if gen_points_dim < self.spatial_dimension:
             raise ValueError(
-                "Dimension mismatch between the generating points "
-                f"({gen_points_dim}) and the multi-index set "
-                f"({self.spatial_dimension})"
+                "Dimension mismatch between generating points "
+                f"({gen_points_dim}) and the grid ({self.spatial_dimension})"
             )
-        # Check the uniqueness of values column-wise
-        are_unique = all([is_unique(xx) for xx in self._generating_points.T])
-        if not are_unique:
+
+        # --- Uniqueness check (column-wise)
+        if not all(is_unique(col) for col in generating_points.T):
             raise ValueError(
                 "One or more columns of the generating points are not unique"
             )
+
+        # --- Internal domain containment check
+        gen_points_ = generating_points[:, :self.spatial_dimension]
+        if not np.all(self.domain.contains(gen_points_, internal=True)):
+            raise ValueError(
+                "Generating points are not contained in the internal domain"
+            )
+
+        return generating_points
 
     def _verify_matching_gen_function_and_points(self):
         """Verify if the generation function and points match.
