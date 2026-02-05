@@ -307,13 +307,12 @@ class TestExpandDim:
         assert poly_2.multi_index == poly_1.multi_index.expand_dim(new_dim)
         assert poly_2.grid == poly_1.grid.expand_dim(new_dim)
 
-    def test_expand_dim_non_uniform_domain(self, poly_class_all, multi_index_mnp):
+    def test_expand_dim_non_unif_domain(self, poly_class_all, multi_index_mnp):
         """Test dimension expansion in which the domain cannot be extrapolated.
         """
         dim = multi_index_mnp.spatial_dimension
-        # DANGEROUS: For low dimension, UB and LB may be uniform across dims
-        lb = np.random.randint(0, 5, dim)
-        ub = np.random.randint(5, 10, dim)
+        lb = np.random.choice(np.arange(0, 5), size=dim, replace=False)
+        ub = np.random.choice(np.arange(5, 10), size=dim, replace=False)
         domain = Domain(np.c_[lb, ub])
         poly = poly_class_all(multi_index_mnp, domain=domain)
 
@@ -730,8 +729,7 @@ class TestMultiplicationPoly:
             print(poly_1 * poly_2)
 
     def test_non_matching_domain(self, poly_class_all, multi_index_mnp):
-        """Multiplication of polynomials with a non-matching domain raises
-        and exception.
+        """Test that poly multiplication raises error for non-matching domains.
         """
         # Get the complete multi-index set
         mi = multi_index_mnp
@@ -739,17 +737,11 @@ class TestMultiplicationPoly:
         # Create a random set of coefficients
         coeffs = np.random.rand(len(mi))
 
-        # Create a polynomial instance
-        domain_1 = np.ones((2, mi.spatial_dimension))
-        domain_1[0, :] *= -2
-        domain_1[1, :] *= 2
-        dom_1 = Domain(domain_1.T)
-        poly_1 = poly_class_all(mi, coeffs, user_domain=domain_1, domain=dom_1)
-        domain_2 = np.ones((2, mi.spatial_dimension))
-        domain_2[0, :] *= -0.5
-        domain_2[1, :] *= 0.5
-        dom_2 = Domain(domain_2.T)
-        poly_2 = poly_class_all(mi, coeffs, user_domain=domain_2, domain=dom_2)
+        # Create polynomial instances with different domains
+        dom_1 = Domain.uniform(mi.spatial_dimension, lower=0, upper=1)
+        poly_1 = poly_class_all(mi, coeffs, domain=dom_1)
+        dom_2 = Domain.uniform(mi.spatial_dimension, lower=0, upper=0.5)
+        poly_2 = poly_class_all(mi, coeffs, domain=dom_2)
 
         # Perform multiplication
         with pytest.raises(DomainMismatchError):
@@ -1297,8 +1289,7 @@ class TestPolyAdditionSubtraction:
         PolyDegree,
         LpDegree,
     ):
-        """Addition and subtraction of polynomials with a non-matching domain
-        raises an exception.
+        """Test addition and subtraction with non-matching domain raises error.
         """
         # Create a MultiIndexSet
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
@@ -1306,17 +1297,11 @@ class TestPolyAdditionSubtraction:
         # Create a random set of coefficients
         coeffs = np.random.rand(len(mi))
 
-        # Create a polynomial instance
-        domain_1 = np.ones((2, SpatialDimension))
-        domain_1[0, :] *= -2
-        domain_1[1, :] *= 2
-        dom_1 = Domain(domain_1.T)
-        poly_1 = poly_class_all(mi, coeffs, user_domain=domain_1, domain=dom_1)
-        domain_2 = np.ones((2, SpatialDimension))
-        domain_2[0, :] *= -0.5
-        domain_2[1, :] *= 0.5
-        dom_2 = Domain(domain_2.T)
-        poly_2 = poly_class_all(mi, coeffs, user_domain=domain_2, domain=dom_2)
+        # Create polynomial instances with different domains
+        dom_1 = Domain.uniform(SpatialDimension, lower=-2, upper=2)
+        poly_1 = poly_class_all(mi, coeffs, domain=dom_1)
+        dom_2 = Domain.uniform(SpatialDimension, lower=0, upper=1)
+        poly_2 = poly_class_all(mi, coeffs, domain=dom_2)
 
         # Assertions
         with pytest.raises(DomainMismatchError):
@@ -2002,17 +1987,11 @@ class TestPolyAdditionSubtractionAugmented:
         # Create a random set of coefficients
         coeffs = np.random.rand(len(mi))
 
-        # Create a polynomial instance with different domains
-        domain_1 = np.ones((2, SpatialDimension))
-        domain_1[0, :] *= -2
-        domain_1[1, :] *= 2
-        dom_1 = Domain(domain_1.T)
-        poly_1 = poly_class_all(mi, coeffs, user_domain=domain_1, domain=dom_1)
-        domain_2 = np.ones((2, SpatialDimension))
-        domain_2[0, :] *= -0.5
-        domain_2[1, :] *= 0.5
-        dom_2 = Domain(domain_2.T)
-        poly_2 = poly_class_all(mi, coeffs, user_domain=domain_2, domain=dom_2)
+        # Create polynomial instances with different domains
+        dom_1 = Domain.uniform(SpatialDimension, lower=0, upper=1)
+        poly_1 = poly_class_all(mi, coeffs, domain=dom_1)
+        dom_2 = Domain.uniform(SpatialDimension, lower=0, upper=2)
+        poly_2 = poly_class_all(mi, coeffs, domain=dom_2)
 
         # Assertions
         with pytest.raises(DomainMismatchError):

@@ -20,32 +20,6 @@ from minterpy.utils.exceptions import (
 )
 
 
-def verify_domain(domain, spatial_dimension):
-    """Building and verification of domains.
-
-    This function builds a suitable domain as the cartesian product of a one-
-    dimensional domain, or verifies the domain shape, of a multivariate domain is
-    passed. If None is passed, the default domain is build from [-1,1].
-
-    :param domain: Either one-dimensional domain ``(min,max)``, or a stack of domains for each domain with shape ``(spatial_dimension,2)``. If :class:`None` is passed, the ``DEFAULT_DOMAIN`` is repeated for each spatial dimentsion.
-    :type domain: array_like, None
-    :param spatial_dimension: Dimentsion of the domain space.
-    :type spatial_dimension: int
-
-    :return verified_domain: Stack of domains for each dimension with shape ``(spatial_dimension,2)``.
-    :rtype: np.ndarray
-    :raise ValueError: If no domain with the expected shape can be constructed from the input.
-
-    """
-    if domain is None:
-        domain = np.repeat(DEFAULT_DOMAIN[:, np.newaxis], spatial_dimension, axis=1)
-    domain = np.require(domain, dtype=FLOAT_DTYPE)
-    if domain.ndim == 1:
-        domain = np.repeat(domain[:, np.newaxis], spatial_dimension, axis=1)
-    check_shape(domain, shape=(2, spatial_dimension))
-    return domain
-
-
 def check_type(obj: Any, expected_type: Type[Any]):
     """Check if the given input is of expected type.
     

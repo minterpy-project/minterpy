@@ -44,7 +44,7 @@ from minterpy.core.ABC.multivariate_polynomial_abstract import (
 )
 from minterpy.core import Grid, MultiIndexSet
 from minterpy.dds import dds
-from minterpy.utils.verification import dummy, verify_domain
+from minterpy.utils.verification import dummy
 from minterpy.utils.polynomials.newton import (
     eval_newton_polynomials,
     deriv_newt_eval as eval_diff_numpy,
@@ -371,11 +371,6 @@ def integrate_over_newton(
     return quad_weights @ poly.coeffs
 
 
-# TODO redundant
-generate_internal_domain_newton = verify_domain
-generate_user_domain_newton = verify_domain
-
-
 class NewtonPolynomial(MultivariatePolynomialSingleABC):
     """Concrete implementations of polynomials in the Newton basis.
 
@@ -401,10 +396,6 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     _partial_diff = staticmethod(partial_diff_newton)
     _diff = staticmethod(diff_newton)
     _integrate_over = staticmethod(integrate_over_newton)
-
-    # Domain generation
-    generate_internal_domain = staticmethod(generate_internal_domain_newton)
-    generate_user_domain = staticmethod(generate_user_domain_newton)
 
 
 # --- Internal utility functions
@@ -448,18 +439,7 @@ def _compute_data_poly_sum(
     # --- Process the coefficients
     coeffs_sum = _compute_coeffs_poly_sum(poly_1, poly_2, grd_sum, mi_sum)
 
-    # --- Process the domains
-    # Deprecate: the properties will be removed in the future
-    internal_domain_sum = grd_sum.domain.bounds.T
-    user_domain_sum = grd_sum.domain.bounds.T
-
-    return PolyData(
-        multi_index=mi_sum,
-        coeffs=coeffs_sum,
-        internal_domain=internal_domain_sum,
-        user_domain=user_domain_sum,
-        grid=grd_sum,
-    )
+    return PolyData(multi_index=mi_sum, coeffs=coeffs_sum, grid=grd_sum)
 
 
 def _compute_coeffs_poly_sum(
@@ -649,18 +629,7 @@ def _compute_data_poly_prod(
     # --- Process the coefficients
     coeffs_prod = _compute_coeffs_poly_prod(poly_1, poly_2, grd_prod, mi_prod)
 
-    # --- Process the domains
-    # Deprecate: the properties will be removed in the future
-    internal_domain_prod = grd_prod.domain.bounds.T
-    user_domain_prod = grd_prod.domain.bounds.T
-
-    return PolyData(
-        multi_index=mi_prod,
-        coeffs=coeffs_prod,
-        internal_domain=internal_domain_prod,
-        user_domain=user_domain_prod,
-        grid=grd_prod,
-    )
+    return PolyData(multi_index=mi_prod, coeffs=coeffs_prod, grid=grd_prod)
 
 
 def _compute_coeffs_poly_prod(
