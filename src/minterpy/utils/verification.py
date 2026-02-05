@@ -20,32 +20,6 @@ from minterpy.utils.exceptions import (
 )
 
 
-def verify_domain(domain, spatial_dimension):
-    """Building and verification of domains.
-
-    This function builds a suitable domain as the cartesian product of a one-
-    dimensional domain, or verifies the domain shape, of a multivariate domain is
-    passed. If None is passed, the default domain is build from [-1,1].
-
-    :param domain: Either one-dimensional domain ``(min,max)``, or a stack of domains for each domain with shape ``(spatial_dimension,2)``. If :class:`None` is passed, the ``DEFAULT_DOMAIN`` is repeated for each spatial dimentsion.
-    :type domain: array_like, None
-    :param spatial_dimension: Dimentsion of the domain space.
-    :type spatial_dimension: int
-
-    :return verified_domain: Stack of domains for each dimension with shape ``(spatial_dimension,2)``.
-    :rtype: np.ndarray
-    :raise ValueError: If no domain with the expected shape can be constructed from the input.
-
-    """
-    if domain is None:
-        domain = np.repeat(DEFAULT_DOMAIN[:, np.newaxis], spatial_dimension, axis=1)
-    domain = np.require(domain, dtype=FLOAT_DTYPE)
-    if domain.ndim == 1:
-        domain = np.repeat(domain[:, np.newaxis], spatial_dimension, axis=1)
-    check_shape(domain, shape=(2, spatial_dimension))
-    return domain
-
-
 def check_type(obj: Any, expected_type: Type[Any]):
     """Check if the given input is of expected type.
     
@@ -254,58 +228,6 @@ def check_values(xx: Union[int, float, np.ndarray], **kwargs):
         raise ValueError(
             "Invalid value(s) (NaN, inf, negative, zero)."
         )
-
-
-DOMAIN_WARN_MSG2 = "the grid points must fit the interpolation domain [-1;1]^m."
-DOMAIN_WARN_MSG = (
-    "this may lead to unexpected behaviour, "
-    "e.g. rank deficiencies in the regression matrices, etc. ."
-)
-
-
-def check_domain_fit(points: np.ndarray):
-    """Checks weather a given array of points is properly formatted and spans the standard domain :math:`[-1,1]^m`.
-
-    .. todo::
-        - maybe remove the warnings.
-        - generalise to custom ``internal_domain``
-
-    :param points: array to be checked. Here ``m`` is the dimenstion of the domain and ``k`` is the number of points.
-    :type points: np.ndarray, shape = (m, k)
-    :raises ValueError: if the grid points do not fit into the domain :math:`[-1;1]^m`.
-    :raises ValueError: if less than one point is passed.
-
-    """
-    # check first if the sample points are valid
-    check_type(points, np.ndarray)
-    check_values(points)
-    # check weather the points lie outside of the domain
-    sample_max = np.max(points, axis=1)
-    if not np.allclose(np.maximum(sample_max, 1.0), 1.0):
-        raise ValueError(DOMAIN_WARN_MSG2 + f"violated max: {sample_max}")
-    sample_min = np.min(points, axis=1)
-    if not np.allclose(np.minimum(sample_min, -1.0), -1.0):
-        raise ValueError(DOMAIN_WARN_MSG2 + f"violated min: {sample_min}")
-    check_dimensionality(points, dimensionality=2)
-    nr_of_points, m = points.shape
-    if nr_of_points == 0:
-        raise ValueError("at least one point must be given")
-    if nr_of_points == 1:
-        return  # one point cannot span the domain
-    if DEBUG:
-        # check weather the points span the hole domain
-        max_grid_val = np.max(sample_max)
-        if not np.isclose(max_grid_val, 1.0):
-            warn(
-                f"the highest encountered value in the given points is {max_grid_val}  (expected 1.0). "
-                + DOMAIN_WARN_MSG
-            )
-        min_grid_val = np.min(sample_min)
-        if not np.isclose(min_grid_val, -1.0):
-            warn(
-                f"the smallest encountered value in the given points is {min_grid_val} (expected -1.0). "
-                + DOMAIN_WARN_MSG
-            )
 
 
 def is_real_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
@@ -636,73 +558,6 @@ def verify_poly_coeffs(coeffs: np.ndarray, num_monomials: int) -> np.ndarray:
         raise err
 
     return coeffs
-
-
-def verify_poly_domain(
-    domain: np.ndarray,
-    spatial_dimension: int,
-) -> np.ndarray:
-    r"""Verify that the given polynomial domain is valid.
-
-    Examples
-    --------
-    >>> verify_poly_domain(np.array([[1], [2]]), 1)  # integer array
-    array([[1.],
-           [2.]])
-    >>> verify_poly_domain(np.array([[1, 2], [2, 3]]), 2)
-    array([[1., 2.],
-           [2., 3.]])
-    >>> verify_poly_domain([3, 2], 1) # doctest: +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-    ...
-    ValueError: The upper bounds must be strictly larger than the lower
-    bounds. Invalid values in the polynomial domain!
-    """
-    try:
-        # The domain must be a NumPy ndarray
-        domain = np.atleast_2d(np.array(domain)).astype(np.float64)
-        if domain.shape[0] == 1:
-            # Column array
-            domain = domain.T
-
-        # The dimension of the array must be two-dimensional
-        check_dimensionality(domain, dimensionality=2)
-
-        # The values must not contain inf
-        check_values(domain, nan=False, inf=True, zero=True, negative=True)
-
-        # The length must be two (lower and upper bounds)
-        if domain.shape[0] != 2:
-            raise ValueError(
-                f"The domain is defined by {domain.shape[0]} numbers "
-                "instead of by 2 (lower and upper bounds)."
-            )
-
-        # The number of columns must be the same as the dimension
-        if domain.shape[1] != spatial_dimension:
-            raise ValueError(
-                f"The dimension of the domain ({domain.shape[1]}) does not "
-                f"match the required dimension ({spatial_dimension})."
-            )
-
-        # The lower bounds must be smaller than the upper bounds
-        if np.any(domain[1, :] - domain[0, :] <= 0):
-            raise ValueError(
-                "The upper bounds must be strictly larger than "
-                "the lower bounds."
-            )
-
-    except TypeError as err:
-        custom_message = "Invalid type for polynomial domain!"
-        err.args = _add_custom_exception_message(err.args, custom_message)
-        raise err
-
-    except ValueError as err:
-        custom_message = "Invalid values in the polynomial domain!"
-        err.args = _add_custom_exception_message(err.args, custom_message)
-        raise err
-
-    return domain
 
 
 def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:

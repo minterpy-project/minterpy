@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `Domain` class for handling transformation between user-defined rectangular domains
+  and internal (reference) domains
+  - Support for coordinate transformations via `map_to_internal()` and `map_from_internal()`
+  - Automatic scaling factor computation for differentiation and integration
+  - Domain validation via `contains()` method
+  - Factory methods: `uniform()` and `normalized()`
+- Domain support integrated into `Grid` class
+  - `domain` parameter in Grid constructor (defaults to normalized domain in [-1, 1]^m)
+  - Grid operations (`*`, `|`) now validate domain consistency
+- Domain property access in all polynomial classes via `poly.domain`
+  obtained from the corresponding `Grid` instance
+- Internal domain infrastructure in `Domain` class with `internal_bounds` property
+
+### Changed
+
+- Grid generating points validation now uses `Domain` class for bound checking
+- Refactored polynomial arithmetic into modular components
+- Optimized `MultiIndexSet` equality check with identity short-circuit
+- Improved Newton polynomial monomial-based multiplication logic
+
+### Removed
+
+- `internal_domain` and `user_domain` properties from polynomial abstract class
+- `check_domain_fit()` verification function (replaced by `Domain.contains()`)
+- the module `minterpy.utils.polynomials.interface`
+
 ## [Version 0.3.1] - 2025-04-30
 
 This minor release incorporates feedback from the review process of

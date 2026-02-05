@@ -41,7 +41,7 @@ import numpy as np
 from minterpy.global_settings import SCALAR
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
 from minterpy.utils.polynomials.lagrange import integrate_monomials_lagrange
-from minterpy.utils.verification import dummy, verify_domain
+from minterpy.utils.verification import dummy
 
 __all__ = ["LagrangePolynomial"]
 
@@ -103,11 +103,6 @@ def integrate_over_lagrange(
     return quad_weights @ poly.coeffs
 
 
-# TODO redundant
-lagrange_generate_internal_domain = verify_domain
-lagrange_generate_user_domain = verify_domain
-
-
 class LagrangePolynomial(MultivariatePolynomialSingleABC):
     """Concrete implementation of polynomials in the Lagrange basis.
 
@@ -149,10 +144,6 @@ class LagrangePolynomial(MultivariatePolynomialSingleABC):
     _partial_diff = staticmethod(dummy)  # type: ignore
     _diff = staticmethod(dummy)  # type: ignore
     _integrate_over = staticmethod(integrate_over_lagrange)
-
-    # Domain generation
-    generate_internal_domain = staticmethod(lagrange_generate_internal_domain)
-    generate_user_domain = staticmethod(lagrange_generate_user_domain)
 
 
 # --- Internal utility functions

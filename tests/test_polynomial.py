@@ -20,10 +20,12 @@ from conftest import (
     POLY_CLASSES,
 )
 from minterpy import (
+    Domain,
     Grid,
     LagrangePolynomial,
     MultiIndexSet,
 )
+from minterpy.utils.exceptions import DomainMismatchError
 
 
 class TestInitialization:
@@ -61,7 +63,7 @@ class TestInitialization:
         assert_call(poly_class_all, multi_index_mnp, grid=grd)
         assert_call(poly_class_all, multi_index_mnp, coeffs, grid=grd)
 
-    def test_with_invalid_grid(
+    def test_with_grid_invalid_smaller(
         self,
         poly_class_all,
         SpatialDimension,
@@ -86,6 +88,38 @@ class TestInitialization:
         with pytest.raises(ValueError):
             poly_class_all(mi, coeffs, grid=grd)
 
+    @pytest.mark.parametrize("invalid_type", ["a", 1, [1, 2, 3]])
+    def test_with_grid_invalid_type(
+        self,
+        poly_class_all,
+        multi_index_mnp,
+        invalid_type,
+    ):
+        """Test initialization with an invalid grid type."""
+        with pytest.raises(TypeError):
+            _ = poly_class_all(multi_index_mnp, grid=invalid_type)
+
+    def test_with_domain_valid(self, poly_class_all, multi_index_mnp):
+        """Test initialization with a domain."""
+        # Create a non-default domain
+        dim = multi_index_mnp.spatial_dimension
+        domain = Domain.uniform(dim, 0, 10)
+        poly = poly_class_all(multi_index_mnp, domain=domain)
+
+        # Assertions
+        assert poly.domain == domain
+
+    def test_with_domain_invalid(self, poly_class_all, multi_index_mnp):
+        """Test initialization with a non-matching domain."""
+        # Create a non-default domain
+        dim = multi_index_mnp.spatial_dimension
+        domain = Domain.uniform(dim, 0, 10)
+
+        # Create a polynomial instance with the default grid
+        grid = Grid(multi_index_mnp)
+        with pytest.raises(DomainMismatchError):
+          _ = poly_class_all(multi_index_mnp, grid=grid, domain=domain)
+
     @pytest.mark.parametrize("spatial_dimension", [0, 1, 5])
     def test_empty_set(self, spatial_dimension, poly_class_all, LpDegree):
         """Test initialization with an empty multi-index set."""
@@ -99,6 +133,18 @@ class TestInitialization:
 
 class TestFrom:
     """All tests related to the different factory methods."""
+    def test_from_degree(self, poly_class_all, multi_index_mnp):
+        """Test creating an instance from the parameters of a complete set.
+        """
+        # Create a polynomial instance
+        m = multi_index_mnp.spatial_dimension
+        n = multi_index_mnp.poly_degree
+        p = multi_index_mnp.lp_degree
+        poly = poly_class_all.from_degree(m, n, p)
+
+        # Assertions
+        assert poly.multi_index == multi_index_mnp
+
     def test_from_grid_uninit(self, poly_class_all, grid_mnp):
         """Test creating an uninitialized polynomial from a Grid instance."""
         # Create a polynomial instance
@@ -261,98 +307,20 @@ class TestExpandDim:
         assert poly_2.multi_index == poly_1.multi_index.expand_dim(new_dim)
         assert poly_2.grid == poly_1.grid.expand_dim(new_dim)
 
-    def test_target_dim_new_domains(self, rand_poly_mnp_all):
-        """Test dimension expansion of a polynomial with specified domains."""
-        # Get the random polynomial
-        poly_1 = rand_poly_mnp_all
-
-        # Get the current and the new dimension
-        dim = poly_1.spatial_dimension
-        new_dim = dim + 2
-
-        # Define valid additional domains
-        new_domains = np.array([[-2, -2], [2, 2]])
-
-        # Expand the dimension
-        poly_2 = poly_1.expand_dim(
-            new_dim,
-            extra_internal_domain=new_domains,
-            extra_user_domain=new_domains,
-        )
-
-        # Assertions
-        assert poly_1 != poly_2
-        assert poly_2.spatial_dimension == new_dim
-        assert poly_2.multi_index == poly_1.multi_index.expand_dim(new_dim)
-        assert poly_2.grid == poly_1.grid.expand_dim(new_dim)
-        assert np.array_equal(poly_2.user_domain[:, dim:], new_domains)
-        assert np.array_equal(poly_2.internal_domain[:, dim:], new_domains)
-
-    def test_target_dim_non_uniform_domain(self, poly_mnp_non_unif_domain):
+    def test_expand_dim_non_unif_domain(self, poly_class_all, multi_index_mnp):
         """Test dimension expansion in which the domain cannot be extrapolated.
         """
-        origin_dim = poly_mnp_non_unif_domain.spatial_dimension
-        target_dim = origin_dim + 1
+        dim = multi_index_mnp.spatial_dimension
+        lb = np.random.choice(np.arange(0, 5), size=dim, replace=False)
+        ub = np.random.choice(np.arange(5, 10), size=dim, replace=False)
+        domain = Domain(np.c_[lb, ub])
+        poly = poly_class_all(multi_index_mnp, domain=domain)
 
-        # Expansion of polynomials w/ a non-uniform domain raises an exception
+        if domain.spatial_dimension == 1:
+            pytest.skip("Dimension 1 can always be expanded.")
+
         with pytest.raises(ValueError):
-            poly_mnp_non_unif_domain.expand_dim(target_dim)
-
-    def test_target_poly_same_dim(self, rand_poly_mnp_all):
-        """Test dimension expansion of a polynomial to the dimension of
-        another polynomial having the same dimension.
-        """
-        # Get the random polynomial
-        poly_1 = rand_poly_mnp_all
-
-        # Expand the dimension
-        poly_2 = poly_1.expand_dim(poly_1)
-
-        # Assertions
-        assert poly_1 == poly_2
-        assert poly_2 == poly_1
-
-    def test_target_poly_higher_dim(self, poly_mnp_pair_diff_dim):
-        """Test dimension expansion of a polynomial to the dimension of another
-        polynomial having a higher dimension.
-        """
-        # Get the polynomial instances
-        poly_1, poly_2 = poly_mnp_pair_diff_dim
-        # The first polynomial must have smaller dimension
-        if poly_1.spatial_dimension > poly_2.spatial_dimension:
-            poly_1, poly_2 = poly_2, poly_1
-
-        # Expand the dimension
-        poly_1_exp = poly_1.expand_dim(poly_2)
-
-        # Assertions
-        assert poly_1_exp.has_matching_dimension(poly_2)
-        assert poly_1_exp.has_matching_domain(poly_2)
-
-    def test_target_poly_contraction(self, poly_mnp_pair_diff_dim):
-        """Test dimension expansion of a polynomial to the dimension of another
-        polynomial having a smaller dimension; this should raise an exception.
-        """
-        # Get the polynomial instances
-        poly_1, poly_2 = poly_mnp_pair_diff_dim
-        # The first polynomial must have larger dimension
-        if poly_1.spatial_dimension < poly_2.spatial_dimension:
-            poly_1, poly_2 = poly_2, poly_1
-
-        # Expand (contract) the dimension
-        with pytest.raises(ValueError):
-            poly_1.expand_dim(poly_2)
-
-    def test_target_poly_incompatible_domain(self, poly_mnp_pair_diff_domain):
-        """Test dimension expansion of a polynomial to the dimension of another
-        polynomial with incompatible internal domain.
-        """
-        # Get the polynomial instances
-        poly_1, poly_2 = poly_mnp_pair_diff_domain
-
-        # Expanding the dimension to a polynomial with incompatible domain
-        with pytest.raises(ValueError):
-            poly_1.expand_dim(poly_2)
+            poly.expand_dim(dim + 1)
 
 
 class TestEquality:
@@ -491,6 +459,27 @@ class TestInequality:
             assert poly_1 != poly_2
             assert poly_2 != poly_1
 
+    def test_different_domain(self, poly_class_all, multi_index_mnp):
+        """Test inequality due to different domain."""
+        # Generate a set of random coefficients
+        coeffs = np.random.rand(len(multi_index_mnp))
+
+        # Create two domains
+        dom_1 = Domain.uniform(multi_index_mnp.spatial_dimension, 0, 1)
+        dom_2 = Domain.normalized(multi_index_mnp.spatial_dimension)
+
+        # Create two polynomials
+        poly_1 = poly_class_all(multi_index_mnp, coeffs, domain=dom_1)
+        poly_2 = poly_class_all(multi_index_mnp, coeffs, domain=dom_2)
+
+        # Assertions
+        assert poly_1 != poly_2
+        assert poly_2 != poly_1
+        assert poly_1.multi_index == poly_2.multi_index
+        assert poly_2.multi_index == poly_1.multi_index
+        assert poly_1.domain != poly_2.domain
+        assert poly_2.domain != poly_1.domain
+
 
 class TestEvaluation:
     """All tests related to the evaluation of a polynomial instance."""
@@ -625,83 +614,6 @@ class TestPos:
         assert poly == (+poly)  # Equality in value
 
 
-class TestHasMatchingDomain:
-    """All tests related to method to check if polynomial domains match."""
-    def test_sanity(self, rand_poly_mnp_all):
-        """Test if a polynomial has a matching domain with itself."""
-        # Get a random polynomial instance
-        poly = rand_poly_mnp_all
-
-        # Assertion
-        assert poly.has_matching_domain(poly)
-
-    def test_same_dim(self, rand_poly_mnp_all):
-        """Test if poly. has a matching domain with another of the same dim."""
-        # Get a random polynomial instance
-        poly_1 = rand_poly_mnp_all
-        poly_2 = copy.copy(rand_poly_mnp_all)
-
-        # Assertions
-        assert poly_1.has_matching_domain(poly_2)
-        assert poly_2.has_matching_domain(poly_1)
-
-    def test_diff_dim(self, rand_poly_mnp_all_pair):
-        """Test if two default polynomials have a matching domain.
-
-        Notes
-        -----
-        - All currently supported Minterpy polynomials have the same default
-          domain. This may change in the future.
-        """
-        # Get the two random polynomials
-        poly_1, poly_2 = rand_poly_mnp_all_pair
-
-        # Assertion
-        assert poly_1.has_matching_domain(poly_2)
-        assert poly_2.has_matching_domain(poly_1)
-
-    def test_user_domain(self, poly_class_all, multi_index_mnp):
-        """Test the case when two polynomials have different user domains."""
-        # Get the complete multi-index set
-        mi = multi_index_mnp
-
-        # Create a polynomial instance
-        m = mi.spatial_dimension
-        user_domain_1 = np.ones((2, m))
-        user_domain_1[0, :] *= -2
-        user_domain_1[1, :] *= 2
-        poly_1 = poly_class_all(mi, user_domain=user_domain_1)
-        user_domain_2 = np.ones((2, m))
-        user_domain_2[0, :] *= -0.5
-        user_domain_2[1, :] *= 0.5
-        poly_2 = poly_class_all(mi, user_domain=user_domain_2)
-
-        # Assertion
-        assert not poly_1.has_matching_domain(poly_2)
-        assert not poly_2.has_matching_domain(poly_1)  # Must be symmetric
-
-    def test_internal_domain(self, poly_class_all, multi_index_mnp):
-        """Test the case when two polynomials have a different internal domain.
-        """
-        # Get the complete multi-index set
-        mi = multi_index_mnp
-
-        # Create a polynomial instance
-        m = mi.spatial_dimension
-        internal_domain_1 = np.ones((2, m))
-        internal_domain_1[0, :] *= -2
-        internal_domain_1[1, :] *= 2
-        poly_1 = poly_class_all(mi, internal_domain=internal_domain_1)
-        internal_domain_2 = np.ones((2, m))
-        internal_domain_2[0, :] *= -0.5
-        internal_domain_2[1, :] *= 0.5
-        poly_2 = poly_class_all(mi, internal_domain=internal_domain_2)
-
-        # Assertion
-        assert not poly_1.has_matching_domain(poly_2)
-        assert not poly_2.has_matching_domain(poly_1)  # Must be symmetric
-
-
 class TestMultiplicationScalar:
     """All tests related to the multiplication of a polynomial with scalars."""
     def test_mul_identity(self, rand_poly_mnp_all):
@@ -817,8 +729,7 @@ class TestMultiplicationPoly:
             print(poly_1 * poly_2)
 
     def test_non_matching_domain(self, poly_class_all, multi_index_mnp):
-        """Multiplication of polynomials with a non-matching domain raises
-        and exception.
+        """Test that poly multiplication raises error for non-matching domains.
         """
         # Get the complete multi-index set
         mi = multi_index_mnp
@@ -826,19 +737,15 @@ class TestMultiplicationPoly:
         # Create a random set of coefficients
         coeffs = np.random.rand(len(mi))
 
-        # Create a polynomial instance
-        domain_1 = np.ones((2, mi.spatial_dimension))
-        domain_1[0, :] *= -2
-        domain_1[1, :] *= 2
-        poly_1 = poly_class_all(mi, coeffs, user_domain=domain_1)
-        domain_2 = np.ones((2, mi.spatial_dimension))
-        domain_2[0, :] *= -0.5
-        domain_2[1, :] *= 0.5
-        poly_2 = poly_class_all(mi, coeffs, user_domain=domain_2)
+        # Create polynomial instances with different domains
+        dom_1 = Domain.uniform(mi.spatial_dimension, lower=0, upper=1)
+        poly_1 = poly_class_all(mi, coeffs, domain=dom_1)
+        dom_2 = Domain.uniform(mi.spatial_dimension, lower=0, upper=0.5)
+        poly_2 = poly_class_all(mi, coeffs, domain=dom_2)
 
         # Perform multiplication
-        with pytest.raises(ValueError):
-            print(poly_1 * poly_2)
+        with pytest.raises(DomainMismatchError):
+            _ = poly_1 * poly_2
 
     @pytest.mark.parametrize(
         "invalid_value",
@@ -941,46 +848,75 @@ class TestMultiplicationPoly:
     ):
         """Test multiplication with a scalar polynomial with separate indices.
 
-        Some scalar polynomial with separate indices are defined such that
-        the grid remains compatible with the product grid.
-        For instance, the first two Leja-ordered Chebyshev-Lobatto points
-        are the same regardless the degree of the sequence.
-        Multiplication with such a scalar polynomial should be allowed without
-        any transformation.
-        This is an edge case, especially for Newton polynomial.
+        When a non-scalar polynomial is multiplied by a scalar polynomial,
+        the multiplication can proceed without basis transformation if the
+        non-scalar polynomial's generating points are compatible with
+        (i.e., contained within) the product grid's generating points.
+
+        For Leja-ordered Chebyshev-Lobatto points, the first two points
+        remain invariant regardless of the sequence degree. Therefore, if
+        a non-scalar polynomial of degree 0 or 1 has generating points that
+        match the first two points of the product grid (even when the product
+        grid is of higher degree), the product polynomial inherits the same
+        Newton basis and the coefficients are simply scaled
+        by the scalar value.
+
+        Without this compatibility (even for a degree 1 polynomial),
+        if the generating points don't match, the polynomial's representation
+        must be recomputed in the new basis via the divided difference scheme,
+        which this test verifies is avoided when points are compatible.
+
+        This is an edge case particularly relevant for Newton polynomials,
+        where changing the degree typically alters the generating points
+        for unnested grids.
 
         Notes
         -----
         - Instances of `LagrangePolynomial` are excluded from this test as
           it does not support polynomial-polynomial multiplication.
+        - For fully nested grids, this test would work
+         with higher polynomial degrees as all generating points are nested.
+        - A scalar polynomial can have separate indices (i.e., live on a
+          higher-degree grid than necessary for representing a constant).
         """
-        # Create an instance of polynomial
+        # Create a polynomial of degree 0 or 1
         m = SpatialDimension
         p = LpDegree
         poly = poly_class_no_lag.from_degree(m, poly_degree, p)
         poly.coeffs = np.random.rand(len(poly.multi_index), num_polynomials)
 
-        # Create a scalar polynomial (of the same dimension)
+        # Create a scalar polynomial on a compatible grid
+        # The scalar has multi_index with all-zero exponents (degree 0)
         exponents = np.zeros((1, m), dtype=np.int_)
         mi = MultiIndexSet(exponents, p)
-        # Create a Grid based of Leja-ordered Chebyshev-Lobatto points
-        n = 1  # NOTE: the first two points are always the same
-        grd = Grid.from_degree(m, 1, p)
-        # Generate a random scalar
-        scalar = np.random.rand(1)[0]
-        # Repeat the scalar column-wise to match the length of the polynomial
+
+        # Use Leja-ordered Chebyshev-Lobatto grid with degree 5
+        # Key: The first two points (degrees 0-1) of this grid match those
+        # in the poly's grid, making them compatible
+        n = 5
+        grd = Grid.from_degree(m, n, p)
+
+        # Create scalar coefficient matching the number of polynomials
+        scalar = 3 * np.random.rand(1)[0]
         coeffs = np.repeat(scalar, len(poly))[np.newaxis, :]
         poly_scalar = poly.__class__(mi, coeffs, grid=grd)
 
-        # Multiplication
+        # Multiply: scalar has scalar multi_index and compatible grid,
+        # so multiplication proceeds via monomials without transformation
         poly_prod_1 = poly * poly_scalar
         poly_prod_2 = poly_scalar * poly
 
-        # Assertions
+        # Verify the products maintain separate indices & correct coefficients
         assert poly_prod_1.indices_are_separate
         assert poly_prod_2.indices_are_separate
         assert np.all(poly_prod_1.coeffs == poly.coeffs * scalar)
         assert np.all(poly_prod_2.coeffs == poly.coeffs * scalar)
+
+        # Verify numerical correctness by evaluation
+        xx_test = -1 + 2 * np.random.rand(10, SpatialDimension)
+        yy_test_1 = poly_prod_1(xx_test)
+        yy_test_2 = poly(xx_test) * scalar
+        assert np.allclose(yy_test_1, yy_test_2)
 
     def test_inplace(self, rand_poly_mnp_no_lag):
         """Augmented multiplication of polynomials raises an exception.
@@ -1353,8 +1289,7 @@ class TestPolyAdditionSubtraction:
         PolyDegree,
         LpDegree,
     ):
-        """Addition and subtraction of polynomials with a non-matching domain
-        raises an exception.
+        """Test addition and subtraction with non-matching domain raises error.
         """
         # Create a MultiIndexSet
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
@@ -1362,23 +1297,19 @@ class TestPolyAdditionSubtraction:
         # Create a random set of coefficients
         coeffs = np.random.rand(len(mi))
 
-        # Create a polynomial instance
-        domain_1 = np.ones((2, SpatialDimension))
-        domain_1[0, :] *= -2
-        domain_1[1, :] *= 2
-        poly_1 = poly_class_all(mi, coeffs, user_domain=domain_1)
-        domain_2 = np.ones((2, SpatialDimension))
-        domain_2[0, :] *= -0.5
-        domain_2[1, :] *= 0.5
-        poly_2 = poly_class_all(mi, coeffs, user_domain=domain_2)
+        # Create polynomial instances with different domains
+        dom_1 = Domain.uniform(SpatialDimension, lower=-2, upper=2)
+        poly_1 = poly_class_all(mi, coeffs, domain=dom_1)
+        dom_2 = Domain.uniform(SpatialDimension, lower=0, upper=1)
+        poly_2 = poly_class_all(mi, coeffs, domain=dom_2)
 
         # Assertions
-        with pytest.raises(ValueError):
+        with pytest.raises(DomainMismatchError):
             # Addition
-            print(poly_1 + poly_2)
-        with pytest.raises(ValueError):
+            _ = poly_1 + poly_2
+        with pytest.raises(DomainMismatchError):
             # Subtraction
-            print(poly_1 - poly_2)
+            _ = poly_1 - poly_2
 
 
 class TestAdditionScalar:
@@ -2056,21 +1987,17 @@ class TestPolyAdditionSubtractionAugmented:
         # Create a random set of coefficients
         coeffs = np.random.rand(len(mi))
 
-        # Create a polynomial instance with different domains
-        domain_1 = np.ones((2, SpatialDimension))
-        domain_1[0, :] *= -2
-        domain_1[1, :] *= 2
-        poly_1 = poly_class_all(mi, coeffs, user_domain=domain_1)
-        domain_2 = np.ones((2, SpatialDimension))
-        domain_2[0, :] *= -0.5
-        domain_2[1, :] *= 0.5
-        poly_2 = poly_class_all(mi, coeffs, user_domain=domain_2)
+        # Create polynomial instances with different domains
+        dom_1 = Domain.uniform(SpatialDimension, lower=0, upper=1)
+        poly_1 = poly_class_all(mi, coeffs, domain=dom_1)
+        dom_2 = Domain.uniform(SpatialDimension, lower=0, upper=2)
+        poly_2 = poly_class_all(mi, coeffs, domain=dom_2)
 
         # Assertions
-        with pytest.raises(ValueError):
+        with pytest.raises(DomainMismatchError):
             # Addition
             poly_1 += poly_2
-        with pytest.raises(ValueError):
+        with pytest.raises(DomainMismatchError):
             # Subtraction
             poly_1 -= poly_2
 

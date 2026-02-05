@@ -3,7 +3,7 @@ This module contains the implementation of the `Domain` class.
 
 The `Domain` class represents the domain of the polynomials, i.e., the set of
 all input points for which the polynomials are defined. As the internals of
-Minterpy work for interpolating polynomial in the so-called "normalized"
+Minterpy work for interpolating polynomial in the so-called "internal"
 domain (i.e., :math:`[-1, 1]^m`), the class provides convenient methods for:
 
 - transformation of values to/from normalized domain in :math:`[-1, 1]^m`
@@ -15,13 +15,17 @@ affine applied to each dimension separately.
 """
 import numpy as np
 
-from typing import Union
+from typing import Optional, Union
 
-from minterpy.global_settings import FLOAT_DTYPE
+from minterpy.global_settings import DEFAULT_DOMAIN, FLOAT_DTYPE
 from minterpy.utils.verification import verify_domain_bounds
 from minterpy.utils.exceptions import DomainMismatchError
 
 __all__ = ["Domain"]
+
+
+DEFAULT_ATOL = 1e-12
+DEFAULT_RTOL = 1e-9
 
 
 class Domain:
@@ -35,26 +39,30 @@ class Domain:
     Parameters
     ----------
     bounds : np.ndarray
-        The domain bounds as a 2D array with shape (m, 2),
-        where m is the spatial dimension.
+        The domain bounds as a 2D array with shape ``(m, 2)``,
+        where ``m`` is the spatial dimension.
         The first column contains the lower bounds and the second column
         the upper bounds across dimensions.
     """
+    _INTERNAL_BOUNDS: np.ndarray = DEFAULT_DOMAIN
 
     def __init__(self, bounds: np.ndarray):
 
         # Verify and assign the bounds
-        self.bounds = verify_domain_bounds(bounds)
+        self._bounds = verify_domain_bounds(bounds)
+
+        # Assign internal bounds
+        self._internal_bounds = None  # Lazy evaluation
 
     # --- Factory methods
     @classmethod
     def uniform(
         cls,
         spatial_dimension: int,
-        lower_bound: float,
-        upper_bound: float,
+        lower: float,
+        upper: float,
     ):
-        """Create an instance of Domain with uniform bounds across dimensions.
+        r"""Create an instance with uniform bounds.
 
         Creates a hyper-rectangular domain :math:`[a, b]^m` where :math:`a`
         and :math:`b` are the lower and upper bounds for each dimension,
@@ -64,9 +72,9 @@ class Domain:
         ----------
         spatial_dimension : int
             The number of dimensions for the space.
-        lower_bound : float
+        lower : float
             The lower bound of each dimension.
-        upper_bound : float
+        upper : float
             The upper bound of each dimension.
 
         Returns
@@ -76,14 +84,16 @@ class Domain:
             bounds, i.e., the same lower and upper bound for all dimensions.
         """
         bounds = np.empty((spatial_dimension, 2), dtype=FLOAT_DTYPE)
-        bounds[:, 0] = lower_bound
-        bounds[:, 1] = upper_bound
+        bounds[:, 0] = lower
+        bounds[:, 1] = upper
 
         return cls(bounds)
 
     @classmethod
     def normalized(cls, spatial_dimension: int):
-        """Create an instance of Domain with [-1, 1] bound across dimensions.
+        r"""Create an instance with the default internal bounds.
+
+        The default internal bounds are :math:`[-1, 1]^m`.
 
         Parameters
         ----------
@@ -93,21 +103,34 @@ class Domain:
         Returns
         -------
         Domain
-            A new instance of the `Domain` class initialized with normalized
-            bounds, i.e., :math:`[-1, 1]^m` where :math:`m`
+            A new instance of the `Domain` class initialized with the default
+            internal bounds, i.e., :math:`[-1, 1]^m` where :math:`m`
             is the spatial dimension.
         """
-        bounds = np.empty((spatial_dimension, 2), dtype=FLOAT_DTYPE)
-        bounds[:, 0] = -1.0
-        bounds[:, 1] = 1.0
+        internal_bounds = cls._INTERNAL_BOUNDS[np.newaxis, :]
+        bounds = np.repeat(internal_bounds, spatial_dimension, axis=0)
 
         return cls(bounds)
 
-    # --- Properties
+    # --- Properties (public)
+    @property
+    def bounds(self) -> np.ndarray:
+        """The domain bounds.
+
+        Return
+        ------
+        np.ndarray
+            The domain bounds as a 2D array with shape ``(m, 2)``,
+            where ``m`` is the spatial dimension.
+            The first column contains the lower bounds and the second column
+            the upper bounds across dimensions.
+        """
+        return self._bounds
+
     @property
     def spatial_dimension(self):
         """Dimension of the domain space.
-        
+
         Return
         ------
         int
@@ -116,7 +139,7 @@ class Domain:
         return len(self.bounds)
 
     @property
-    def lower_bounds(self) -> np.ndarray:
+    def lowers(self) -> np.ndarray:
         """The lower bounds of the domain.
 
         Returns
@@ -128,7 +151,7 @@ class Domain:
         return self.bounds[:, 0]
 
     @property
-    def upper_bounds(self) -> np.ndarray:
+    def uppers(self) -> np.ndarray:
         """The upper bounds of the domain.
 
         Returns
@@ -140,7 +163,7 @@ class Domain:
         return self.bounds[:, 1]
 
     @property
-    def domain_widths(self) -> np.ndarray:
+    def widths(self) -> np.ndarray:
         """The widths of the domain.
 
         Returns
@@ -149,34 +172,139 @@ class Domain:
             The difference between the upper and lower bounds of the domain
             as a one-dimensional array having shape ``(m, )``.
         """
-        return self.upper_bounds - self.lower_bounds
+        return self.uppers - self.lowers
 
     @property
     def is_normalized(self) -> bool:
-        """Check whether the domain is normalized.
+        """Check whether the domain is the same as the internal domain.
 
         Returns
         -------
         bool
             ``True`` if the domain is normalized, ``False`` otherwise.
+
+        Notes
+        -----
+        - This check uses numerical tolerances (``DEFAULT_RTOL`` and
+          ``DEFAULT_ATOL``) for robustness against floating-point errors.
         """
-        return (
-            np.all(self.lower_bounds == -1.0) and
-            np.all(self.upper_bounds == 1.0)
-        )
+        # Get the default tolerances
+        rtol = DEFAULT_RTOL
+        atol = DEFAULT_ATOL
+
+        lb = bool(np.allclose(self.lowers, self._internal_lowers, rtol, atol))
+        ub = bool(np.allclose(self.uppers, self._internal_uppers, rtol, atol))
+
+        return lb and ub
+
+    @property
+    def is_uniform(self) -> bool:
+        r"""Check whether the domain is uniform.
+
+        A uniform domain has the same lower and upper bounds in all dimensions,
+        i.e., the domain has the form :math:`[a, b]^m` for some :math:`a`
+        and :math:`b`.
+
+        Returns
+        -------
+        bool
+            ``True`` if the domain is uniform, ``False`` otherwise.
+
+        Notes
+        -----
+        - The dimension of a uniform domain can be expanded by extrapolating
+          the bounds of the extra dimension from the bounds of the other
+          dimensions.
+        - A domain of dimension 1 is always uniform by definition.
+        - A normalized domain is always uniform, but not vice versa.
+        - This check uses numerical tolerances (``DEFAULT_RTOL`` and
+          ``DEFAULT_ATOL``) for robustness against floating-point errors.
+        """
+        # Get the default tolerances
+        rtol = DEFAULT_RTOL
+        atol = DEFAULT_ATOL
+
+        # Lower bound condition
+        lb_c = np.allclose(self.lowers, self.lowers[0], rtol=rtol, atol=atol)
+
+        # Upper bound condition
+        ub_c = np.allclose(self.uppers, self.uppers[0], rtol=rtol, atol=atol)
+
+        return bool(lb_c and ub_c)
+
+    @property
+    def internal_bounds(self) -> np.ndarray:
+        """The bounds of the internal domain.
+
+        Returns
+        -------
+        np.ndarray
+            The bounds of the internal domain as a 2D array with shape
+            ``(m, 2)``, where ``m`` is the spatial dimension.
+            The first column contains the lower bounds and the second column
+            the upper bounds across dimensions.
+        """
+        if self._internal_bounds is None:
+            # Note: Use the default hard-coded internal bounds
+            self._internal_bounds = np.repeat(
+                self._INTERNAL_BOUNDS[np.newaxis, :],
+                self.spatial_dimension,
+                axis=0,
+            )
+
+        return self._internal_bounds
+
+    # --- Properties (private)
+    @property
+    def _internal_lowers(self) -> np.ndarray:
+        """The lower bounds of the internal domain.
+
+       Returns
+        -------
+        np.ndarray
+            The lower bounds of the internal domain as a one-dimensional array
+            having shape ``(m, )``.
+        """
+        return self.internal_bounds[:, 0]
+
+    @property
+    def _internal_uppers(self) -> np.ndarray:
+        """"The upper bounds of the internal domain.
+
+        Returns
+        -------
+        np.ndarray
+            The upper bounds of the internal domain as a one-dimensional array
+            having shape ``(m, )``.
+        """
+        return self.internal_bounds[:, 1]
+
+    @property
+    def _internal_widths(self) -> np.ndarray:
+        """"The widths of the internal domain.
+
+        Returns
+        -------
+        np.ndarray
+            The difference between the upper and lower bounds of the internal
+            domain as a one-dimensional array having shape ``(m, )``.
+        """
+        return self._internal_uppers - self._internal_lowers
 
     # --- Instance methods
-    def map_to_normalized(
+    def map_to_internal(
         self,
         xx: np.ndarray,
         validate: bool = False,
     ) -> np.ndarray:
-        """Map input points to normalized :math:`[-1, 1]^m` domain.
+        r"""Map input points to the internal domain.
+
+        The default internal domain is :math:`[-1, 1]^m`.
 
         Parameters
         ----------
         xx : :class:`numpy:numpy.ndarray`
-            The input points to be mapped to the normalized domain.
+            The input points to be mapped to the internal domain.
         validate : bool, optional
             If True, validate that input points are within domain bounds, i.e.,
             no extrapolation is allowed.
@@ -184,8 +312,8 @@ class Domain:
         Returns
         -------
         :class:`numpy:numpy.ndarray`
-            The normalized points in :math:`[-1, 1]^m` domain, except when
-            extrapolated (with ``validate=False``).
+            The points in the internal domain, except when extrapolated
+            (with ``validate=False``).
         """
         if validate and not np.all(self.contains(xx)):
             raise ValueError(
@@ -193,19 +321,24 @@ class Domain:
                 "Set validate=False to allow extrapolation."
             )
 
-        return -1 + 2 * (xx - self.lower_bounds) / self.domain_widths
+        ilb = self._internal_lowers
+        iwidths = self._internal_widths
 
-    def map_from_normalized(
+        return ilb + iwidths * (xx - self.lowers) / self.widths
+
+    def map_from_internal(
         self,
         xx: np.ndarray,
         validate: bool = False,
     ) -> np.ndarray:
-        """Map normalized points in :math:`[-1, 1]^m` to the original domain.
+        r"""Map points in the internal domain to the original domain.
+
+        The default internal domain is :math:`[-1, 1]^m`.
 
         Parameters
         ----------
         xx : :class:`numpy:numpy.ndarray`
-            The input points in the normalized domain to be mapped
+            The input points in the internal domain to be mapped
             to the original domain.
         validate : bool, optional
             If True, validate that input points are within domain bounds, i.e.,
@@ -216,13 +349,16 @@ class Domain:
         :class:`numpy:numpy.ndarray`
             The points in the original domain.
         """
-        if validate and not np.all((xx <= 1.0) & (xx >= -1.0)):
+        if validate and not np.all(self.contains(xx, internal=True)):
             raise ValueError(
-                "Input points are outside of [-1, 1]^m domain. "
+                "Input points are outside of the internal domain. "
                 "Set validate=False to allow extrapolation."
             )
 
-        return self.lower_bounds + (xx + 1) / 2 * self.domain_widths
+        ilb = self._internal_lowers
+        iwidths = self._internal_widths
+
+        return self.lowers + (xx - ilb) / iwidths * self.widths
 
     def get_int_factor(self) -> float:
         """Compute the scaling factor for polynomial integration.
@@ -237,7 +373,7 @@ class Domain:
         - Here, we assume that the integration is carried out over all
           dimensions.
         """
-        return float(np.prod(self.domain_widths / 2.0))
+        return float(np.prod(self.widths / self._internal_widths))
 
     def get_diff_factor(self, order: np.ndarray) -> float:
         """Compute the scaling factor for polynomial differentiation.
@@ -255,17 +391,35 @@ class Domain:
             The scaling factor for polynomial differentiation.
         """
         idx = order > 0
+        iwidths = self._internal_widths
 
-        return float(np.prod((2.0 / self.domain_widths[idx])**(order[idx])))
+        return float(np.prod((iwidths[idx] / self.widths[idx])**(order[idx])))
 
-    def partial_matching(self, other: "Domain") -> bool:
+    def partial_matching(
+        self,
+        other: "Domain",
+        rtol: Optional[float] = None,
+        atol: Optional[float] = None,
+    ) -> bool:
         """Compare two instances of domain up to the common dimension.
+
+        This method performs approximate equality checking between two domains
+        using numerical tolerances, comparing only up to the minimum spatial
+        dimension of the two domains.
+        This is useful for checking compatibility of domains of different
+        dimensions before, e.g., merging.
 
         Parameters
         ----------
         other : Domain
             An instance of :class:`Domain` that is to be compared with
             the current instance.
+        rtol : float, optional
+            The relative tolerance parameter. If not specified,
+            the module-level default ``DEFAULT_RTOL`` is used.
+        atol : float, optional
+            The absolute tolerance parameter. If not specified,
+            the module-level default ``DEFAULT_ATOL`` is used.
 
         Returns
         -------
@@ -273,17 +427,41 @@ class Domain:
             ``True`` if the two instances matches up to the common dimension,
             ``False`` otherwise.
         """
+        # Get the default tolerances
+        rtol = DEFAULT_RTOL if rtol is None else rtol
+        atol = DEFAULT_ATOL if atol is None else atol
+
         dim = min(self.spatial_dimension, other.spatial_dimension)
 
-        return np.all(self.bounds[:dim, :] == other.bounds[:dim, :])
+        # "User" bounds
+        bounds_match = np.allclose(
+            self.bounds[:dim, :],
+            other.bounds[:dim, :],
+            rtol=rtol,
+            atol=atol,
+        )
 
-    def contains(self, xx: np.ndarray) -> np.ndarray:
+        # Check internal bounds (currently identical for all instances,
+        # but enables future generalization of internal coordinate system)
+        internal_bounds_match = np.allclose(
+            self.internal_bounds[:dim, :],
+            other.internal_bounds[:dim, :],
+            rtol=rtol,
+            atol=atol,
+        )
+
+        return bool(bounds_match and internal_bounds_match)
+
+    def contains(self, xx: np.ndarray, internal: bool = False) -> np.ndarray:
         """Check whether the input points are contained in the domain.
 
         Parameters
         ----------
         xx : :class:`numpy:numpy.ndarray`
             A set of values to be checked.
+        internal : bool, optional
+            Check against internal bounds instead of the domain bounds.
+            The default is ``False``.
 
         Returns
         -------
@@ -291,10 +469,14 @@ class Domain:
             A boolean array indicating whether each point is contained
             in the domain.
         """
-        return (
-                np.all(self.lower_bounds <= xx, axis=1)
-                & np.all(xx <= self.upper_bounds, axis=1)
-        )
+        if internal:
+            lb = self._internal_lowers
+            ub = self._internal_uppers
+        else:
+            lb = self.lowers
+            ub = self.uppers
+
+        return np.all(lb <= xx, axis=1) & np.all(xx <= ub, axis=1)
 
     def expand_dim(self, target: Union[int, "Domain"]) -> "Domain":
         """Expand the dimension of the domain.
@@ -322,27 +504,41 @@ class Domain:
             If the target domain does not match the current domain.
         TypeError
             If the target is not an instance of Domain or int.
+
+        Notes
+        -----
+        - If the target domain is the current instance, the current instance
+          is returned.
         """
         if isinstance(target, int):
+
             if target < self.spatial_dimension:
                 raise ValueError(
                     f"Target dimension {target} cannot be smaller than "
                     f"the current dimension {self.spatial_dimension}"
                 )
 
-            if not self.is_normalized:
+            if not self.is_uniform:
                 raise ValueError(
-                    "Un-normalized domain cannot be expanded due to ambigous "
+                    "Non-uniform domain cannot be expanded due to ambiguous "
                     "bounds for the extra dimension."
                 )
 
-            return self.__class__.normalized(target)
+            lb = self.lowers[0]
+            ub = self.uppers[0]
+
+            return self.__class__.uniform(target, lb, ub)
 
         if isinstance(target, Domain):
+
             if not self.partial_matching(target):
                 raise DomainMismatchError(
                     "Target domain does not match the current domain"
                 )
+
+            # If there's no need to expand, return the current instance
+            if self is target:
+                return self
 
             if target.spatial_dimension < self.spatial_dimension:
                 raise ValueError(
@@ -363,8 +559,10 @@ class Domain:
     def __eq__(self, other: "Domain") -> bool:
         """Compare two instances of Domain for exact equality in value.
 
-        Two instances of :class:`Domain` class is equal in value if
-        and only if both the underlying bounds are equal.
+        Two instances of :class:`Domain` class are considered equal in value if
+        and only if their underlying bounds arrays are exactly equal.
+        In other words, this is a strict comparison without any numerical
+        tolerance.
 
         Parameters
         ----------
@@ -378,11 +576,16 @@ class Domain:
             ``True`` if the two instances are equal in value,
             ``False`` otherwise.
         """
-        if self.spatial_dimension != other.spatial_dimension:
+        if not isinstance(other, Domain):
             return False
 
-        return self.partial_matching(other)
+        bounds_eq = np.array_equal(self.bounds, other.bounds)
+        internal_bounds_eq = np.array_equal(
+            self.internal_bounds,
+            other.internal_bounds,
+        )
 
+        return bool(bounds_eq and internal_bounds_eq)
 
     def __or__(self, other: "Domain") -> "Domain":
         """Combine two instances of Domain via the ``|`` operator.
@@ -393,7 +596,7 @@ class Domain:
         Parameters
         ----------
         other : Domain
-            An instance of :class:`Domain` that is to be combined with the
+            An instance of :class:`Domain` that is to be combined with
             the current instance.
 
         Returns
