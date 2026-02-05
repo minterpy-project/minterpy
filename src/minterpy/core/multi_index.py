@@ -1029,7 +1029,11 @@ class MultiIndexSet:
             ``True`` if the two instances are equal in value, ``False``
             otherwise.
         """
-        # Check for consistent type
+        # Identity check
+        if self is other:
+            return True
+
+        # Check for a consistent type
         if not isinstance(other, MultiIndexSet):
             return False
 
