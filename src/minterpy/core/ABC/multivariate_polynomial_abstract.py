@@ -240,7 +240,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     # TODO static methods should not have a parameter "self"
     @staticmethod
     @abc.abstractmethod
-    def _add(poly_1, poly_2):  # pragma: no cover
+    def _add(poly_1, poly_2, **kwargs):  # pragma: no cover
         # no docstring here, since it is given in the concrete implementation
         pass
 
@@ -825,10 +825,17 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # Verify the operands before conducting addition
         poly_1, poly_2 = self._verify_operands(other)
 
-        # Compute the grid for the polynomial sum
-        grd_sum = poly_1.grid | poly_2.grid
+        # Compute the grid of the polynomial sum
+        grd_add = poly_1.grid | poly_2.grid
 
-        return self._add(poly_1, poly_2)
+        # Compute the multi-index set of the polynomial sum
+        # NOTE: They differ only if one of the polynomials has separate indices
+        if poly_1.indices_are_separate or poly_2.indices_are_separate:
+            mi_add = poly_1.multi_index | poly_2.multi_index
+        else:
+            mi_add = grd_add.multi_index
+
+        return self._add(poly_1, poly_2, multi_index=mi_add, grid=grd_add)
 
     def __sub__(self, other: Union["MultivariatePolynomialSingleABC", SCALAR]):
         """Subtract the polynomial(s) with another poly. or a real scalar.
@@ -905,10 +912,17 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # Verify the operands before conducting multiplication
         poly_1, poly_2 = self._verify_operands(other)
 
-        # Compute the grid for the polynomial product
-        grd_prod = poly_1.grid * poly_2.grid
+        # Compute the grid of the polynomial product
+        grd_mul = poly_1.grid * poly_2.grid
 
-        return self._mul(poly_1, poly_2)
+        # Compute the multi-index set of the polynomial product
+        # NOTE: They differ only if one of the polynomials has separate indices
+        if poly_1.indices_are_separate or poly_2.indices_are_separate:
+            mi_mul = poly_1.multi_index * poly_2.multi_index
+        else:
+            mi_mul = grd_mul.multi_index
+
+        return self._mul(poly_1, poly_2, multi_index=mi_mul, grid=grd_mul)
 
     def __truediv__(self, other: SCALAR) -> "MultivariatePolynomialSingleABC":
         """Divide an instance of polynomial with a real scalar number (``/``).
@@ -1474,7 +1488,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         # Check if the number of coefficients is consistent
         if len(self) != len(other):
             raise ValueError(
-                "Cannot add polynomials with inconsistent "
+                "Cannot operate on polynomials with inconsistent "
                 "number of coefficient sets"
             )
         return self, other
