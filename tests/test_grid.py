@@ -649,7 +649,7 @@ class TestCall:
         # Call the Grid instance
         yy_1 = grd(_fun_one_out, sum=True)
         yy_2 = _fun_one_out(
-            random_unif_domain.map_from_normalized(grd.unisolvent_nodes),
+            random_unif_domain.map_from_internal(grd.unisolvent_nodes),
             sum=True,
         )
 

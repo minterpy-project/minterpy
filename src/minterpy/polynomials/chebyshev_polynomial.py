@@ -28,7 +28,7 @@ from minterpy.utils.polynomials.interface import (
     scalar_add_via_monomials,
     select_active_monomials,
 )
-from minterpy.utils.verification import dummy, verify_domain
+from minterpy.utils.verification import dummy
 from minterpy.services import is_scalar
 
 
@@ -171,10 +171,6 @@ class ChebyshevPolynomial(MultivariatePolynomialSingleABC):
     _diff = staticmethod(dummy)  # type: ignore
     _integrate_over = staticmethod(dummy)  # type: ignore
 
-    # Domain generation
-    generate_internal_domain = staticmethod(verify_domain)
-    generate_user_domain = staticmethod(verify_domain)
-
 
 # --- Internal utility functions
 def _compute_data_poly_sum(
@@ -216,18 +212,7 @@ def _compute_data_poly_sum(
     #       instead of the one attached to grid
     coeffs_sum = compute_coeffs_poly_sum_via_monomials(poly_1, poly_2, mi_sum)
 
-    # --- Process the domains
-    # Deprecate: the properties will be removed in the future
-    internal_domain_sum = grd_sum.domain.bounds.T
-    user_domain_sum = grd_sum.domain.bounds.T
-
-    return PolyData(
-        mi_sum,
-        coeffs_sum,
-        internal_domain_sum,
-        user_domain_sum,
-        grd_sum,
-    )
+    return PolyData(mi_sum, coeffs_sum, grd_sum)
 
 
 def _compute_data_poly_prod(
@@ -262,18 +247,7 @@ def _compute_data_poly_prod(
     #       instead of the one attached to grid
     coeffs_prod = _compute_coeffs_poly_prod(poly_1, poly_2, grd_prod, mi_prod)
 
-    # --- Process the domains
-    # Deprecate: the properties will be removed in the future
-    internal_domain_prod = grd_prod.domain.bounds.T
-    user_domain_prod = grd_prod.domain.bounds.T
-
-    return PolyData(
-        multi_index=mi_prod,
-        coeffs=coeffs_prod,
-        internal_domain=internal_domain_prod,
-        user_domain=user_domain_prod,
-        grid=grd_prod,
-    )
+    return PolyData(multi_index=mi_prod, coeffs=coeffs_prod, grid=grd_prod)
 
 
 def _compute_coeffs_poly_prod(

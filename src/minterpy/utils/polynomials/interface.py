@@ -22,8 +22,6 @@ class PolyData(NamedTuple):
     """Container for complete inputs to create a polynomial in any basis."""
     multi_index: MultiIndexSet
     coeffs: np.ndarray
-    internal_domain: np.ndarray
-    user_domain: np.ndarray
     grid: Grid
 
 
@@ -377,7 +375,12 @@ def _create_scalar_poly(
     # Create a Grid
     # The grid of the polynomial may not include the multi-index set element
     # (0, ..., 0) (i.e., it's non-downward-closed) so create a new one.
-    grd = Grid(mi, poly.grid.generating_function, poly.grid.generating_points)
+    grd = Grid(
+        mi,
+        poly.grid.generating_function,
+        poly.grid.generating_points,
+        domain=poly.grid.domain,
+    )
 
     # Create the coefficient
     if len(poly) == 1:
@@ -389,13 +392,7 @@ def _create_scalar_poly(
         )
 
     # Return a polynomial instance of the same class as input
-    return poly.__class__(
-        multi_index=mi,
-        coeffs=coeffs,
-        internal_domain=poly.internal_domain,
-        user_domain=poly.user_domain,
-        grid=grd,
-    )
+    return poly.__class__(multi_index=mi, coeffs=coeffs, grid=grd)
 
 
 def _match_mi_dim(mi_1: MultiIndexSet, mi_2: MultiIndexSet) -> MultiIndexSet:

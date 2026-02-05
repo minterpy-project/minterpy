@@ -22,10 +22,7 @@ from minterpy.utils.polynomials.interface import (
     PolyData,
     scalar_add_via_monomials,
 )
-from minterpy.utils.verification import (
-    dummy,
-    verify_domain,
-)
+from minterpy.utils.verification import dummy
 from minterpy.utils.arrays import make_coeffs_2d
 from minterpy.utils.multi_index import find_match_between
 from minterpy.jit_compiled.multi_index import all_indices_are_contained
@@ -144,11 +141,6 @@ def mul_canonical(
     return CanonicalPolynomial(**poly_prod_data._asdict())
 
 
-# TODO redundant
-canonical_generate_internal_domain = verify_domain
-canonical_generate_user_domain = verify_domain
-
-
 def _canonical_partial_diff(poly: "CanonicalPolynomial", dim: int, order: int) -> "CanonicalPolynomial":
     """ Partial differentiation in Canonical basis.
     """
@@ -240,10 +232,6 @@ class CanonicalPolynomial(MultivariatePolynomialSingleABC):
     _diff = staticmethod(_canonical_diff)
     _integrate_over = staticmethod(_canonical_integrate_over)
 
-    # Domain generation
-    generate_internal_domain = staticmethod(canonical_generate_internal_domain)
-    generate_user_domain = staticmethod(canonical_generate_user_domain)
-
 
 # --- Internal utility functions
 def _compute_data_poly_sum(
@@ -291,8 +279,8 @@ def _compute_data_poly_sum(
     return PolyData(
         multi_index=mi_sum,
         coeffs=coeffs_sum,
-        internal_domain=internal_domain_sum,
-        user_domain=user_domain_sum,
+        # internal_domain=internal_domain_sum,
+        # user_domain=user_domain_sum,
         grid=grd_sum,
     )
 
@@ -339,18 +327,7 @@ def _compute_data_poly_prod(
         mi_prod,
     )
 
-    # --- Process the domains
-    # Deprecate: the properties will be removed in the future
-    internal_domain_prod = grd_prod.domain.bounds.T
-    user_domain_prod = grd_prod.domain.bounds.T
-
-    return PolyData(
-        multi_index=mi_prod,
-        coeffs=coeffs_prod,
-        internal_domain=internal_domain_prod,
-        user_domain=user_domain_prod,
-        grid=grd_prod,
-    )
+    return PolyData(multi_index=mi_prod, coeffs=coeffs_prod, grid=grd_prod)
 
 
 def _compute_quad_weights(
