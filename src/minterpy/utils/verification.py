@@ -560,23 +560,30 @@ def verify_poly_coeffs(coeffs: np.ndarray, num_monomials: int) -> np.ndarray:
     return coeffs
 
 
-def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:
+def standardize_query_points(
+    xx: np.ndarray,
+    spatial_dimension: int,
+    truncate_cols: bool = False,
+) -> np.ndarray:
     r"""Verify if the values of the query points for evaluation are valid.
 
     Parameters
     ----------
     xx : :class:`numpy:numpy.ndarray`
         A one- or two-dimensional array of query points at which a polynomial
-        is evaluated. The length of the array is ``N``, i.e., the number
+        is evaluated. The length of the array is ``k``, i.e., the number
         of query points.
     spatial_dimension : int
         The spatial dimension of the polynomial (``m``).
         The shape of the query points array must be consistent with this.
+    truncate_cols : bool, optional
+        If ``True``, truncate columns to match ``spatial_dimension`` after
+        conversion to array. Default is ``False``.
 
     Returns
     -------
     :class:`numpy:numpy.ndarray`
-        A two-dimensional array of ``numpy.float64`` with a length of ``N``
+        A two-dimensional array of ``numpy.float64`` with a length of ``k``
         and a number of columns of ``m``. If the dtype of the array is not of
         `numpy.float64`, the function does a type conversion if possible.
 
@@ -590,26 +597,28 @@ def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:
 
     Examples
     --------
-    >>> verify_query_points(1, 1)  # a scalar integer
+    >>> standardize_query_points(1, 1)  # a scalar integer
     array([[1.]])
-    >>> verify_query_points([3., 4., 5.], 1)  # a list
+    >>> standardize_query_points([3., 4., 5.], 1)  # a list
     array([[3.],
            [4.],
            [5.]])
-    >>> verify_query_points([[3, 4, 5]], 3)  # a list of lists of integers
+    >>> standardize_query_points([[3, 4, 5]], 3)  # a list of lists of integers
     array([[3., 4., 5.]])
-    >>> verify_query_points(np.array([1., 2., 3.]), 1)  # 1 dimension
+    >>> standardize_query_points(np.array([1., 2., 3.]), 1)  # 1 dimension
     array([[1.],
            [2.],
            [3.]])
-    >>> verify_query_points(np.array([[1., 2.], [3., 4.]]), 2)  # 2 dimensions
+    >>> standardize_query_points(np.array([[1., 2.], [3., 4.]]), 2)  # 2 dims
     array([[1., 2.],
            [3., 4.]])
-    >>> verify_query_points(np.array([1, 2, 3]), 1)  # integer
+    >>> standardize_query_points(np.array([1, 2, 3]), 1)  # integer
     array([[1.],
            [2.],
            [3.]])
-    >>> verify_query_points(np.array(["a", "b"]), 1) # doctest: +ELLIPSIS
+    >>> standardize_query_points(np.array([[1, 2, 3]]), 2, True)  # Truncate
+    array([[1., 2.]])
+    >>> standardize_query_points(np.array(["a", "b"]), 1) # doctest: +ELLIPSIS
     Traceback (most recent call last):
     ...
     ValueError: could not convert string to float: ...
@@ -629,8 +638,10 @@ def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:
 
         # Check spatial dimension
         if xx.ndim == 1:
+            xx = xx[:spatial_dimension] if truncate_cols else xx
             dim = 1
         else:
+            xx = xx[:, :spatial_dimension] if truncate_cols else xx
             dim = xx.shape[1]
         dim_is_consistent = dim == spatial_dimension
         if not dim_is_consistent:

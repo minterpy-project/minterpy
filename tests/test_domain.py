@@ -168,9 +168,9 @@ class TestProperties:
         my_dom_3 = Domain(bounds)
 
         # Assertions
-        assert my_dom_1.is_normalized
-        assert my_dom_2.is_normalized
-        assert my_dom_3.is_normalized
+        assert my_dom_1.is_identity
+        assert my_dom_2.is_identity
+        assert my_dom_3.is_identity
         # Normalized domain is always uniform.
         assert my_dom_1.is_uniform
         assert my_dom_2.is_uniform
@@ -181,7 +181,7 @@ class TestProperties:
         my_dom = Domain(random_bounds_valid)
 
         # Assertion
-        assert not my_dom.is_normalized
+        assert not my_dom.is_identity
 
     def test_is_uniform(self, SpatialDimension):
         """Test the uniform property for uniform domain."""
@@ -194,7 +194,7 @@ class TestProperties:
 
         # Assertions
         assert domain.is_uniform
-        assert not domain.is_normalized  # In general not normalized.
+        assert not domain.is_identity  # In general not normalized.
 
     def test_is_not_uniform(self, random_bounds_valid):
         """Test the uniform property for non-uniform domain."""

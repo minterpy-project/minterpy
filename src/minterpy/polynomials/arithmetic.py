@@ -182,8 +182,9 @@ def _compute_coeffs_poly_add_via_lagrange(
     # Compute the values of the operands at the unisolvent nodes
     # NOTE: The grid may be of higher dimension than one of the polynomials;
     #       evaluation must ignore the extra dimensions
-    lag_coeffs_1 = grid_add(poly_1, truncate_cols=True)
-    lag_coeffs_2 = grid_add(poly_2, truncate_cols=True)
+    nodes_add = grid_add.unisolvent_nodes
+    lag_coeffs_1 = poly_1.eval_on_internal(nodes_add, truncate_cols=True)
+    lag_coeffs_2 = poly_2.eval_on_internal(nodes_add, truncate_cols=True)
     lag_coeffs_add = lag_coeffs_1 + lag_coeffs_2
 
     return lag_coeffs_add
@@ -297,8 +298,9 @@ def _compute_coeffs_poly_mul_via_lagrange(
     # Compute the values of the operands at the unisolvent nodes
     # NOTE: The grid may be of higher dimension than one of the polynomials;
     #       evaluation must ignore the extra dimensions
-    lag_coeffs_1 = grid_mul(poly_1, truncate_cols=True)
-    lag_coeffs_2 = grid_mul(poly_2, truncate_cols=True)
+    nodes_mul = grid_mul.unisolvent_nodes
+    lag_coeffs_1 = poly_1.eval_on_internal(nodes_mul, truncate_cols=True)
+    lag_coeffs_2 = poly_2.eval_on_internal(nodes_mul, truncate_cols=True)
     lag_coeffs_prod = lag_coeffs_1 * lag_coeffs_2
 
     return lag_coeffs_prod

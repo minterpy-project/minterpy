@@ -857,11 +857,12 @@ class Grid:
           there no transformation takes place.
         """
         # No need for type checking the argument; rely on Python to raise any
-        # exceptions when a problematic 'fun' is called on the nodes.
-        if self.domain.is_normalized:
+        # exceptions when problematic 'fun' is called on the nodes.
+        if self.domain.is_identity:
             xx = self.unisolvent_nodes
         else:
             xx = self.domain.map_from_internal(self.unisolvent_nodes)
+
         return fun(xx, *args, **kwargs)
 
     # --- Dunder methods: Rich comparison

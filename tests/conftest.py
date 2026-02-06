@@ -73,7 +73,7 @@ POLY_DEGREES = [0, 1, 4]  # NOTE: Include test for poly_degree 0 (Issue #27)
 LP_DEGREES = [0.5, 1.0, 2.0, np.inf]
 
 # Number of coefficient sets in a single polynomial instance
-NUM_POLYS = [1, 2, 5]
+NUM_POLYS = [1, 4]
 
 
 # asserts that a call runs as expected

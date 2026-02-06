@@ -25,6 +25,7 @@ from minterpy import (
     LagrangePolynomial,
     MultiIndexSet,
 )
+from minterpy.global_settings import DEFAULT_DOMAIN
 from minterpy.utils.exceptions import DomainMismatchError
 
 
@@ -545,6 +546,42 @@ class TestEvaluation:
             for i in range(num_polynomials):
                 # Due to identical coefficients, results are identical
                 assert np.allclose(yy_test[:, i], yy_test[:, 0])
+
+    def test_different_domains(
+        self,
+        poly_class_no_lag,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+        num_polynomials,
+    ):
+        """Test that domain affects input transformation, not internal poly."""
+        m, n, p = SpatialDimension, PolyDegree, LpDegree
+        mi = MultiIndexSet.from_degree(m, n, p)
+        coeffs = np.arange(len(mi), dtype=float)
+        coeffs = np.repeat(coeffs[:, None], num_polynomials, axis=1)
+
+        # Create a polynomial instance with the default internal domain
+        poly_1 = poly_class_no_lag(mi, coeffs)
+
+        # Create the same polynomial with custom domain
+        lb = np.random.uniform(0, 5, size=m)
+        ub = lb + np.random.uniform(5, 10, size=m)  # Ensure ub > lb
+        domain = Domain(np.c_[lb, ub])
+        poly_2 = poly_class_no_lag(mi, coeffs, domain=domain)
+
+        # Test points in the internal domain
+        lb, ub = DEFAULT_DOMAIN
+        xx_test_1 = lb + (ub - lb) * np.random.rand(100, m)
+
+        # Corresponding points in the custom domain
+        xx_test_2 = poly_2.domain.map_from_internal(xx_test_1)
+
+        # Assertion
+        yy_1 = poly_1(xx_test_1)
+        yy_2 = poly_2(xx_test_2)
+
+        assert np.allclose(yy_1, yy_2)
 
 
 class TestNegation:
