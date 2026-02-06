@@ -16,6 +16,7 @@ import abc
 import numpy as np
 
 from copy import copy, deepcopy
+from numpy.typing import ArrayLike
 from typing import List, Optional, Tuple, Union
 
 from minterpy.global_settings import ARRAY, SCALAR
@@ -25,9 +26,9 @@ from minterpy.core.multi_index import MultiIndexSet
 from minterpy.utils.verification import (
     is_real_scalar,
     shape_eval_output,
+    standardize_query_points,
     verify_poly_coeffs,
     verify_poly_power,
-    verify_query_points,
 )
 from minterpy.utils.multi_index import find_match_between
 from minterpy.utils.exceptions import DomainMismatchError
@@ -136,29 +137,34 @@ class MultivariatePolynomialABC(abc.ABC):
         """
         pass
 
-    def __call__(self, xx: np.ndarray, *, truncate_cols: bool = False, **kwargs) -> np.ndarray:
-        """Evaluate the polynomial on a set of query points.
+    # --- Instance methods: Public
+    def eval_on_internal(
+        self,
+        xx: np.ndarray,
+        *,
+        truncate_cols: bool = False,
+        **kwargs,
+    ) -> np.ndarray:
+        """Evaluate polynomial at points in the internal domain.
 
-        The function is called when an instance of a polynomial is called with
-        a set of query points, i.e., :math:`p(\mathbf{X})` where
-        :math:`\mathbf{X}` is a matrix of values with :math:`k` rows
-        and each row is of length :math:`m` (i.e., a point in
-        :math:`m`-dimensional space).
+        This method evaluates the polynomial at points assumed to already be
+        in the internal domain used by the polynomial's algorithms. It skips
+        coordinate transformation to avoid unnecessary floating-point error
+        accumulation.
 
         Parameters
         ----------
         xx : :class:`numpy:numpy.ndarray`
-            The set of query points to evaluate as a two-dimensional array
-            of shape ``(k, m)`` where ``k`` is the number of query points and
-            ``m`` is the spatial dimension of the polynomial.
+            Query points in the internal domain. It should be a two-dimensional
+            array of shape ``(k, m)`` where ``k`` is the number of query points
+            and ``m`` is the spatial dimension.
         truncate_cols : bool, optional
             If ``True``, then the last columns of ``xx`` are truncated to match
             the spatial dimension of the polynomial; otherwise all provided
-            columns are attempted to be evaluated.
-            The default is ``False``.
+            columns are attempted to be evaluated. The default is ``False``.
         **kwargs
-            Additional keyword-only arguments that change the behavior of
-            the underlying evaluation (see the concrete implementation).
+            Additional keyword-only arguments passed to the underlying
+            evaluation method (see concrete implementation).
 
         Returns
         -------
@@ -175,6 +181,15 @@ class MultivariatePolynomialABC(abc.ABC):
 
         Notes
         -----
+        - Use this method when: (1) Points are already in the internal
+          domain (e.g., unisolvent nodes) (2) Avoiding unnecessary coordinate
+          transformations that incur floating-point errors.
+        - Coordinate transformations are not free numerically. While they
+          are affine, round-trip transformations over many interation may
+          accumulate floating-point errors.
+
+        Notes
+        -----
         - The function calls the concrete implementation of the static method
           ``_eval()``.
 
@@ -183,28 +198,18 @@ class MultivariatePolynomialABC(abc.ABC):
         _eval
             The underlying static method to evaluate the polynomial(s) instance
             on a set of query points.
-
-        TODO
-        ----
-        - Possibly built-in rescaling between ``user_domain`` and
-          ``internal_domain``. An idea: use sklearn min max scaler
-          (``transform()`` and ``inverse_transform()``)
         """
-        # Verify query points
+        # Truncate
         if truncate_cols:
             xx = xx[:, :self.spatial_dimension]
 
-        xx = verify_query_points(xx, self.spatial_dimension)
-
-        # Evaluate using concrete static method
+        # Evaluate using a concrete static method
         yy = self._eval(self, xx, **kwargs)
 
         # Follow the convention of output shape from an evaluation
-        return shape_eval_output(yy)
+        yy = shape_eval_output(yy)
 
-    # anything else any polynomial must support
-    # TODO mathematical operations? abstract
-    # TODO copy operations. abstract
+        return yy
 
 
 class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
@@ -1153,6 +1158,52 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             return 1
 
         return self.coeffs.shape[1]
+
+    # --- Special methods: Callable instance
+    def __call__(
+        self,
+        xx: ArrayLike,
+        *,
+        truncate_cols: bool = False,
+        **kwargs,
+    ) -> np.ndarray:
+        r"""Evaluate the polynomial on a set of query points.
+
+        The function is called when an instance of a polynomial is called with
+        a set of query points, i.e., :math:`p(\mathbf{X})` where
+        :math:`\mathbf{X}` is a matrix of values with :math:`k` rows
+        and each row is of length :math:`m` (i.e., a point in
+        :math:`m`-dimensional space).
+
+        Parameters
+        ----------
+        xx : array_like
+            Query points to evaluate. Can be a scalar, list, or numpy array.
+            The points will be standardized to a two-dimensional array of
+            shape ``(k, m)`` where ``k`` is the number of query points and
+            ``m`` is the spatial dimension of the polynomial.
+        truncate_cols : bool, optional
+            If ``True``, then the last columns of ``xx`` are truncated to match
+            the spatial dimension of the polynomial; otherwise all provided
+            columns are attempted to be evaluated. The default is ``False``.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying evaluation (see the concrete implementation).
+
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            The values of the polynomial evaluated at query points.
+        """
+        # Standardize query points
+        dim = self.spatial_dimension
+        xx = standardize_query_points(xx, dim, truncate_cols=truncate_cols)
+
+        if not self.domain.is_identity:
+            xx = self.domain.map_to_internal(xx)
+
+        # Query points are standardized and truncated
+        return self.eval_on_internal(xx, truncate_cols=False, **kwargs)
 
     # --- Instance methods
     def _new_instance_if_necessary(

@@ -27,7 +27,7 @@ from minterpy.utils.polynomials.newton import (
     eval_newton_monomials,
     eval_newton_polynomials,
 )
-from minterpy.utils.verification import verify_query_points
+from minterpy.utils.verification import standardize_query_points
 from .regression_abc import RegressionABC
 
 __all__ = ["OrdinaryRegression"]
@@ -330,7 +330,7 @@ class OrdinaryRegression(RegressionABC):
             )
 
         # Verify the training points
-        xx = verify_query_points(xx, self.multi_index.spatial_dimension)
+        xx = standardize_query_points(xx, self.multi_index.spatial_dimension)
 
         # Get the regression matrix on the data points
         self._regression_matrix = self.get_regression_matrix(xx)

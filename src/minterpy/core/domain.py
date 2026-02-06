@@ -175,18 +175,20 @@ class Domain:
         return self.uppers - self.lowers
 
     @property
-    def is_normalized(self) -> bool:
-        """Check whether the domain is the same as the internal domain.
+    def is_identity(self) -> bool:
+        """Check whether the domain is (approx) equal to the internal domain.
 
         Returns
         -------
         bool
-            ``True`` if the domain is normalized, ``False`` otherwise.
+            ``True`` if the domain is an identity, ``False`` otherwise.
 
         Notes
         -----
         - This check uses numerical tolerances (``DEFAULT_RTOL`` and
           ``DEFAULT_ATOL``) for robustness against floating-point errors.
+        - When the domain is an identity, transformations and scaling factors
+          computation can usually be skipped.
         """
         # Get the default tolerances
         rtol = DEFAULT_RTOL

@@ -9,12 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Domain-aware polynomial evaluation: `__call__()` now accepts query points in (user) domain with automatic transformation to internal domain (currently [-1, 1]^m)
+- - `eval_on_internal()` method for direct polynomial evaluation in internal domain, bypassing coordinate transformation
 - `Domain` class for handling transformation between user-defined rectangular domains
   and internal (reference) domains
   - Support for coordinate transformations via `map_to_internal()` and `map_from_internal()`
   - Automatic scaling factor computation for differentiation and integration
   - Domain validation via `contains()` method
   - Factory methods: `uniform()` and `normalized()`
+  - The property `is_identity` indicates if the user-defined domain is identical to the internal domain
 - Domain support integrated into `Grid` class
   - `domain` parameter in Grid constructor (defaults to normalized domain in [-1, 1]^m)
   - Grid operations (`*`, `|`) now validate domain consistency
