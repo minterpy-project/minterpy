@@ -351,7 +351,7 @@ class TestScalingFactor:
         diff_bounds = random_bounds_valid[:, 1] - random_bounds_valid[:, 0]
 
         assert np.isclose(
-            dom.get_int_factor(),
+            dom.int_factor(),
             np.prod(diff_bounds) / 2**dom.spatial_dimension,
         )
 
@@ -359,7 +359,7 @@ class TestScalingFactor:
         """Test the integration scaling factor for normalized domain."""
         dom = Domain.normalized(SpatialDimension)
 
-        assert np.isclose(dom.get_int_factor(), 1.)
+        assert np.isclose(dom.int_factor(), 1.)
 
     def test_diff_zero_order(self, random_bounds_valid):
         """Test the differentiation scaling factor for 0th-order derivative."""

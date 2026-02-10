@@ -367,21 +367,21 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     @abc.abstractmethod
     def _integrate_over(
         poly: "MultivariatePolynomialABC",
-        bounds: Optional[np.ndarray],
+        bounds: np.ndarray,
         **kwargs,
     ) -> Union[float, np.ndarray]:
-        """Abstract method for definite integration.
+        r"""Abstract method for definite integration.
 
         Parameters
         ----------
         poly : MultivariatePolynomialABC
             The instance of polynomial to integrate.
-        bounds : Union[List[List[float]], np.ndarray], optional
-            The bounds of the integral, an ``(m, 2)`` array where ``m``
+        bounds : :class:`numpy:numpy.ndarray`
+            The limits of the integration, an ``(m, 2)`` array where ``m``
             is the number of spatial dimensions. Each row corresponds to
-            the bounds in a given dimension.
-            If not given, then the canonical bounds :math:`[-1, 1]^m` will
-            be used instead.
+            the limits `[lower, upper]` for a given dimension.
+            If ``None``, then the bounds of the internal domain associated
+            with the polynomial are used instead.
         **kwargs
             Additional keyword-only arguments that change the behavior of
             the underlying integration (see the respective concrete
@@ -392,12 +392,15 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         Union[:py:class:`float`, :class:`numpy:numpy.ndarray`]
             The integral value of the polynomial over the given bounds.
             If only one polynomial is available, the return value is of
-            a :py:class:`float` type.
+            a :py:class:`float` type. For multiple polynomials, an array of
+            values is returned.
 
         Notes
         -----
         - The concrete implementation of this static method is called when
           the public method ``integrate_over()`` is called on an instance.
+        - Bounds are assumed to be in the internal domain (already transformed
+          from the user domain by the public method).
 
         See Also
         --------
@@ -1439,19 +1442,19 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
     def integrate_over(
         self,
-        bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
+        bounds: np.ndarray = None,
         **kwargs,
     ) -> Union[float, np.ndarray]:
-        """Compute the definite integral of the polynomial over the bounds.
+        r"""Compute the definite integral of the polynomial over the bounds.
 
         Parameters
         ----------
-        bounds : Union[List[List[float]], np.ndarray], optional
-            The bounds of the integral, an ``(m, 2)`` array where ``m``
-            is the number of spatial dimensions. Each row corresponds to
-            the bounds in a given dimension.
-            If not given, then the canonical bounds :math:`[-1, 1]^m` will
-            be used instead.
+        bounds : np.ndarray, optional
+            The integral bounds or the limits of integration, an array of
+            shape ``(m, 2)`` where ``m`` is the number of spatial dimensions.
+            Each row corresponds to the limits ``[lower, upper]``
+            for a given dimension. If not given, the integral is computed over
+            the entire domain (i.e., ``self.domain.bounds``).
         **kwargs
             Additional keyword-only arguments that change the behavior of
             the underlying integration (see the respective concrete
@@ -1461,38 +1464,35 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         -------
         Union[:py:class:`float`, :class:`numpy:numpy.ndarray`]
             The integral value of the polynomial over the given bounds.
-            If only one polynomial is available, the return value is of
-            a :py:class:`float` type.
+            If only one polynomial is available, a single value of
+            :py:class:`float` type is returned. For multiple polynomials, an
+            array of values is returned.
 
         Raises
         ------
         ValueError
-            If the bounds either of inconsistent shape or not in
-            the :math:`[-1, 1]^m` domain.
+            If the bounds are of inconsistent shape.
 
         Notes
         -----
-        - This method calls the concrete implementation of the abstract
-          method ``_integrate_over()`` after input validation.
+        - Bounds are specified in the user domain. Internally, they are
+          transformed to the internal domain.
+        - The concrete implementation of the abstract method
+          ``_integrate_over()`` assumes the domain is internal.
+        - Integration outside the domain bounds is allowed but involves
+          extrapolation.
 
         See Also
         --------
         _integrate_over
             The underlying static method to integrate the polynomial instance
             over the given bounds.
-
-        TODO
-        ----
-        - The default fixed domain [-1, 1]^M may in the future be relaxed.
-          In that case, the domain check below along with the concrete
-          implementations for the poly. classes must be updated.
         """
+        # --- Get the integration bounds
         num_dim = self.spatial_dimension
         if bounds is None:
-            # The canonical bounds are [-1, 1]^M
-            bounds = np.ones((num_dim, 2))
-            bounds[:, 0] *= -1
-
+            # Default: over the entire (user) domain
+            bounds = self.domain.bounds
         if isinstance(bounds, list):
             bounds = np.atleast_2d(bounds)
 
@@ -1503,16 +1503,18 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
                 "The bounds shape is inconsistent! "
                 f"Given {bounds.shape}, expected {(num_dim, 2)}."
             )
-        # Domain fit, i.e., in [-1, 1]^M
-        if np.any(bounds < -1) or np.any(bounds > 1):
-            raise ValueError("Bounds are outside [-1, 1]^M domain!")
 
-        # --- Compute the integrals
-        # If the lower and upper bounds are equal, immediately return 0
-        if np.any(np.isclose(bounds[:, 0], bounds[:, 1])):
-            return 0.0
+        # --- Transform the bounds
+        if not self.domain.is_identity:
+            # bounds is (m, 2), map function expects (N, m) with each row
+            # a point in m-dimensional space. So transpose the bounds,
+            # then transpose the outcome to get the transformed bounds
+            bounds = self.domain.map_to_internal(bounds.T).T
+        # The Jacobian factor
+        int_factor = self.domain.int_factor()
 
-        value = self._integrate_over(self, bounds, **kwargs)
+        # --- Compute the integral
+        value = int_factor * self._integrate_over(self, bounds, **kwargs)
 
         try:
             # One-element array (one set of coefficients), just return the item
