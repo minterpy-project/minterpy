@@ -51,8 +51,9 @@ class Domain:
         # Verify and assign the bounds
         self._bounds = verify_domain_bounds(bounds)
 
-        # Assign internal bounds
-        self._internal_bounds = None  # Lazy evaluation
+        # Assign lazily-evaluated properties
+        self._internal_bounds = None
+        self._is_identity = None
 
     # --- Factory methods
     @classmethod
@@ -190,14 +191,17 @@ class Domain:
         - When the domain is an identity, transformations and scaling factors
           computation can usually be skipped.
         """
-        # Get the default tolerances
-        rtol = DEFAULT_RTOL
-        atol = DEFAULT_ATOL
+        if self._is_identity is None:
+            # Get the default tolerances
+            rtol = DEFAULT_RTOL
+            atol = DEFAULT_ATOL
 
-        lb = bool(np.allclose(self.lowers, self._internal_lowers, rtol, atol))
-        ub = bool(np.allclose(self.uppers, self._internal_uppers, rtol, atol))
+            lb = np.allclose(self.lowers, self._internal_lowers, rtol, atol)
+            ub = np.allclose(self.uppers, self._internal_uppers, rtol, atol)
 
-        return lb and ub
+            self._is_identity = bool(lb and ub)
+
+        return self._is_identity
 
     @property
     def is_uniform(self) -> bool:
@@ -362,7 +366,7 @@ class Domain:
 
         return self.lowers + (xx - ilb) / iwidths * self.widths
 
-    def get_int_factor(self) -> float:
+    def int_factor(self) -> float:
         """Compute the scaling factor for polynomial integration.
 
         Returns
@@ -375,6 +379,9 @@ class Domain:
         - Here, we assume that the integration is carried out over all
           dimensions.
         """
+        if self.is_identity:
+            return 1.0
+
         return float(np.prod(self.widths / self._internal_widths))
 
     def get_diff_factor(self, order: np.ndarray) -> float:
@@ -392,6 +399,9 @@ class Domain:
         float
             The scaling factor for polynomial differentiation.
         """
+        if self.is_identity:
+            return 1.0
+
         idx = order > 0
         iwidths = self._internal_widths
 
