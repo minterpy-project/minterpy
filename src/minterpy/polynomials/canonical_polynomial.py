@@ -165,16 +165,7 @@ def mul_canonical(
     return CanonicalPolynomial(multi_index, coeffs, grid)
 
 
-def _canonical_partial_diff(poly: "CanonicalPolynomial", dim: int, order: int) -> "CanonicalPolynomial":
-    """ Partial differentiation in Canonical basis.
-    """
-    spatial_dim = poly.multi_index.spatial_dimension
-    deriv_order_along = np.zeros(spatial_dim, dtype=INT_DTYPE)
-    deriv_order_along[dim] = order
-    return _canonical_diff(poly, deriv_order_along)
-
-
-def _canonical_diff(poly: "CanonicalPolynomial", order: np.ndarray) -> "CanonicalPolynomial":
+def canonical_diff(poly: "CanonicalPolynomial", order: np.ndarray, diff_factor: float) -> "CanonicalPolynomial":
     """ Partial differentiation in Canonical basis.
     """
 
@@ -206,7 +197,7 @@ def _canonical_diff(poly: "CanonicalPolynomial", order: np.ndarray) -> "Canonica
     new_coeffs[map_pos] = diff_coeffs
 
     # Squeezing the last dimension to handle single polynomial
-    return CanonicalPolynomial.from_poly(poly, new_coeffs.reshape(poly.coeffs.shape))
+    return CanonicalPolynomial.from_poly(poly, diff_factor * new_coeffs.reshape(poly.coeffs.shape))
 
 
 def _canonical_integrate_over(
@@ -252,8 +243,7 @@ class CanonicalPolynomial(MultivariatePolynomialSingleABC):
     _scalar_add = staticmethod(scalar_add_via_monomials)
 
     # Calculus
-    _partial_diff = staticmethod(_canonical_partial_diff)
-    _diff = staticmethod(_canonical_diff)
+    _diff = staticmethod(canonical_diff)
     _integrate_over = staticmethod(_canonical_integrate_over)
 
 

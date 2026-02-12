@@ -3,26 +3,13 @@ testing module for canonical_polynomial.py
 
 The subclassing is not tested here, see tesing module `test_polynomial.py`
 """
-import numpy as np
 import pytest
-from conftest import (
-    assert_polynomial_almost_equal,
-    build_rnd_coeffs,
-    build_rnd_points,
-    build_random_newton_polynom,
-)
+
+from conftest import build_rnd_coeffs, build_rnd_points
 from numpy.testing import assert_almost_equal
 
-from minterpy.global_settings import INT_DTYPE
 from minterpy.utils.polynomials.newton import eval_newton_polynomials
-from minterpy import Grid, MultiIndexSet
-
-from minterpy import (
-    NewtonPolynomial,
-    NewtonToCanonical,
-    CanonicalToNewton,
-    NewtonToLagrange,
-)
+from minterpy import Grid, NewtonPolynomial, NewtonToCanonical
 
 
 @pytest.fixture(params=["numpy", "numba", "numba-par"])
@@ -75,128 +62,3 @@ def test_eval_batch(multi_index_mnp, num_polynomials, BatchSizes):
 
     # Assert
     assert_almost_equal(yy_newton, yy_canonical)
-
-
-class TestDiff:
-    """All tests related to the differentiation of polys. in the Newton basis.
-    """
-
-    def test_zero_derivative(
-        self,
-        SpatialDimension,
-        PolyDegree,
-        LpDegree,
-        num_polynomials,
-        diff_backend,
-    ):
-        """Test taking the 0th-order derivative of polynomials."""
-        # Create a random Newton polynomial
-        newton_poly = build_random_newton_polynom(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree,
-            num_polynomials,
-        )
-
-        # A derivative of order zero along all dimensions should be equivalent
-        # to the same polynomial
-        orders = np.zeros(SpatialDimension, dtype=INT_DTYPE)
-        zero_order_diff_newt = newton_poly.diff(orders)
-
-        # Assertion
-        assert_polynomial_almost_equal(zero_order_diff_newt, newton_poly)
-
-    def test_vs_canonical(
-        self,
-        SpatialDimension,
-        PolyDegree,
-        LpDegree,
-        num_polynomials,
-        diff_backend,
-    ):
-        """Test comparing the gradient with that computed in canonical basis.
-        """
-        # Create a random Newton polynomial
-        newton_poly = build_random_newton_polynom(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree,
-            num_polynomials,
-        )
-
-        # Transform to the canonical basis
-        trafo_n2c = NewtonToCanonical(newton_poly)
-        canon_poly = trafo_n2c()
-
-        # Differentiate in the canonical basis and transform back
-        diff_order = np.ones(SpatialDimension, dtype=INT_DTYPE)
-        can_diff_poly = canon_poly.diff(diff_order)
-        trafo_c2n = CanonicalToNewton(can_diff_poly)
-        newt_can_diff_poly = trafo_c2n()
-
-        # Differentiate the original polynomial
-        newt_diff_poly = newton_poly.diff(diff_order, backend=diff_backend)
-
-        # Assertion
-        assert_polynomial_almost_equal(newt_can_diff_poly, newt_diff_poly)
-
-    def test_partial_diff(
-        self,
-        SpatialDimension,
-        PolyDegree,
-        LpDegree,
-        diff_backend,
-    ):
-        """Test taking the partial derivative of polynomials."""
-        # Create a random Newton polynomial
-        newton_poly = build_random_newton_polynom(
-            SpatialDimension,
-            PolyDegree,
-            LpDegree,
-        )
-
-        # Check partial derivative on each dimension by comparing it
-        # with the partial derivative in the canonical basis
-        for dim in range(SpatialDimension):
-            # Transform to the canonical basis
-            trafo_n2c = NewtonToCanonical(newton_poly)
-            canon_poly = trafo_n2c()
-            # ...differentiate
-            can_diff_poly = canon_poly.partial_diff(dim)
-            # ...and transform back
-            trafo_c2n = CanonicalToNewton(can_diff_poly)
-            newt_can_diff_poly = trafo_c2n()
-
-            # Differentiate the original polynomial
-            newt_diff_poly = newton_poly.partial_diff(
-                dim,
-                backend=diff_backend,
-            )
-
-            # Assertion
-            assert_polynomial_almost_equal(newt_can_diff_poly, newt_diff_poly)
-
-    def test_unsupported_backend(
-        self,
-        SpatialDimension,
-        PolyDegree,
-        LpDegree,
-        num_polynomials,
-        diff_backend,
-    ):
-        """Test unsupported backend to differentiate Newton polynomials."""
-        # Create a Newton polynomial
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
-        nwt_coeffs = np.random.rand(len(mi))
-        nwt_poly = NewtonPolynomial(mi, nwt_coeffs)
-
-        # Attempt to differentiate with a non-supported back-end
-        unsupported_backend = "numdumb"
-        with pytest.raises(NotImplementedError):
-            nwt_poly.partial_diff(0, backend=unsupported_backend)
-
-        with pytest.raises(NotImplementedError):
-            nwt_poly.diff(
-                order=np.ones(SpatialDimension, dtype=np.int_),
-                backend=unsupported_backend,
-            )

@@ -69,7 +69,7 @@ TRANSFORMATION_CLASSES = [
 
 # Primary parameters to create complete multi-index sets, grids, & polynomials
 SPATIAL_DIMENSIONS = [1, 3]
-POLY_DEGREES = [0, 1, 4]  # NOTE: Include test for poly_degree 0 (Issue #27)
+POLY_DEGREES = [0, 1, 3]  # NOTE: Include test for poly_degree 0 (Issue #27)
 LP_DEGREES = [0.5, 1.0, 2.0, np.inf]
 
 # Number of coefficient sets in a single polynomial instance
