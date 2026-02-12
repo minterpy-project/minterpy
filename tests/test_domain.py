@@ -369,18 +369,29 @@ class TestScalingFactor:
         expected = 1.0  # Always 1.0
         dim = my_dom.spatial_dimension
         assert np.isclose(
-            my_dom.get_diff_factor(np.zeros(dim, dtype=int)),
+            my_dom.diff_factor(np.zeros(dim, dtype=int)),
             expected,
         )
 
-    def test_diff_normalized(self, SpatialDimension):
-        """Test the differentiation scaling factor in the normalized domain."""
+    def test_diff_identity(self, SpatialDimension):
+        """Test the differentiation scaling factor in the identity domain."""
         my_dom = Domain.normalized(SpatialDimension)
 
         # Assertion
         expected = 1.0  # Always 1.0
         order = np.random.randint(0, 5, size=(SpatialDimension,))
-        assert np.isclose(my_dom.get_diff_factor(order), expected)
+        assert np.isclose(my_dom.diff_factor(order), expected)
+
+    def test_diff_first_order(self, SpatialDimension):
+        """Test the differentiation scaling factor for 1st-order derivative."""
+        dom = Domain.uniform(SpatialDimension, 0, 10)
+        order = np.ones(dom.spatial_dimension, dtype=int)
+
+        diff_factor = dom.diff_factor(order)
+        iwidth = dom.internal_bounds[0, 1] - dom.internal_bounds[0, 0]
+        width = dom.widths[0]
+
+        assert np.isclose(diff_factor, (iwidth/width)**SpatialDimension)
 
 
 class TestEquality:

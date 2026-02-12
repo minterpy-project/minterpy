@@ -201,7 +201,6 @@ class ChebyshevPolynomial(MultivariatePolynomialSingleABC):
     _scalar_add = staticmethod(scalar_add_via_monomials)
 
     # Calculus
-    _partial_diff = staticmethod(dummy)  # type: ignore
     _diff = staticmethod(dummy)  # type: ignore
     _integrate_over = staticmethod(dummy)  # type: ignore
 

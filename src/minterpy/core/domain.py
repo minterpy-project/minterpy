@@ -384,7 +384,7 @@ class Domain:
 
         return float(np.prod(self.widths / self._internal_widths))
 
-    def get_diff_factor(self, order: np.ndarray) -> float:
+    def diff_factor(self, order: np.ndarray) -> float:
         """Compute the scaling factor for polynomial differentiation.
 
         Parameters
@@ -400,6 +400,9 @@ class Domain:
             The scaling factor for polynomial differentiation.
         """
         if self.is_identity:
+            return 1.0
+
+        if np.all(order == 0):
             return 1.0
 
         idx = order > 0

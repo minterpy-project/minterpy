@@ -269,6 +269,7 @@ def mul_newton(
 def diff_newton(
     poly: "NewtonPolynomial",
     order: np.ndarray,
+    diff_factor: float,
     *,
     backend: str = "numba",
 ) -> "NewtonPolynomial":
@@ -353,75 +354,13 @@ def diff_newton(
 
     # DDS returns a 2D array, reshaping it according to input coefficient array
     nwt_diff_coeffs = dds(lag_diff_coeffs, tree).reshape(poly.coeffs.shape)
+    nwt_diff_coeffs *= diff_factor
 
     return NewtonPolynomial(
         coeffs=nwt_diff_coeffs,
         multi_index=multi_index,
         grid=grid,
     )
-
-
-def partial_diff_newton(
-    poly: "NewtonPolynomial",
-    dim: int,
-    order: int,
-    *,
-    backend: str = "numba",
-) -> "NewtonPolynomial":
-    """Differentiate polynomial(s) in the Newton basis with respect to a given
-    dimension and order of derivative.
-
-    This is a wrapper for the partial differentiation function in
-    the Newton basis.
-
-    Parameters
-    ----------
-    poly : NewtonPolynomial
-        The instance of polynomial in Newton form to differentiate.
-    dim : int
-        Spatial dimension with respect to which the differentiation
-        is taken. The dimension starts at 0 (i.e., the first dimension).
-    order : int
-        Order of partial derivative.
-    backend : str
-        Computational backend to carry out the differentiation.
-        Supported values are:
-
-        - ``"numpy"``: implementation based on NumPy; not performant, only
-          applicable for a very small problem size (small degree,
-          low dimension).
-        - ``"numba"`` (default): implementation based on compiled code with
-          the help of Numba; applicable up to moderate problem size.
-        - ``"numba-par"``: parallelized (CPU) implementation based on compiled
-          code with the help of Numba for relatively large problem sizes.
-
-    Returns
-    -------
-    NewtonPolynomial
-        A new instance of `NewtonPolynomial` that represents the partial
-        derivative of the original polynomial of the given order of derivative
-        with respect to the specified dimension.
-
-    Notes
-    -----
-    - The abstract class is responsible to validate ``dim`` and ``order``; no
-      additional validation regarding those two parameters are required here.
-
-    See Also
-    --------
-    NewtonPolynomial.partial_diff
-        The public method to differentiate the polynomial instance of
-        a specified order of derivative with respect to a given dimension.
-    NewtonPolynomial.diff
-        The public method to differentiate the polynomial instance of
-        the given orders of derivative along each dimension.
-    """
-    # Create a specification for differentiation
-    spatial_dim = poly.multi_index.spatial_dimension
-    deriv_order_along = np.zeros(spatial_dim, dtype=int)
-    deriv_order_along[dim] = order
-
-    return diff_newton(poly, deriv_order_along, backend=backend)
 
 
 def integrate_over_newton(
@@ -470,7 +409,6 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     _scalar_add = staticmethod(scalar_add_via_monomials)
 
     # Calculus
-    _partial_diff = staticmethod(partial_diff_newton)
     _diff = staticmethod(diff_newton)
     _integrate_over = staticmethod(integrate_over_newton)
 

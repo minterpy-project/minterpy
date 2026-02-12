@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Domain-aware polynomial differentiation: `diff()` and `partial_diff()` now
+  automatically apply chain rule scaling factors when differentiating
+  polynomials over user-defined domains
 - Domain-aware polynomial integration: `integrate_over()` now automatically
   applies Jacobian scaling factors when integrating polynomials over
   user-defined domains
@@ -37,6 +40,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Zero-order differentiation now returns a copy of the polynomial
+  (identity operation)
+- Centralized polynomial differentiation tests into a dedicated test module
+  (`test_polynomial_differentiation.py`); relevant tests from basis-specific
+  test modules have been removed
+- Refactored `partial_diff()` as syntactic sugar for `diff()`, removing
+  duplicate `_partial_diff()` static methods from the polynomial class 
+  hierarchy
 - Centralized polynomial integration tests into a dedicated test module
   (`test_polynomial_integration.py`); relevant tests from dedicated test
   modules (with respect to each basis) have been removed.
@@ -279,4 +290,4 @@ that neither everything works as expected,
 nor if further releases will break the current API.
 
 [Unreleased]: https://github.com/minterpy-project/minterpy/compare/main...dev
-[0.3.1]: https://github.com/minterpy-project/minterpy/compare/v0.3.0...v0.3.1
+[Version 0.3.1]: https://github.com/minterpy-project/minterpy/compare/v0.3.0...v0.3.1

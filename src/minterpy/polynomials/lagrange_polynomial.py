@@ -141,7 +141,6 @@ class LagrangePolynomial(MultivariatePolynomialSingleABC):
     _scalar_add = staticmethod(scalar_add_lagrange)  # type: ignore
 
     # Calculus
-    _partial_diff = staticmethod(dummy)  # type: ignore
     _diff = staticmethod(dummy)  # type: ignore
     _integrate_over = staticmethod(integrate_over_lagrange)
 

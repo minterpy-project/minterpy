@@ -27,6 +27,7 @@ from minterpy.utils.verification import (
     is_real_scalar,
     shape_eval_output,
     standardize_query_points,
+    verify_derivative_order,
     verify_poly_coeffs,
     verify_poly_power,
 )
@@ -281,52 +282,10 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
     @staticmethod
     @abc.abstractmethod
-    def _partial_diff(
-        poly: MultivariatePolynomialABC,
-        dim: int,
-        order: int,
-        **kwargs,
-    ) -> "MultivariatePolynomialSingleABC":  # pragma: no cover
-        """Abstract method for differentiating poly. on a given dim. and order.
-
-        Parameters
-        ----------
-        poly : MultivariatePolynomialABC
-            The instance of polynomial to differentiate.
-        dim : int
-            Spatial dimension with respect to which the differentiation
-            is taken. The dimension starts at 0 (i.e., the first dimension).
-        order : int
-            Order of partial derivative.
-        **kwargs
-            Additional keyword-only arguments that change the behavior of
-            the underlying differentiation (see the concrete implementation).
-
-        Returns
-        -------
-        MultivariatePolynomialSingleABC
-            A new polynomial instance that represents the partial derivative
-            of the original polynomial of the given order of derivative with
-            respect to the specified dimension.
-
-        Notes
-        -----
-        - The concrete implementation of this static method is called when
-          the public method ``partial_diff()`` is called on an instance.
-
-        See also
-        --------
-        partial_diff
-            The public method to differentiate the polynomial of a specified
-            order of derivative with respect to a given dimension.
-        """
-        pass
-
-    @staticmethod
-    @abc.abstractmethod
     def _diff(
         poly: MultivariatePolynomialABC,
         order: np.ndarray,
+        diff_factor: float,
         **kwargs,
     ) -> "MultivariatePolynomialSingleABC":  # pragma: no cover
         """Abstract method for diff. poly. on given orders w.r.t each dim.
@@ -339,6 +298,9 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             A one-dimensional integer array specifying the orders of derivative
             along each dimension. The length of the array must be ``m`` where
             ``m`` is the spatial dimension of the polynomial.
+        diff_factor : float
+            Differentiation scaling factor taking into account the user
+            domain.
         **kwargs
             Additional keyword-only arguments that change the behavior of
             the underlying differentiation (see the concrete implementation).
@@ -1334,7 +1296,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         order: int = 1,
         **kwargs,
     ) -> "MultivariatePolynomialSingleABC":
-        """Return the partial derivative poly. at the given dim. and order.
+        """Differentiate the polynomial with respect to a given dimension.
 
         Parameters
         ----------
@@ -1342,7 +1304,7 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             Spatial dimension with respect to which the differentiation
             is taken. The dimension starts at 0 (i.e., the first dimension).
         order : int
-            Order of partial derivative.
+            Order of partial derivative; the default is 1.
         **kwargs
             Additional keyword-only arguments that change the behavior of
             the underlying differentiation (see the respective concrete
@@ -1357,35 +1319,14 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
 
         Notes
         -----
-        - This method calls the concrete implementation of the abstract
-          method ``_partial_diff()`` after input validation.
-
-        See Also
-        --------
-        _partial_diff
-            The underlying static method to differentiate the polynomial
-            instance of a specified order of derivative and with respect to
-            a specified dimension.
+        - This method is a syntactic sugar to `diff()` to differentiate
+          with respect to a particular dimension.
         """
+        # Create an array of the derivative order passable to diff
+        deriv_order = np.zeros(self.spatial_dimension, dtype=int)
+        deriv_order[dim] = order
 
-        # Guard rails for dim
-        if not np.issubdtype(type(dim), np.integer):
-            raise TypeError(f"dim <{dim}> must be an integer")
-
-        if dim < 0 or dim >= self.spatial_dimension:
-            raise ValueError(
-                f"dim <{dim}> for spatial dimension <{self.spatial_dimension}>"
-                f" should be between 0 and {self.spatial_dimension-1}"
-            )
-
-        # Guard rails for order
-        if not np.issubdtype(type(dim), np.integer):
-            raise TypeError(f"order <{order}> must be a non-negative integer")
-
-        if order < 0:
-            raise ValueError(f"order <{order}> must be a non-negative integer")
-
-        return self._partial_diff(self, dim, order, **kwargs)
+        return self.diff(deriv_order, **kwargs)
 
     def diff(
         self,
@@ -1416,6 +1357,8 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
         -----
         - This method calls the concrete implementation of the abstract
           method ``_diff()`` after input validation.
+        - For zero-order derivative (identity operation), returns a copy
+          of the polynomial.
 
         See Also
         --------
@@ -1423,22 +1366,17 @@ class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
             The underlying static method to differentiate the polynomial
             of specified orders of derivative along each dimension.
         """
+        # --- Verify the order of derivatives
+        deriv_order = verify_derivative_order(order, self.spatial_dimension)
 
-        # convert 'order' to numpy 1d array if it isn't already. This allows type checking below.
-        order = np.ravel(order)
+        # --- Short circuit identity differentiation
+        if np.all(deriv_order == 0):
+            return copy(self)
 
-        # Guard rails for order
-        if not np.issubdtype(order.dtype.type, np.integer):
-            raise TypeError(f"order of derivative <{order}> can only be non-negative integers")
+        # --- Compute the scaling factor
+        diff_factor = self.domain.diff_factor(deriv_order)
 
-        if np.any(order < 0):
-            raise ValueError(f"order of derivative <{order}> cannot have negative values")
-
-        if len(order) != self.spatial_dimension:
-            raise ValueError(f"inconsistent number of elements in 'order' <{len(order)}>,"
-                             f"expected <{self.spatial_dimension}> corresponding to each spatial dimension")
-
-        return self._diff(self, order, **kwargs)
+        return self._diff(self, deriv_order, diff_factor, **kwargs)
 
     def integrate_over(
         self,
