@@ -21,206 +21,413 @@ for the interpolation of any functions.
 +-------------------+---------------------------------------------------------+
 
 """
+import attrs
+import numpy as np
 
-import attr
-
+from numpy.typing import ArrayLike
 from typing import Callable, Optional
 
-from .core import Grid, MultiIndexSet
-from .dds import dds
-from .polynomials import NewtonPolynomial, LagrangePolynomial
-from .transformations import NewtonToCanonical, NewtonToChebyshev
-from .global_settings import DEFAULT_LP_DEG
+from minterpy.core import Grid, MultiIndexSet, Domain
+from minterpy.dds import dds
+from minterpy.polynomials import (
+    NewtonPolynomial,
+    LagrangePolynomial,
+    CanonicalPolynomial,
+    ChebyshevPolynomial,
+)
+from minterpy.transformations import NewtonToCanonical, NewtonToChebyshev
+from minterpy.global_settings import DEFAULT_LP_DEG
 
 __all__ = ["Interpolator", "Interpolant", "interpolate"]
 
 
 class InterpolationError(Exception):
     """Exception raised if the interpolation went wrong."""
-
     pass
 
 
-@attr.s(frozen=True, order=False, eq=False)
+@attrs.define(frozen=True, order=False, eq=False)
 class Interpolator:
-    """The construction class for interpolation.
+    r"""The class for constructing polynomial interpolant.
 
-    Data type which contains all relevant parts for interpolation and caches them.
+    The class contains all the relevant parts for constructing a polynomial
+    interpolant in the Newton basis of a given callable.
+    The instance of this class is a callable; passing a function to it will
+    return an interpolating polynomial.
+
+    With an instance of this class, one can construct interpolants of the
+    same underlying polynomial for different functions.
+
+    Parameters
+    ----------
+    spatial_dimension : int
+        The dimension of the interpolator.
+    poly_degree : int
+        The degree of the interpolating polynomial.
+    lp_degree : float
+        The degree :math:`p` of the :math:`l_p`-norm used to define
+        the (multivariate) polynomial degree.
+    bounds : array_like, optional
+        The bounds of the domain space, an array of shape ``(m, 2)``,
+        where ``m`` is the spatial dimension. Each row corresponds to the
+        lower and upper bounds of the domain in the corresponding dimension.
+        If not provided, the bounds are assumed to be :math:`[-1, 1]^m`.
 
     Attributes
     ----------
-    spatial_dimension : dimension of the domain space.
-    poly_degree : degree of the interpolation polynomials
-    lp_degree : degree of the :math:`l_p` norm used to determine the `poly_degree`.
-    multi_index : lexicographically complete multi index set build from `(spatial_dimension, poly_degree, lp_degree)`.
-    grid : `Grid` instance build from `multi_index`.
-
+    multi_index : MultiIndexSet
+        The multi-index set used to define the interpolating polynomial,
+        a lexicographically complete multi-index set, i.e.,
+        :math:`\mathcal{A}_{m, n, p}`, where :math:`m` is
+        ``spatial_dimension``, :math:`n` is ``poly_degree``,
+        and :math:`p` is the ``lp_degree``.
+    grid : Grid
+        The underlying interpolation grid with the domain defined
+        by ``bounds``.
     """
+    # Constructor parameters
+    _spatial_dimension: int = attrs.field(repr=False)
+    _poly_degree: int = attrs.field(repr=False)
+    _lp_degree: float = attrs.field(repr=False)
+    _bounds: Optional[ArrayLike] = attrs.field(default=None, repr=False)
 
-    spatial_dimension: int = attr.ib()
-    poly_degree: int = attr.ib()
-    lp_degree: int = attr.ib()
-
-    multi_index = attr.ib(init=False, repr=False)
-    grid = attr.ib(init=False, repr=False)
+    # --- Core properties (computed based on constructor parameters)
+    multi_index: MultiIndexSet = attrs.field(init=False, repr=False)
+    grid: Grid = attrs.field(init=False, repr=False)
 
     @multi_index.default
-    def __multi_index_default(self) -> MultiIndexSet:
+    def _multi_index_default(self) -> MultiIndexSet:
         return MultiIndexSet.from_degree(
-            self.spatial_dimension, self.poly_degree, self.lp_degree
+            self._spatial_dimension,
+            self._poly_degree,
+            self._lp_degree
         )
 
     @grid.default
-    def __grid_default(self) -> Grid:
-        return Grid(self.multi_index)
+    def _grid_default(self) -> Grid:
+        if self._bounds is not None:
+            domain = Domain(self._bounds)
+        else:
+            domain = None
+        return Grid(self.multi_index, domain=domain)
 
-    def __call__(self, fct: Callable) -> Optional[NewtonPolynomial]:
-        """Interpolate a given function.
+    # --- Derived properties
+    @property
+    def spatial_dimension(self) -> int:
+        """The dimension of the interpolator."""
+        return self.multi_index.spatial_dimension
 
-        Builds a `NewtonPolynomial` which interpolates the given `fct`, where the precomuted setting of the current instance is used.
+    @property
+    def poly_degree(self) -> int:
+        """The degree of the interpolating polynomial (and multi-index set)."""
+        return self.multi_index.poly_degree
 
-        :param fct: Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If `arr` is an :class:`np.ndarray` with shape ``arr.shape == (N,spatial_dimension)``, the signature needs to be ``fct(arr) -> res``, where ``res`` is an :class:`np.ndarray` with shape ``(N,)``.
-        :type fct: Callable
+    @property
+    def lp_degree(self) -> float:
+        """:math:`p` of :math:`l_p`-norm used to define the multi-index set."""
+        return self.multi_index.lp_degree
 
-        :return: Interpolation polynomial in Newton form, which interpolates the function ``fct``, where the used divided difference scheme is build from ``self.multi_index`` and ``self.grid``.
-        :rtype: NewtonPolynomial
+    @property
+    def domain(self) -> Domain:
+        """The domain of the interpolating polynomial."""
+        return self.grid.domain
 
-        :raises InterpolationError: Raised if anything goes wrong with the interpolation.
+    # --- Dunder methods
+    def __repr__(self) -> str:
+        return (
+            f"Interpolator(spatial_dimension={self.spatial_dimension}, "
+            f"poly_degree={self.poly_degree}, "
+            f"lp_degree={self.lp_degree})"
+        )
+
+    def __call__(self, func: Callable) -> NewtonPolynomial:
+        """Interpolate a given function and return an interpolating polynomial.
+
+        Parameters
+        ----------
+        func : Callable
+            The function to interpolate. It must accept as the first argument
+            a :class:`numpy:numpy.ndarray` with shape ``(k, m)``, where ``k``
+            is the number of evaluation points and ``m`` is the spatial
+            dimension. The function returns a :class:`numpy:numpy.ndarray`
+            with shape ``(k, )`` for scalar outputs and ``(k, d)``
+            for vector outputs, where ``d``  is the output dimension.
+
+        Returns
+        -------
+        NewtonPolynomial
+            An interpolating polynomial of the function ``func`` in the Newton
+            basis. The interpolating polynomial is constructed according
+            to the underlying multi-index set and interpolation grid.
+
+        Raises
+        ------
+        InterpolationError
+            If anything goes wrong with the interpolation.
         """
         try:
-            fct_values = self.grid(fct)
-            # NOTE: Don't use np.squeeze as DDS results may be of shape (1,1)
-            interpol_coeffs = dds(fct_values, self.grid.tree).reshape(-1)
+            func_values = self.grid(func)
         except Exception as e:
             raise InterpolationError(e) from e
 
-        return NewtonPolynomial(self.multi_index, interpol_coeffs)
+        return self.interpolate_values(func_values)
+
+    def interpolate_values(self, func_values: ArrayLike) -> NewtonPolynomial:
+        """Interpolate a given array of values at the unisolvent nodes.
+
+        Parameters
+        ----------
+        func_values : array_like
+            The function values at the unisolvent nodes (i.e., the Lagrange
+            coefficients of the interpolating polynomial).
+
+        Returns
+        -------
+        NewtonPolynomial
+            An interpolating polynomial of the function ``func`` in the Newton
+            basis. The interpolating polynomial is constructed according
+            to the underlying multi-index set and interpolation grid.
+
+        Raises
+        ------
+        InterpolationError
+            If anything goes wrong with the interpolation.
+        """
+        try:
+            coeffs = dds(func_values, self.grid.tree)
+            # DDS returns shape (N, d) where N=#points, d=output_dim
+            # For scalar functions (d=1), convert to 1D array of shape (N,)
+            if coeffs.shape[1] == 1:
+                coeffs = coeffs[:, 0]  # Most explicit and safe
+        except Exception as e:
+            raise InterpolationError(e) from e
+
+        return NewtonPolynomial(self.multi_index, coeffs, grid=self.grid)
 
 
-@attr.s(frozen=True, order=False, eq=False)
+@attrs.define(frozen=True, order=False, eq=False)
 class Interpolant:
-    """Data type representing the result of an interpolation.
+    """A class representing the result of an interpolation of a given function.
 
-    Instances of this class can be used as functions, which interpolate a given function. Users who do not want to learn anything about neither polynomial interpolation nor bases in multivariate polynomial bases may use the instances of this class just as an interpolative representant of their function, which they can evaluate. (Other properties are conceivable too)
+    An instance of this class is a callable that interpolates a given function.
+    It serves as an intermediate layer between function approximation
+    and the corresponding interpolating polynomial representation; it can be
+    used without any in-depth knowledge of the underlying polynomial
+    representation.
 
-    Attributes
+    Parameters
     ----------
-    fct : Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If `arr` is an :class:`np.ndarray` with shape ``arr.shape == (N,spatial_dimension)``, the signature needs to be ``fct(arr) -> res``, where ``res`` is an :class:`np.ndarray` with shape ``(N,)``.
-    interpolator : Instance of :class:`Interpolator`, which represents the interpolation scheme to be used.
+    func : Callable
+        The function to interpolate. It must accept as the first argument
+        a :class:`numpy:numpy.ndarray` with shape ``(k, m)``, where ``k``
+        is the number of evaluation points and ``m`` is the spatial
+        dimension. The function returns a :class:`numpy:numpy.ndarray`
+        with shape ``(k, )`` for scalar outputs and ``(k, d)``
+        for vector outputs, where ``d``  is the output dimension.
+    interpolator : Interpolator
+        The underlying setting for the interpolation.
     """
+    # --- Constructor parameters
+    func: Callable = attrs.field(repr=False)
+    interpolator: Interpolator = attrs.field(repr=False)
 
-    fct: Callable = attr.ib(repr=False)
-    interpolator: Interpolator = attr.ib(repr=False)
-    __interpolation_poly: NewtonPolynomial = attr.ib(init=False, repr=False)
+    # --- Private attribute
+    _func_values: np.ndarray = attrs.field(init=False, repr=False)
+    _interpolation_poly: NewtonPolynomial = attrs.field(init=False, repr=False)
 
-    @__interpolation_poly.default
-    def __interpolation_poly_default(self):
-        return self.interpolator(self.fct)
+    @_func_values.default
+    def _func_values_default(self):
+        return self.interpolator.grid(self.func)
 
+    @_interpolation_poly.default
+    def _interpolation_poly_default(self):
+        return self.interpolator.interpolate_values(self._func_values)
+
+    # --- Factory method
     @classmethod
-    def from_degree(cls, fct, spatial_dimension, poly_degree, lp_degree):
-        """Custom constructor of an interpolant using dimensionality and degree parameter.
+    def from_degree(
+        cls,
+        func: Callable,
+        spatial_dimension: int,
+        poly_degree: int,
+        lp_degree: float,
+        bounds: Optional[ArrayLike] = None,
+    ) -> "Interpolant":
+        r"""Create an interpolant with respect to a complete multi-index set.
 
-        :param fct: Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If `arr` is an :class:`np.ndarray` with shape ``arr.shape == (N,spatial_dimension)``, the signature needs to be ``fct(arr) -> res``, where ``res`` is an :class:`np.ndarray` with shape ``(N,)``.
-        :type fct: Callable
+        Parameters
+        ----------
+        func : Callable
+            The function to interpolate. It must accept as the first argument
+            a :class:`numpy:numpy.ndarray` with shape ``(k, m)``, where ``k``
+            is the number of evaluation points and ``m`` is the spatial
+            dimension. The function returns a :class:`numpy:numpy.ndarray`
+            with shape ``(k, )`` for scalar outputs and ``(k, d)``
+            for vector outputs, where ``d``  is the output dimension.
+        spatial_dimension : int
+            The dimension of the interpolator.
+        poly_degree : int
+            The degree of the interpolating polynomial.
+        lp_degree : float
+            The degree :math:`p` of the :math:`l_p`-norm used to define
+            the (multivariate) polynomial degree.
+        bounds : array_like, optional
+            The bounds of the domain space, an array of shape ``(m, 2)``,
+            where ``m`` is the spatial dimension. Each row corresponds to the
+            lower and upper bounds of the domain in the corresponding dimension.
+            If not provided, the bounds are assumed to be :math:`[-1, 1]^m`.
 
-        :param spatial_dimension: dimension of the domain space.
-        :type spatial_dimension: int
-        :param poly_degree: degree of the interpolation polynomials
-        :type poly_degree: int
-        :param lp_degree: degree of the :math:`l_p` norm used to determine the `poly_degree`.
-        :type lp_degree: int
+        Returns
+        --------
+        Interpolant
+            An instance of interpolant of ``func`` using an interpolating
+            polynomial with respect to complete multi-index set.
 
-        :return: The interpolant of ``fct`` using the default interpolator build from ``(spatial_dimension, poly_degree, lp_degree)``.
-        :rtype: Interpolant
+        Notes
+        -----
+        - ``spatial_dimension`` (:math:`m`), ``poly_degree`` (:math:`n`),
+          ``lp_degree`` (:math:`p`) are used to construct the lexicographically
+          complete multi-index set :math:`\mathcal{A}_{m, n, p}`.
         """
-        return cls(fct, Interpolator(spatial_dimension, poly_degree, lp_degree))
+        return cls(
+            func,
+            Interpolator(spatial_dimension, poly_degree, lp_degree, bounds),
+        )
 
+    # --- Properties
     @property
-    def spatial_dimension(self):
-        """Dimension of the domain space the interpolation polynomial lives on.
-
-        This is the propagated attribute from ``self.interpolator``.
-
-        :rtype: int
-        """
+    def spatial_dimension(self) -> int:
+        """The dimension of the interpolator."""
         return self.interpolator.spatial_dimension
 
     @property
-    def poly_degree(self):
-        """Degree of the interpolation polynomial.
-
-        This is the propagated attribute from ``self.interpolator``.
-
-        :rtype: int
-        """
+    def poly_degree(self) -> int:
+        """The degree of the interpolating polynomial."""
         return self.interpolator.poly_degree
 
     @property
-    def lp_degree(self):
-        """Degree of the :math:`l_p` norm.
-
-        This is the propagated attribute from ``self.interpolator``.
-
-        :rtype: int
-        """
+    def lp_degree(self) -> float:
+        """:math:`p` of :math:`l_p`-norm used to define the multi-index set."""
         return self.interpolator.lp_degree
 
     @property
-    def lagrange_coeffs(self):
-        """Return the Lagrange coefficients of the interpolating polynomial."""
-        return self.interpolator.grid(self.fct)
+    def multi_index(self) -> MultiIndexSet:
+        """The multi-index set defining the interpolating polynomial."""
+        return self.interpolator.multi_index
 
-    def to_newton(self):
-        """Return the interpolant as a polynomial in the Newton basis."""
-        return self.__interpolation_poly
+    # --- Public methods
+    def to_newton(self) -> NewtonPolynomial:
+        """Return the interpolant as a polynomial in the Newton basis.
 
-    def to_lagrange(self):
-        """Return the interpolant as a polynomial in the Lagrange basis."""
+        Returns
+        -------
+        NewtonPolynomial
+            The interpolating polynomial represented in the Newton basis.
+        """
+        return self._interpolation_poly
+
+    def to_lagrange(self) -> LagrangePolynomial:
+        """Return the interpolant as a polynomial in the Lagrange basis.
+
+        Returns
+        -------
+        LagrangePolynomial
+            The interpolating polynomial represented in the Lagrange basis.
+        """
         return LagrangePolynomial.from_grid(
             self.interpolator.grid,
-            self.lagrange_coeffs,
+            self._func_values,
         )
 
-    def to_canonical(self):
-        """Return the interpolant as a polynomial in the canonical basis."""
-        nwt_poly = self.__interpolation_poly
+    def to_canonical(self) -> CanonicalPolynomial:
+        """Return the interpolant as a polynomial in the canonical basis.
+
+        Returns
+        -------
+        CanonicalPolynomial
+            The interpolating polynomial represented in the canonical
+            (monomial) basis.
+        """
+        nwt_poly = self._interpolation_poly
 
         return NewtonToCanonical(nwt_poly)()
 
-    def to_chebyshev(self):
-        """Return the interpolant as a polynomial in the Chebyshev basis."""
-        nwt_poly = self.__interpolation_poly
+    def to_chebyshev(self) -> ChebyshevPolynomial:
+        """Return the interpolant as a polynomial in the Chebyshev basis.
+
+        Returns
+        -------
+        ChebyshevPolynomial
+            The interpolating polynomial represented in the Chebyshev basis
+            (of the first kind).
+        """
+        nwt_poly = self._interpolation_poly
 
         return NewtonToChebyshev(nwt_poly)()
 
-    def __call__(self, pts):
-        """Evaulate the interpolant on a given array of points.
+    # --- Dunder methods
+    def __call__(self, xx: ArrayLike, **kwargs) -> np.ndarray:
+        """Evaluate the interpolant on a given array of points.
 
-        :param pts: Array of points, where the shape needs to be ``pts.shape == (N,spatial_dimension)``,
+        Parameters
+        ----------
+        xx : array_like
+            Query points to evaluate. Can be a scalar, list, or numpy array.
+            The points will be standardized to a two-dimensional array of
+            shape ``(k, m)`` where ``k`` is the number of query points and
+            ``m`` is the spatial dimension of the polynomial.
+        **kwargs
+            Additional keyword-only arguments that change the behavior of
+            the underlying evaluation (see the concrete implementation of the
+            interpolating polynomial).
 
+        Returns
+        -------
+        :class:`numpy:numpy.ndarray`
+            The values of the polynomial evaluated at query points.
         """
-        return self.__interpolation_poly(pts)
+        return self._interpolation_poly(xx)
 
 
-def interpolate(fct, spatial_dimension, poly_degree, lp_degree=DEFAULT_LP_DEG):
-    """Interpolate a given function.
+def interpolate(
+    func: Callable,
+    spatial_dimension: int,
+    poly_degree: int,
+    lp_degree: float = DEFAULT_LP_DEG,
+    bounds: Optional[ArrayLike] = None,
+) -> Interpolant:
+    r"""Interpolate a function using a complete multi-index set polynomial.
 
-    Return an interpolant, which represents the given function on the domain :math:`[-1, 1]^d`, where :math:`d` is the dimension of the domain space.
+    Parameters
+    ----------
+    func : Callable
+        The function to interpolate. It must accept as the first argument
+        a :class:`numpy:numpy.ndarray` with shape ``(k, m)``, where ``k``
+        is the number of evaluation points and ``m`` is the spatial
+        dimension. The function returns a :class:`numpy:numpy.ndarray`
+        with shape ``(k, )`` for scalar outputs and ``(k, d)``
+        for vector outputs, where ``d``  is the output dimension.
+    spatial_dimension : int
+        The dimension of the interpolator.
+    poly_degree : int
+        The degree of the interpolating polynomial.
+    lp_degree : float, optional
+        The degree :math:`p` of the :math:`l_p`-norm used to define
+        the (multivariate) polynomial degree.
+    bounds : array_like, optional
+        The bounds of the domain space, an array of shape ``(m, 2)``,
+        where ``m`` is the spatial dimension. Each row corresponds to the
+        lower and upper bounds of the domain in the corresponding dimension.
+        If not provided, the bounds are assumed to be :math:`[-1, 1]^m`.
 
-
-
-    :param fct: Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If `arr` is an :class:`np.ndarray` with shape ``arr.shape == (N,spatial_dimension)``, the signature needs to be ``fct(arr) -> res``, where ``res`` is an :class:`np.ndarray` with shape ``(N,)``.
-    :type fct: Callable
-
-    :param spatial_dimension: dimension of the domain space.
-    :type spatial_dimension: int
-    :param poly_degree: degree of the interpolation polynomials
-    :type poly_degree: int
-    :param lp_degree: degree of the :math:`l_p` norm used to determine the `poly_degree`.
-    :type lp_degree: int
-
-    :return: The interpolant of ``fct`` using the default interpolator build from ``(spatial_dimension, poly_degree, lp_degree)``.
-    :rtype: Interpolant
+    Returns
+    -------
+    Interpolant
+        The interpolant of ``func`` with respect to the lexicographically
+        complete multi-index set :math:`\mathcal{A}_{m, n, p}` where :math:`m`
+        is ``spatial_dimension``, :math:`n` is ``poly_degree``, and :math:`p`
+        is ``lp_degree``.
     """
-    return Interpolant.from_degree(fct, spatial_dimension, poly_degree, lp_degree)
+    m, n, p = spatial_dimension, poly_degree, lp_degree
+
+    return Interpolant.from_degree(func, m, n, p, bounds)

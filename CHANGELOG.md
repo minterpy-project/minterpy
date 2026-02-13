@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Domain support in interpolation module: `interpolate()`, `Interpolator`, and 
+  `Interpolant` now accept `bounds` parameter to specify custom rectangular
+  domains directly without manually creating `Domain` objects;
+  the underlying interpolating polynomials are constructed with domain
+  awareness
+- `interpolate_values()` method in `Interpolator` class to interpolate 
+  pre-computed function values at unisolvent nodes, enabling reuse of 
+  function evaluations
 - Domain-aware polynomial differentiation: `diff()` and `partial_diff()` now
   automatically apply chain rule scaling factors when differentiating
   polynomials over user-defined domains
@@ -40,6 +48,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored `Interpolator` class to use modern `attrs.define` syntax 
+  instead of legacy `attr.ib` decorators
+- Interpolation tests now cover both default (internal reference)
+  and custom domain cases
 - Zero-order differentiation now returns a copy of the polynomial
   (identity operation)
 - Centralized polynomial differentiation tests into a dedicated test module

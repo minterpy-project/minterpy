@@ -52,34 +52,6 @@ def differentiable_poly(request):
     return request.param
 
 
-# --- Domain types
-DOMAIN_TYPES = ["default", "random"]
-
-
-def _id_domain_type(domain_type):
-    return f"dom={domain_type:>7}"
-
-
-@pytest.fixture(params=DOMAIN_TYPES, ids=_id_domain_type)
-def domain_type(request):
-    return request.param
-
-
-# --- Domain instance
-@pytest.fixture
-def domain(SpatialDimension, domain_type):
-    # Create a default domain
-    if domain_type == "default":
-        return Domain.normalized(SpatialDimension)
-
-    # Create the same polynomial with custom domain
-    lb = np.random.uniform(0, 5, size=SpatialDimension)
-    # Ensure ub > lb
-    ub = lb + np.random.uniform(5, 10, size=SpatialDimension)
-
-    return Domain(np.c_[lb, ub])
-
-
 # --- Random integrable polynomial instance
 @pytest.fixture
 def rand_poly(
