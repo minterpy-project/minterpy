@@ -467,7 +467,7 @@ class TestInequality:
 
         # Create two domains
         dom_1 = Domain.uniform(multi_index_mnp.spatial_dimension, 0, 1)
-        dom_2 = Domain.normalized(multi_index_mnp.spatial_dimension)
+        dom_2 = Domain.identity(multi_index_mnp.spatial_dimension)
 
         # Create two polynomials
         poly_1 = poly_class_all(multi_index_mnp, coeffs, domain=dom_1)

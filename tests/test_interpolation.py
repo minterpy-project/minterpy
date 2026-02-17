@@ -66,7 +66,7 @@ class TestInterpolator:
         interpolator = Interpolator(m, n, p)
 
         # Create a default Domain
-        domain = Domain.normalized(m)
+        domain = Domain.identity(m)
 
         # Assertions
         assert interpolator.domain == domain

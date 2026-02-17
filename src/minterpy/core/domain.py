@@ -1,17 +1,56 @@
-"""
+r"""
 This module contains the implementation of the `Domain` class.
 
-The `Domain` class represents the domain of the polynomials, i.e., the set of
-all input points for which the polynomials are defined. As the internals of
-Minterpy work for interpolating polynomial in the so-called "internal"
-domain (i.e., :math:`[-1, 1]^m`), the class provides convenient methods for:
+The `Domain` class represents a rectangular domain in :math:`m`-dimensional
+space and provides utilities for transformation between user-defined domains
+and the internal reference domain (currently :math:`[-1, 1]^m`).
 
-- transformation of values to/from normalized domain in :math:`[-1, 1]^m`
-- computing the scaling factor in polynomial differentiation
-- computing the scaling factor in polynomial integration
+Background information
+======================
 
-The main assumption of the transformation is that the transformation is
-affine applied to each dimension separately.
+Internal polynomial representations of Minterpy are defined on an internal
+reference domain (currently :math:`[-1, 1]^m`).
+Users, however, are interested in approximating functions defined on custom
+rectangular domains
+:math:`\Omega = [a_1, b_1] \times \cdots \times [a_i, b_i] \times \cdots \times [a_m, b_m]`
+where :math:`a_i` and :math:`b_i` are the lower and upper bounds of
+dimension :math:`i`, respectively.
+The transformations between these domains are essential for correct evaluation,
+differentiation, and integration of polynomials approximating functions
+in the user-defined domains.
+
+More detailed background information can be found in
+:doc:`/fundamentals/domain`.
+
+Implementation details
+======================
+
+An instance of the `Domain` class consists of domain bounds
+as a two-dimensional array of shape ``(m, 2)``, where ``m`` is the spatial
+dimension. The first column contains the lower bounds
+and the second column the upper bounds across dimensions.
+The bounds are finite real numbers, and the lower bounds are strictly
+smaller than the upper bounds.
+
+The instance of the class provides:
+
+- Coordinate transformations to and from internal domain
+- Scaling factors for differentiation from chain rule
+- Scaling factors for integration (i.e., the determinant of the Jacobian)
+- Domain validation utilities
+
+The transformations are **separable**: each spatial dimension is transformed
+independently of the other dimensions via an affine map.
+
+How-To Guides
+=============
+
+The relevant section of the :doc:`docs </how-to/domain/index>` contains
+several how-to guides related to instances of the `Domain` class illustrating
+their main usages and features.
+
+----
+
 """
 import numpy as np
 
@@ -91,7 +130,7 @@ class Domain:
         return cls(bounds)
 
     @classmethod
-    def normalized(cls, spatial_dimension: int):
+    def identity(cls, spatial_dimension: int):
         r"""Create an instance with the default internal bounds.
 
         The default internal bounds are :math:`[-1, 1]^m`.
@@ -222,7 +261,7 @@ class Domain:
           the bounds of the extra dimension from the bounds of the other
           dimensions.
         - A domain of dimension 1 is always uniform by definition.
-        - A normalized domain is always uniform, but not vice versa.
+        - An identity domain is currently always uniform, but not vice versa.
         - This check uses numerical tolerances (``DEFAULT_RTOL`` and
           ``DEFAULT_ATOL``) for robustness against floating-point errors.
         """
@@ -265,7 +304,7 @@ class Domain:
     def _internal_lowers(self) -> np.ndarray:
         """The lower bounds of the internal domain.
 
-       Returns
+        Returns
         -------
         np.ndarray
             The lower bounds of the internal domain as a one-dimensional array
@@ -275,7 +314,7 @@ class Domain:
 
     @property
     def _internal_uppers(self) -> np.ndarray:
-        """"The upper bounds of the internal domain.
+        """The upper bounds of the internal domain.
 
         Returns
         -------
@@ -287,7 +326,7 @@ class Domain:
 
     @property
     def _internal_widths(self) -> np.ndarray:
-        """"The widths of the internal domain.
+        """The widths of the internal domain.
 
         Returns
         -------
@@ -513,7 +552,7 @@ class Domain:
         ------
         ValueError
             If the target dimension is smaller than the current dimension or
-            an expansion to a target integer is attempted for an unnormalized
+            an expansion to a target integer is attempted for a non-identity
             domain.
         DomainMismatchError
             If the target domain does not match the current domain.

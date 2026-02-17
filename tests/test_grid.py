@@ -32,7 +32,7 @@ def _fun_multi_out(xx: np.ndarray):
 @pytest.fixture
 def normalized_domain(SpatialDimension) -> Domain:
     """Normalized domain for testing."""
-    return Domain.normalized(SpatialDimension)
+    return Domain.identity(SpatialDimension)
 
 @pytest.fixture
 def random_unif_domain(SpatialDimension) -> Domain:
@@ -150,7 +150,7 @@ class TestInit:
 
         dim = multi_index_mnp.spatial_dimension + 1
         with pytest.raises(ValueError):
-            _ = Grid(multi_index_mnp, domain=Domain.normalized(dim))
+            _ = Grid(multi_index_mnp, domain=Domain.identity(dim))
 
 
 class TestInitGenPoints:
@@ -349,7 +349,7 @@ class TestInitFrom:
         # Create a complete multi-index set
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
         # Create a normalized domain
-        domain = Domain.normalized(SpatialDimension)
+        domain = Domain.identity(SpatialDimension)
 
         # Create a grid
         grd_1 = Grid(mi, domain=domain)
@@ -978,7 +978,7 @@ class TestEquality:
         # Create two different domains
         dim = multi_index_mnp.spatial_dimension
         domain_1 = Domain.uniform(dim, 0, 1)
-        domain_2 = Domain.normalized(dim)
+        domain_2 = Domain.identity(dim)
 
         # Create two Grid instances
         grd_1 = Grid(multi_index_mnp, domain=domain_1)
@@ -1066,7 +1066,7 @@ class TestMultiplication:
         # Create two different domains
         dim = multi_index_mnp.spatial_dimension
         domain_1 = Domain.uniform(dim, 0, 1)
-        domain_2 = Domain.normalized(dim)
+        domain_2 = Domain.identity(dim)
 
         # Create two Grid instances
         grd_1 = Grid(multi_index_mnp, domain=domain_1)
@@ -1136,7 +1136,7 @@ class TestUnion:
         # Create two different domains
         dim = multi_index_mnp.spatial_dimension
         domain_1 = Domain.uniform(dim, 0, 1)
-        domain_2 = Domain.normalized(dim)
+        domain_2 = Domain.identity(dim)
 
         # Create two Grid instances
         grd_1 = Grid(multi_index_mnp, domain=domain_1)
