@@ -15,13 +15,20 @@
 
 Minterpy is an open-source Python package designed for constructing
 and manipulating multivariate interpolating polynomials
-with the goal of lifting the curse of dimensionality from interpolation tasks.
+with the goal of addressing the curse of dimensionality
+from interpolation tasks.
 
 Minterpy is being continuously extended and improved,
-with new functionalities added to address the bottlenecks involving
-interpolations in various computational tasks.
+with new functionalities added to address the computational bottlenecks
+in accuracy, stability, and performance of multidimensional interpolation
+tasks.
 
 ## Installation
+
+You can install Minterpy from [PyPI](https://pypi.org/project/minterpy/)
+or from [source](https://github.com/minterpy-project/minterpy).
+
+### From PyPI
 
 You can obtain the stable release of Minterpy directly
 from [PyPI](https://pypi.org/project/minterpy/) using `pip`:
@@ -30,70 +37,79 @@ from [PyPI](https://pypi.org/project/minterpy/) using `pip`:
 pip install minterpy
 ```
 
-Alternatively, you can also obtain the latest version of Minterpy
-from the [GitHub repository](https://github.com/minterpy-project/minterpy):
+### From source
+
+To install the latest development version of Minterpy,
+you can clone the [GitHub repository](https://github.com/minterpy-project/minterpy):
 
 ```bash
 git clone https://github.com/minterpy-project/minterpy
 ```
 
-Then from the source directory, you can install Minterpy:
+Then install Minterpy from the source directory:
 
 ```bash
-pip install [-e] .[all,dev,docs]
+pip install .[all,dev,docs]
 ```
 
-where the flag `-e` means the package is directly linked into
-the python site-packages of your Python version.
+For an editable installation, use the flag `-e`:
+
+```bash
+pip install -e .[all,dev,docs]
+```
+
 The options `[all,dev,docs]` refer to the requirements defined
 in the `options.extras_require` section in `setup.cfg`.
 
-A best practice is to first create a virtual environment with the help of
-a tool like [mamba], [conda], [venv], [virtualenv] or [pyenv-virtualenv].
+### Virtual environments
+
+We recommend installing Minterpy in a virtual environment.
+Tools like [mamba], [conda], [venv], [virtualenv] or [pyenv-virtualenv]
+can help you set one up.
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
-**NOTE**: **Do not** use the command `python setup.py install`
-to install Minterpy, as we cannot guarantee that the file `setup.py`
-will always be present in the further development of Minterpy.
+> **NOTE**: **Do not** use the command `python setup.py install`
+> to install Minterpy, as `setup.py` may not be present in the future releases.
 
 ## Quickstart
 
-Using Minterpy, you can easily interpolate a given function.
-For instance, take the one-dimensional function $`f(x) = x \, \sin{(10x)}`$
-with $x \in [-1, 1]$:
+Using Minterpy, you can interpolate a given function.
+For instance, take the one-dimensional function $`f(x) = x \, \sin{(x)}`$
+with $x \in [0, 15]$:
 
 ```python
 import numpy as np
 
-def test_function(x):
-    return x * np.sin(10*x)
+def func(x):
+    return x * np.sin(x)
 ```
 
-To interpolate the function, you can use the top-level function `interpolate()`:
+To interpolate the function, you can use the function `interpolate()`:
 
 ```python
 import minterpy as mp
 
-interpolant = mp.interpolate(test_function, spatial_dimension=1, poly_degree=64)
+interpolant = mp.interpolate(func, spatial_dimension=1, poly_degree=64, bounds=[0, 15])
 ```
 
 `interpolate()` takes as arguments the function to interpolate,
 the number of dimensions (`spatial_dimension`),
-and the degree of the underlying polynomial interpolant (`poly_degree`).
-You may adjust this parameter in order to get higher accuracy.
+the degree of the underlying polynomial interpolant (`poly_degree`),
+and the bounds of the domain (`bounds`).
+You may adjust the polynomial degree parameter to get higher accuracy.
 The resulting `interpolant` is a Python callable,
-which can be used as an approximation of `test_function`.
+which can be used as an approximation of `func`.
 
 In this example, an interpolating polynomial of degree $64$ produces
-an approximation of `test_function` to near machine precision:
+an approximation of `func` to near machine precision:
 
 ```python
 import matplotlib.pyplot as plt
 
-xx = np.linspace(-1, 1, 150)
+xx = np.linspace(0, 15, 100)
 
+plt.plot(xx, func(xx), "k.",label="function")
 plt.plot(xx, interpolant(xx), label="interpolant")
-plt.plot(xx, test_function(xx), "k.",label="test function")
 plt.legend()
 plt.show()
 ```
@@ -106,28 +122,29 @@ you can carry out common numerical operations on the approximations
 like multiplication and differentiation:
 
 ```python
-# Access the underlying Newton interpolating polynomial  
-nwt_poly = interpolant.to_newton()  
-# Multiply the polynomial -> obtained another polynomial  
-prod_poly = nwt_poly * nwt_poly  
-# Differentiate the polynomial once -> obtained another polynomial  
-diff_poly = nwt_poly.diff(1)  
-# Reference function for the (once) differentiated test function
-diff_fun = lambda xx: np.sin(10 * xx) + xx * 10 * np.cos(10 * xx)
+# Extract the underlying Newton interpolating polynomial
+nwt_poly = interpolant.to_newton()
+# Multiply the polynomial -> results in another polynomial
+prod_poly = nwt_poly * nwt_poly
+# Differentiate the polynomial once -> results in another polynomial
+diff_poly = nwt_poly.diff(1)
+# Analytical derivative of the function
+diff_func = lambda xx: np.sin(xx) + xx * np.cos(xx)
 
-fig, axs = plt.subplots(1, 2, figsize=(10, 5))  
-  
+fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+
+axs[0].plot(xx, func(xx)**2, "k.", label="product function")
 axs[0].plot(xx, prod_poly(xx), label="product polynomial")
-axs[0].plot(xx, fun(xx)**2, "k.", label="product test function")
 axs[0].legend()
 axs[0].set_xlabel("$x$")
 axs[0].set_ylabel("$y$")
+
+axs[1].plot(xx, diff_func(xx), "k.", label="differentiated function")
 axs[1].plot(xx, diff_poly(xx), label="differentiated polynomial")
-axs[1].plot(xx, diff_fun(xx), "k.", label="differentiated test function")
 axs[1].legend()
 axs[1].set_xlabel("$x$")
-  
-plt.show()  
+
+plt.show()
 ```
 
 <img src="./docs/assets/images/xsinx-prod-diff.png" alt="Product and differentiated polynomial" width="700"/>
@@ -140,7 +157,7 @@ on interpolating polynomials, including multidimensional cases.
 
 For detailed guidance,
 please refer to the online documentation ([stable](https://minterpy-project.github.io/minterpy/stable/)
-or [latest](https://minterpy-project.github.io/minterpy/stable/)).
+or [latest](https://minterpy-project.github.io/minterpy/latest/)).
 It includes detailed installation instructions, usage examples, API references,
 and contributors guide.
 
@@ -159,22 +176,37 @@ of the documentation.
 
 ## Citing Minterpy
 
-If you use Minterpy in your research or projects,
-please consider citing the archived version
-in [RODARE](https://rodare.hzdr.de/record/3354).
-
-The citation for the current public version is:
+If you use Minterpy in your research or projects, please cite our paper
+published in the [Journal of Open Source Software](https://doi.org/10.21105/joss.07702):
 
 ```bibtex
-@software{Minterpy_0_3_0,
+@article{Wicaksono2025,
+  author    = {Wicaksono, Damar and Acosta, Uwe Hernandez and Veettil, Sachin Krishnan Thekke and Kissinger, Jannik and Hecht, Michael},
+  title     = {{Minterpy}: multivariate polynomial interpolation in {Python}},
+  journal   = {Journal of Open Source Software},
+  year      = {2025},
+  volume    = {10},
+  number    = {109},
+  pages     = {7702},
+  doi       = {10.21105/joss.07702},
+  url       = {https://doi.org/10.21105/joss.07702}
+}
+```
+
+For reproducibility, please also cite the specific version of Minterpy
+that you used. The current archived version is available
+on [RODARE](https://rodare.hzdr.de/record/3725):
+
+```bibtex
+@software{Minterpy_0_3_1,
   author       = {Hernandez Acosta, Uwe and Thekke Veettil, Sachin Krishnan and Wicaksono, Damar Canggih and Michelfeit, Jannik and Hecht, Michael},
   title        = {{Minterpy} - multivariate polynomial interpolation},
-  month        = dec,
-  year         = 2024,
+  month        = apr,
+  year         = 2025,
   publisher    = {RODARE},
-  version      = {v0.3.0},
-  doi          = {10.14278/rodare.3354},
-  url          = {http://doi.org/10.14278/rodare.3354}
+  version      = {v0.3.1},
+  doi          = {10.14278/rodare.3725},
+  url          = {https://doi.org/10.14278/rodare.3725}
 }
 ```
 
@@ -183,7 +215,7 @@ The citation for the current public version is:
 This work was partly funded by the Center for Advanced Systems Understanding ([CASUS]),
 an institute of the Helmholtz-Zentrum Dresden-Rossendorf ([HZDR]),
 financed by Germany’s Federal Ministry of Education and Research ([BMBF])
-and by the Saxony Ministry for Science, Culture and Tourism ([SMWK])
+and by the Saxony Ministry for Science, Culture, and Tourism ([SMWK])
 with tax funds on the basis of the budget approved
 by the Saxony State Parliament.
 
