@@ -15,6 +15,9 @@ rectangular domains
 :math:`\Omega = [a_1, b_1] \times \cdots \times [a_i, b_i] \times \cdots \times [a_m, b_m]`
 where :math:`a_i` and :math:`b_i` are the lower and upper bounds of
 dimension :math:`i`, respectively.
+In other words, the domain :math:`\Omega` is a cartesian product of intervals
+:math:`[a_i, b_i]` for :math:`i = 1, \dots, m`.
+
 The transformations between these domains are essential for correct evaluation,
 differentiation, and integration of polynomials approximating functions
 in the user-defined domains.
@@ -29,6 +32,7 @@ An instance of the `Domain` class consists of domain bounds
 as a two-dimensional array of shape ``(m, 2)``, where ``m`` is the spatial
 dimension. The first column contains the lower bounds
 and the second column the upper bounds across dimensions.
+Each row is the interval of each dimension.
 The bounds are finite real numbers, and the lower bounds are strictly
 smaller than the upper bounds.
 
@@ -460,8 +464,9 @@ class Domain:
         This method performs approximate equality checking between two domains
         using numerical tolerances, comparing only up to the minimum spatial
         dimension of the two domains.
-        This is useful for checking compatibility of domains of different
-        dimensions before, e.g., merging.
+        Both user-defined bounds and internal reference domain bounds are
+        compared. This is useful for checking the compatibility of domains
+        of different dimensions before, e.g., merging.
 
         Parameters
         ----------
@@ -478,7 +483,7 @@ class Domain:
         Returns
         -------
         bool
-            ``True`` if the two instances matches up to the common dimension,
+            ``True`` if the two instances match up to the common dimension,
             ``False`` otherwise.
         """
         # Get the default tolerances
@@ -496,7 +501,7 @@ class Domain:
         )
 
         # Check internal bounds (currently identical for all instances,
-        # but enables future generalization of internal coordinate system)
+        # but enables future generalization of an internal coordinate system)
         internal_bounds_match = np.allclose(
             self.internal_bounds[:dim, :],
             other.internal_bounds[:dim, :],
