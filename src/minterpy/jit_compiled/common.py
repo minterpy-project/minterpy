@@ -69,7 +69,7 @@ def n_choose_r(n: int, r: int) -> int:
 
 @njit(I_2D(I_1D, UINT32), cache=True)
 def combinations_iter(xx: np.ndarray, r: int) -> np.ndarray:
-    """Return successive r-length combinations of elements as an array.
+    r"""Return successive r-length combinations of elements as an array.
 
     Parameters
     ----------
