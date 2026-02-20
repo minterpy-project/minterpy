@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Documentation for the `Domain` class, its API reference, theoretical
+  background, and examples
 - Domain support in interpolation module: `interpolate()`, `Interpolator`, and 
   `Interpolant` now accept `bounds` parameter to specify custom rectangular
   domains directly without manually creating `Domain` objects;
@@ -48,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Relevant tutorials have been updated to reflect the new domain support
 - Refactored `Interpolator` class to use modern `attrs.define` syntax 
   instead of legacy `attr.ib` decorators
 - Interpolation tests now cover both default (internal reference)
