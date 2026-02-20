@@ -216,7 +216,7 @@ class MultivariatePolynomialABC(abc.ABC):
 class MultivariatePolynomialSingleABC(MultivariatePolynomialABC):
     """Abstract base class for "single instance" multivariate polynomials
 
-    Attributes
+    Parameters
     ----------
     multi_index : MultiIndexSet
         The multi-index set of the multivariate polynomial.
