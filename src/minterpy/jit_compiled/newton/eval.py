@@ -82,7 +82,7 @@ def eval_newton_monomials_multiple(
     monomials_placeholder: np.ndarray,
     triangular: bool
 ) -> None:
-    """Evaluate the Newton monomials at multiple query points.
+    r"""Evaluate the Newton monomials at multiple query points.
 
     The following notations are used below:
 

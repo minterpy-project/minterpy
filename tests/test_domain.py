@@ -112,7 +112,7 @@ class TestFactoryMethods:
 
     def test_normalized_domain(self, SpatialDimension):
         """Test that a normalized domain is correctly initialized."""
-        domain = Domain.normalized(SpatialDimension)
+        domain = Domain.identity(SpatialDimension)
 
         # Assertions
         assert domain.spatial_dimension == SpatialDimension
@@ -161,7 +161,7 @@ class TestProperties:
 
     def test_normalized(self, SpatialDimension):
         """Test the normalized property for normalized domain."""
-        my_dom_1 = Domain.normalized(SpatialDimension)
+        my_dom_1 = Domain.identity(SpatialDimension)
         my_dom_2 = Domain.uniform(SpatialDimension, -1, 1)
         bounds = np.ones((SpatialDimension, 2))
         bounds[:, 0] = -1
@@ -357,7 +357,7 @@ class TestScalingFactor:
 
     def test_integration_normalized(self, SpatialDimension):
         """Test the integration scaling factor for normalized domain."""
-        dom = Domain.normalized(SpatialDimension)
+        dom = Domain.identity(SpatialDimension)
 
         assert np.isclose(dom.int_factor(), 1.)
 
@@ -375,7 +375,7 @@ class TestScalingFactor:
 
     def test_diff_identity(self, SpatialDimension):
         """Test the differentiation scaling factor in the identity domain."""
-        my_dom = Domain.normalized(SpatialDimension)
+        my_dom = Domain.identity(SpatialDimension)
 
         # Assertion
         expected = 1.0  # Always 1.0
@@ -571,7 +571,7 @@ class TestExpandDim:
 
     def test_to_target_int_same(self, SpatialDimension):
         """Test expanding the dimension to the same target dimension."""
-        dom_1 = Domain.normalized(SpatialDimension)
+        dom_1 = Domain.identity(SpatialDimension)
         dom_2 = dom_1.expand_dim(SpatialDimension)
 
         # Assertion
@@ -580,18 +580,18 @@ class TestExpandDim:
 
     def test_to_target_int_normalized(self, SpatialDimension):
         """Test expanding the dimension to an integer target dimension."""
-        my_dom_1 = Domain.normalized(SpatialDimension)
+        my_dom_1 = Domain.identity(SpatialDimension)
 
         my_dom_2 = my_dom_1.expand_dim(SpatialDimension + 1)
 
         # Assertions
         assert my_dom_1 is not my_dom_2
         assert my_dom_1 != my_dom_2
-        assert my_dom_2 == Domain.normalized(SpatialDimension + 1)
+        assert my_dom_2 == Domain.identity(SpatialDimension + 1)
 
     def test_to_target_int_contraction(self, SpatialDimension):
         """Test contracting the dimension to an integer target dimension."""
-        my_dom = Domain.normalized(SpatialDimension)
+        my_dom = Domain.identity(SpatialDimension)
 
         with pytest.raises(ValueError):
             _ = my_dom.expand_dim(SpatialDimension - 1)

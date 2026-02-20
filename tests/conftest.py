@@ -311,7 +311,7 @@ def domain_type(request):
 def domain(SpatialDimension, domain_type):
     # Create a default domain
     if domain_type == "default":
-        return Domain.normalized(SpatialDimension)
+        return Domain.identity(SpatialDimension)
 
     # Create a custom domain
     lb = np.random.uniform(0, 5, size=SpatialDimension)

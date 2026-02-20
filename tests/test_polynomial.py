@@ -467,7 +467,7 @@ class TestInequality:
 
         # Create two domains
         dom_1 = Domain.uniform(multi_index_mnp.spatial_dimension, 0, 1)
-        dom_2 = Domain.normalized(multi_index_mnp.spatial_dimension)
+        dom_2 = Domain.identity(multi_index_mnp.spatial_dimension)
 
         # Create two polynomials
         poly_1 = poly_class_all(multi_index_mnp, coeffs, domain=dom_1)
@@ -843,7 +843,7 @@ class TestMultiplicationPoly:
         assert poly_prod_2 == poly * scalar
 
     def test_scalar_poly_diff_dim(self, rand_poly_mnp_no_lag):
-        """Test multiplication with a scalar polynomial of the higher dim.
+        r"""Test multiplication with a scalar polynomial of the higher dim.
 
         Multiplication with a constant scalar polynomial of a higher dimension
         should produce a polynomial multiplied by the scalar value with
@@ -1507,7 +1507,7 @@ class TestAdditionPoly:
         assert poly_sum == 4 * poly
 
     def test_scalar_poly_same_dim(self, rand_poly_mnp_no_lag):
-        """Test adding a scalar polynomial of the same dimension.
+        r"""Test adding a scalar polynomial of the same dimension.
 
         Notes
         -----
@@ -1534,7 +1534,7 @@ class TestAdditionPoly:
         assert poly_sum == poly + scalar
 
     def test_scalar_poly_diff_dim(self, rand_poly_mnp_no_lag):
-        """Test adding a scalar polynomial of the higher dimension
+        r"""Test adding a scalar polynomial of the higher dimension
 
         Notes
         -----
@@ -1829,7 +1829,7 @@ class TestSubtractionPoly:
         assert poly_sub == -2 * poly
 
     def test_scalar_poly_same_dim(self, rand_poly_mnp_no_lag):
-        """Test subtracting a scalar polynomial of the same dimension.
+        r"""Test subtracting a scalar polynomial of the same dimension.
 
         Notes
         -----
@@ -1856,7 +1856,7 @@ class TestSubtractionPoly:
         assert poly_sum == poly - scalar
 
     def test_scalar_poly_diff_dim(self, rand_poly_mnp_no_lag):
-        """Test subtracting a scalar polynomial of the higher dimension
+        r"""Test subtracting a scalar polynomial of the higher dimension
 
         Notes
         -----

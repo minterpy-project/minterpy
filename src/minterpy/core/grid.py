@@ -155,7 +155,7 @@ class Grid:
 
         # Process and assign the domain
         if domain is None:
-            domain = Domain.normalized(self.multi_index.spatial_dimension)
+            domain = Domain.identity(self.multi_index.spatial_dimension)
 
         self._domain = _process_domain(domain, multi_index)
 
