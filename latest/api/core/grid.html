@@ -56,10 +56,10 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="ABC" href="ABC/index.html" />
-    <link rel="prev" title="multi_index" href="multi_index.html" />
+    <link rel="prev" title="domain" href="domain.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -393,6 +393,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../interpolation.html">Interpolation</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Core</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="multi_index.html">Multi-Index Set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html">Domain</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Grid</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="ABC/index.html">Abstract Base Classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="ABC/abc-polynomial.html">Multivariate Polynomial</a></li>
@@ -542,6 +543,34 @@ the generating points, specifies the unisolvent nodes—these are the points
 where the function to be interpolated is evaluated.</p>
 <p>More detailed background information can be found in
 <a class="reference internal" href="../../fundamentals/interpolation-at-unisolvent-nodes.html"><span class="doc">Interpolation at Unisolvent Nodes</span></a>.</p>
+<section id="generating-points-convention">
+<h3>Generating Points Convention<a class="headerlink" href="#generating-points-convention" title="Link to this heading">#</a></h3>
+<p>The generating points are stored as a two-dimensional array of shape
+<code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">m)</span></code>:</p>
+<ul class="simple">
+<li><p><strong>Columns</strong> represent spatial dimensions: each column contains the
+one-dimensional interpolation nodes for that specific dimension</p></li>
+<li><p><strong>Rows</strong> represent polynomial degrees: row <code class="docutils literal notranslate"><span class="pre">i</span></code> contains nodes for
+polynomial degree <code class="docutils literal notranslate"><span class="pre">i</span></code> (from degree 0 to degree <code class="docutils literal notranslate"><span class="pre">n</span></code>)</p></li>
+</ul>
+<p><strong>Important</strong>: Currently, generating points must be defined in the normalized
+domain <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>. When a custom user domain is specified,
+the Grid handles transformation automatically during function evaluation.</p>
+<p>Example structure for a 2D grid with maximum degree 3:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generating_points</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="n">x0_dim1</span><span class="p">,</span> <span class="n">x0_dim2</span><span class="p">],</span>  <span class="c1"># Degree 0 nodes</span>
+    <span class="p">[</span><span class="n">x1_dim1</span><span class="p">,</span> <span class="n">x1_dim2</span><span class="p">],</span>  <span class="c1"># Degree 1 nodes</span>
+    <span class="p">[</span><span class="n">x2_dim1</span><span class="p">,</span> <span class="n">x2_dim2</span><span class="p">],</span>  <span class="c1"># Degree 2 nodes</span>
+    <span class="p">[</span><span class="n">x3_dim1</span><span class="p">,</span> <span class="n">x3_dim2</span><span class="p">],</span>  <span class="c1"># Degree 3 nodes</span>
+<span class="p">]</span>
+<span class="c1"># All values must be in [-1, 1]</span>
+</pre></div>
+</div>
+<p>The generating function, when provided, produces this array structure.
+Different generating function (e.g., Chebyshev-Lobatto, equidistant, Leja)
+creates different node distributions within <span class="math notranslate nohighlight">\([-1, 1]\)</span>, each with distinct
+approximation properties.</p>
+</section>
 </section>
 <section id="how-to-guides">
 <h2>How-To Guides<a class="headerlink" href="#how-to-guides" title="Link to this heading">#</a></h2>
@@ -552,7 +581,7 @@ demonstrating their usages and features.</p>
 <hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.core.grid.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.core.grid.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid" title="Link to this definition">#</a></dt>
 <dd><p>A class representing the nodes on which interpolating polynomials live.</p>
 <p>Instances of this class provide the data structure for the unisolvent
 nodes, i.e., points in a hypercube that uniquely determine
@@ -578,6 +607,9 @@ This parameter is optional. If not specified, the generating points
 are created from the default generating function. If specified,
 then the points must be consistent with any non-<code class="docutils literal notranslate"><span class="pre">None</span></code> generating
 function.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a><em>, </em><em>optional</em>) – The domain of the interpolation grid. This parameter is optional.
+If not specified, a normalized domain in the hypercube of
+<span class="math notranslate nohighlight">\([-1, 1]^m\)</span> is created.</p></li>
 </ul>
 </dd>
 </dl>
@@ -588,6 +620,11 @@ arguments two integers, namely, the maximum exponent (<code class="docutils lite
 of the multi-index set of polynomial exponents and the spatial dimension
 (<code class="docutils literal notranslate"><span class="pre">m</span></code>). Furthermore, it must return an array of shape <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">m)</span></code>
 whose values are unique per column.</p></li>
+<li><p>Generating points array has shape <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">m)</span></code> where columns
+represent spatial dimensions and rows represent polynomial degrees.
+All values must be in the normalized domain <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>.
+Different generating functions create different node distributions within
+this normalized space.</p></li>
 <li><p>The multi-index set to construct a <a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></a> instance may not be
 downward-closed. However, building a <a class="reference internal" href="tree.html#minterpy.core.tree.MultiIndexTree" title="minterpy.core.tree.MultiIndexTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexTree</span></code></a> used
 in the transformation between polynomials in the Newton and Lagrange
@@ -599,14 +636,14 @@ downward-closed then unisolvency cannot be guaranteed.</p></li>
 <p class="rubric">Properties</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.generating_function" title="minterpy.core.grid.Grid.generating_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generating_function</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.domain" title="minterpy.core.grid.Grid.domain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">domain</span></code></a></p></td>
+<td><p>The domain associated with the Grid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.generating_function" title="minterpy.core.grid.Grid.generating_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generating_function</span></code></a></p></td>
 <td><p>The generating function of the interpolation Grid.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.generating_points" title="minterpy.core.grid.Grid.generating_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generating_points</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.generating_points" title="minterpy.core.grid.Grid.generating_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generating_points</span></code></a></p></td>
 <td><p>The generating points of the interpolation Grid.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.has_generating_function" title="minterpy.core.grid.Grid.has_generating_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_generating_function</span></code></a></p></td>
-<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance has a generating function.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.is_complete" title="minterpy.core.grid.Grid.is_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_complete</span></code></a></p></td>
 <td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance has a complete multi-index set.</p></td>
@@ -627,7 +664,7 @@ downward-closed then unisolvency cannot be guaranteed.</p></li>
 <td><p>The used <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexTree</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.unisolvent_nodes" title="minterpy.core.grid.Grid.unisolvent_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unisolvent_nodes</span></code></a></p></td>
-<td><p>The array of unisolvent nodes.</p></td>
+<td><p>The array of unisolvent nodes in the normalized domain.</p></td>
 </tr>
 </tbody>
 </table>
@@ -638,8 +675,8 @@ downward-closed then unisolvency cannot be guaranteed.</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.add_exponents" title="minterpy.core.grid.Grid.add_exponents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_exponents</span></code></a>(exponents)</p></td>
 <td><p>Add a set of exponents to the underlying multi-index set.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.expand_dim" title="minterpy.core.grid.Grid.expand_dim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_dim</span></code></a>(target_dimension)</p></td>
-<td><p>Expand the dimension of the Grid.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.expand_dim" title="minterpy.core.grid.Grid.expand_dim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_dim</span></code></a>(target)</p></td>
+<td><p>Expand the dimension of the Grid to a target dimension or Grid.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.from_degree" title="minterpy.core.grid.Grid.from_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_degree</span></code></a>(spatial_dimension, poly_degree, ...)</p></td>
 <td><p>Create an instance of Grid with a complete multi-index set.</p></td>
@@ -653,8 +690,14 @@ downward-closed then unisolvency cannot be guaranteed.</p></li>
 <tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.from_value_set" title="minterpy.core.grid.Grid.from_value_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_value_set</span></code></a>(multi_index, generating_values)</p></td>
 <td><p>Create an instance of Grid from an array of generating values.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.has_compatible_gen_function" title="minterpy.core.grid.Grid.has_compatible_gen_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_compatible_gen_function</span></code></a>(other)</p></td>
+<td><p>Check if two grids have a compatible generating function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.has_compatible_gen_points" title="minterpy.core.grid.Grid.has_compatible_gen_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_compatible_gen_points</span></code></a>(other)</p></td>
+<td><p>Check if two grids have compatible generating points.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.is_compatible" title="minterpy.core.grid.Grid.is_compatible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_compatible</span></code></a>(other)</p></td>
-<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance is compatible with another.</p></td>
+<td><p>Check if two instances of Grid are compatible.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.make_complete" title="minterpy.core.grid.Grid.make_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_complete</span></code></a>()</p></td>
 <td><p>Complete the underlying multi-index set of the <a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a> instance.</p></td>
@@ -662,15 +705,12 @@ downward-closed then unisolvency cannot be guaranteed.</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.make_downward_closed" title="minterpy.core.grid.Grid.make_downward_closed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_downward_closed</span></code></a>()</p></td>
 <td><p>Make the underlying multi-index set downward-closed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.grid.Grid.merge" title="minterpy.core.grid.Grid.merge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge</span></code></a>(other, multi_index)</p></td>
-<td><p>Merge two instances of Grid with a new multi-index set.</p></td>
-</tr>
 </tbody>
 </table>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.from_degree">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.from_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.from_degree" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.from_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.from_degree" title="Link to this definition">#</a></dt>
 <dd><p>Create an instance of Grid with a complete multi-index set.</p>
 <p>A complete multi-index set denoted by <span class="math notranslate nohighlight">\(A_{m, n, p}\)</span> contains
 all the exponents
@@ -707,6 +747,9 @@ dimension. This parameter is optional. If not specified,
 the generating points are created from the default generating
 function. If specified, then the points must be consistent
 with any non-<code class="docutils literal notranslate"><span class="pre">None</span></code> generating function.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a><em>, </em><em>optional</em>) – The domain of the interpolation grid. This parameter is optional.
+If not specified, a normalized domain in the hypercube of
+<span class="math notranslate nohighlight">\([-1, 1]^m\)</span> is created.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -722,7 +765,7 @@ generating function and generating points.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.from_function">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.from_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.from_function" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.from_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.from_function" title="Link to this definition">#</a></dt>
 <dd><p>Create an instance of Grid with a given generating function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -737,6 +780,9 @@ where <code class="docutils literal notranslate"><span class="pre">n</span></cod
 and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.
 Alternatively, a string as a key to dictionary of built-in
 generating functions may be specified.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a><em>, </em><em>optional</em>) – The domain of the interpolation grid. This parameter is optional.
+If not specified, a normalized domain in the hypercube of
+<span class="math notranslate nohighlight">\([-1, 1]^m\)</span> is created.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -751,7 +797,7 @@ generating function.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.from_points">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.from_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.from_points" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.from_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.from_points" title="Link to this definition">#</a></dt>
 <dd><p>Create an instance of Grid from an array of generating points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -764,6 +810,9 @@ per spatial dimension. The shape of the array is <code class="docutils literal n
 where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the maximum polynomial degree in all dimensions
 (i.e., the maximum exponent) and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.
 The values in each column must be unique.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a><em>, </em><em>optional</em>) – The domain of the interpolation grid. This parameter is optional.
+If not specified, a normalized domain in the hypercube of
+<span class="math notranslate nohighlight">\([-1, 1]^m\)</span> is created.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -778,7 +827,7 @@ with the given multi-index set and generating points.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.from_value_set">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.from_value_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.from_value_set" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generating_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.from_value_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.from_value_set" title="Link to this definition">#</a></dt>
 <dd><p>Create an instance of Grid from an array of generating values.</p>
 <p>A set of generating values is one-dimensional interpolation points.</p>
 <dl class="field-list simple">
@@ -790,6 +839,9 @@ The set, in turn, defines the polynomials the Grid can support.</p></li>
 a one-dimensional array of floats of length <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">)</span></code>
 where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the maximum exponent of the multi-index set.
 The values in the array must be unique.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a><em>, </em><em>optional</em>) – The domain of the interpolation grid. This parameter is optional.
+If not specified, a normalized domain in the hypercube of
+<span class="math notranslate nohighlight">\([-1, 1]^m\)</span> is created.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -864,6 +916,21 @@ multi-index set of exponents and <code class="docutils literal notranslate"><spa
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid.domain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">domain</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><span class="pre">Domain</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.domain" title="Link to this definition">#</a></dt>
+<dd><p>The domain associated with the Grid.</p>
+<p>The domain represents the rectangular bounds of the Grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The domain of the interpolation grid.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain">Domain</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.max_exponent">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_exponent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.max_exponent" title="Link to this definition">#</a></dt>
 <dd><p>The maximum exponent of the interpolation grid.</p>
@@ -881,20 +948,27 @@ degree of any one-dimensional polynomials the grid can support.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.unisolvent_nodes">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unisolvent_nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.unisolvent_nodes" title="Link to this definition">#</a></dt>
-<dd><p>The array of unisolvent nodes.</p>
-<p>For a definition of unisolvent nodes, see
-<a class="reference internal" href="../../fundamentals/unisolvence.html"><span class="doc">The Notion of Unisolvence</span></a>
-in the docs.</p>
+<dd><p>The array of unisolvent nodes in the normalized domain.</p>
+<p>The unisolvent nodes are provided in the normalized domain
+<span class="math notranslate nohighlight">\([-1, 1]^m\)</span>.</p>
+<p>For a definition of unisolvent nodes,
+see <a class="reference internal" href="../../fundamentals/unisolvence.html"><span class="doc">The Notion of Unisolvence</span></a> in the docs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The unisolvent nodes as a two-dimensional array of floats.
-The shape of the array is <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code> where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of
-elements in the multi-index set and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.</p>
+<dd class="field-odd"><p>The unisolvent nodes in [-1, 1]^m as a two-dimensional array
+of floats. The shape of the array is <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code>
+where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of elements in the multi-index set
+and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>When evaluating functions via <code class="docutils literal notranslate"><span class="pre">grid(func)</span></code>,
+the nodes are automatically transformed to the user-defined domain.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py property">
@@ -922,21 +996,6 @@ elements in the multi-index set and <code class="docutils literal notranslate"><
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="tree.html#minterpy.core.tree.MultiIndexTree" title="minterpy.core.tree.MultiIndexTree">MultiIndexTree</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="minterpy.core.grid.Grid.has_generating_function">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_generating_function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid.has_generating_function" title="Link to this definition">#</a></dt>
-<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance has a generating function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance has a generating function assigned to it,
-and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -998,50 +1057,121 @@ the number of columns</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.expand_dim">
-<span class="sig-name descname"><span class="pre">expand_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_dimension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.expand_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.expand_dim" title="Link to this definition">#</a></dt>
-<dd><p>Expand the dimension of the Grid.</p>
+<span class="sig-name descname"><span class="pre">expand_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.expand_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.expand_dim" title="Link to this definition">#</a></dt>
+<dd><p>Expand the dimension of the Grid to a target dimension or Grid.</p>
+<p>This method creates a new Grid with a higher spatial dimension by
+expanding both the underlying multi-index set and the domain.
+The expansion can target either a specific integer dimension
+or match the dimension of another (compatible) Grid instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>target_dimension</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>]</em>) – The new spatial dimension. It must be larger than or equal
-to the current dimension of the Grid. Alternatively,
-another instance of Grid whose dimension is higher can also
-be specified as a target dimension.</p>
+<dd class="field-odd"><p><strong>target</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a><em>, </em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>]</em>) – <p>The target for for dimension expansion:</p>
+<ul class="simple">
+<li><p>If int: The new spatial dimension (must be &gt;= current dimension).
+For non-normalized domains, expansion to an integer is not
+allowed.</p></li>
+<li><p>If Grid: Another Grid instance whose dimension to match.
+The grids must have compatible generating functions or points.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The Grid with expanded dimension.</p>
+<dd class="field-even"><p><p>A new Grid instance with expanded dimension, containing:</p>
+<ul class="simple">
+<li><p>Expanded multi-index set</p></li>
+<li><p>Expanded domain</p></li>
+<li><p>Compatible generating function or points</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If an instance is expanded to a dimension that cannot be supported
-    either by the available generating function or generating points.
-    If the target dimension is a <a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a>, the exception is raised
-    when there are inconsistencies in either generating function
-    or points.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the target dimension is smaller than the current dimension,
+    if expanding a non-normalized domain to an integer dimension,
+    if the generating points cannot accommodate the target dimension,
+    or if the Grid is not compatible with the target Grid.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.grid.Grid.is_compatible">
-<span class="sig-name descname"><span class="pre">is_compatible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.is_compatible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.is_compatible" title="Link to this definition">#</a></dt>
-<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance is compatible with another.</p>
-<p>Two grids are compatible if they have the same generating function
-(if exists) and the generating points up to a common dimension.</p>
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid.has_compatible_gen_function">
+<span class="sig-name descname"><span class="pre">has_compatible_gen_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.has_compatible_gen_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.has_compatible_gen_function" title="Link to this definition">#</a></dt>
+<dd><p>Check if two grids have a compatible generating function.</p>
+<p>Two grids have a compatible generating function if each has
+a generating function and they are an identical function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – The other instance to check its compatibility with the current
-instance.</p>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – Another Grid instance to check compatibility with.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the current instance is compatible with the given
-instance; <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the generating functions are compatible,
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid.has_compatible_gen_points">
+<span class="sig-name descname"><span class="pre">has_compatible_gen_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.has_compatible_gen_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.has_compatible_gen_points" title="Link to this definition">#</a></dt>
+<dd><p>Check if two grids have compatible generating points.</p>
+<p>Two grids have compatible generating points if their generating point
+arrays match in the common dimensions (columns) and common degrees
+(rows). Compatibility is checked by comparing the overlapping subarray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – Another Grid instance to check compatibility with.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the generating points are compatible in their common
+dimensions and degrees, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Compatibility is checked only for the intersection of dimensions
+and degrees</p></li>
+<li><p>For example, a grid with 3D generating points can be compatible with
+a 2D grid if their first 2 dimensions match; or a grid with degree 5
+can be compatible with degree 3 if the first 4 rows (degrees 0-3)
+match</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid.is_compatible">
+<span class="sig-name descname"><span class="pre">is_compatible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.is_compatible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.is_compatible" title="Link to this definition">#</a></dt>
+<dd><p>Check if two instances of Grid are compatible.</p>
+<p>Two instances of Grid are compatible if they have:</p>
+<ul class="simple">
+<li><p>The same generating function (when both have one), OR</p></li>
+<li><p>Compatible generating points (matching values in common dimensions,
+i.e., columns and common degrees, i.e., rows)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – Another Grid instance to check compatibility with.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the generating data is compatible, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This method checks ONLY the compatibility of the underlying
+generating functions or points of the two instances of Grid.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -1088,39 +1218,14 @@ is returned.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.grid.Grid.merge">
-<span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.merge" title="Link to this definition">#</a></dt>
-<dd><p>Merge two instances of Grid with a new multi-index set.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – Another instance of <a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a> to merge with the current instance.</p></li>
-<li><p><strong>multi_index</strong> (<a class="reference internal" href="multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – The multi-index set of the merged instance.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The merged instance with the given multi-index set.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the generating functions of the instances are incompatible
-    with each other (if both are specified) or if the generating points
-    are incompatible with each other (if an instance is missing
-    a generating function).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.__copy__">
 <span class="sig-name descname"><span class="pre">__copy__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.__copy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.__copy__" title="Link to this definition">#</a></dt>
-<dd><p>Creates of a shallow copy.</p>
-<p>This function is called, if one uses the top-level function <code class="docutils literal notranslate"><span class="pre">copy()</span></code> on an instance of this class.</p>
+<dd><p>Creates a shallow copy of the instance.</p>
+<p>This function is called when using the top-level function <code class="docutils literal notranslate"><span class="pre">copy()</span></code>
+on an instance of this class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The copy of the current instance.</p>
+<dd class="field-odd"><p>A shallow copy of the current instance.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
@@ -1129,7 +1234,7 @@ is returned.</p></li>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.copy" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.copy</span></code></a></dt><dd><p>copy operator form the python standard library.</p>
+<dt><a class="reference external" href="https://docs.python.org/dev/library/copy.html#copy.copy" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy.copy</span></code></a></dt><dd><p>Copy operator from the Python standard library.</p>
 </dd>
 </dl>
 </div>
@@ -1139,12 +1244,13 @@ is returned.</p></li>
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.__deepcopy__">
 <span class="sig-name descname"><span class="pre">__deepcopy__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.__deepcopy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.__deepcopy__" title="Link to this definition">#</a></dt>
 <dd><p>Create of a deepcopy.</p>
-<p>This function is called, if one uses the top-level function
+<p>This function is called if one uses the top-level function
 <code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code> on an instance of this class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A deepcopy of the current instance where the underlying
-multi-index set and the generating points are deepcopied.</p>
+multi-index set, the domain, and the generating points
+are deepcopied.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
@@ -1162,25 +1268,38 @@ multi-index set and the generating points are deepcopied.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fun</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.__call__" title="Link to this definition">#</a></dt>
-<dd><p>Evaluate the given function on the unisolvent nodes of the grid.</p>
+<dd><p>Evaluate a function on the unisolvent nodes in the given domain.</p>
+<p>The function is evaluated at the unisolvent nodes transformed from
+the canonical domain <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> to the user-defined domain.
+This allows users to define functions in their natural coordinate
+system without manually handling domain transformations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fun</strong> (<em>Callable</em>) – The given function to evaluate. The function must accept as its
-first argument a two-dimensional array and return as its output
-an array of the same length as the input array.</p></li>
-<li><p><strong>*args</strong> – Additional positional arguments passed to the given function.</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword arguments passed to the given function.</p></li>
+<li><p><strong>fun</strong> (<em>Callable</em>) – The function to evaluate. Must accept as its first argument a
+two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code> and return an array of
+length <code class="docutils literal notranslate"><span class="pre">N</span></code>, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of unisolvent nodes
+and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.</p></li>
+<li><p><strong>*args</strong> – Additional positional arguments passed to the function.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments passed to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The values of the given function evaluated on the unisolvent nodes
-(i.e., the coefficients of the polynomial in the Lagrange basis).</p>
+<dd class="field-even"><p>The function values evaluated at the unisolvent nodes in the
+user domain. These values correspond to the coefficients of
+the polynomial in the Lagrange basis.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The unisolvent nodes are automatically transformed from
+<span class="math notranslate nohighlight">\([-1, 1]^m\)</span> to the given domain before evaluation.</p></li>
+<li><p>If the domain is normalized (<span class="math notranslate nohighlight">\([-1, 1]^m\)</span>),
+there no transformation takes place.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -1191,7 +1310,8 @@ an array of the same length as the input array.</p></li>
 <ul class="simple">
 <li><p>both the underlying multi-index sets are equal, and</p></li>
 <li><p>both the generating points are equal, and</p></li>
-<li><p>both the generating functions are equal.</p></li>
+<li><p>both the generating functions are equal, and</p></li>
+<li><p>both the underlying domains are equal.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1211,35 +1331,91 @@ the current instance.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.__mul__">
 <span class="sig-name descname"><span class="pre">__mul__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.__mul__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.__mul__" title="Link to this definition">#</a></dt>
-<dd><p>Multiply two instances of <a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a> via the <code class="docutils literal notranslate"><span class="pre">*</span></code> operator.</p>
+<dd><p>Multiply two instances of Grid via the <code class="docutils literal notranslate"><span class="pre">*</span></code> operator.</p>
+<p>Multiplying two instances of Grid creates a product grid with
+a multi-index set that is the product of the underlying sets
+of the two operands, and a domain that is the union of the two
+underlying domains.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a>) – The second operand of the grid multiplication.</p>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – The second Grid operand for multiplication.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The product of two grids; the underlying multi-index set is
-the product of the multi-index sets of the operands.</p>
+<dd class="field-even"><p><p>The product grid with:</p>
+<ul class="simple">
+<li><p>Product of the two multi-index sets</p></li>
+<li><p>Union of the two domains</p></li>
+<li><p>Compatible generating function or points</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This operation provides the infrastructure for polynomial
+multiplication: if polynomial <code class="docutils literal notranslate"><span class="pre">p1</span></code> is defined on <code class="docutils literal notranslate"><span class="pre">grid1</span></code>
+and <code class="docutils literal notranslate"><span class="pre">p2</span></code> on <code class="docutils literal notranslate"><span class="pre">grid2</span></code>, then their product <code class="docutils literal notranslate"><span class="pre">(p1</span> <span class="pre">*</span> <span class="pre">p2)</span></code>
+is naturally defined on <code class="docutils literal notranslate"><span class="pre">(grid1</span> <span class="pre">*</span> <span class="pre">grid2)</span></code>.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid.__or__">
 <span class="sig-name descname"><span class="pre">__or__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid.__or__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid.__or__" title="Link to this definition">#</a></dt>
-<dd><p>Combine two instances of <a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a> via the <code class="docutils literal notranslate"><span class="pre">|</span></code> operator.</p>
+<dd><p>Combine two instances of Grid via the <code class="docutils literal notranslate"><span class="pre">|</span></code> operator.</p>
+<p>Combining two instances of Grid creates a union grid with a multi-index
+set that is the union of the underlying sets of the two operands,
+and a domain that is the union of the two underlying domains.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a>) – The second operand of the grid union.</p>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – The second Grid operand for union.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The union of two grids; the underlying multi-index set is
-the union of the multi-index sets of the operands.</p>
+<dd class="field-even"><p><p>The union grid with:</p>
+<ul class="simple">
+<li><p>Union of the two multi-index sets</p></li>
+<li><p>Union of the two domains</p></li>
+<li><p>Compatible generating function or points</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This operation provides the infrastructure for polynomial addition:
+if polynomial <code class="docutils literal notranslate"><span class="pre">p1</span></code> is defined on <code class="docutils literal notranslate"><span class="pre">grid1</span></code> and <code class="docutils literal notranslate"><span class="pre">p2</span></code> on <code class="docutils literal notranslate"><span class="pre">grid2</span></code>,
+then their sum <code class="docutils literal notranslate"><span class="pre">(p1</span> <span class="pre">+</span> <span class="pre">p2)</span></code> is naturally defined
+on <code class="docutils literal notranslate"><span class="pre">(grid1</span> <span class="pre">|</span> <span class="pre">grid2)</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid._combine_with">
+<span class="sig-name descname"><span class="pre">_combine_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid._combine_with"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid._combine_with" title="Link to this definition">#</a></dt>
+<dd><p>Combine two compatible grids with specified multi-index and domain.</p>
+<p>This is a low-level helper used by grid operations, e.g., <code class="docutils literal notranslate"><span class="pre">__mul__</span></code>,
+<code class="docutils literal notranslate"><span class="pre">__or__</span></code>. The multi-index set and domain are already computed by the
+caller; this method picks the compatible generating data and constructs
+a new instance of Grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – The other grid to combine with</p></li>
+<li><p><strong>multi_index</strong> (<a class="reference internal" href="multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – The multi-index for the result</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a>) – The domain for the result</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>New grid constructed with the given multi-index and domain</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1263,19 +1439,112 @@ exponents and <code class="docutils literal notranslate"><span class="pre">m</sp
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.grid.Grid._verify_generating_points">
-<span class="sig-name descname"><span class="pre">_verify_generating_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid._verify_generating_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid._verify_generating_points" title="Link to this definition">#</a></dt>
-<dd><p>Verify if the generating points are valid.</p>
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid._expand_to_grid">
+<span class="sig-name descname"><span class="pre">_expand_to_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid._expand_to_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid._expand_to_grid" title="Link to this definition">#</a></dt>
+<dd><p>Expand the dimension of the Grid to match that of a target Grid.</p>
+<p>This method expands the dimension of the current Grid instance to
+match the spatial dimension of the target Grid. Both the underlying
+multi-index set and domain are expanded, and the grids must have
+compatible generating functions or points.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the points are not of the correct dimension, contains
-    NaN’s or inf’s, do not fit the standard domain, or the values
-    per column are not unique.</p></li>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – The target Grid whose dimension to match. Must have compatible
+generating functions or points with the current Grid instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A new instance of Grid with:</p>
+<ul class="simple">
+<li><p>Dimension matching the target Grid</p></li>
+<li><p>Expanded multi-index set</p></li>
+<li><p>Expanded domain</p></li>
+<li><p>Compatible generating function or points for both grids</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid._expand_to_dimension">
+<span class="sig-name descname"><span class="pre">_expand_to_dimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid._expand_to_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid._expand_to_dimension" title="Link to this definition">#</a></dt>
+<dd><p>Expand the dimension of the Grid to a target dimension.</p>
+<p>This method expands the dimension of the current Grid instance to
+the specified dimension (given as integer).
+The domain must be normalized to allow expansion, as the new dimension
+is inferred to have the same normalized bounds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The target dimension to expand the Grid to. Must be greater than
+or equal to the current dimension.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A new instance of Grid with:</p>
+<ul class="simple">
+<li><p>Dimension equal to the target dimension</p></li>
+<li><p>Expanded multi-index set</p></li>
+<li><p>Expanded domain</p></li>
+<li><p>Same generating function or points as the current instance</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid._has_generating_function">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_has_generating_function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></em><a class="headerlink" href="#minterpy.core.grid.Grid._has_generating_function" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance has a generating function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the instance has a generating function assigned to it,
+and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid._verify_generating_points">
+<span class="sig-name descname"><span class="pre">_verify_generating_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generating_points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid._verify_generating_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid._verify_generating_points" title="Link to this definition">#</a></dt>
+<dd><p>Validate generating points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>generating_points</strong> (<em>np.ndarray</em>) – The given generating points to validate, a 2D array of
+shape <code class="docutils literal notranslate"><span class="pre">(n</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">m)</span></code> where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the maximum degree of the
+the grid in any dimension and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the maximum spatial
+dimension of the grid.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Validated generating points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the points are not of the correct dimension, contain
+    NaN’s or inf’s, do not match with the dimension of the grid,
+    the values per column are not unique, or the points are not
+    within the internal domain.</p></li>
 <li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If the points are not given in the correct type.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Generating points may contain more columns (i.e., spatial dimension)
+than the grid itself (as defined by the dimension of the multi-index
+set). If there’s no generating function, this indicates the maximum
+dimension the current grid can be expanded to.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -1314,14 +1583,18 @@ two arrays having lengths of <code class="docutils literal notranslate"><span cl
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.grid.Grid._new_instance">
-<span class="sig-name descname"><span class="pre">_new_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid._new_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid._new_instance" title="Link to this definition">#</a></dt>
-<dd><p>Construct new grid instance with a new multi-index set.</p>
+<span class="sig-name descname"><span class="pre">_new_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid._new_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid._new_instance" title="Link to this definition">#</a></dt>
+<dd><p>Construct a new grid instance with a new multi-index set and domain.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>multi_index</strong> (<a class="reference internal" href="multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – The multi-index set of the new instance.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>multi_index</strong> (<a class="reference internal" href="multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – The multi-index set of the new instance.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a><em>, </em><em>optional</em>) – The domain of the new instance. If not specified, the domain of
+the current grid will be used.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The new instance of <a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a> with the given multi-index set.</p>
+<dd class="field-even"><p>A new instance of <a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a> with the given multi-index set.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
@@ -1334,6 +1607,45 @@ and generating points.</p></li>
 <li><p>If the new multi-index set cannot be accommodated either by
 the generating function or the generating points, an exception
 will be raised.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.grid.Grid._pick_generating_data">
+<span class="sig-name descname"><span class="pre">_pick_generating_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minterpy/core/grid.html#Grid._pick_generating_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.grid.Grid._pick_generating_data" title="Link to this definition">#</a></dt>
+<dd><p>Pick generating data from two compatible grids.</p>
+<p>This private method validates that the two grids have compatible
+generating functions or generating points, then selects the appropriate
+generating data to use for constructing a combined grid.
+If both grids have compatible generating functions,
+the generating function; otherwise, the larger set of generating points
+is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a>) – Another instance of Grid to pick compatible generating data from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A tuple containing either (Only one element of the tuple will be
+non-None):</p>
+<ul class="simple">
+<li><p>(generating_function, None) if both grids have compatible
+functions</p></li>
+<li><p>(None, generating_points) if grids have compatible points.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Optional[GEN_FUNCTION], Optional[np.ndarray]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the grids are not compatible.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This is a low-level helper method used internally by grid combination
+operations (__mul__, __or__, expand_dim). Compatibility is determined
+by the is_compatible() method.</p></li>
 </ul>
 </dd></dl>
 
@@ -1363,12 +1675,12 @@ will be raised.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="multi_index.html"
+       href="domain.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">multi_index</p>
+        <p class="prev-next-title">domain</p>
       </div>
     </a>
     <a class="right-next"
@@ -1399,7 +1711,10 @@ will be raised.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background-information">Background information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background-information">Background information</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-points-convention">Generating Points Convention</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-guides">How-To Guides</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.from_degree"><code class="docutils literal notranslate"><span class="pre">Grid.from_degree()</span></code></a></li>
@@ -1409,30 +1724,36 @@ will be raised.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.multi_index"><code class="docutils literal notranslate"><span class="pre">Grid.multi_index</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.generating_function"><code class="docutils literal notranslate"><span class="pre">Grid.generating_function</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.generating_points"><code class="docutils literal notranslate"><span class="pre">Grid.generating_points</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.domain"><code class="docutils literal notranslate"><span class="pre">Grid.domain</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.max_exponent"><code class="docutils literal notranslate"><span class="pre">Grid.max_exponent</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.unisolvent_nodes"><code class="docutils literal notranslate"><span class="pre">Grid.unisolvent_nodes</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">Grid.spatial_dimension</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.tree"><code class="docutils literal notranslate"><span class="pre">Grid.tree</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.has_generating_function"><code class="docutils literal notranslate"><span class="pre">Grid.has_generating_function</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.is_complete"><code class="docutils literal notranslate"><span class="pre">Grid.is_complete</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.is_downward_closed"><code class="docutils literal notranslate"><span class="pre">Grid.is_downward_closed</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.add_exponents"><code class="docutils literal notranslate"><span class="pre">Grid.add_exponents()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.expand_dim"><code class="docutils literal notranslate"><span class="pre">Grid.expand_dim()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.has_compatible_gen_function"><code class="docutils literal notranslate"><span class="pre">Grid.has_compatible_gen_function()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.has_compatible_gen_points"><code class="docutils literal notranslate"><span class="pre">Grid.has_compatible_gen_points()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.is_compatible"><code class="docutils literal notranslate"><span class="pre">Grid.is_compatible()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.make_complete"><code class="docutils literal notranslate"><span class="pre">Grid.make_complete()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.make_downward_closed"><code class="docutils literal notranslate"><span class="pre">Grid.make_downward_closed()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.merge"><code class="docutils literal notranslate"><span class="pre">Grid.merge()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.__copy__"><code class="docutils literal notranslate"><span class="pre">Grid.__copy__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">Grid.__deepcopy__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.__call__"><code class="docutils literal notranslate"><span class="pre">Grid.__call__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.__eq__"><code class="docutils literal notranslate"><span class="pre">Grid.__eq__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.__mul__"><code class="docutils literal notranslate"><span class="pre">Grid.__mul__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.__or__"><code class="docutils literal notranslate"><span class="pre">Grid.__or__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._combine_with"><code class="docutils literal notranslate"><span class="pre">Grid._combine_with()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._create_generating_points"><code class="docutils literal notranslate"><span class="pre">Grid._create_generating_points()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._expand_to_grid"><code class="docutils literal notranslate"><span class="pre">Grid._expand_to_grid()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._expand_to_dimension"><code class="docutils literal notranslate"><span class="pre">Grid._expand_to_dimension()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._has_generating_function"><code class="docutils literal notranslate"><span class="pre">Grid._has_generating_function</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._verify_generating_points"><code class="docutils literal notranslate"><span class="pre">Grid._verify_generating_points()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._verify_matching_gen_function_and_points"><code class="docutils literal notranslate"><span class="pre">Grid._verify_matching_gen_function_and_points()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._verify_grid_max_exponent"><code class="docutils literal notranslate"><span class="pre">Grid._verify_grid_max_exponent()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._new_instance"><code class="docutils literal notranslate"><span class="pre">Grid._new_instance()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid._pick_generating_data"><code class="docutils literal notranslate"><span class="pre">Grid._pick_generating_data()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.__hash__"><code class="docutils literal notranslate"><span class="pre">Grid.__hash__</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.grid.Grid.__weakref__"><code class="docutils literal notranslate"><span class="pre">Grid.__weakref__</span></code></a></li>
 </ul>

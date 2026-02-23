@@ -1,26 +1,29 @@
 {
  "cells": [
   {
-   "metadata": {},
    "cell_type": "markdown",
-   "source": "# Create a Grid with a Generating Function",
-   "id": "2be84de1e0a3b90e"
+   "id": "2be84de1e0a3b90e",
+   "metadata": {},
+   "source": [
+    "# Create a Grid with a Generating Function"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
+   "execution_count": 1,
+   "id": "80d67622f636af48",
+   "metadata": {},
+   "outputs": [],
    "source": [
     "import numpy as np\n",
     "import minterpy as mp\n",
     "import matplotlib.pyplot as plt"
-   ],
-   "id": "80d67622f636af48",
-   "outputs": [],
-   "execution_count": null
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "a83abcedf02e16e1",
+   "metadata": {},
    "source": [
     "Minterpy interpolating polynomials (i.e., in the Lagrange or Newton basis)\n",
     "lives on a grid that holds the so-called _unisolvent nodes_.\n",
@@ -38,12 +41,12 @@
     "\n",
     "This guide provides an example on how to construct a `Grid` instance based\n",
     "on a given generating function using the `from_function()` method."
-   ],
-   "id": "a83abcedf02e16e1"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "cf7e6168829e5e2b",
+   "metadata": {},
    "source": [
     "## About a generating function\n",
     "\n",
@@ -60,62 +63,74 @@
     "    ...\n",
     "```\n",
     "\n",
-    "It must return an array with the aforementioned shape and each column of the\n",
-    "array must have unique values.\n",
-    "\n",
-    "Take for instance, the default generating function in Minterpy, i.e.,\n",
-    "the Leja-ordered Chebyshev-Lobatto generating function.\n",
-    "The function returns the following generating points in two dimensions\n",
-    "with maximum polynomial degree of $3$ in every dimension:"
-   ],
-   "id": "cf7e6168829e5e2b"
+    "It must return an array with the aforementioned shape and each column of the array must have unique values. The values in the returned array must lie within $[-1, 1]$, that is, all generating points must be in the internal reference domain $[-1, 1]^m$."
+   ]
   },
   {
-   "metadata": {},
-   "cell_type": "code",
-   "source": "mp.gen_points.gen_points_chebyshev(poly_degree=3, spatial_dimension=2)",
-   "id": "6b6bf1693e8f01a0",
-   "outputs": [],
-   "execution_count": null
-  },
-  {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "42bc2fbf-858f-4ac4-8f36-5916e720199f",
+   "metadata": {},
+   "source": [
+    "Take for instance, the default generating function in Minterpy, i.e., the Leja-ordered Chebyshev-Lobatto generating function. The function returns the following generating points in two dimensions\n",
+    "with maximum polynomial degree of $3$ in every dimension:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "6b6bf1693e8f01a0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[ 1. , -1. ],\n",
+       "       [-1. ,  1. ],\n",
+       "       [ 0.5, -0.5],\n",
+       "       [-0.5,  0.5]])"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "mp.gen_points.gen_points_chebyshev(poly_degree=3, spatial_dimension=2)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6041a18b159cac12",
+   "metadata": {},
    "source": [
     "Notice that the array has $4$ rows (i.e., $n + 1$, $n = 3$ as\n",
     "one-dimensional polynomials of degree $3$ require $4$ points)\n",
     "and $2$ columns (i.e., $m = 2$), and that each column has unique values."
-   ],
-   "id": "6041a18b159cac12"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "50c96a68e8c901e0",
+   "metadata": {},
    "source": [
     "## About the `from_function()` factory method\n",
     "\n",
-    "The method `from_function()` of the `Grid` class returns an instance of Grid\n",
-    "based on a given generating function.\n",
+    "The method `from_function()` of the `Grid` class returns an instance of Grid based on a given generating function.\n",
     "\n",
-    "The method accepts two mandatory arguments, namely, the multi-index set\n",
-    "of exponents that defines the polynomials that grid can support,\n",
-    "and the generating function that creates generating points\n",
-    "as required by the multi-index set.\n",
+    "The method accepts two mandatory arguments, namely, the multi-index set of exponents that defines the polynomials that grid can support, and the generating function that creates generating points as required by the multi-index set.\n",
     "\n",
-    "Any callable that is a valid generating function (see above) may be passed\n",
-    "as the second argument to `from_function()`.\n",
-    "Alternatively, a string as a key to a dictionary of built-in generating\n",
-    "functions may be specified.\n",
+    "Any callable that is a valid generating function (see above) may be passed as the second argument to `from_function()`. Alternatively, a string as a key to a dictionary of built-in generating functions may be specified.\n",
     "\n",
-    "The `from_function()` method is a shortcut to create a grid with a given\n",
-    "multi-index set and a particular generating function that is, possibly, defined\n",
-    "by the users."
-   ],
-   "id": "50c96a68e8c901e0"
+    "The method also accepts an optional `domain` argument. If not specified the domain defaults to the internal reference domain $[-1, 1]^m$. Regardless of the specified domain, however, the generating function must always return values in $[-1, 1]^m$.\n",
+    "\n",
+    "The `from_function()` method is a shortcut to create a grid with a given multi-index set and a particular generating function that is, possibly, defined by the users."
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "f2e7ab16bd7b05cc",
+   "metadata": {},
    "source": [
     "## Example: Two-dimensional interpolation grid\n",
     "\n",
@@ -123,22 +138,24 @@
     "polynomials having a multi-index set \n",
     "$A = \\{ (0, 0), (1, 0), (2, 0), (3, 0), (0, 1), (1, 1), (0, 2), (1, 2), (0, 3), (0, 4) \\}$ \n",
     "(defined with respect to $l_p$-degree $2.0$)."
-   ],
-   "id": "f2e7ab16bd7b05cc"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "6a35e4ca9db3b8b0",
+   "metadata": {},
    "source": [
     "### Multi-index set\n",
     "\n",
     "Create an instance of `MultiIndexSet` following the above specification:"
-   ],
-   "id": "6a35e4ca9db3b8b0"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
+   "execution_count": 6,
+   "id": "30bdd334f359d36a",
+   "metadata": {},
+   "outputs": [],
    "source": [
     "exponents = np.array([\n",
     "    [0, 0],\n",
@@ -152,40 +169,62 @@
     "    [0, 3],\n",
     "    [0, 4],\n",
     "])"
-   ],
-   "id": "30bdd334f359d36a",
-   "outputs": [],
-   "execution_count": null
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "mi = mp.MultiIndexSet(exponents, lp_degree=2.0)",
+   "execution_count": 7,
    "id": "d3ce0ffcefd7a222",
+   "metadata": {},
    "outputs": [],
-   "execution_count": null
+   "source": [
+    "mi = mp.MultiIndexSet(exponents, lp_degree=2.0)"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "print(mi)",
+   "execution_count": 8,
    "id": "8d5412adddc4b0a1",
-   "outputs": [],
-   "execution_count": null
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "MultiIndexSet(m=2, n=4, p=2.0)\n",
+      "[[0 0]\n",
+      " [1 0]\n",
+      " [2 0]\n",
+      " [3 0]\n",
+      " [0 1]\n",
+      " [1 1]\n",
+      " [0 2]\n",
+      " [1 2]\n",
+      " [0 3]\n",
+      " [0 4]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(mi)"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "725427e2a48988ea",
+   "metadata": {},
    "source": [
     "### Generating function\n",
     "\n",
     "The generating function for equidistant points can be defined as follows:"
-   ],
-   "id": "725427e2a48988ea"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
+   "execution_count": 9,
+   "id": "84e9c48050e35d8a",
+   "metadata": {},
+   "outputs": [],
    "source": [
     "def equidistant_gen_function(\n",
     "    poly_degree: int,\n",
@@ -195,98 +234,163 @@
     "    xx = np.linspace(-1, 1, poly_degree + 1)[:, np.newaxis]\n",
     "    \n",
     "    return np.tile(xx, spatial_dimension)"
-   ],
-   "id": "84e9c48050e35d8a",
-   "outputs": [],
-   "execution_count": null
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "c059a88286b4fa53",
+   "metadata": {},
    "source": [
     "Given the function above, the generating points for polynomial degree $3$ in every dimension\n",
     "and spatial dimension $3$ are:"
-   ],
-   "id": "c059a88286b4fa53"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "print(equidistant_gen_function(3, 3))",
+   "execution_count": 10,
    "id": "2399d4f46cf1f248",
-   "outputs": [],
-   "execution_count": null
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[-1.         -1.         -1.        ]\n",
+      " [-0.33333333 -0.33333333 -0.33333333]\n",
+      " [ 0.33333333  0.33333333  0.33333333]\n",
+      " [ 1.          1.          1.        ]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(equidistant_gen_function(3, 3))"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "051ef6f5-5708-4410-8aa1-186fbe2c4f05",
+   "metadata": {},
+   "source": [
+    "Remember that these points must lie within $[-1, 1]^m."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "dd4ba554f203b33e",
+   "metadata": {},
    "source": [
     "### Grid instance\n",
     "\n",
     "Given the multi-index set and the generating function,\n",
     "an instance of `Grid` can be constructed via the `from_function()` method\n",
     "as follows:"
-   ],
-   "id": "dd4ba554f203b33e"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "grd = mp.Grid.from_function(mi, equidistant_gen_function)",
+   "execution_count": 11,
    "id": "1fb54f2c699b50c4",
+   "metadata": {},
    "outputs": [],
-   "execution_count": null
+   "source": [
+    "grd = mp.Grid.from_function(mi, equidistant_gen_function)"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
-   "source": "The grid has the following unisolvent nodes:",
-   "id": "513bc88db90b7505"
+   "id": "513bc88db90b7505",
+   "metadata": {},
+   "source": [
+    "The grid has the following unisolvent nodes:"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "print(grd.unisolvent_nodes)",
+   "execution_count": 12,
    "id": "a04b54f6e38e440",
-   "outputs": [],
-   "execution_count": null
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[-1.  -1. ]\n",
+      " [-0.5 -1. ]\n",
+      " [ 0.  -1. ]\n",
+      " [ 0.5 -1. ]\n",
+      " [-1.  -0.5]\n",
+      " [-0.5 -0.5]\n",
+      " [-1.   0. ]\n",
+      " [-0.5  0. ]\n",
+      " [-1.   0.5]\n",
+      " [-1.   1. ]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(grd.unisolvent_nodes)"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
-   "source": "Finally, the two-dimensional interpolation grid is plotted below:",
-   "id": "77a00b903229ac94"
+   "id": "77a00b903229ac94",
+   "metadata": {},
+   "source": [
+    "Finally, the two-dimensional interpolation grid is plotted below:"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
+   "execution_count": 13,
+   "id": "a7c41c4712b66521",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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D7LLly873qZ169bO888/717PyspyoqKiTMDPzRNPPOF069btmvv5d7/7neMLbvR6r3blyhWncuXKzoIFCxx/vd4rV6449913n/P+++87Tz/9tN+GKJrz/NThw4dN85ZWG+f8HiCthtUmIG+mz0+bPFq2bOnepteh30W4ffv2PI/T5s4lS5aYphD98metRr548aI89NBD4m/Xm5qaavZFRESY665Ro4a0b99etmzZIt7O9u97/vx5eeqpp0yzgjbZ+grb672aNuVpc2CZMt71laeXLl2SHTt2eLzX6LXpel7vNbo9Z3nVpUsXr39vsr3e3O7ly5cvS3h4uPjr9U6cONG8P2nTtT8jRPkpDVBKP1xz0nXXPm+lz0//8eWkHxz6hpPfc//444/NG9Mtt9xiZs793e9+J8uXL5f69euLv13voUOHzOPrr78uQ4YMkfj4eNMHrGPHjl7f78327/vSSy+ZwNijRw/xJbbXm9OpU6dk0qRJMnToUPE2+tyysrJu6L1Gt/vie5Pt9V5t9OjREhUVdU2Q9Jfr3bJli3zwwQemL5i/I0SVoDFjxpgOd/kt+/btE39R1Nc7duxYOXPmjPz973+Xb775RkaOHClPPPGE7N69W/zterWmTWlQHDRokDRv3lz+/Oc/m47Ic+fOFX+73pUrV8qGDRvk7bffltL27zc9PV26desmjRo1MqEZvm3y5Mmmllz/B087afubs2fPmgE+GqCqVasm/s676oVLmVGjRsnAgQPzLVOvXj2rc7uaO1JSUszoPBddb9asmXjz9epz1+aqnK5cuWKa6fJqxjl48KC89957smfPHrn77rvNtqZNm8qXX35pmn9mz54t/nS9rr+pfrDmdNddd8nRo0elJBTl9WqA0r/x1SNTe/XqZUY9bdq0SfzpenN+IMXExEjlypXNh27ZsmXF2+gHZVBQkHlvyUnX87o+3X4j5X39el2mTZtmQpT+j16TJk3EF9zo9R48eFCOHDki3bt3v+Z/+rQGdv/+/XLHHXeI3yjpTlko2o7l06ZNc29LS0vzqY7l33zzjXvbmjVr8u2I+91335lj9NicOnfubEaS+Nv16t9XO3Ze3bG8WbNmTmxsrONv16sdyXXkVs5Fz/HOO+84hw4dcvztel3/Xtu0aeO0b9/eOXfunOPtHY+HDx/u0fFYBwDk17H83/7t3zy2tW3b1qc6lt/I9aopU6aY0bQJCQmOr7mR671w4cI1/1a1U3mHDh3Mz5mZmY4/IUT5iJ9++smMTJowYYJTqVIl87MuZ8+edZdp0KCBs2zZMo8pDnQY6qeffmpCht7IvjTFQfPmzc10BVu2bDHDu3MOCdehwXq9ul9dunTJDBvXobS6TYeFa4DUD6rVq1c7/na96s9//rN5U166dKnz448/mkAVEhJirt0fr/dqvjI6z+Z6NUDpaLXGjRubv6eGSNeio568cQi8/g/a/PnzTWgcOnSoee9JTk42+/v37++MGTPGY4qDMmXKmH+jOuR//PjxPjfFwY1cr74X68jKTz75xONvmfP925+u92r+PDqPEOUj9CbUD42rl40bN7rL6LrWVOWsrRg7dqxTo0YN8w+gY8eOzv79+x1f8Msvv5gPGQ2MGhQGDRrk8Yaj849cff3//Oc/zdw6ERERToUKFZwmTZpcM+WBP12v0v8TvO2228z16v/J6xxE/ny9vhqibvR69TG3f++6aFlv9O677zq1a9c2YUFrLnROLBetTdP3sKunbLjzzjtN+bvvvtsn/mfH9npvv/32XP+WGh59xY3+fUtLiArQ/5R0kyIAAICvYXQeAACABUIUAACABUIUAACABUIUAACABUIUAACABUIUAACABUIUAACABUIUAACABUIUAACABUIUAACABUIUAOTijTfekICAAGnTpk2ur8+YMWPM/mbNmsmvv/7KawiUQnx3HgDk4sKFC3LnnXfK8ePH5ZNPPpFevXq598XFxcl//ud/SoMGDWTz5s0SERHBawiUQtREAUAuypcvL2+++ab5+Q9/+INcuXLF/Dxr1iwToOrWrSvr168nQAGlGDVRAJAHx3GkZcuWsnPnTpk9e7ZUqlRJ+vfvL1FRUfLll1+aIOVy4MABmTZtmiQmJsru3bvl1ltvlSNHjvDaAn6MEAUA+di0aZM8/PDDUrVqVTl79qx51Ca8hg0bepT79NNP5fnnn5fWrVvL4cOHTT8pQhTg3whRAHAd7dq1k61bt0rlypVNgNLO5FfLzs6WwMB/9ZB49tlnJT4+nhAF+Dn6RAFAPubNmycJCQnm58zMTAkNDc39zfT/AhSA0oN/9QCQh6VLl8qQIUMkPDxcevfuLZcuXZLRo0fzegEwCFEAkIvPP/9c+vbtKxUrVpQ1a9aYjuUapnS6A23aAwBCFABc5YsvvpDHHntMypQpI6tWrZIWLVpIlSpVzNQGauTIkbxmAAhRAJCTTlHQvXt3ycrKkmXLlsmDDz7o3jd8+HC5/fbbZfv27bJ48WJeOKCUoyYKAP6Pzu/UtWtXOX/+vHz44YcSExPj8doEBwfLpEmTzM+xsbGmozmA0ospDgCgkDHFAVA6lCnpJwAA/kBrr7Qzujp06JBZ107oqlWrVqYZEIB/oSYKAAqBzk6e82tgrp5rauDAgbzOgJ8hRAEAAFigYzkAAAAhCgAAoHhQEwUAAGCBEAUAAGCBEAUAAGCBEAUAAGCBEAUAAGCBEAUAAGCBEAUAAGCBEAUAAGCBEAUAACA37n8BmwuyjW9eSggAAAAASUVORK5CYII=",
+      "text/plain": [
+       "<Figure size 640x480 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
    "source": [
     "plt.scatter(grd.unisolvent_nodes[:, 0], grd.unisolvent_nodes[:, 1])\n",
     "plt.xlabel(\"$x_1$\", fontsize=16)\n",
     "plt.ylabel(\"$x_2$\", fontsize=16);"
-   ],
-   "id": "a7c41c4712b66521",
-   "outputs": [],
-   "execution_count": null
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "dcb3b344-f904-46f8-b50a-31bf77567358",
+   "metadata": {},
+   "source": [
+    "```{note}\n",
+    "Regardless of the specified domain, the unisolvent nodes are stored in the internal reference domain $[-1, 1]^m$. When the domain is not $[-1, 1]^m$, Minterpy automatically transforms the nodes to the specified domain before passing them to the function, for example, when calling\n",
+    "`grid(func)`.\n",
+    "```"
+   ]
   }
  ],
  "metadata": {
   "kernelspec": {
-   "display_name": "Python 3",
+   "display_name": "Python 3 (ipykernel)",
    "language": "python",
    "name": "python3"
   },
   "language_info": {
    "codemirror_mode": {
     "name": "ipython",
-    "version": 2
+    "version": 3
    },
    "file_extension": ".py",
    "mimetype": "text/x-python",
    "name": "python",
    "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython2",
-   "version": "2.7.6"
+   "pygments_lexer": "ipython3",
+   "version": "3.11.14"
   }
  },
  "nbformat": 4,

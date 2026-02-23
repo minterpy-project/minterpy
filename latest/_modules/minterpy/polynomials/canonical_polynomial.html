@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -443,24 +443,19 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">factorial</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiIndexSet</span><span class="p">,</span> <span class="n">Grid</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">INT_DTYPE</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.ABC</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultivariatePolynomialSingleABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.polynomials.arithmetic</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_compute_coeffs_add</span><span class="p">,</span>
+    <span class="n">get_compute_coeffs_mul</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.polynomials.scalar_add</span><span class="w"> </span><span class="kn">import</span> <span class="n">scalar_add_via_monomials</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.polynomials.canonical</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">eval_polynomials</span><span class="p">,</span>
     <span class="n">integrate_monomials</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.polynomials.interface</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">compute_coeffs_poly_prod_via_monomials</span><span class="p">,</span>
-    <span class="n">compute_coeffs_poly_sum_via_monomials</span><span class="p">,</span>
-    <span class="n">get_grid_and_multi_index_poly_prod</span><span class="p">,</span>
-    <span class="n">get_grid_and_multi_index_poly_sum</span><span class="p">,</span>
-    <span class="n">PolyData</span><span class="p">,</span>
-    <span class="n">scalar_add_via_monomials</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.verification</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">dummy</span><span class="p">,</span>
-    <span class="n">verify_domain</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.verification</span><span class="w"> </span><span class="kn">import</span> <span class="n">dummy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_coeffs_2d</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.multi_index</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_match_between</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.jit_compiled.multi_index</span><span class="w"> </span><span class="kn">import</span> <span class="n">all_indices_are_contained</span>
@@ -506,6 +501,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">add_canonical</span><span class="p">(</span>
     <span class="n">poly_1</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span>
     <span class="n">poly_2</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span>
+    <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="n">Grid</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add two polynomial instances in the canonical basis.</span>
 
@@ -516,9 +513,15 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    poly_1 : CanonicalPolynomial</span>
-<span class="sd">        Left operand of the addition expression.</span>
+<span class="sd">        Left operand of the addition.</span>
 <span class="sd">    poly_2 : CanonicalPolynomial</span>
-<span class="sd">        Right operand of the addition expression.</span>
+<span class="sd">        Right operand of the addition.</span>
+<span class="sd">    multi_index : MultiIndexSet</span>
+<span class="sd">        The multi-index set of the resulting polynomial, i.e., the union</span>
+<span class="sd">        of the multi-index sets of the operands.</span>
+<span class="sd">    grid : Grid</span>
+<span class="sd">        The grid of the resulting polynomial, i.e., the union of the grids</span>
+<span class="sd">        of the two operands.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -528,22 +531,29 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - This function assumes: both polynomials must be in canonical basis,</span>
-<span class="sd">      they must be initialized, have the same dimension and their domains</span>
-<span class="sd">      are matching, and the number of polynomials per instance are the same.</span>
-<span class="sd">      These conditions are not explicitly checked in this function; the caller</span>
-<span class="sd">      is responsible for the verification.</span>
+<span class="sd">    - This function assumes the caller has verified: both polynomials are in</span>
+<span class="sd">      the canonical basis, both are initialized, their domains match, and they</span>
+<span class="sd">      have the same number of polynomial instances.</span>
+<span class="sd">    - The provided ``multi_index`` may differ from ``grid.multi_index`` when</span>
+<span class="sd">      the polynomial multi-index set is a subset of the grid multi-index set</span>
+<span class="sd">      (i.e., separated indices). The coefficients are computed</span>
+<span class="sd">      with respect to the given ``multi_index``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># --- Get the ingredients of the summed polynomial in the Canonical basis</span>
-    <span class="n">poly_sum_data</span> <span class="o">=</span> <span class="n">_compute_data_poly_sum</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">)</span>
+    <span class="c1"># Get the function to compute the sum coefficients via monomials</span>
+    <span class="n">compute_coeffs</span> <span class="o">=</span> <span class="n">get_compute_coeffs_add</span><span class="p">(</span><span class="s2">&quot;monomials&quot;</span><span class="p">)</span>
 
-    <span class="c1"># --- Return a new instance</span>
-    <span class="k">return</span> <span class="n">CanonicalPolynomial</span><span class="p">(</span><span class="o">**</span><span class="n">poly_sum_data</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span>
+    <span class="c1"># Compute the coefficients</span>
+    <span class="n">coeffs</span> <span class="o">=</span> <span class="n">compute_coeffs</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">)</span>
+
+    <span class="c1"># Create and return a new instance of polynomial</span>
+    <span class="k">return</span> <span class="n">CanonicalPolynomial</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">mul_canonical</span><span class="p">(</span>
     <span class="n">poly_1</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span>
     <span class="n">poly_2</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span>
+    <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="n">Grid</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply two polynomial instances in the canonical basis.</span>
 
@@ -554,46 +564,43 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    poly_1 : CanonicalPolynomial</span>
-<span class="sd">        Left operand of the multiplication expression.</span>
+<span class="sd">        Left operand of the multiplication.</span>
 <span class="sd">    poly_2 : CanonicalPolynomial</span>
-<span class="sd">        Right operand of the multiplication expression.</span>
+<span class="sd">        Right operand of the multiplication.</span>
+<span class="sd">    multi_index : MultiIndexSet</span>
+<span class="sd">        The multi-index set of the resulting polynomial, i.e., the product</span>
+<span class="sd">        of the multi-index sets of the two operands.</span>
+<span class="sd">    grid : Grid</span>
+<span class="sd">        The grid of the resulting polynomial, i.e., the product of the grids</span>
+<span class="sd">        of the two operands.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    CanonicalPolynomial</span>
-<span class="sd">        The product of two polynomials in the canonical basis; a new instance</span>
-<span class="sd">        of polynomial.</span>
+<span class="sd">        The product of the two polynomials in the canonical basis as a new</span>
+<span class="sd">        polynomial instance.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - This function assumes: both polynomials must be in the canonical basis,</span>
-<span class="sd">      they must be initialized, have the same dimension and their domains</span>
-<span class="sd">      are matching, and the number of polynomials per instance are the same.</span>
-<span class="sd">      These conditions are not explicitly checked in this function; the caller</span>
-<span class="sd">      is responsible for the verification.</span>
+<span class="sd">    - This function assumes the caller has verified: both polynomials are in</span>
+<span class="sd">      the canonical basis, both are initialized, their domains match, and they</span>
+<span class="sd">      have the same number of polynomial instances.</span>
+<span class="sd">    - The provided ``multi_index`` may differ from ``grid.multi_index`` when</span>
+<span class="sd">      the polynomial multi-index set is a subset of the grid multi-index set</span>
+<span class="sd">      (i.e., separated indices). The coefficients are computed</span>
+<span class="sd">      with respect to the given ``multi_index``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># --- Get the ingredients of the product polynomial in the canonical basis</span>
-    <span class="n">poly_prod_data</span> <span class="o">=</span> <span class="n">_compute_data_poly_prod</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">)</span>
+    <span class="c1"># Get the function to compute the product coefficients via monomials</span>
+    <span class="n">compute_coeffs</span> <span class="o">=</span> <span class="n">get_compute_coeffs_mul</span><span class="p">(</span><span class="s2">&quot;monomials&quot;</span><span class="p">)</span>
 
-    <span class="c1"># --- Return a new instance</span>
-    <span class="k">return</span> <span class="n">CanonicalPolynomial</span><span class="p">(</span><span class="o">**</span><span class="n">poly_prod_data</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span>
+    <span class="c1"># Compute the coefficients</span>
+    <span class="n">coeffs</span> <span class="o">=</span> <span class="n">compute_coeffs</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">)</span>
 
-
-<span class="c1"># TODO redundant</span>
-<span class="n">canonical_generate_internal_domain</span> <span class="o">=</span> <span class="n">verify_domain</span>
-<span class="n">canonical_generate_user_domain</span> <span class="o">=</span> <span class="n">verify_domain</span>
+    <span class="c1"># Create and return a new instance of polynomial</span>
+    <span class="k">return</span> <span class="n">CanonicalPolynomial</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_canonical_partial_diff</span><span class="p">(</span><span class="n">poly</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Partial differentiation in Canonical basis.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">spatial_dim</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span>
-    <span class="n">deriv_order_along</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">spatial_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">INT_DTYPE</span><span class="p">)</span>
-    <span class="n">deriv_order_along</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">order</span>
-    <span class="k">return</span> <span class="n">_canonical_diff</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">deriv_order_along</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_canonical_diff</span><span class="p">(</span><span class="n">poly</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">canonical_diff</span><span class="p">(</span><span class="n">poly</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">diff_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Partial differentiation in Canonical basis.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -625,7 +632,7 @@
     <span class="n">new_coeffs</span><span class="p">[</span><span class="n">map_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff_coeffs</span>
 
     <span class="c1"># Squeezing the last dimension to handle single polynomial</span>
-    <span class="k">return</span> <span class="n">CanonicalPolynomial</span><span class="o">.</span><span class="n">from_poly</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">new_coeffs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">poly</span><span class="o">.</span><span class="n">coeffs</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">CanonicalPolynomial</span><span class="o">.</span><span class="n">from_poly</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">diff_factor</span> <span class="o">*</span> <span class="n">new_coeffs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">poly</span><span class="o">.</span><span class="n">coeffs</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_canonical_integrate_over</span><span class="p">(</span>
@@ -673,126 +680,12 @@
     <span class="n">_scalar_add</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">scalar_add_via_monomials</span><span class="p">)</span>
 
     <span class="c1"># Calculus</span>
-    <span class="n">_partial_diff</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">_canonical_partial_diff</span><span class="p">)</span>
-    <span class="n">_diff</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">_canonical_diff</span><span class="p">)</span>
-    <span class="n">_integrate_over</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">_canonical_integrate_over</span><span class="p">)</span>
-
-    <span class="c1"># Domain generation</span>
-    <span class="n">generate_internal_domain</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">canonical_generate_internal_domain</span><span class="p">)</span>
-    <span class="n">generate_user_domain</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">canonical_generate_user_domain</span><span class="p">)</span></div>
+    <span class="n">_diff</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">canonical_diff</span><span class="p">)</span>
+    <span class="n">_integrate_over</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">_canonical_integrate_over</span><span class="p">)</span></div>
 
 
 
 <span class="c1"># --- Internal utility functions</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_compute_data_poly_sum</span><span class="p">(</span>
-    <span class="n">poly_1</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span>
-    <span class="n">poly_2</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PolyData</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the data to create a summed polynomial in the canonical basis.</span>
-
-<span class="sd">    Addition or subtraction of polynomials in the canonical basis is based</span>
-<span class="sd">    on the adding (resp. subtracting) the coefficients of the matching</span>
-<span class="sd">    monomials of the two polynomial operands (i.e., the matching elements of</span>
-<span class="sd">    the two multi-index sets).</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    poly_1 : CanonicalPolynomial</span>
-<span class="sd">        Left operand of the addition expression.</span>
-<span class="sd">    poly_2 : CanonicalPolynomial</span>
-<span class="sd">        Right operand of the addition expression.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    PolyData</span>
-<span class="sd">        The ingredients to construct a summed polynomial in the canonical</span>
-<span class="sd">        basis.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    - Both polynomials are assumed to have the same dimension</span>
-<span class="sd">      and matching domains.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># --- Get the grid and multi-index set of the summed polynomial</span>
-    <span class="n">grd_sum</span><span class="p">,</span> <span class="n">mi_sum</span> <span class="o">=</span> <span class="n">get_grid_and_multi_index_poly_sum</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">)</span>
-
-    <span class="c1"># --- Process the coefficients</span>
-    <span class="c1"># NOTE: indices may or may not be separate, use the summed multi-index set</span>
-    <span class="c1">#       instead of the one attached to grid</span>
-    <span class="n">coeffs_sum</span> <span class="o">=</span> <span class="n">compute_coeffs_poly_sum_via_monomials</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">,</span> <span class="n">mi_sum</span><span class="p">)</span>
-
-    <span class="c1"># --- Process the domains</span>
-    <span class="c1"># NOTE: Because it is assumed that &#39;poly_1&#39; and &#39;poly_2&#39; have</span>
-    <span class="c1"># matching domains, it does not matter which one to use</span>
-    <span class="n">internal_domain_sum</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">internal_domain</span>
-    <span class="n">user_domain_sum</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">user_domain</span>
-
-    <span class="k">return</span> <span class="n">PolyData</span><span class="p">(</span>
-        <span class="n">multi_index</span><span class="o">=</span><span class="n">mi_sum</span><span class="p">,</span>
-        <span class="n">coeffs</span><span class="o">=</span><span class="n">coeffs_sum</span><span class="p">,</span>
-        <span class="n">internal_domain</span><span class="o">=</span><span class="n">internal_domain_sum</span><span class="p">,</span>
-        <span class="n">user_domain</span><span class="o">=</span><span class="n">user_domain_sum</span><span class="p">,</span>
-        <span class="n">grid</span><span class="o">=</span><span class="n">grd_sum</span><span class="p">,</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_compute_data_poly_prod</span><span class="p">(</span>
-    <span class="n">poly_1</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span>
-    <span class="n">poly_2</span><span class="p">:</span> <span class="s2">&quot;CanonicalPolynomial&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PolyData</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the data to create a product polynomial in the canonical basis.</span>
-
-<span class="sd">    Multiplication of polynomials in the canonical basis is based on</span>
-<span class="sd">    multiplying the coefficients of the matching monomials of the two</span>
-<span class="sd">    polynomial operands (i.e., the matching elements of the two multi-index</span>
-<span class="sd">    sets). In the canonical basis, multiplying two monomials results in a</span>
-<span class="sd">    a monomial of a higher degree (the degree sum of the two monomials).</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    poly_1 : CanonicalPolynomial</span>
-<span class="sd">        Left operand of the multiplication expression.</span>
-<span class="sd">    poly_2 : CanonicalPolynomial</span>
-<span class="sd">        Right operand of the multiplication expression.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    PolyData</span>
-<span class="sd">        The ingredients to construct a product polynomial in the canonical</span>
-<span class="sd">        basis.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    - Both polynomials are assumed to have the same dimension</span>
-<span class="sd">      and matching domains.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># --- Get the grid and multi-index set of the summed polynomial</span>
-    <span class="n">grd_prod</span><span class="p">,</span> <span class="n">mi_prod</span> <span class="o">=</span> <span class="n">get_grid_and_multi_index_poly_prod</span><span class="p">(</span><span class="n">poly_1</span><span class="p">,</span> <span class="n">poly_2</span><span class="p">)</span>
-
-    <span class="c1"># --- Process the coefficients</span>
-    <span class="c1"># NOTE: indices may or may not be separate, use the summed multi-index set</span>
-    <span class="c1">#       instead of the one attached to grid</span>
-    <span class="n">coeffs_prod</span> <span class="o">=</span> <span class="n">compute_coeffs_poly_prod_via_monomials</span><span class="p">(</span>
-        <span class="n">poly_1</span><span class="p">,</span>
-        <span class="n">poly_2</span><span class="p">,</span>
-        <span class="n">mi_prod</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="c1"># --- Process the domains</span>
-    <span class="c1"># NOTE: Because it is assumed that &#39;poly_1&#39; and &#39;poly_2&#39; have</span>
-    <span class="c1"># matching domains, it does not matter which one to use</span>
-    <span class="n">internal_domain_prod</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">internal_domain</span>
-    <span class="n">user_domain_prod</span> <span class="o">=</span> <span class="n">poly_1</span><span class="o">.</span><span class="n">user_domain</span>
-
-    <span class="k">return</span> <span class="n">PolyData</span><span class="p">(</span>
-        <span class="n">multi_index</span><span class="o">=</span><span class="n">mi_prod</span><span class="p">,</span>
-        <span class="n">coeffs</span><span class="o">=</span><span class="n">coeffs_prod</span><span class="p">,</span>
-        <span class="n">internal_domain</span><span class="o">=</span><span class="n">internal_domain_prod</span><span class="p">,</span>
-        <span class="n">user_domain</span><span class="o">=</span><span class="n">user_domain_prod</span><span class="p">,</span>
-        <span class="n">grid</span><span class="o">=</span><span class="n">grd_prod</span><span class="p">,</span>
-    <span class="p">)</span>
-
-
 <span class="k">def</span><span class="w"> </span><span class="nf">_compute_quad_weights</span><span class="p">(</span>
     <span class="n">poly</span><span class="p">:</span> <span class="n">CanonicalPolynomial</span><span class="p">,</span>
     <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>

@@ -63,6 +63,20 @@ behind Minterpy.
 
       The answer depends on the basis in which the polynomial is represented.
 
+   .. grid-item-card:: Internal and User Domains
+      :link: domain
+      :link-type: doc
+      :columns: 12 8 8 6
+      :class-card: sd-border-0, sd-card-hover-1
+
+      *Working with custom domains*
+      ^^^
+      Minterpy polynomials are defined on an internal reference domain,
+      but functions of interest often live on custom rectangular domains.
+
+      This page covers the coordinate transformations that bridge the two domains and their implications for evaluation, differentiation,
+      and integration.
+
    .. grid-item-card:: Transformation between Bases
       :link: transformation
       :link-type: doc
@@ -124,6 +138,7 @@ behind Minterpy.
    mD Polynomial Bases <polynomial-bases>
    interpolation-at-unisolvent-nodes
    Evaluation of mD Polynomials <polynomial-evaluation>
+   Internal and User Domains <domain>
    transformation
    polynomial-regression
    mD Divided Difference Scheme <dds>

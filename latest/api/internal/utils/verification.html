@@ -59,7 +59,7 @@
     <link rel="prev" title="quad" href="quad.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -393,6 +393,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../interpolation.html">Interpolation</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../core/index.html">Core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../core/multi_index.html">Multi-Index Set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../core/domain.html">Domain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../core/grid.html">Grid</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../core/ABC/index.html">Abstract Base Classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../core/ABC/abc-polynomial.html">Multivariate Polynomial</a></li>
@@ -533,32 +534,6 @@
   <section id="module-minterpy.utils.verification">
 <span id="verification"></span><h1>verification<a class="headerlink" href="#module-minterpy.utils.verification" title="Link to this heading">#</a></h1>
 <p>This module contains functions to verify relevant Minterpy quantities.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="minterpy.utils.verification.verify_domain">
-<span class="sig-prename descclassname"><span class="pre">minterpy.utils.verification.</span></span><span class="sig-name descname"><span class="pre">verify_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/utils/verification.html#verify_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.utils.verification.verify_domain" title="Link to this definition">#</a></dt>
-<dd><p>Building and verification of domains.</p>
-<p>This function builds a suitable domain as the cartesian product of a one-
-dimensional domain, or verifies the domain shape, of a multivariate domain is
-passed. If None is passed, the default domain is build from [-1,1].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>domain</strong> (<em>array_like</em><em>, </em><em>None</em>) – Either one-dimensional domain <code class="docutils literal notranslate"><span class="pre">(min,max)</span></code>, or a stack of domains for each domain with shape <code class="docutils literal notranslate"><span class="pre">(spatial_dimension,2)</span></code>. If <code class="xref py py-class docutils literal notranslate"><span class="pre">None</span></code> is passed, the <code class="docutils literal notranslate"><span class="pre">DEFAULT_DOMAIN</span></code> is repeated for each spatial dimentsion.</p></li>
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Dimentsion of the domain space.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return verified_domain<span class="colon">:</span></dt>
-<dd class="field-even"><p>Stack of domains for each dimension with shape <code class="docutils literal notranslate"><span class="pre">(spatial_dimension,2)</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If no domain with the expected shape can be constructed from the input.</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="minterpy.utils.verification.check_type">
 <span class="sig-prename descclassname"><span class="pre">minterpy.utils.verification.</span></span><span class="sig-name descname"><span class="pre">check_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/utils/verification.html#check_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.utils.verification.check_type" title="Link to this definition">#</a></dt>
@@ -724,23 +699,6 @@ zero or negative values are allowed.</p></li>
 <span class="gr">ValueError</span>: <span class="n">Invalid value(s) (NaN, inf, negative, zero).</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="minterpy.utils.verification.check_domain_fit">
-<span class="sig-prename descclassname"><span class="pre">minterpy.utils.verification.</span></span><span class="sig-name descname"><span class="pre">check_domain_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/utils/verification.html#check_domain_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.utils.verification.check_domain_fit" title="Link to this definition">#</a></dt>
-<dd><p>Checks weather a given array of points is properly formatted and spans the standard domain <span class="math notranslate nohighlight">\([-1,1]^m\)</span>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>points</strong> (<em>np.ndarray</em><em>, </em><em>shape =</em><em> (</em><em>m</em><em>, </em><em>k</em><em>)</em>) – array to be checked. Here <code class="docutils literal notranslate"><span class="pre">m</span></code> is the dimenstion of the domain and <code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of points.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – if the grid points do not fit into the domain <span class="math notranslate nohighlight">\([-1;1]^m\)</span>.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – if less than one point is passed.</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -973,52 +931,23 @@ to the type if possible. This type is expected by Numba functions.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="minterpy.utils.verification.verify_poly_domain">
-<span class="sig-prename descclassname"><span class="pre">minterpy.utils.verification.</span></span><span class="sig-name descname"><span class="pre">verify_poly_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/utils/verification.html#verify_poly_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.utils.verification.verify_poly_domain" title="Link to this definition">#</a></dt>
-<dd><p>Verify that the given polynomial domain is valid.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">verify_poly_domain</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">]]),</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># integer array</span>
-<span class="go">array([[1.],</span>
-<span class="go">       [2.]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_poly_domain</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]),</span> <span class="mi">2</span><span class="p">)</span>
-<span class="go">array([[1., 2.],</span>
-<span class="go">       [2., 3.]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_poly_domain</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> 
-<span class="gt">Traceback (most recent call last):</span>
-<span class="c">...</span>
-<span class="gr">ValueError</span>: <span class="n">The upper bounds must be strictly larger than the lower</span>
-<span class="x">bounds. Invalid values in the polynomial domain!</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="minterpy.utils.verification.verify_query_points">
-<span class="sig-prename descclassname"><span class="pre">minterpy.utils.verification.</span></span><span class="sig-name descname"><span class="pre">verify_query_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/utils/verification.html#verify_query_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.utils.verification.verify_query_points" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="minterpy.utils.verification.standardize_query_points">
+<span class="sig-prename descclassname"><span class="pre">minterpy.utils.verification.</span></span><span class="sig-name descname"><span class="pre">standardize_query_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncate_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/utils/verification.html#standardize_query_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.utils.verification.standardize_query_points" title="Link to this definition">#</a></dt>
 <dd><p>Verify if the values of the query points for evaluation are valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A one- or two-dimensional array of query points at which a polynomial
-is evaluated. The length of the array is <code class="docutils literal notranslate"><span class="pre">N</span></code>, i.e., the number
+is evaluated. The length of the array is <code class="docutils literal notranslate"><span class="pre">k</span></code>, i.e., the number
 of query points.</p></li>
 <li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The spatial dimension of the polynomial (<code class="docutils literal notranslate"><span class="pre">m</span></code>).
 The shape of the query points array must be consistent with this.</p></li>
+<li><p><strong>truncate_cols</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, truncate columns to match <code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> after
+conversion to array. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A two-dimensional array of <code class="docutils literal notranslate"><span class="pre">numpy.float64</span></code> with a length of <code class="docutils literal notranslate"><span class="pre">N</span></code>
+<dd class="field-even"><p>A two-dimensional array of <code class="docutils literal notranslate"><span class="pre">numpy.float64</span></code> with a length of <code class="docutils literal notranslate"><span class="pre">k</span></code>
 and a number of columns of <code class="docutils literal notranslate"><span class="pre">m</span></code>. If the dtype of the array is not of
 <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="(in NumPy v2.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.float64</span></code></a>, the function does a type conversion if possible.</p>
 </dd>
@@ -1034,29 +963,31 @@ and a number of columns of <code class="docutils literal notranslate"><span clas
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">verify_query_points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># a scalar integer</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">standardize_query_points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># a scalar integer</span>
 <span class="go">array([[1.]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_query_points</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># a list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">standardize_query_points</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># a list</span>
 <span class="go">array([[3.],</span>
 <span class="go">       [4.],</span>
 <span class="go">       [5.]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_query_points</span><span class="p">([[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]],</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># a list of lists of integers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">standardize_query_points</span><span class="p">([[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]],</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># a list of lists of integers</span>
 <span class="go">array([[3., 4., 5.]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_query_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 1 dimension</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">standardize_query_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 1 dimension</span>
 <span class="go">array([[1.],</span>
 <span class="go">       [2.],</span>
 <span class="go">       [3.]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_query_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]]),</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 2 dimensions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">standardize_query_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]]),</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 2 dims</span>
 <span class="go">array([[1., 2.],</span>
 <span class="go">       [3., 4.]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_query_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># integer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">standardize_query_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># integer</span>
 <span class="go">array([[1.],</span>
 <span class="go">       [2.],</span>
 <span class="go">       [3.]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_query_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">standardize_query_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]),</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>  <span class="c1"># Truncate</span>
+<span class="go">array([[1., 2.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">standardize_query_points</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span> 
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
-<span class="gr">ValueError</span>: <span class="n">could not convert string to float: &#39;a&#39; Invalid values in query points array!</span>
+<span class="gr">ValueError</span>: <span class="n">could not convert string to float: ...</span>
 </pre></div>
 </div>
 <p class="rubric">Notes</p>
@@ -1102,6 +1033,113 @@ the function does a type conversion to an <em class="xref py py-obj">int</em> if
 <span class="go">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">verify_poly_power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># numpy.int64</span>
 <span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.utils.verification.verify_domain_bounds">
+<span class="sig-prename descclassname"><span class="pre">minterpy.utils.verification.</span></span><span class="sig-name descname"><span class="pre">verify_domain_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/utils/verification.html#verify_domain_bounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.utils.verification.verify_domain_bounds" title="Link to this definition">#</a></dt>
+<dd><p>Verify that the given bounds for a domain are valid.</p>
+<p>Valid domain bounds must satisfy the following conditions:</p>
+<ul class="simple">
+<li><p>Convertible to a 2D numeric array</p></li>
+<li><p>Shape of <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code> where <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">&gt;=</span> <span class="pre">1</span></code> (dimension is positive)</p></li>
+<li><p>Finite values (no NaN or inf)</p></li>
+<li><p>Non-empty</p></li>
+<li><p>Upper bounds strictly greater than lower bounds for all dimensions</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bounds</strong> (<em>array_like</em>) – Domain bounds as either a 1D array <code class="docutils literal notranslate"><span class="pre">[lower,</span> <span class="pre">upper]</span></code> for a single
+dimension, or a 2D array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code> for <code class="docutils literal notranslate"><span class="pre">m</span></code> dimensions.
+Each row specifies <code class="docutils literal notranslate"><span class="pre">[lower,</span> <span class="pre">upper]</span></code> for one dimension.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Validated domain bounds as a 2D array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code> with
+dtype <code class="docutils literal notranslate"><span class="pre">FLOAT_DTYPE</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>InvalidDomainBoundsError</strong> – If the bounds violate any validation condition (see above).</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">verify_domain_bounds</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>  <span class="c1"># 1D array, single dimension</span>
+<span class="go">array([[-1.,  1.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_domain_bounds</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]))</span>  <span class="c1"># Integer array (auto-converted)</span>
+<span class="go">array([[1., 2.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_domain_bounds</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]]))</span>  <span class="c1"># 2D domain</span>
+<span class="go">array([[1., 2.],</span>
+<span class="go">       [2., 3.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_domain_bounds</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> 
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">minterpy.utils.exceptions.InvalidDomainBoundsError</span>: <span class="n">Upper bounds must be</span>
+<span class="x">strictly greater than lower bounds.</span>
+<span class="x">Invalid dimensions: [0]; Invalid bounds: [[3.0, 2.0]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.utils.verification.verify_derivative_order">
+<span class="sig-prename descclassname"><span class="pre">minterpy.utils.verification.</span></span><span class="sig-name descname"><span class="pre">verify_derivative_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/utils/verification.html#verify_derivative_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.utils.verification.verify_derivative_order" title="Link to this definition">#</a></dt>
+<dd><p>Verify that the given order of derivatives are valid.</p>
+<p>Valid orders of derivatives must satisfy the following conditions:</p>
+<ul class="simple">
+<li><p>Convertible to a 1D numeric array</p></li>
+<li><p>The length must match the spatial dimension (<code class="docutils literal notranslate"><span class="pre">m</span></code>)</p></li>
+<li><p>Integer values (whole numbers only, round floats like 2.0 are accepted
+and converted)</p></li>
+<li><p>Non-negative (all values are &gt;=0, no NaN, no Inf)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>order</strong> (<em>array_like</em>) – Order of derivative for each dimension. An order must be specified
+for each spatial dimension. Non-integer values are accepted only
+if they represent whole numbers.</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Expected number of dimensions (must be positive).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Validated order of derivatives as a 1D array of shape <code class="docutils literal notranslate"><span class="pre">(m,)</span></code> with
+dtype <code class="docutils literal notranslate"><span class="pre">INT_DTYPE</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>InvalidDerivativeOrderError</strong> – If the specification violate any validation condition (see above).</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">verify_derivative_order</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Scalar, 1D</span>
+<span class="go">array([1])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_derivative_order</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># List as order, 3D</span>
+<span class="go">array([1, 0, 1])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_derivative_order</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># 4D</span>
+<span class="go">array([1, 0, 2, 0])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_derivative_order</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> 
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">minterpy.utils.exceptions.InvalidDerivativeOrderError</span>: <span class="n">Order length 3 does</span>
+<span class="x">not match spatial dimension 2. Order of derivative for each dimension must</span>
+<span class="x">be specified.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_derivative_order</span><span class="p">([</span><span class="mf">3.2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> 
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">minterpy.utils.exceptions.InvalidDerivativeOrderError</span>: <span class="n">Order of derivatives</span>
+<span class="x">must be whole numbers. Invalid values: [3.2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verify_derivative_order</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> 
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">minterpy.utils.exceptions.InvalidDerivativeOrderError</span>: <span class="n">Order of</span>
+<span class="x">derivatives must be non-negative. Negative values at dimensions: [1];</span>
+<span class="x">Invalid values: [-1]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1173,22 +1211,21 @@ the function does a type conversion to an <em class="xref py py-obj">int</em> if
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_domain"><code class="docutils literal notranslate"><span class="pre">verify_domain()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.check_type"><code class="docutils literal notranslate"><span class="pre">check_type()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.check_dtype"><code class="docutils literal notranslate"><span class="pre">check_dtype()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.check_dimensionality"><code class="docutils literal notranslate"><span class="pre">check_dimensionality()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.check_shape"><code class="docutils literal notranslate"><span class="pre">check_shape()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.check_values"><code class="docutils literal notranslate"><span class="pre">check_values()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.check_domain_fit"><code class="docutils literal notranslate"><span class="pre">check_domain_fit()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.is_real_scalar"><code class="docutils literal notranslate"><span class="pre">is_real_scalar()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.shape_eval_output"><code class="docutils literal notranslate"><span class="pre">shape_eval_output()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_spatial_dimension"><code class="docutils literal notranslate"><span class="pre">verify_spatial_dimension()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_poly_degree"><code class="docutils literal notranslate"><span class="pre">verify_poly_degree()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_lp_degree"><code class="docutils literal notranslate"><span class="pre">verify_lp_degree()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_poly_coeffs"><code class="docutils literal notranslate"><span class="pre">verify_poly_coeffs()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_poly_domain"><code class="docutils literal notranslate"><span class="pre">verify_poly_domain()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_query_points"><code class="docutils literal notranslate"><span class="pre">verify_query_points()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.standardize_query_points"><code class="docutils literal notranslate"><span class="pre">standardize_query_points()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_poly_power"><code class="docutils literal notranslate"><span class="pre">verify_poly_power()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_domain_bounds"><code class="docutils literal notranslate"><span class="pre">verify_domain_bounds()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.verify_derivative_order"><code class="docutils literal notranslate"><span class="pre">verify_derivative_order()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.utils.verification.dummy"><code class="docutils literal notranslate"><span class="pre">dummy()</span></code></a></li>
 </ul>
   </nav></div>

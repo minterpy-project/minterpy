@@ -59,7 +59,7 @@
     <link rel="prev" title="Quick Start Guide to Function Approximations with Minterpy" href="function-approximations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -466,7 +466,7 @@ You can do a wide range of arithmetic and calculus operations with Minterpy poly
 <p>This tutorial demonstrates how you can create such a polynomial from scratch in the most typical use case: interpolating a function.</p>
 <section id="import-minterpy">
 <h2>Import Minterpy<a class="headerlink" href="#import-minterpy" title="Link to this heading">#</a></h2>
-<p>After installing <a class="reference internal" href="index.html"><span class="doc">installing Minterpy</span></a>, you can import it as follows:</p>
+<p>After <a class="reference internal" href="index.html"><span class="doc">installing Minterpy</span></a>, you can import it as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">minterpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
@@ -487,11 +487,11 @@ You can do a wide range of arithmetic and calculus operations with Minterpy poly
 </section>
 <section id="motivating-function">
 <h2>Motivating function<a class="headerlink" href="#motivating-function" title="Link to this heading">#</a></h2>
-<p>In Minterpy, polynomials are typically used to approximate functions of interest by interpolating them. This is actually one of the main goals of Minterpy: to approximate a (multidimensional) function using a polynomial.</p>
-<p>For now, however, consider the following one-dimensional function:</p>
+<p>Polynomials in Minterpy are typically created by interpolating a function of interest; function approximation by polynomial interpolation is one of the package’s main use cases.</p>
+<p>Consider the following one-dimensional function, known as the Runge function:</p>
 <div class="math notranslate nohighlight">
 \[
-f(x) = \frac{1}{1 + 25 x^2}, x \in [-1, 1].
+f(x) = \frac{1}{1 + 25 \, x^2}, x \in [-1, 1].
 \]</div>
 <p>Define this function in Python:</p>
 <div class="cell docutils container">
@@ -510,41 +510,42 @@ f(x) = \frac{1}{1 + 25 x^2}, x \in [-1, 1].
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$f$&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$y$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/9b5fef40f2e45fd92ddfe2646ad8971c6a25114c94b0a56fba38646b50b03063.png" src="../_images/9b5fef40f2e45fd92ddfe2646ad8971c6a25114c94b0a56fba38646b50b03063.png" />
+<img alt="../_images/3848cd58cfb45d58c26a26c5f89bead1b228ddb70ab0598909008430236eaa4d.png" src="../_images/3848cd58cfb45d58c26a26c5f89bead1b228ddb70ab0598909008430236eaa4d.png" />
 </div>
 </div>
 <p>Now that you’ve defined your function, you’re ready to create a polynomial that approximates it.</p>
 </section>
 <section id="create-an-interpolating-polynomial">
 <h2>Create an interpolating polynomial<a class="headerlink" href="#create-an-interpolating-polynomial" title="Link to this heading">#</a></h2>
-<p>To create an interpolating polynomial from scratch in Minterpy, follow these four main steps:</p>
+<p>To create an interpolating polynomial in Minterpy, follow these four main steps:</p>
 <ol class="arabic simple">
 <li><p><strong>Define the multi-index set</strong>: Specify the multi-index set that determines the structure of the polynomial.</p></li>
 <li><p><strong>Construct an interpolation grid</strong>: Create an interpolation grid, which consists of the points at which the function of interest will be evaluated.</p></li>
-<li><p><strong>Evaluate the function of interest at the grid points</strong>: Compute the function values at the grid points (also known as the unisolvent nodes)</p></li>
+<li><p><strong>Evaluate the function at the grid points</strong>: Compute the function values at the grid points, also known as the <em>unisolvent nodes</em></p></li>
 <li><p><strong>Create a polynomial in the Lagrange basis</strong>: Construct the interpolating polynomial in the Lagrange basis based on the evaluated points.</p></li>
 </ol>
 <p>To perform additional operations with the interpolating polynomial, such as evaluating it at a set of query points, follow this extra step:</p>
 <ol class="arabic simple" start="5">
-<li><p><strong>Transform the polynomial to another basis</strong>: Change the basis of the interpolating polynomial from the Lagrange basis to another basis, preferably the Newton basis, for convenient evaluation and manipulation.</p></li>
+<li><p><strong>Transform the polynomial to another basis</strong>: Change the basis of the interpolating polynomial from the Lagrange basis to another basis, typically the Newton basis, which is well-suited for evaluation and manipulation.</p></li>
 </ol>
 <p>Let’s go through these steps one at a time.</p>
 <section id="define-a-multi-index-set">
 <h3>Define a multi-index set<a class="headerlink" href="#define-a-multi-index-set" title="Link to this heading">#</a></h3>
-<p>In Minterpy, the exponents of a multivariate polynomial are represented using multi-indices within a set known as the multi-index set. This set generalizes the notion of polynomial degree to multiple dimensions. For more details, see the the <a class="reference internal" href="../fundamentals/polynomial-bases.html#multi-index-sets-and-polynomial-degree"><span class="std std-ref">relevant section</span></a> of the documentation.</p>
-<p>Even though our function is one-dimensional, defining the multi-index set (in this case, of dimension <span class="math notranslate nohighlight">\(1\)</span>) is still the first steps of constructing a Minterpy polynomial.</p>
+<p>In Minterpy, the exponents of a multivariate polynomial are represented using multi-indices within a set known as the multi-index set. This set generalizes the notion of polynomial degree to multiple dimensions. For more details, see the <a class="reference internal" href="../fundamentals/polynomial-bases.html#multi-index-sets-and-polynomial-degree"><span class="std std-ref">relevant section</span></a> of the documentation.</p>
+<p>Even though our function is one-dimensional, defining the multi-index set (in this case, of dimension <span class="math notranslate nohighlight">\(1\)</span>) is still the first step of constructing a Minterpy polynomial.</p>
 <p>In Minterpy, multi-index sets are represented by the <a class="reference internal" href="../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code></a> class.
-You can create a complete multi-index set using the class method <a class="reference internal" href="../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.from_degree" title="minterpy.core.multi_index.MultiIndexSet.from_degree"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_degree()</span></code></a>, which requires the spatial dimension (first argument) and the polynomial degree (second argument).</p>
-<p>To construct a one-dimensional multi-index set of polynomial degree, say, <span class="math notranslate nohighlight">\(10\)</span>, type:</p>
+You can create a complete multi-index set using the class method <a class="reference internal" href="../api/core/multi_index.html#minterpy.core.multi_index.MultiIndexSet.from_degree" title="minterpy.core.multi_index.MultiIndexSet.from_degree"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_degree()</span></code></a>, which requires the spatial dimension (first argument) and the polynomial degree (second argument). The third argument, the <span class="math notranslate nohighlight">\(l_p\)</span>-degree, does not affect the result for one-dimensional polynomials.</p>
+<p>To construct a one-dimensional multi-index set of polynomial degree <span class="math notranslate nohighlight">\(10\)</span>, type:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mi</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">MultiIndexSet</span><span class="o">.</span><span class="n">from_degree</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -581,7 +582,7 @@ You can create a complete multi-index set using the class method <a class="refer
 </section>
 <section id="construct-an-interpolation-grid">
 <h3>Construct an interpolation grid<a class="headerlink" href="#construct-an-interpolation-grid" title="Link to this heading">#</a></h3>
-<p>An interpolation grid is where an interpolating polynomial lives on. The bases of interpolating polynomials, such as the Lagrange or the Newton basis, are built with respect to these grids.</p>
+<p>An interpolation grid defines the set of points on which an interpolating polynomial is built. The bases of interpolating polynomials, such as the Lagrange or Newton bases, are built with respect to these grids.</p>
 <p>In Minterpy, interpolation grids are represented by the <a class="reference internal" href="../api/core/grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></a> class.
 The default constructor allows you to create an interpolation grid for a specified multi-index set (the first argument).</p>
 <p>To create an interpolation grid for the previously defined multi-index set, use the following command:</p>
@@ -592,8 +593,7 @@ The default constructor allows you to create an interpolation grid for a specifi
 </div>
 </div>
 </div>
-<p>An instance of <a class="reference internal" href="../api/core/grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></a> is always defined with respect to a multi-index set.
-In simple terms, the multi-index set of an interpolation grid determines the structure of multivariate polynomials that the grid can support.</p>
+<p>In simple terms, the multi-index set of an interpolation grid determines the structure of multivariate polynomials that the grid can support.</p>
 <p>A key property of a <a class="reference internal" href="../api/core/grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></a> instance is <a class="reference internal" href="../api/core/grid.html#minterpy.core.grid.Grid.unisolvent_nodes" title="minterpy.core.grid.Grid.unisolvent_nodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">unisolvent_nodes</span></code></a> (i.e., interpolating nodes or grid points).
 These nodes are crucial because they uniquely determine the interpolating polynomial given the multi-index set.
 By default, Minterpy generates unisolvent nodes based on the <a class="reference internal" href="../fundamentals/interpolation-at-unisolvent-nodes.html#generating-points"><span class="std std-ref">Leja-ordered Chebyshev-Lobatto points</span></a>.
@@ -620,7 +620,7 @@ For the chosen polynomial degree, these nodes are:</p>
 </div>
 </div>
 </div>
-<p>which distributed like the following:</p>
+<p>which are distributed as follows:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -644,18 +644,24 @@ For the chosen polynomial degree, these nodes are:</p>
 <img alt="../_images/57a559ec1d123be81040505ee6c2584cf995ad2f243fc851e900084264f40491.png" src="../_images/57a559ec1d123be81040505ee6c2584cf995ad2f243fc851e900084264f40491.png" />
 </div>
 </div>
-<p>Notice that there are more points in the boundaries of the domain.</p>
+<p>Notice that there are more points near the boundaries of the domain.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>No domain is specified when constructing the grid above. In that case, Minterpy defaults to the internal reference domain <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>. o learn how to define a custom domain, see <a class="reference internal" href="md-polynomial-interpolation.html"><span class="doc">Multivariate Polynomial Interpolation</span></a>.</p>
+<hr class="docutils" />
+<p>Unisolvent nodes are always expressed in the canonical domain <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>, regardless of the user-defined domain.</p>
+</div>
 </section>
 <section id="evaluate-the-function-at-the-unisolvent-nodes">
 <h3>Evaluate the function at the unisolvent nodes<a class="headerlink" href="#evaluate-the-function-at-the-unisolvent-nodes" title="Link to this heading">#</a></h3>
-<p>An interpolating polynomial <span class="math notranslate nohighlight">\(Q\)</span> with a domain of <span class="math notranslate nohighlight">\([-1, 1]\)</span> of a function <span class="math notranslate nohighlight">\(f\)</span> is a polynomial that satisfies the following condition:</p>
+<p>An interpolating polynomial <span class="math notranslate nohighlight">\(Q\)</span> of a function <span class="math notranslate nohighlight">\(f\)</span> on <span class="math notranslate nohighlight">\([-1, 1]\)</span> is a polynomial that satisfies the following condition:</p>
 <div class="math notranslate nohighlight">
 \[
 Q(p_{\alpha}) = f(p_{\alpha}), \forall p_{\alpha} \in P_A,
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(P_A = \{ p_{\alpha} \}\)</span> is the set of unisolvent nodes.</p>
-<p>The function values at the unisolvent nodes are therefore crucial to construct an interpolating polynomial.</p>
-<p>In Minterpy, calling an instance of <a class="reference internal" href="../api/core/grid.html#minterpy.core.grid.Grid.__call__" title="minterpy.core.grid.Grid.__call__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Grid</span></code></a> with a given function evaluates the function at the unisolvent nodes:</p>
+<p>where <span class="math notranslate nohighlight">\(P_A = \{ p_{\alpha}: \alpha \in A \}\)</span> is the set of unisolvent nodes.</p>
+<p>The function values at the unisolvent nodes are therefore crucial for constructing an interpolating polynomial.</p>
+<p>In Minterpy, calling an instance of <a class="reference internal" href="../api/core/grid.html#minterpy.core.grid.Grid.__call__" title="minterpy.core.grid.Grid.__call__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Grid</span></code></a> with a given function evaluates the function at the unisolvent nodes and returns the values as an array</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">grd</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
@@ -679,23 +685,29 @@ Q(p_{\alpha}) = f(p_{\alpha}), \forall p_{\alpha} \in P_A,
 </div>
 </div>
 </div>
+<p>these are the coefficients of the interpolating polynomial in the Lagrange basis.</p>
 </section>
 <section id="create-a-lagrange-polynomial">
 <h3>Create a Lagrange polynomial<a class="headerlink" href="#create-a-lagrange-polynomial" title="Link to this heading">#</a></h3>
+<p>“where δ⋅,⋅\delta{\cdot, \cdot}
+δ⋅,⋅ denotes the Kronecker delta” — missing the comma in the notation, should be δ⋅,⋅\delta_{\cdot, \cdot}
+δ⋅,⋅​
+“You can create an instance of LagrangePolynomial class with various constructors. Relevant to the present tutorial, from_grid() constructor accepts…” — “Relevant to the present tutorial” is a slightly awkward opener. Consider: “For this tutorial, the from_grid() constructor is the most relevant — it accepts…”
+The three consecutive sentences that each contain the full cross-reference to LagrangePolynomial make the paragraph feel heavy. The second and third mentions could just use the class name without the full cross-reference since it’s already been linked once</p>
 <p>The function values at the unisolvent nodes are equal to the coefficients of a polynomial in the Lagrange basis <span class="math notranslate nohighlight">\(c_{\mathrm{lag}, \alpha}\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[
 Q(x) = \sum_{\alpha \in A} c_{\mathrm{lag}, \alpha} \Psi_{\mathrm{lag}, \alpha}(x),
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(A\)</span> is the multi-index set and <span class="math notranslate nohighlight">\(\Psi_{\alpha}\)</span>’s are Lagrange basis polynomials, each of which satisfies:</p>
+<p>where <span class="math notranslate nohighlight">\(A\)</span> is the multi-index set and <span class="math notranslate nohighlight">\(\Psi_{\mathrm{lag}, \alpha}\)</span>’s are Lagrange basis polynomials, where each of the Lagrange basis polynomial satisfies:</p>
 <div class="math notranslate nohighlight">
 \[
 \Psi_{\mathrm{lag}, \alpha}(p_{\beta}) = \delta_{\alpha, \beta}, p_\beta \in P_A,
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(\delta{\cdot, \cdot}\)</span> denotes the Kronecker delta.</p>
+<p>where <span class="math notranslate nohighlight">\(\delta_{\cdot, \cdot}\)</span> denotes the Kronecker delta.</p>
 <p>Polynomials in the Lagrange basis are represented by the <a class="reference internal" href="../api/polynomials/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial" title="minterpy.polynomials.lagrange_polynomial.LagrangePolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">LagrangePolynomial</span></code></a> class in Minterpy.
-You can create an instance of <a class="reference internal" href="../api/polynomials/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial" title="minterpy.polynomials.lagrange_polynomial.LagrangePolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">LagrangePolynomial</span></code></a> class with various constructors.
-Relevant to the present tutorial, <a class="reference internal" href="../api/polynomials/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.from_grid" title="minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.from_grid"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_grid()</span></code></a> constructor accepts an instance of <a class="reference internal" href="../api/core/grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></a> and the corresponding Lagrange coefficients (i.e., function values at the unisolvent nodes) to create an instance of <a class="reference internal" href="../api/polynomials/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial" title="minterpy.polynomials.lagrange_polynomial.LagrangePolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">LagrangePolynomial</span></code></a>.</p>
+You can create an instance of <code class="docutils literal notranslate"><span class="pre">LagrangePolynomial</span></code> class with various constructors.
+For this tutorial, the <a class="reference internal" href="../api/polynomials/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.from_grid" title="minterpy.polynomials.lagrange_polynomial.LagrangePolynomial.from_grid"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_grid()</span></code></a> constructor is the most relevant. Specifically, it accepts an instance of <a class="reference internal" href="../api/core/grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></a> and the corresponding Lagrange coefficients (i.e., function values at the unisolvent nodes) to create an instance of the class.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lag_poly</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">LagrangePolynomial</span><span class="o">.</span><span class="n">from_grid</span><span class="p">(</span><span class="n">grd</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">)</span>
@@ -709,19 +721,19 @@ Relevant to the present tutorial, <a class="reference internal" href="../api/pol
 <h3>Transform to the Newton basis<a class="headerlink" href="#transform-to-the-newton-basis" title="Link to this heading">#</a></h3>
 <p>Unfortunately, polynomials in the Lagrange basis have limited functionality; for instance, you can’t directly evaluate them at a set of query points.</p>
 <p>In Minterpy, the Lagrange basis primarily serves as a convenient starting point for constructing an interpolating polynomial.
-The coefficients in this basis are straightforwardly defined as the function values at the unisolvent nodes (grid points).</p>
-<p>To perform more advanced operations with the polynomial in Minterpy, you need to transform it into the Newton basis.
+The coefficients in this basis are simply the function values at the unisolvent nodes (grid points).</p>
+<p>To perform more advanced operations in Minterpy, the polynomial must be transformed to the Newton basis.
 In the Newton basis, the polynomial takes the form:</p>
 <div class="math notranslate nohighlight">
 \[
 Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alpha}(x),
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(c_{\mathrm{nwt}, \alpha}\)</span>’s are the coefficients of the polynomial in the Newton basis and <span class="math notranslate nohighlight">\(\Psi_{\mathrm{nwt}, \alpha}\)</span> is the the Newton basis polynomial associated with multi-index element <span class="math notranslate nohighlight">\(\alpha\)</span>:</p>
+<p>where <span class="math notranslate nohighlight">\(c_{\mathrm{nwt}, \alpha}\)</span>’s are the coefficients of the polynomial in the Newton basis and <span class="math notranslate nohighlight">\(\Psi_{\mathrm{nwt}, \alpha}\)</span> is the (one-dimensional) Newton basis polynomial associated with multi-index element <span class="math notranslate nohighlight">\(\alpha\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[
 \Psi_{\mathrm{nwt}, \alpha}(x) = \prod_{i = 0}^{\alpha - 1} (x - p_i),
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(p_i\)</span>’s are the interpolation points (unisolvent nodes).</p>
+<p>where <span class="math notranslate nohighlight">\(p_i\)</span> denotes the <span class="math notranslate nohighlight">\(i\)</span>-th unisolvent nodes.</p>
 <p>To transform a polynomial in the Lagrange basis to a polynomial in the Newton basis, use the <a class="reference internal" href="../api/transformations/transformation-lagrange.html#minterpy.transformations.lagrange.LagrangeToNewton" title="minterpy.transformations.lagrange.LagrangeToNewton"><code class="xref py py-class docutils literal notranslate"><span class="pre">LagrangeToNewton</span></code></a> class:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -740,12 +752,12 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 <p>The second call, which is made without any arguments, performs the transformation and returns the actual Newton polynomial instance.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Minterpy offers other polynomial bases as well, but for most practical purposes, we recommend to use the Newton basis.</p>
+<p>Minterpy offers other polynomial bases as well, but for most practical purposes, we recommend using the Newton basis.</p>
 </div>
 </section>
 <section id="evaluate-the-polynomial-at-a-set-of-query-points">
 <h3>Evaluate the polynomial at a set of query points<a class="headerlink" href="#evaluate-the-polynomial-at-a-set-of-query-points" title="Link to this heading">#</a></h3>
-<p>Once a polynomial in the Newton basis is obtained, you can evaluate it at a set of query points; this one of the most routine tasks involving polynomial approximation.</p>
+<p>Once a polynomial in the Newton basis is obtained, you can evaluate it at a set of query points; this is one of the most routine tasks involving polynomial approximation.</p>
 <p>First, create a set of equally spaced test points in <span class="math notranslate nohighlight">\([-1, 1]\)</span>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -762,7 +774,7 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 </div>
 </div>
 </div>
-<p>Calling an instance of <a class="reference internal" href="../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial" title="minterpy.polynomials.newton_polynomial.NewtonPolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewtonPolynomial</span></code></a> at these query points evaluate the polynomial at the query points:</p>
+<p>Calling an instance of <a class="reference internal" href="../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial" title="minterpy.polynomials.newton_polynomial.NewtonPolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewtonPolynomial</span></code></a> at these query points evaluates the polynomial and returns the results as an array:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">yy_poly</span> <span class="o">=</span> <span class="n">nwt_poly</span><span class="p">(</span><span class="n">xx_test</span><span class="p">)</span>
@@ -776,7 +788,7 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 </div>
 </div>
 </div>
-<p>As expected, evaluating the polynomial on <span class="math notranslate nohighlight">\(1'000\)</span> query points returns an array <span class="math notranslate nohighlight">\(1'000\)</span> points:</p>
+<p>As expected, evaluating the polynomial on <span class="math notranslate nohighlight">\(1'000\)</span> query points returns an array of <span class="math notranslate nohighlight">\(1'000\)</span> points:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">yy_poly</span><span class="o">.</span><span class="n">shape</span>
@@ -791,7 +803,7 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For evaluation, an instance of polynomial expects as its input an array; as the polynomial is one dimensional, the array should either be one-dimensional or two-dimensional with a single column (the column of a two-dimensional array indicates the values along each spatial dimension).</p>
+<p>For evaluation, a one dimensional polynomial expects a one-dimensional array or a two-dimensional array with a single column as input. The column of a two-dimensional input array indicates the values along each spatial dimension.</p>
 </div>
 <p>Let’s compare the results of the interpolating polynomial with the original function.</p>
 <div class="cell tag_hide-input docutils container">
@@ -805,7 +817,7 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_test</span><span class="p">,</span> <span class="n">yy_poly</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;interpolant ($Q$)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$y$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">grd</span><span class="o">.</span><span class="n">unisolvent_nodes</span><span class="p">,</span> <span class="n">lag_poly</span><span class="o">.</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;unisolvent nodes&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">grd</span><span class="o">.</span><span class="n">unisolvent_nodes</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">lag_poly</span><span class="o">.</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;unisolvent nodes&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
@@ -816,7 +828,7 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 <img alt="../_images/5b628ceb34b224a08bbaee5136934e4b69dd4b40af84b6d46a48b9b0d03834f2.png" src="../_images/5b628ceb34b224a08bbaee5136934e4b69dd4b40af84b6d46a48b9b0d03834f2.png" />
 </div>
 </div>
-<p>The plot also shows the location of the unisolvent nodes and their corresponding function values; the interpolant is indeed interpolatory.</p>
+<p>The plot also shows the location of the unisolvent nodes and their corresponding function values confirming that the polynomial passes through the unisolvent nodes.</p>
 </section>
 <section id="assess-the-accuracy-of-interpolating-polynomial">
 <h3>Assess the accuracy of interpolating polynomial<a class="headerlink" href="#assess-the-accuracy-of-interpolating-polynomial" title="Link to this heading">#</a></h3>
@@ -825,7 +837,7 @@ Q(x) = \sum_{\alpha \in A} c_{\mathrm{nwt}, \alpha} \, \Psi_{\mathrm{nwt}, \alph
 The norm is defined as:</p>
 <div class="math notranslate nohighlight">
 \[
-\lVert f - Q \rVert_\infty = \sup_{-1 \leq x \leq 1} \lvert f(x) - Q(x) \rvert
+\lVert f - Q \rVert_\infty = \sup_{-1 \leq x \leq 1} \lvert f(x) - Q(x) \rvert.
 \]</div>
 <p>The infinity norm of <span class="math notranslate nohighlight">\(Q\)</span> can be approximated using the <span class="math notranslate nohighlight">\(1'000\)</span> testing points created above:</p>
 <div class="cell docutils container">
@@ -840,20 +852,18 @@ The norm is defined as:</p>
 </div>
 </div>
 </div>
-<p>which is hardly a numerical convergence.</p>
+<p>indicating that the interpolating polynomial of degree <span class="math notranslate nohighlight">\(10\)</span> is insufficient to accurately approximate the Runge function.</p>
 </section>
 </section>
 <section id="the-interpolate-function">
 <h2>The <code class="docutils literal notranslate"><span class="pre">interpolate()</span></code> function<a class="headerlink" href="#the-interpolate-function" title="Link to this heading">#</a></h2>
-<p>As an alternative to constructing an interpolating polynomial from scratch using the steps outlined above, you can use the <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a> function.
-The function allows you to specify:</p>
+<p>As an alternative to constructing an interpolating polynomial from scratch using the steps outlined above, you can use the <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a> function. The function allows you to specify:</p>
 <ul class="simple">
 <li><p>the function to interpolate</p></li>
 <li><p>the number of dimensions</p></li>
 <li><p>the degree of polynomial interpolant</p></li>
 </ul>
-<p>All in a single function call.
-The function returns a callable object that you can use to evaluate the (underlying) interpolating polynomial at a set of query points.</p>
+<p>All in a single function call. The function returns a callable object that you can use to evaluate the (underlying) interpolating polynomial at a set of query points.</p>
 <p>To create an interpolant using the <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a> function with the same structure as before, use the following command:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -875,7 +885,7 @@ The function returns a callable object that you can use to evaluate the (underly
 </div>
 </div>
 </div>
-<p>With this shortcut to create an interpolant where evaluation is all that is needed, let’s investigate the convergence of interpolating polynomials with increasing polynomial degrees.,</p>
+<p>With this shortcut in hand, let’s investigate the convergence behavior of interpolating polynomials with increasing polynomial degrees.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poly_degrees</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">]</span>
@@ -887,7 +897,7 @@ The function returns a callable object that you can use to evaluate the (underly
 </div>
 </div>
 </div>
-<p>The interpolants of increasing degrees looks like:</p>
+<p>The interpolants of increasing degrees are shown below:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -936,7 +946,7 @@ The function returns a callable object that you can use to evaluate the (underly
 <img alt="../_images/1aff905c09d0e17f91f91b3a8c58993885178a8467eff675048dbf278e8f14db.png" src="../_images/1aff905c09d0e17f91f91b3a8c58993885178a8467eff675048dbf278e8f14db.png" />
 </div>
 </div>
-<p>The absolute error of the degree 64 polynomials in the domain is shown below:</p>
+<p>The absolute error of the degree 256 polynomials in the domain is shown below:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -945,7 +955,7 @@ The function returns a callable object that you can use to evaluate the (underly
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_test</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yy_test</span> <span class="o">-</span> <span class="n">yy_poly</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">1e-18</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">1e-18</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$| f - Q |$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">);</span>
@@ -957,7 +967,7 @@ The function returns a callable object that you can use to evaluate the (underly
 <img alt="../_images/adc67afb9e2f40d63076321de90d49150f8bdaea14a3a752e535cb6e35a4c4b2.png" src="../_images/adc67afb9e2f40d63076321de90d49150f8bdaea14a3a752e535cb6e35a4c4b2.png" />
 </div>
 </div>
-<p>The seemingly random behavior of the (very small) absolute error indicates that machine precision has been reached. Compare it with the absolute error of degree 4 polynomials:</p>
+<p>The seemingly random behavior of the (very small) absolute error indicates that machine precision has been reached. For comparison, the absolute error of the degree <span class="math notranslate nohighlight">\(4\)</span> polynomial is shown below:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_test</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yy_test</span> <span class="o">-</span> <span class="n">yy_poly</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
@@ -973,11 +983,9 @@ The function returns a callable object that you can use to evaluate the (underly
 </div>
 </section>
 <section id="from-interpolant-to-polynomial">
-<h2>From Interpolant to polynomial<a class="headerlink" href="#from-interpolant-to-polynomial" title="Link to this heading">#</a></h2>
-<p>The callable produced by <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a>
-is an instance of <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.Interpolant" title="minterpy.interpolation.Interpolant"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interpolant</span></code></a>;
-it is not a Minterpy polynomial!</p>
-<p>There are, however, convenient methods to represent the interpolant in one of the Minterpy polynomials.
+<h2>From interpolant to polynomial<a class="headerlink" href="#from-interpolant-to-polynomial" title="Link to this heading">#</a></h2>
+<p>The callable produced by <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a> is an instance of <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.Interpolant" title="minterpy.interpolation.Interpolant"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interpolant</span></code></a>; it is not a Minterpy polynomial per se.</p>
+<p>There are, however, convenient methods to represent the interpolant as one of the Minterpy polynomial types.
 These methods are summarized in the table below.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1001,9 +1009,8 @@ These methods are summarized in the table below.</p>
 </tbody>
 </table>
 </div>
-<p>These bases will be the topic of <a class="reference internal" href="polynomial-bases-and-transformations.html"><span class="doc">Polynomial Bases and Transformations</span></a>
-in-depth tutorial.</p>
-<p>For now to obtain the interpolating polynomial in the Newton basis, call:</p>
+<p>These polynomial bases are covered in more detail in <a class="reference internal" href="polynomial-bases-and-transformations.html"><span class="doc">Polynomial Bases and Transformations</span></a> in-depth tutorial.</p>
+<p>For now, to obtain the lastly created interpolating polynomial in the Newton basis, call:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fx_interp</span><span class="o">.</span><span class="n">to_newton</span><span class="p">()</span>
@@ -1011,7 +1018,7 @@ in-depth tutorial.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f7a307acb80&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fc7100f2a40&gt;
 </pre></div>
 </div>
 </div>
@@ -1026,12 +1033,12 @@ in-depth tutorial.</p>
 <li><p><strong>Constructing an interpolation grid</strong>: Creating the grid points (unisolvent nodes) for interpolation.</p></li>
 <li><p><strong>Evaluating the given function on the grid points</strong>: Computing function values at the nodes.</p></li>
 <li><p><strong>Constructing a polynomial in the Lagrange basis</strong>: Creating an interpolating polynomial in the Lagrange basis with the function values as the coefficients.</p></li>
-<li><p><strong>Transform the polynomial into the Newton basis</strong>: Changing the basis from the Lagrange basis to the Newton basis for more flexibility.</p></li>
+<li><p><strong>Transforming the polynomial into the Newton basis</strong>: Changing the basis from the Lagrange basis to the Newton basis for more evaluation and further manipulation.</p></li>
 </ol>
 <p>You’ve also explored the <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a> function, which simplifies the process of creating an interpolant.</p>
 <p>Finally, you’ve learned how to assess the accuracy of an interpolating polynomial as an approximation of the given function and how to investigate its empirical convergence by adjusting the polynomial degree.</p>
 <hr class="docutils" />
-<p>Minterpy, as its name implies, supports the construction of multivariate polynomials as well. The process for constructing these polynomials follows similar steps to those described here.</p>
+<p>As its name implies, Minterpy is designed for multivariate polynomial interpolation. The process for constructing these polynomials follows similar steps to those described here.</p>
 <p>In the next tutorial, you’ll learn how to create multivariate polynomials to interpolate multidimensional functions using Minterpy.</p>
 </section>
 </section>
@@ -1096,7 +1103,7 @@ in-depth tutorial.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-interpolate-function">The <code class="docutils literal notranslate"><span class="pre">interpolate()</span></code> function</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-interpolant-to-polynomial">From Interpolant to polynomial</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-interpolant-to-polynomial">From interpolant to polynomial</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 </ul>
   </nav></div>

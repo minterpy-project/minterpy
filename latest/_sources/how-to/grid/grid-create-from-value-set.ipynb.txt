@@ -1,26 +1,29 @@
 {
  "cells": [
   {
-   "metadata": {},
    "cell_type": "markdown",
-   "source": "# Create a Grid from an Array of Generating Values",
-   "id": "30fda6830c7191f2"
+   "id": "30fda6830c7191f2",
+   "metadata": {},
+   "source": [
+    "# Create a Grid from an Array of Generating Values"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
+   "execution_count": null,
+   "id": "284f17796016b5b",
+   "metadata": {},
+   "outputs": [],
    "source": [
     "import numpy as np\n",
     "import minterpy as mp\n",
     "import matplotlib.pyplot as plt"
-   ],
-   "id": "284f17796016b5b",
-   "outputs": [],
-   "execution_count": null
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "b6943bbbd9caee2b",
+   "metadata": {},
    "source": [
     "Minterpy interpolating polynomials (i.e., in the Lagrange or Newton basis)\n",
     "lives on a grid that holds the so-called _unisolvent nodes_.\n",
@@ -39,12 +42,12 @@
     "This guide provides an example on how to construct a `Grid` instance based\n",
     "on a given array of generating values (i.e., one-dimensional interpolation\n",
     "points) using the `from_value_set()` method."
-   ],
-   "id": "b6943bbbd9caee2b"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "799ba4eb511bf60e",
+   "metadata": {},
    "source": [
     "## About generating values\n",
     "\n",
@@ -57,6 +60,7 @@
     "a one-dimensional array of floats that must additionally satisfy the following\n",
     "conditions:\n",
     "\n",
+    "- the values must be in $[-1, 1]$, regardless of the domain assigned to the grid.\n",
     "- the length must be $n + 1$ where $n$ is the maximum polynomial degree\n",
     "  across all dimensions that the grid must support.\n",
     "- the values of the array must be unique, that is, it contains no repeats.\n",
@@ -68,12 +72,12 @@
     "Generating values may also be provided as a two-dimensional array as long\n",
     "as the array only has either one colum or one row.\n",
     "```"
-   ],
-   "id": "799ba4eb511bf60e"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "eedf18386c3eba2f",
+   "metadata": {},
    "source": [
     "## About  the `from_value_set()` factory method\n",
     "\n",
@@ -87,17 +91,19 @@
     "As explained above, the array of generating values must satisfy\n",
     "several conditions for it to be valid.\n",
     "\n",
+    "The method also accepts an optional `domain` argument. If not specified the domain defaults to the internal reference domain $[-1, 1]^m$. As noted above, regardless of the specified domain, the generating values must always be in $[-1, 1]$.\n",
+    "\n",
     "In many applications, a single set of one-dimensional interpolation points\n",
     "is used for different dimensions.\n",
     "The `from_value_set()` method is a shortcut to create a grid with\n",
     "a specific one-dimensional interpolation points that are replicated\n",
     "in every dimension."
-   ],
-   "id": "eedf18386c3eba2f"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "b5abd137fddfa0e6",
+   "metadata": {},
    "source": [
     "## Example: Two-dimensional interpolation grid\n",
     "\n",
@@ -106,22 +112,24 @@
     "$A = \\{ (0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2), (0, 3) \\}$\n",
     "(defined with respect to $l_p$-degree $1.0$).\n",
     "The interpolation grid has Leja points in every dimension."
-   ],
-   "id": "b5abd137fddfa0e6"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "63f066280abf5c9e",
+   "metadata": {},
    "source": [
     "### Multi-index set\n",
     "\n",
     "Create an instance of `MultiIndexSet` following the above specification:"
-   ],
-   "id": "63f066280abf5c9e"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
+   "execution_count": null,
+   "id": "591af982cc982d0e",
+   "metadata": {},
+   "outputs": [],
    "source": [
     "exponents = np.array([\n",
     "    [0, 0],\n",
@@ -135,123 +143,145 @@
     "    [2, 2],\n",
     "    [0, 3],\n",
     "])"
-   ],
-   "id": "591af982cc982d0e",
-   "outputs": [],
-   "execution_count": null
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "mi = mp.MultiIndexSet(exponents, lp_degree=1.0)",
+   "execution_count": null,
    "id": "7c107f6e46ee336a",
+   "metadata": {},
    "outputs": [],
-   "execution_count": null
+   "source": [
+    "mi = mp.MultiIndexSet(exponents, lp_degree=1.0)"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "print(mi)",
+   "execution_count": null,
    "id": "eaaa8b707cee089b",
+   "metadata": {},
    "outputs": [],
-   "execution_count": null
+   "source": [
+    "print(mi)"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "c0ff0c1f9f06f7b2",
+   "metadata": {},
    "source": [
     "### Generating values\n",
     "\n",
     "The required generating values as required by the grid are given as follows:"
-   ],
-   "id": "c0ff0c1f9f06f7b2"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "gen_values = np.array([0, -1, 1, 0.57735035])",
+   "execution_count": null,
    "id": "1b946b0c6700c900",
+   "metadata": {},
    "outputs": [],
-   "execution_count": null
+   "source": [
+    "gen_values = np.array([0, -1, 1, 0.57735035])"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "f6b35e3ac281ca6d",
+   "metadata": {},
    "source": [
     "Because the maximum exponents in the multi-indices across all dimensions is $3$,\n",
     "the required number of generating values is $3 + 1 = 4$."
-   ],
-   "id": "f6b35e3ac281ca6d"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
+   "id": "def5222540d869d0",
+   "metadata": {},
    "source": [
     "### Grid instance\n",
     "\n",
     "An instance of `Grid` given the multi-index set and the array of generating values\n",
     "can  be constructed via `from_value_set()` method as follows:"
-   ],
-   "id": "def5222540d869d0"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "grd = mp.Grid.from_value_set(mi, gen_values)",
+   "execution_count": null,
    "id": "3a11686f15dd0cc3",
+   "metadata": {},
    "outputs": [],
-   "execution_count": null
+   "source": [
+    "grd = mp.Grid.from_value_set(mi, gen_values)"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
-   "source": "The grid has the following unisolvent nodes:",
-   "id": "cb165b42ba414cbd"
+   "id": "cb165b42ba414cbd",
+   "metadata": {},
+   "source": [
+    "The grid has the following unisolvent nodes:"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
-   "source": "print(grd.unisolvent_nodes)",
+   "execution_count": null,
    "id": "bd81d11f9e3842d",
+   "metadata": {},
    "outputs": [],
-   "execution_count": null
+   "source": [
+    "print(grd.unisolvent_nodes)"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "markdown",
-   "source": "The two-dimensional interpolation grid is plotted below:",
-   "id": "24eb3e4afee3e70b"
+   "id": "24eb3e4afee3e70b",
+   "metadata": {},
+   "source": [
+    "The two-dimensional interpolation grid is plotted below:"
+   ]
   },
   {
-   "metadata": {},
    "cell_type": "code",
+   "execution_count": null,
+   "id": "80b67f24678953a9",
+   "metadata": {},
+   "outputs": [],
    "source": [
     "plt.scatter(grd.unisolvent_nodes[:, 0], grd.unisolvent_nodes[:, 1])\n",
     "plt.xlabel(\"$x_1$\", fontsize=16)\n",
     "plt.ylabel(\"$x_2$\", fontsize=16);"
-   ],
-   "id": "80b67f24678953a9",
-   "outputs": [],
-   "execution_count": null
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9f048e4b-c2b3-4b95-a13c-5dbf01f4c4c6",
+   "metadata": {},
+   "source": [
+    "```{note}\n",
+    "Regardless of the specified domain, the unisolvent nodes are stored in the internal reference domain $[-1, 1]^m$. When the domain is not $[-1, 1]^m$, Minterpy automatically transforms the nodes to the specified domain before passing them to the function, for example, when calling\n",
+    "`grid(func)`.\n",
+    "```"
+   ]
   }
  ],
  "metadata": {
   "kernelspec": {
-   "display_name": "Python 3",
+   "display_name": "Python 3 (ipykernel)",
    "language": "python",
    "name": "python3"
   },
   "language_info": {
    "codemirror_mode": {
     "name": "ipython",
-    "version": 2
+    "version": 3
    },
    "file_extension": ".py",
    "mimetype": "text/x-python",
    "name": "python",
    "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython2",
-   "version": "2.7.6"
+   "pygments_lexer": "ipython3",
+   "version": "3.11.14"
   }
  },
  "nbformat": 4,

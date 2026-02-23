@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -441,37 +441,18 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">_warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEBUG</span><span class="p">,</span> <span class="n">DEFAULT_DOMAIN</span><span class="p">,</span> <span class="n">FLOAT_DTYPE</span><span class="p">,</span> <span class="n">INT_DTYPE</span>
-
-
-<div class="viewcode-block" id="verify_domain">
-<a class="viewcode-back" href="../../../api/internal/utils/verification.html#minterpy.utils.verification.verify_domain">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">verify_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Building and verification of domains.</span>
-
-<span class="sd">    This function builds a suitable domain as the cartesian product of a one-</span>
-<span class="sd">    dimensional domain, or verifies the domain shape, of a multivariate domain is</span>
-<span class="sd">    passed. If None is passed, the default domain is build from [-1,1].</span>
-
-<span class="sd">    :param domain: Either one-dimensional domain ``(min,max)``, or a stack of domains for each domain with shape ``(spatial_dimension,2)``. If :class:`None` is passed, the ``DEFAULT_DOMAIN`` is repeated for each spatial dimentsion.</span>
-<span class="sd">    :type domain: array_like, None</span>
-<span class="sd">    :param spatial_dimension: Dimentsion of the domain space.</span>
-<span class="sd">    :type spatial_dimension: int</span>
-
-<span class="sd">    :return verified_domain: Stack of domains for each dimension with shape ``(spatial_dimension,2)``.</span>
-<span class="sd">    :rtype: np.ndarray</span>
-<span class="sd">    :raise ValueError: If no domain with the expected shape can be constructed from the input.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">domain</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">DEFAULT_DOMAIN</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT_DTYPE</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">domain</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">check_shape</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">domain</span></div>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DEBUG</span><span class="p">,</span>
+    <span class="n">DEFAULT_DOMAIN</span><span class="p">,</span>
+    <span class="n">FLOAT_DTYPE</span><span class="p">,</span>
+    <span class="n">INT_DTYPE</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InvalidDomainBoundsError</span><span class="p">,</span>
+    <span class="n">InvalidDerivativeOrderError</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="check_type">
@@ -696,61 +677,6 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;Invalid value(s) (NaN, inf, negative, zero).&quot;</span>
         <span class="p">)</span></div>
-
-
-
-<span class="n">DOMAIN_WARN_MSG2</span> <span class="o">=</span> <span class="s2">&quot;the grid points must fit the interpolation domain [-1;1]^m.&quot;</span>
-<span class="n">DOMAIN_WARN_MSG</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;this may lead to unexpected behaviour, &quot;</span>
-    <span class="s2">&quot;e.g. rank deficiencies in the regression matrices, etc. .&quot;</span>
-<span class="p">)</span>
-
-
-<div class="viewcode-block" id="check_domain_fit">
-<a class="viewcode-back" href="../../../api/internal/utils/verification.html#minterpy.utils.verification.check_domain_fit">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">check_domain_fit</span><span class="p">(</span><span class="n">points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks weather a given array of points is properly formatted and spans the standard domain :math:`[-1,1]^m`.</span>
-
-<span class="sd">    .. todo::</span>
-<span class="sd">        - maybe remove the warnings.</span>
-<span class="sd">        - generalise to custom ``internal_domain``</span>
-
-<span class="sd">    :param points: array to be checked. Here ``m`` is the dimenstion of the domain and ``k`` is the number of points.</span>
-<span class="sd">    :type points: np.ndarray, shape = (m, k)</span>
-<span class="sd">    :raises ValueError: if the grid points do not fit into the domain :math:`[-1;1]^m`.</span>
-<span class="sd">    :raises ValueError: if less than one point is passed.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># check first if the sample points are valid</span>
-    <span class="n">check_type</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
-    <span class="n">check_values</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
-    <span class="c1"># check weather the points lie outside of the domain</span>
-    <span class="n">sample_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">sample_max</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">DOMAIN_WARN_MSG2</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;violated max: </span><span class="si">{</span><span class="n">sample_max</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">sample_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">sample_min</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">),</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">DOMAIN_WARN_MSG2</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;violated min: </span><span class="si">{</span><span class="n">sample_min</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">check_dimensionality</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dimensionality</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">nr_of_points</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span>
-    <span class="k">if</span> <span class="n">nr_of_points</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;at least one point must be given&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">nr_of_points</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span>  <span class="c1"># one point cannot span the domain</span>
-    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
-        <span class="c1"># check weather the points span the hole domain</span>
-        <span class="n">max_grid_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">sample_max</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">max_grid_val</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
-            <span class="n">warn</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;the highest encountered value in the given points is </span><span class="si">{</span><span class="n">max_grid_val</span><span class="si">}</span><span class="s2">  (expected 1.0). &quot;</span>
-                <span class="o">+</span> <span class="n">DOMAIN_WARN_MSG</span>
-            <span class="p">)</span>
-        <span class="n">min_grid_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">sample_min</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">min_grid_val</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">):</span>
-            <span class="n">warn</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;the smallest encountered value in the given points is </span><span class="si">{</span><span class="n">min_grid_val</span><span class="si">}</span><span class="s2"> (expected -1.0). &quot;</span>
-                <span class="o">+</span> <span class="n">DOMAIN_WARN_MSG</span>
-            <span class="p">)</span></div>
 
 
 
@@ -1102,95 +1028,32 @@
 
 
 
-<div class="viewcode-block" id="verify_poly_domain">
-<a class="viewcode-back" href="../../../api/internal/utils/verification.html#minterpy.utils.verification.verify_poly_domain">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">verify_poly_domain</span><span class="p">(</span>
-    <span class="n">domain</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<div class="viewcode-block" id="standardize_query_points">
+<a class="viewcode-back" href="../../../api/internal/utils/verification.html#minterpy.utils.verification.standardize_query_points">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">standardize_query_points</span><span class="p">(</span>
+    <span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">truncate_cols</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verify that the given polynomial domain is valid.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; verify_poly_domain(np.array([[1], [2]]), 1)  # integer array</span>
-<span class="sd">    array([[1.],</span>
-<span class="sd">           [2.]])</span>
-<span class="sd">    &gt;&gt;&gt; verify_poly_domain(np.array([[1, 2], [2, 3]]), 2)</span>
-<span class="sd">    array([[1., 2.],</span>
-<span class="sd">           [2., 3.]])</span>
-<span class="sd">    &gt;&gt;&gt; verify_poly_domain([3, 2], 1) # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    Traceback (most recent call last):</span>
-<span class="sd">    ...</span>
-<span class="sd">    ValueError: The upper bounds must be strictly larger than the lower</span>
-<span class="sd">    bounds. Invalid values in the polynomial domain!</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># The domain must be a NumPy ndarray</span>
-        <span class="n">domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">domain</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># Column array</span>
-            <span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">T</span>
-
-        <span class="c1"># The dimension of the array must be two-dimensional</span>
-        <span class="n">check_dimensionality</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">dimensionality</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-        <span class="c1"># The values must not contain inf</span>
-        <span class="n">check_values</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inf</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="c1"># The length must be two (lower and upper bounds)</span>
-        <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The domain is defined by </span><span class="si">{</span><span class="n">domain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> numbers &quot;</span>
-                <span class="s2">&quot;instead of by 2 (lower and upper bounds).&quot;</span>
-            <span class="p">)</span>
-
-        <span class="c1"># The number of columns must be the same as the dimension</span>
-        <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">spatial_dimension</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The dimension of the domain (</span><span class="si">{</span><span class="n">domain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) does not &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;match the required dimension (</span><span class="si">{</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="s2">).&quot;</span>
-            <span class="p">)</span>
-
-        <span class="c1"># The lower bounds must be smaller than the upper bounds</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;The upper bounds must be strictly larger than &quot;</span>
-                <span class="s2">&quot;the lower bounds.&quot;</span>
-            <span class="p">)</span>
-
-    <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-        <span class="n">custom_message</span> <span class="o">=</span> <span class="s2">&quot;Invalid type for polynomial domain!&quot;</span>
-        <span class="n">err</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">_add_custom_exception_message</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">custom_message</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">err</span>
-
-    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-        <span class="n">custom_message</span> <span class="o">=</span> <span class="s2">&quot;Invalid values in the polynomial domain!&quot;</span>
-        <span class="n">err</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">_add_custom_exception_message</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">custom_message</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">err</span>
-
-    <span class="k">return</span> <span class="n">domain</span></div>
-
-
-
-<div class="viewcode-block" id="verify_query_points">
-<a class="viewcode-back" href="../../../api/internal/utils/verification.html#minterpy.utils.verification.verify_query_points">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">verify_query_points</span><span class="p">(</span><span class="n">xx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verify if the values of the query points for evaluation are valid.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    xx : :class:`numpy:numpy.ndarray`</span>
 <span class="sd">        A one- or two-dimensional array of query points at which a polynomial</span>
-<span class="sd">        is evaluated. The length of the array is ``N``, i.e., the number</span>
+<span class="sd">        is evaluated. The length of the array is ``k``, i.e., the number</span>
 <span class="sd">        of query points.</span>
 <span class="sd">    spatial_dimension : int</span>
 <span class="sd">        The spatial dimension of the polynomial (``m``).</span>
 <span class="sd">        The shape of the query points array must be consistent with this.</span>
+<span class="sd">    truncate_cols : bool, optional</span>
+<span class="sd">        If ``True``, truncate columns to match ``spatial_dimension`` after</span>
+<span class="sd">        conversion to array. Default is ``False``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    :class:`numpy:numpy.ndarray`</span>
-<span class="sd">        A two-dimensional array of ``numpy.float64`` with a length of ``N``</span>
+<span class="sd">        A two-dimensional array of ``numpy.float64`` with a length of ``k``</span>
 <span class="sd">        and a number of columns of ``m``. If the dtype of the array is not of</span>
 <span class="sd">        `numpy.float64`, the function does a type conversion if possible.</span>
 
@@ -1204,29 +1067,31 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; verify_query_points(1, 1)  # a scalar integer</span>
+<span class="sd">    &gt;&gt;&gt; standardize_query_points(1, 1)  # a scalar integer</span>
 <span class="sd">    array([[1.]])</span>
-<span class="sd">    &gt;&gt;&gt; verify_query_points([3., 4., 5.], 1)  # a list</span>
+<span class="sd">    &gt;&gt;&gt; standardize_query_points([3., 4., 5.], 1)  # a list</span>
 <span class="sd">    array([[3.],</span>
 <span class="sd">           [4.],</span>
 <span class="sd">           [5.]])</span>
-<span class="sd">    &gt;&gt;&gt; verify_query_points([[3, 4, 5]], 3)  # a list of lists of integers</span>
+<span class="sd">    &gt;&gt;&gt; standardize_query_points([[3, 4, 5]], 3)  # a list of lists of integers</span>
 <span class="sd">    array([[3., 4., 5.]])</span>
-<span class="sd">    &gt;&gt;&gt; verify_query_points(np.array([1., 2., 3.]), 1)  # 1 dimension</span>
+<span class="sd">    &gt;&gt;&gt; standardize_query_points(np.array([1., 2., 3.]), 1)  # 1 dimension</span>
 <span class="sd">    array([[1.],</span>
 <span class="sd">           [2.],</span>
 <span class="sd">           [3.]])</span>
-<span class="sd">    &gt;&gt;&gt; verify_query_points(np.array([[1., 2.], [3., 4.]]), 2)  # 2 dimensions</span>
+<span class="sd">    &gt;&gt;&gt; standardize_query_points(np.array([[1., 2.], [3., 4.]]), 2)  # 2 dims</span>
 <span class="sd">    array([[1., 2.],</span>
 <span class="sd">           [3., 4.]])</span>
-<span class="sd">    &gt;&gt;&gt; verify_query_points(np.array([1, 2, 3]), 1)  # integer</span>
+<span class="sd">    &gt;&gt;&gt; standardize_query_points(np.array([1, 2, 3]), 1)  # integer</span>
 <span class="sd">    array([[1.],</span>
 <span class="sd">           [2.],</span>
 <span class="sd">           [3.]])</span>
-<span class="sd">    &gt;&gt;&gt; verify_query_points(np.array([&quot;a&quot;, &quot;b&quot;]), 1)</span>
+<span class="sd">    &gt;&gt;&gt; standardize_query_points(np.array([[1, 2, 3]]), 2, True)  # Truncate</span>
+<span class="sd">    array([[1., 2.]])</span>
+<span class="sd">    &gt;&gt;&gt; standardize_query_points(np.array([&quot;a&quot;, &quot;b&quot;]), 1) # doctest: +ELLIPSIS</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ...</span>
-<span class="sd">    ValueError: could not convert string to float: &#39;a&#39; Invalid values in query points array!</span>
+<span class="sd">    ValueError: could not convert string to float: ...</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -1243,8 +1108,10 @@
 
         <span class="c1"># Check spatial dimension</span>
         <span class="k">if</span> <span class="n">xx</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">xx</span> <span class="o">=</span> <span class="n">xx</span><span class="p">[:</span><span class="n">spatial_dimension</span><span class="p">]</span> <span class="k">if</span> <span class="n">truncate_cols</span> <span class="k">else</span> <span class="n">xx</span>
             <span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="n">xx</span> <span class="o">=</span> <span class="n">xx</span><span class="p">[:,</span> <span class="p">:</span><span class="n">spatial_dimension</span><span class="p">]</span> <span class="k">if</span> <span class="n">truncate_cols</span> <span class="k">else</span> <span class="n">xx</span>
             <span class="n">dim</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">dim_is_consistent</span> <span class="o">=</span> <span class="n">dim</span> <span class="o">==</span> <span class="n">spatial_dimension</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">dim_is_consistent</span><span class="p">:</span>
@@ -1340,6 +1207,199 @@
         <span class="k">raise</span> <span class="n">err</span>
 
     <span class="k">return</span> <span class="n">power</span></div>
+
+
+<div class="viewcode-block" id="verify_domain_bounds">
+<a class="viewcode-back" href="../../../api/internal/utils/verification.html#minterpy.utils.verification.verify_domain_bounds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_domain_bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verify that the given bounds for a domain are valid.</span>
+
+<span class="sd">    Valid domain bounds must satisfy the following conditions:</span>
+
+<span class="sd">    - Convertible to a 2D numeric array</span>
+<span class="sd">    - Shape of ``(m, 2)`` where ``m &gt;= 1`` (dimension is positive)</span>
+<span class="sd">    - Finite values (no NaN or inf)</span>
+<span class="sd">    - Non-empty</span>
+<span class="sd">    - Upper bounds strictly greater than lower bounds for all dimensions</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bounds : array_like</span>
+<span class="sd">        Domain bounds as either a 1D array ``[lower, upper]`` for a single</span>
+<span class="sd">        dimension, or a 2D array of shape ``(m, 2)`` for ``m`` dimensions.</span>
+<span class="sd">        Each row specifies ``[lower, upper]`` for one dimension.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        Validated domain bounds as a 2D array of shape ``(m, 2)`` with</span>
+<span class="sd">        dtype ``FLOAT_DTYPE``.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    InvalidDomainBoundsError</span>
+<span class="sd">        If the bounds violate any validation condition (see above).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; verify_domain_bounds(np.array([-1, 1]))  # 1D array, single dimension</span>
+<span class="sd">    array([[-1.,  1.]])</span>
+<span class="sd">    &gt;&gt;&gt; verify_domain_bounds(np.array([[1, 2]]))  # Integer array (auto-converted)</span>
+<span class="sd">    array([[1., 2.]])</span>
+<span class="sd">    &gt;&gt;&gt; verify_domain_bounds(np.array([[1., 2.], [2., 3.]]))  # 2D domain</span>
+<span class="sd">    array([[1., 2.],</span>
+<span class="sd">           [2., 3.]])</span>
+<span class="sd">    &gt;&gt;&gt; verify_domain_bounds([3, 2]) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ...</span>
+<span class="sd">    minterpy.utils.exceptions.InvalidDomainBoundsError: Upper bounds must be</span>
+<span class="sd">    strictly greater than lower bounds.</span>
+<span class="sd">    Invalid dimensions: [0]; Invalid bounds: [[3.0, 2.0]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert to a two-dimensional NumPy array of FLOAT_DTYPE</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FLOAT_DTYPE</span><span class="p">))</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidDomainBoundsError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Domain bounds must be array-like of numeric values, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> instead&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+
+    <span class="c1"># Validate dimensionality</span>
+    <span class="k">if</span> <span class="n">bounds</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidDomainBoundsError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Domain bounds must be 2D after conversion, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">bounds</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">D array instead&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Validate non-empty array</span>
+    <span class="k">if</span> <span class="n">bounds</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidDomainBoundsError</span><span class="p">(</span><span class="s2">&quot;Domain bounds cannot be empty&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validate shape</span>
+    <span class="k">if</span> <span class="n">bounds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidDomainBoundsError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Bounds must have 2 columns [lower, upper], &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">bounds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns instead&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Validate finite values (no Inf and NaN allowed)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">InvalidDomainBoundsError</span><span class="p">(</span>
+            <span class="s2">&quot;Bounds must be finite (no NaN or inf values)&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Validate lower &lt; upper</span>
+    <span class="n">widths</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">widths</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">invalid_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">widths</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="n">InvalidDomainBoundsError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Upper bounds must be strictly greater than lower bounds. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid dimensions: </span><span class="si">{</span><span class="n">invalid_dims</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid bounds: </span><span class="si">{</span><span class="n">bounds</span><span class="p">[</span><span class="n">invalid_dims</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">bounds</span></div>
+
+
+
+<div class="viewcode-block" id="verify_derivative_order">
+<a class="viewcode-back" href="../../../api/internal/utils/verification.html#minterpy.utils.verification.verify_derivative_order">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_derivative_order</span><span class="p">(</span>
+    <span class="n">order</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verify that the given order of derivatives are valid.</span>
+
+<span class="sd">    Valid orders of derivatives must satisfy the following conditions:</span>
+
+<span class="sd">    - Convertible to a 1D numeric array</span>
+<span class="sd">    - The length must match the spatial dimension (``m``)</span>
+<span class="sd">    - Integer values (whole numbers only, round floats like 2.0 are accepted</span>
+<span class="sd">      and converted)</span>
+<span class="sd">    - Non-negative (all values are &gt;=0, no NaN, no Inf)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    order : array_like</span>
+<span class="sd">        Order of derivative for each dimension. An order must be specified</span>
+<span class="sd">        for each spatial dimension. Non-integer values are accepted only</span>
+<span class="sd">        if they represent whole numbers.</span>
+<span class="sd">    spatial_dimension : int</span>
+<span class="sd">        Expected number of dimensions (must be positive).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        Validated order of derivatives as a 1D array of shape ``(m,)`` with</span>
+<span class="sd">        dtype ``INT_DTYPE``.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    InvalidDerivativeOrderError</span>
+<span class="sd">        If the specification violate any validation condition (see above).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; verify_derivative_order(1, 1)  # Scalar, 1D</span>
+<span class="sd">    array([1])</span>
+<span class="sd">    &gt;&gt;&gt; verify_derivative_order([1, 0, 1], 3)  # List as order, 3D</span>
+<span class="sd">    array([1, 0, 1])</span>
+<span class="sd">    &gt;&gt;&gt; verify_derivative_order(np.array([1, 0, 2, 0]), 4)  # 4D</span>
+<span class="sd">    array([1, 0, 2, 0])</span>
+<span class="sd">    &gt;&gt;&gt; verify_derivative_order([3, 2, 0], 2) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ...</span>
+<span class="sd">    minterpy.utils.exceptions.InvalidDerivativeOrderError: Order length 3 does</span>
+<span class="sd">    not match spatial dimension 2. Order of derivative for each dimension must</span>
+<span class="sd">    be specified.</span>
+<span class="sd">    &gt;&gt;&gt; verify_derivative_order([3.2, 2.0], 2) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ...</span>
+<span class="sd">    minterpy.utils.exceptions.InvalidDerivativeOrderError: Order of derivatives</span>
+<span class="sd">    must be whole numbers. Invalid values: [3.2]</span>
+<span class="sd">    &gt;&gt;&gt; verify_derivative_order([0, -1], 2) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ...</span>
+<span class="sd">    minterpy.utils.exceptions.InvalidDerivativeOrderError: Order of</span>
+<span class="sd">    derivatives must be non-negative. Negative values at dimensions: [1];</span>
+<span class="sd">    Invalid values: [-1]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Normalize input to 1D NumPy array</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+    <span class="c1"># Validate length matches spatial dimension</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)</span> <span class="o">!=</span> <span class="n">spatial_dimension</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidDerivativeOrderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Order length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)</span><span class="si">}</span><span class="s2"> does not match spatial dimension &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="s2">. Order of derivative for each dimension &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;must be specified.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Validate integer values (accept round floats)</span>
+    <span class="n">round_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">round_mask</span><span class="p">):</span>
+        <span class="n">non_round_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">round_mask</span>
+        <span class="n">invalid_values</span> <span class="o">=</span> <span class="n">order</span><span class="p">[</span><span class="n">non_round_mask</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="n">InvalidDerivativeOrderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Order of derivatives must be whole numbers. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid values: </span><span class="si">{</span><span class="n">invalid_values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Validate non-negative values</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">order</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">negative_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">order</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">invalid_values</span> <span class="o">=</span> <span class="n">order</span><span class="p">[</span><span class="n">negative_dims</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="n">InvalidDerivativeOrderError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Order of derivatives must be non-negative. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Negative values at dimensions: </span><span class="si">{</span><span class="n">negative_dims</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid values: </span><span class="si">{</span><span class="n">invalid_values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Convert to integer dtype</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">order</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">INT_DTYPE</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">order</span></div>
 
 
 

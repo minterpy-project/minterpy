@@ -59,7 +59,7 @@
     <link rel="prev" title="Basic Arithmetic Operations with Polynomials" href="arithmetic-operations-with-polynomials.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -484,10 +484,10 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 								  &amp; - 0.20 \exp{\left( -1.00 \left( (x_1 - 4)^2 + (x_2 - 7)^2 \right) \right)} \\
 \end{align}
 \end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{x} = (x_1, x_2) \in [-1, 1]^2\)</span>.</p>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{x} = (x_1, x_2) \in [0, 1]^2\)</span>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This function is known in the literature as the Franke function<a class="footnote-reference brackets" href="#franke" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Here, however, the domain has been redefined to be <span class="math notranslate nohighlight">\([-1, 1]^2\)</span> instead of <span class="math notranslate nohighlight">\([0, 1]^2\)</span>.</p>
+<p>This function is known in the literature as the Franke function<a class="footnote-reference brackets" href="#franke" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 </div>
 <p>The function can be defined in Python as follows:</p>
 <div class="cell docutils container">
@@ -522,7 +522,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
-<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 <span class="n">mesh_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">xx_1d</span><span class="p">)</span>
 <span class="n">xx_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_2d</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">yy_2d</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">xx_2d</span><span class="p">)</span>
@@ -567,7 +567,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/4eefb61c5a7296c3397d477280e5af4b8a2b09285092f26a79a06c0387a846ba.png" src="../_images/4eefb61c5a7296c3397d477280e5af4b8a2b09285092f26a79a06c0387a846ba.png" />
+<img alt="../_images/a7da6f16ec39d985b90fa94e4d470243ee9ca72bcf8f9c97ac2d1a7933ec53b5.png" src="../_images/a7da6f16ec39d985b90fa94e4d470243ee9ca72bcf8f9c97ac2d1a7933ec53b5.png" />
 </div>
 </div>
 <p>You can construct a (Newton) polynomial that approximates the above function with the following:</p>
@@ -575,8 +575,10 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Multi-index set of polynomial degree</span>
 <span class="n">mi</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">MultiIndexSet</span><span class="o">.</span><span class="n">from_degree</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="c1"># Custom domain [0, 1]^2</span>
+<span class="n">dom</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Domain</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="c1"># Interpolation grid</span>
-<span class="n">grd</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Grid</span><span class="p">(</span><span class="n">mi</span><span class="p">)</span>
+<span class="n">grd</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Grid</span><span class="p">(</span><span class="n">mi</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">dom</span><span class="p">)</span>
 <span class="c1"># Coefficients of the Lagrange polynomial</span>
 <span class="n">coeffs</span> <span class="o">=</span> <span class="n">grd</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
 <span class="c1"># Lagrange polynomial given grid and coefficients</span>
@@ -590,7 +592,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 <p>Verify if the interpolating polynomial has the sufficient accuracy by estimating its infinity norm:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_test</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">yy_test</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">xx_test</span><span class="p">)</span>
 <span class="n">yy_poly</span> <span class="o">=</span> <span class="n">poly</span><span class="p">(</span><span class="n">xx_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yy_poly</span> <span class="o">-</span> <span class="n">yy_test</span><span class="p">)))</span>
@@ -598,7 +600,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8.988910274640959e-07
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6.827871601444713e-15
 </pre></div>
 </div>
 </div>
@@ -612,7 +614,7 @@ You’ve also explored the basic <a class="reference internal" href="arithmetic-
 \[
 I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(\Omega\)</span> is the domain of the polynomial which in this case is <span class="math notranslate nohighlight">\([-1, 1]^2\)</span>.</p>
+<p>where <span class="math notranslate nohighlight">\(\Omega\)</span> is the domain of the polynomial which in this case is <span class="math notranslate nohighlight">\([0, 1]^2\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poly</span><span class="o">.</span><span class="n">integrate_over</span><span class="p">()</span>
@@ -620,7 +622,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7757899777014259
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.24524128683817278
 </pre></div>
 </div>
 </div>
@@ -633,17 +635,17 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 <p>For instance, to compute:</p>
 <div class="math notranslate nohighlight">
 \[
-\int_{-0.5}^{0.5} \int_{-0.25}^{0.75} Q(\boldsymbol{x}) \, dx_2 dx_1,
+\int_{0}^{0.5} \int_{0.25}^{0.75} Q(\boldsymbol{x}) \, dx_2 dx_1,
 \]</div>
 <p>you would specify the bounds for each dimension as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poly</span><span class="o">.</span><span class="n">integrate_over</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">]])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poly</span><span class="o">.</span><span class="n">integrate_over</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.39984157731754727
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0575028840675241
 </pre></div>
 </div>
 </div>
@@ -699,7 +701,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa1d34b2dd0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f80d893b640&gt;
 </pre></div>
 </div>
 </div>
@@ -713,7 +715,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa1d34b08b0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f80d8c77610&gt;
 </pre></div>
 </div>
 </div>
@@ -726,7 +728,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create 2D data</span>
-<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 <span class="n">mesh_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">xx_1d</span><span class="p">)</span>
 <span class="n">xx_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_2d</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">yy_diff_0_1</span> <span class="o">=</span> <span class="n">poly_diff_0_1</span><span class="p">(</span><span class="n">xx_2d</span><span class="p">)</span>
@@ -775,7 +777,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/ae8bd47517d132c0ef31e9f24d1493a7ab22a759ac3d3acef4323d33a6b88b3e.png" src="../_images/ae8bd47517d132c0ef31e9f24d1493a7ab22a759ac3d3acef4323d33a6b88b3e.png" />
+<img alt="../_images/f9f9463fd84b26dbba232ce79af39214284ce38464aa5c5bd9f549686c7778b4.png" src="../_images/f9f9463fd84b26dbba232ce79af39214284ce38464aa5c5bd9f549686c7778b4.png" />
 </div>
 </div>
 <p>The <a class="reference internal" href="../api/polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial.diff" title="minterpy.polynomials.newton_polynomial.NewtonPolynomial.diff"><code class="xref py py-meth docutils literal notranslate"><span class="pre">diff()</span></code></a> method enables you to compute the derivatives of varying oders for each spatial dimension simultaneously. To do this, pass a list or a NumPy array specifying the desired order of derivative for each dimension.</p>
@@ -811,7 +813,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa1d102bca0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f80d65e6800&gt;
 </pre></div>
 </div>
 </div>
@@ -825,7 +827,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fa1d102bd30&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7f80d0c82260&gt;
 </pre></div>
 </div>
 </div>
@@ -838,7 +840,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- Create 2D data</span>
-<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 <span class="n">mesh_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">xx_1d</span><span class="p">)</span>
 <span class="n">xx_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_2d</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">yy_diff_0_1_1_1</span> <span class="o">=</span> <span class="n">poly_diff_0_1_1_1</span><span class="p">(</span><span class="n">xx_2d</span><span class="p">)</span>
@@ -887,7 +889,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/9f211c8e79c04ba3e4f8ecef6665f16027f513511891191058d873c8998fc647.png" src="../_images/9f211c8e79c04ba3e4f8ecef6665f16027f513511891191058d873c8998fc647.png" />
+<img alt="../_images/bedb50f32c489d4f2e5d45467830cb8ea42bc54bb38dd16990f3ff539b7f1eea.png" src="../_images/bedb50f32c489d4f2e5d45467830cb8ea42bc54bb38dd16990f3ff539b7f1eea.png" />
 </div>
 </div>
 </section>
@@ -895,7 +897,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <p>In this in-depth tutorial, you’ve learned the basic calculus operations involving Minterpy polynomials, specifically:</p>
 <ul class="simple">
-<li><p><strong>Definite integration</strong>: Computes the integral over specified bounds, returning a numeric result.</p></li>
+<li><p><strong>Definite integration</strong>: Computes the integral over specified bounds in the domain of the function, returning a numeric result.</p></li>
 <li><p><strong>Differentiation</strong>: Computes the derivative of the polynomial, resulting in another polynomial (the differentiated one).</p></li>
 </ul>
 <p>These operations were demonstrated using a two-dimensional polynomial, but they apply similarly to polynomials of higher dimensions.</p>
@@ -907,7 +909,7 @@ I[Q] = \int_{\Omega} Q(\boldsymbol{x}) \, d\boldsymbol{x},
 <li><p>Applying basic calculus operations to Minterpy polynomials, including differentiation and definite integration (<em>this tutorial</em>).</p></li>
 </ul>
 <p>In the examples we’ve explored so far, we’ve started with a polynomial in the Lagrange basis and then converted it to a polynomial in the Newton basis. However, Minterpy offers more flexibility than that.</p>
-<p>Polynomials can be represented in a variety of bases, extending beyond just Lagrange and Newton. In the next tutorial, we’ll delve into different bases available in Minterpy and discuss how to transform polynomials between the.</p>
+<p>Polynomials can be represented in a variety of bases, extending beyond just Lagrange and Newton. In the next tutorial, we’ll delve into different bases available in Minterpy and discuss how to transform polynomials between them.</p>
 </section>
 </section>
 <hr class="footnotes docutils" />

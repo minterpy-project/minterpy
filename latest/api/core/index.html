@@ -59,7 +59,7 @@
     <link rel="prev" title="minterpy.interpolation" href="../interpolation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -389,6 +389,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../interpolation.html">Interpolation</a></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Core</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="multi_index.html">Multi-Index Set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html">Domain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">Grid</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="ABC/index.html">Abstract Base Classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="ABC/abc-polynomial.html">Multivariate Polynomial</a></li>
@@ -524,14 +525,15 @@
 <span id="minterpy-core"></span><h1>minterpy.core<a class="headerlink" href="#module-minterpy.core" title="Link to this heading">#</a></h1>
 <p>The core sub-package of Minterpy.</p>
 <p>The sub-package contains several top domain-specific classes
-(e.g., <a class="reference internal" href="multi_index.html#module-minterpy.core.multi_index" title="minterpy.core.multi_index"><code class="xref py py-mod docutils literal notranslate"><span class="pre">multi_index</span></code></a>)
+(e.g., <a class="reference internal" href="multi_index.html#module-minterpy.core.multi_index" title="minterpy.core.multi_index"><code class="xref py py-mod docutils literal notranslate"><span class="pre">multi_index</span></code></a>, <a class="reference internal" href="grid.html#module-minterpy.core.grid" title="minterpy.core.grid"><code class="xref py py-mod docutils literal notranslate"><span class="pre">grid</span></code></a>)
 and the abstract base classes.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Modifications to this sub-package should only be made with a thorough
-understanding of the overall Minterpy code base.
-We strongly advise holding discussions with the project maintainers
-prior to any modifications.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This sub-package forms the computational core of Minterpy.
+Its components are tightly coupled, and any significant changes may have
+far-reaching downstream effects on correctness, accuracy, and performance.
+We recommend discussing any proposed modifications
+with the project maintainers before proceeding.</p>
 </div>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -543,14 +545,17 @@ prior to any modifications.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="multi_index.html#module-minterpy.core.multi_index" title="minterpy.core.multi_index"><code class="xref py py-mod docutils literal notranslate"><span class="pre">multi_index</span></code></a></p></td>
 <td><p>The set of multi-indices representing the exponents of multidimensional polynomials</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="grid.html#module-minterpy.core.grid" title="minterpy.core.grid"><code class="xref py py-mod docutils literal notranslate"><span class="pre">grid</span></code></a></p></td>
-<td><p>The grid on which interpolating polynomials live</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="domain.html#module-minterpy.core.domain" title="minterpy.core.domain"><code class="xref py py-mod docutils literal notranslate"><span class="pre">domain</span></code></a></p></td>
+<td><p>The user-defined domain and its transformation to and from the internal domain</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="tree.html#module-minterpy.core.tree" title="minterpy.core.tree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tree</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="grid.html#module-minterpy.core.grid" title="minterpy.core.grid"><code class="xref py py-mod docutils literal notranslate"><span class="pre">grid</span></code></a></p></td>
+<td><p>The interpolation grid of unisolvent nodes defined by multi-indices and generating points</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="tree.html#module-minterpy.core.tree" title="minterpy.core.tree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tree</span></code></a></p></td>
 <td><p>The data to carry out the multidimensional divided difference scheme (DDS)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ABC/index.html#module-minterpy.core.ABC" title="minterpy.core.ABC"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ABC</span></code></a></p></td>
-<td><p>The core abstract base classes</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ABC/index.html#module-minterpy.core.ABC" title="minterpy.core.ABC"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ABC</span></code></a></p></td>
+<td><p>The abstract base classes for multivariate polynomial representations</p></td>
 </tr>
 </tbody>
 </table>

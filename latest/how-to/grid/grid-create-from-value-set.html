@@ -59,7 +59,7 @@
     <link rel="prev" title="Create a Grid from an Array of Generating Points" href="grid-create-from-points.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -389,7 +389,14 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../integration/index.html">Integration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../integration/poly-interpolant-integration-1d.html">Integrate a One-Dimensional Polynomial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../integration/poly-interpolant-integration-md.html">Integrate an M-Dimensional Polynomial</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../multi-index-set/index.html">Multi-index Set</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../multi-index-set/multi-index-set-create.html">Create a Multi-Index Set</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../multi-index-set/multi-index-set-add.html">Add Exponents to a Multi-Index Set</a></li>
@@ -401,6 +408,19 @@
 <li class="toctree-l2"><a class="reference internal" href="../multi-index-set/multi-index-set-union.html">Create the Union of Multi-Index Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../multi-index-set/multi-index-set-multiply.html">Multiply Multi-Index Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../multi-index-set/multi-index-set-empty.html">Create an Empty Multi-Index Set</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../domain/index.html">Domain</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-create-bounds.html">Create with Bounds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-create-uniform.html">Create with Uniform Bounds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-create-identity.html">Create with Internal Bounds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-map-to-from.html">Map Values from and to Internal Domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-compute-int-factor.html">Compute Integration Scaling Factor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-compute-diff-factor.html">Compute Differentiation Scaling Factor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-check-containment.html">Check whether Points Lie within the Domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-check-equality.html">Check for Equality in Value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-check-partial-matching.html">Check for Partial Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain/domain-create-union.html">Create the Union of Domain</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Grid</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -415,11 +435,6 @@
 <li class="toctree-l2"><a class="reference internal" href="grid-add.html">Add Elements of a Multi-Index Set to a Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid-complete.html">Make a Grid complete</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid-downward-closed.html">Make a Grid downward-closed</a></li>
-</ul>
-</details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../integration/index.html">Integration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../integration/poly-interpolant-integration-1d.html">Integrate a One-Dimensional Polynomial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../integration/poly-interpolant-integration-md.html">Integrate an M-Dimensional Polynomial</a></li>
 </ul>
 </details></li>
 </ul>
@@ -522,6 +537,7 @@ via tiling procedure.</p>
 a one-dimensional array of floats that must additionally satisfy the following
 conditions:</p>
 <ul class="simple">
+<li><p>the values must be in <span class="math notranslate nohighlight">\([-1, 1]\)</span>, regardless of the domain assigned to the grid.</p></li>
 <li><p>the length must be <span class="math notranslate nohighlight">\(n + 1\)</span> where <span class="math notranslate nohighlight">\(n\)</span> is the maximum polynomial degree
 across all dimensions that the grid must support.</p></li>
 <li><p>the values of the array must be unique, that is, it contains no repeats.</p></li>
@@ -543,6 +559,7 @@ of exponents that defines the polynomials that grid can support,
 and the generating values as required by the multi-index set.</p>
 <p>As explained above, the array of generating values must satisfy
 several conditions for it to be valid.</p>
+<p>The method also accepts an optional <code class="docutils literal notranslate"><span class="pre">domain</span></code> argument. If not specified the domain defaults to the internal reference domain <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>. As noted above, regardless of the specified domain, the generating values must always be in <span class="math notranslate nohighlight">\([-1, 1]\)</span>.</p>
 <p>In many applications, a single set of one-dimensional interpolation points
 is used for different dimensions.
 The <code class="docutils literal notranslate"><span class="pre">from_value_set()</span></code> method is a shortcut to create a grid with
@@ -665,6 +682,11 @@ can  be constructed via <code class="docutils literal notranslate"><span class="
 <div class="cell_output docutils container">
 <img alt="../../_images/110d0be36eadf1bbf18fb9f156ee4b52b7816ea05c63fc2d22f3e6a69ab75c99.png" src="../../_images/110d0be36eadf1bbf18fb9f156ee4b52b7816ea05c63fc2d22f3e6a69ab75c99.png" />
 </div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Regardless of the specified domain, the unisolvent nodes are stored in the internal reference domain <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>. When the domain is not <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>, Minterpy automatically transforms the nodes to the specified domain before passing them to the function, for example, when calling
+<code class="docutils literal notranslate"><span class="pre">grid(func)</span></code>.</p>
 </div>
 </section>
 </section>

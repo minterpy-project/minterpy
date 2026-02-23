@@ -59,7 +59,7 @@
     <link rel="prev" title="ABC" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -393,6 +393,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../interpolation.html">Interpolation</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Core</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../multi_index.html">Multi-Index Set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../domain.html">Domain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../grid.html">Grid</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Abstract Base Classes</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">Multivariate Polynomial</a></li>
@@ -636,29 +637,31 @@ by the concrete implementation.</p></li>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.__call__" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a></dt><dd><p>The dunder method as a syntactic sugar to evaluate the polynomial(s) instance on a set of query points.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></dt><dd><p>The dunder method as a syntactic sugar to evaluate the polynomial(s) instance on a set of query points.</p>
 </dd>
 </dl>
 </div>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialABC.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.__call__" title="Link to this definition">#</a></dt>
-<dd><p>Evaluate the polynomial on a set of query points.</p>
-<p>The function is called when an instance of a polynomial is called with
-a set of query points, i.e., <span class="math notranslate nohighlight">\(p(\mathbf{X})\)</span> where
-<span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is a matrix of values with <span class="math notranslate nohighlight">\(k\)</span> rows
-and each row is of length <span class="math notranslate nohighlight">\(m\)</span> (i.e., a point in
-<span class="math notranslate nohighlight">\(m\)</span>-dimensional space).</p>
+<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.eval_on_internal">
+<span class="sig-name descname"><span class="pre">eval_on_internal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncate_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialABC.eval_on_internal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.eval_on_internal" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate polynomial at points in the internal domain.</p>
+<p>This method evaluates the polynomial at points assumed to already be
+in the internal domain used by the polynomial’s algorithms. It skips
+coordinate transformation to avoid unnecessary floating-point error
+accumulation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The set of query points to evaluate as a two-dimensional array
-of shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code> where <code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of query points and
-<code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension of the polynomial.</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword-only arguments that change the behavior of
-the underlying evaluation (see the concrete implementation).</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Query points in the internal domain. It should be a two-dimensional
+array of shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code> where <code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of query points
+and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.</p></li>
+<li><p><strong>truncate_cols</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the last columns of <code class="docutils literal notranslate"><span class="pre">xx</span></code> are truncated to match
+the spatial dimension of the polynomial; otherwise all provided
+columns are attempted to be evaluated. The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword-only arguments passed to the underlying
+evaluation method (see concrete implementation).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -678,6 +681,15 @@ coefficient sets.</p></li>
 <dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Use this method when: (1) Points are already in the internal
+domain (e.g., unisolvent nodes) (2) Avoiding unnecessary coordinate
+transformations that incur floating-point errors.</p></li>
+<li><p>Coordinate transformations are not free numerically. While they
+are affine, round-trip transformations over many interation may
+accumulate floating-point errors.</p></li>
+</ul>
 <p class="rubric">Notes</p>
 <ul class="simple">
 <li><p>The function calls the concrete implementation of the static method
@@ -702,77 +714,51 @@ coefficient sets.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.core.ABC.multivariate_polynomial_abstract.</span></span><span class="sig-name descname"><span class="pre">MultivariatePolynomialSingleABC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">internal_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.core.ABC.multivariate_polynomial_abstract.</span></span><span class="sig-name descname"><span class="pre">MultivariatePolynomialSingleABC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariatePolynomialABC</span></code></a></p>
-<p>abstract base class for “single instance” multivariate polynomials</p>
+<p>Abstract base class for “single instance” multivariate polynomials</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>multi_index</strong> (<a class="reference internal" href="../multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a><em> | </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
-<li><p><strong>coeffs</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>internal_domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>user_domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>grid</strong> (<a class="reference internal" href="../grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>multi_index</strong> (<a class="reference internal" href="../multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – The multi-index set of the multivariate polynomial.</p></li>
+<li><p><strong>coeffs</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Coefficients of the polynomial. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the polynomial is
+uninitialized. Either a one-dimensional array of length equal to
+the number of monomials or a two-dimensional array of shape
+<code class="docutils literal notranslate"><span class="pre">(num_monomials,</span> <span class="pre">num_polynomials)</span></code> for multiple polynomials
+sharing the same multi-index set.</p></li>
+<li><p><strong>grid</strong> (<a class="reference internal" href="../grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a><em>, </em><em>optional</em>) – The underlying grid on which the (interpolating) polynomial is defined.
+If not given, the default Grid instance will be constructed.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="../domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a><em>, </em><em>optional</em>) – The domain of the underlying grid. If not given, the domain will be
+derived from the default Grid instance.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.multi_index">
-<span class="sig-name descname"><span class="pre">multi_index</span></span><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.multi_index" title="Link to this definition">#</a></dt>
-<dd><p>The multi-indices of the multivariate polynomial.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet">MultiIndexSet</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.internal_domain">
-<span class="sig-name descname"><span class="pre">internal_domain</span></span><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.internal_domain" title="Link to this definition">#</a></dt>
-<dd><p>The domain the polynomial is defined on (basically the domain of the unisolvent nodes).
-Either one-dimensional domain (min,max), a stack of domains for each
-domain with shape (spatial_dimension,2).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>array_like</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.user_domain">
-<span class="sig-name descname"><span class="pre">user_domain</span></span><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.user_domain" title="Link to this definition">#</a></dt>
-<dd><p>The domain where the polynomial can be evaluated. This will be mapped onto the <code class="docutils literal notranslate"><span class="pre">internal_domain</span></code>.
-Either one-dimensional domain <code class="docutils literal notranslate"><span class="pre">min,max)</span></code> a stack of domains for each
-domain with shape <code class="docutils literal notranslate"><span class="pre">(spatial_dimension,2)</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>array_like</p>
-</dd>
-</dl>
-</dd></dl>
-
 <p class="rubric">Notes</p>
-<p>the grid with the corresponding indices defines the “basis” or polynomial space a polynomial is part of.
-e.g. also the constraints for a Lagrange polynomial, i.e. on which points they must vanish.
-ATTENTION: the grid might be defined on other indices than multi_index! e.g. useful for defining Lagrange coefficients with “extra constraints”
-but all indices from multi_index must be contained in the grid!
-this corresponds to polynomials with just some of the Lagrange polynomials of the basis being “active”</p>
+<ul class="simple">
+<li><p>The multi-index set associated with <code class="docutils literal notranslate"><span class="pre">grid</span></code> may be different from
+<code class="docutils literal notranslate"><span class="pre">multi_index</span></code>. All indices from <code class="docutils literal notranslate"><span class="pre">multi_index</span></code> must be contained
+in <code class="docutils literal notranslate"><span class="pre">grid.multi_index</span></code>.</p></li>
+</ul>
 <p class="rubric">Properties</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.coeffs" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.coeffs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coeffs</span></code></a></p></td>
 <td><p>The coefficients of the polynomial(s).</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.domain" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.domain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">domain</span></code></a></p></td>
+<td><p>The domain associated with the Grid of the polynomial(s).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.grid" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid</span></code></a></p></td>
+<td><p>The underlying grid of the polynomial(s).</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.num_active_monomials" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.num_active_monomials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">num_active_monomials</span></code></a></p></td>
 <td><p>The number of active monomials of the polynomial(s).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.spatial_dimension" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.spatial_dimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spatial_dimension</span></code></a></p></td>
-<td><p>Spatial dimension.</p></td>
+<td><p>The spatial dimension of the polynomial(s).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.unisolvent_nodes" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.unisolvent_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unisolvent_nodes</span></code></a></p></td>
-<td><p>Unisolvent nodes the polynomial(s) is(are) defined on.</p></td>
+<td><p>Unisolvent nodes on which the interpolating polynomial lives.</p></td>
 </tr>
 </tbody>
 </table>
@@ -786,101 +772,36 @@ this corresponds to polynomials with just some of the Lagrange polynomials of th
 <tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.diff" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diff</span></code></a>(order, **kwargs)</p></td>
 <td><p>Return the partial derivative poly.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.expand_dim" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.expand_dim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_dim</span></code></a>(target_dimension[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.eval_on_internal" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.eval_on_internal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval_on_internal</span></code></a>(xx, *[, truncate_cols])</p></td>
+<td><p>Evaluate polynomial at points in the internal domain.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.expand_dim" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.expand_dim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_dim</span></code></a>(target_dimension)</p></td>
 <td><p>Expand the spatial dimension of the polynomial instance.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_degree" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_degree</span></code></a>(spatial_dimension, poly_degree, ...)</p></td>
-<td><p>Initialise Polynomial from given coefficients and the default construction for given polynomial degree, spatial dimension and <span class="math notranslate nohighlight">\(l_p\)</span> degree.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_degree" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_degree</span></code></a>(spatial_dimension, poly_degree, ...)</p></td>
+<td><p>Create a polynomial from polynomial degree specifications.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_grid" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_grid</span></code></a>(grid[, coeffs, internal_domain, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_grid" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_grid</span></code></a>(grid[, coeffs])</p></td>
 <td><p>Create an instance of polynomial with a <code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code> instance.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_poly" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_poly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_poly</span></code></a>(polynomial[, new_coeffs])</p></td>
-<td><p>constructs a new polynomial instance based on the properties of an input polynomial</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_poly" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_poly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_poly</span></code></a>(polynomial[, new_coeffs])</p></td>
+<td><p>Create a new polynomial instance based on an existing polynomial.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_internal_domain</span></code>(internal_domain, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_user_domain</span></code>(user_domain, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_dimension" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_dimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_matching_dimension</span></code></a>(other)</p></td>
-<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the polynomials have matching dimensions.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_domain" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_domain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_matching_domain</span></code></a>(other[, tol])</p></td>
-<td><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the polynomials have matching domains.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.integrate_over" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.integrate_over"><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrate_over</span></code></a>([bounds])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.integrate_over" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.integrate_over"><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrate_over</span></code></a>([bounds])</p></td>
 <td><p>Compute the definite integral of the polynomial over the bounds.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.make_complete" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.make_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_complete</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.make_complete" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.make_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_complete</span></code></a>()</p></td>
 <td><p>returns a possibly new polynomial instance with a complete multi index set.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.partial_diff" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.partial_diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partial_diff</span></code></a>(dim[, order])</p></td>
-<td><p>Return the partial derivative poly.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.partial_diff" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.partial_diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partial_diff</span></code></a>(dim[, order])</p></td>
+<td><p>Differentiate the polynomial with respect to a given dimension.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._gen_grid_default">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_gen_grid_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC._gen_grid_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._gen_grid_default" title="Link to this definition">#</a></dt>
-<dd><p>Return the default <code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code> for a given <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code> instance.</p>
-<p>For the default values of the Grid class, see <code class="xref py py-class docutils literal notranslate"><span class="pre">minterpy.Grid</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>multi_index</strong> (<a class="reference internal" href="../multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a>) – An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiIndexSet</span></code> for which the default <code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code> shall be build</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code> with the default optional parameters.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._partial_diff">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_partial_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC._partial_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._partial_diff" title="Link to this definition">#</a></dt>
-<dd><p>Abstract method for differentiating poly. on a given dim. and order.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>poly</strong> (<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC"><em>MultivariatePolynomialABC</em></a>) – The instance of polynomial to differentiate.</p></li>
-<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Spatial dimension with respect to which the differentiation
-is taken. The dimension starts at 0 (i.e., the first dimension).</p></li>
-<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Order of partial derivative.</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword-only arguments that change the behavior of
-the underlying differentiation (see the concrete implementation).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A new polynomial instance that represents the partial derivative
-of the original polynomial of the given order of derivative with
-respect to the specified dimension.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC">MultivariatePolynomialSingleABC</a></p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>The concrete implementation of this static method is called when
-the public method <code class="docutils literal notranslate"><span class="pre">partial_diff()</span></code> is called on an instance.</p></li>
-</ul>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.partial_diff" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.partial_diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partial_diff</span></code></a></dt><dd><p>The public method to differentiate the polynomial of a specified order of derivative with respect to a given dimension.</p>
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._diff">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC._diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._diff" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_factor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC._diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._diff" title="Link to this definition">#</a></dt>
 <dd><p>Abstract method for diff. poly. on given orders w.r.t each dim.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -889,6 +810,8 @@ the public method <code class="docutils literal notranslate"><span class="pre">p
 <li><p><strong>order</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – A one-dimensional integer array specifying the orders of derivative
 along each dimension. The length of the array must be <code class="docutils literal notranslate"><span class="pre">m</span></code> where
 <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension of the polynomial.</p></li>
+<li><p><strong>diff_factor</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Differentiation scaling factor taking into account the user
+domain.</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword-only arguments that change the behavior of
 the underlying differentiation (see the concrete implementation).</p></li>
 </ul>
@@ -924,11 +847,11 @@ the public method <code class="docutils literal notranslate"><span class="pre">d
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>poly</strong> (<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC"><em>MultivariatePolynomialABC</em></a>) – The instance of polynomial to integrate.</p></li>
-<li><p><strong>bounds</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The bounds of the integral, an <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code> array where <code class="docutils literal notranslate"><span class="pre">m</span></code>
+<li><p><strong>bounds</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The limits of the integration, an <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code> array where <code class="docutils literal notranslate"><span class="pre">m</span></code>
 is the number of spatial dimensions. Each row corresponds to
-the bounds in a given dimension.
-If not given, then the canonical bounds <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> will
-be used instead.</p></li>
+the limits <em class="xref py py-obj">[lower, upper]</em> for a given dimension.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then the bounds of the internal domain associated
+with the polynomial are used instead.</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword-only arguments that change the behavior of
 the underlying integration (see the respective concrete
 implementations).</p></li>
@@ -937,7 +860,8 @@ implementations).</p></li>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The integral value of the polynomial over the given bounds.
 If only one polynomial is available, the return value is of
-a <a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> type.</p>
+a <a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> type. For multiple polynomials, an array of
+values is returned.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Union[<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>]</p>
@@ -947,6 +871,8 @@ a <a class="reference external" href="https://docs.python.org/dev/library/functi
 <ul class="simple">
 <li><p>The concrete implementation of this static method is called when
 the public method <code class="docutils literal notranslate"><span class="pre">integrate_over()</span></code> is called on an instance.</p></li>
+<li><p>Bounds are assumed to be in the internal domain (already transformed
+from the user domain by the public method).</p></li>
 </ul>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -959,15 +885,14 @@ the public method <code class="docutils literal notranslate"><span class="pre">i
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">internal_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__init__" title="Link to this definition">#</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>multi_index</strong> (<a class="reference internal" href="../multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><em>MultiIndexSet</em></a><em> | </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>)</p></li>
 <li><p><strong>coeffs</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>internal_domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>user_domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>grid</strong> (<a class="reference internal" href="../grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="../domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -975,18 +900,39 @@ the public method <code class="docutils literal notranslate"><span class="pre">i
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_degree">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">internal_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.from_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_degree" title="Link to this definition">#</a></dt>
-<dd><p>Initialise Polynomial from given coefficients and the default construction for given polynomial degree, spatial dimension and <span class="math notranslate nohighlight">\(l_p\)</span> degree.</p>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.from_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_degree" title="Link to this definition">#</a></dt>
+<dd><p>Create a polynomial from polynomial degree specifications.</p>
+<p>This factory method constructs a polynomial with a complete multi-index
+set <span class="math notranslate nohighlight">\(\mathcal{M}_{m, n, p}\)</span> defined by the spatial dimension
+<span class="math notranslate nohighlight">\(m\)</span>, polynomial degree <span class="math notranslate nohighlight">\(n\)</span>,
+and <span class="math notranslate nohighlight">\(l_p\)</span> degree <span class="math notranslate nohighlight">\(p\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Dimension of the domain space of the polynomial.</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The degree of the polynomial, i.e. the (integer) supremum of the <span class="math notranslate nohighlight">\(l_p\)</span> norms of the monomials.</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The <span class="math notranslate nohighlight">\(l_p\)</span> degree used to determine the polynomial degree.</p></li>
-<li><p><strong>coeffs</strong> (<em>np.ndarray</em>) – coefficients of the polynomial. These shall be 1D for a single polynomial, where the length of the array is the number of monomials given by the <code class="docutils literal notranslate"><span class="pre">multi_index</span></code>. For a set of similar polynomials (with the same number of monomials) the array can also be 2D, where the first axis refers to the monomials and the second axis refers to the polynomials.</p></li>
-<li><p><strong>internal_domain</strong> (<em>np.ndarray</em><em> or </em><em>callable</em>) – the internal domain (factory) where the polynomials are defined on, e.g. <span class="math notranslate nohighlight">\([-1,1]^d\)</span> where <span class="math notranslate nohighlight">\(d\)</span> is the dimension of the domain space. If a <code class="docutils literal notranslate"><span class="pre">callable</span></code> is passed, it shall get the dimension of the domain space and returns the <code class="docutils literal notranslate"><span class="pre">internal_domain</span></code> as an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>.</p></li>
-<li><p><strong>user_domain</strong> (<em>np.ndarray</em><em> or </em><em>callable</em>) – the domain window (factory), from which the arguments of a polynomial are transformed to the internal domain. If a <code class="docutils literal notranslate"><span class="pre">callable</span></code> is passed, it shall get the dimension of the domain space and returns the <code class="docutils literal notranslate"><span class="pre">user_domain</span></code> as an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>.</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Spatial dimension of the multi-index set (<span class="math notranslate nohighlight">\(m\)</span>); the value of
+<code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> must be a positive integer (<span class="math notranslate nohighlight">\(m &gt; 0\)</span>).</p></li>
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Polynomial degree of the multi-index set (<span class="math notranslate nohighlight">\(n\)</span>); the value of
+<code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> must be a non-negative integer (<span class="math notranslate nohighlight">\(n \geq 0\)</span>).</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm (i.e., the <span class="math notranslate nohighlight">\(l_p\)</span>-degree)
+that is used to define the multi-index set. The value of
+<code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> must be a positive float (<span class="math notranslate nohighlight">\(p &gt; 0\)</span>).</p></li>
+<li><p><strong>coeffs</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Coefficients of the polynomial. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the polynomial is
+uninitialized. Either one-dimensional array of length equal to
+the number of monomials, or two-dimensional array of shape
+<code class="docutils literal notranslate"><span class="pre">(num_monomials,</span> <span class="pre">num_polynomials)</span></code> for multiple polynomials
+sharing the same multi-index set.</p></li>
+<li><p><strong>grid</strong> (<a class="reference internal" href="../grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><em>Grid</em></a><em>, </em><em>optional</em>) – The underlying grid on which the polynomial is defined.
+If not given, a default Grid instance will be constructed.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="../domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><em>Domain</em></a><em>, </em><em>optional</em>) – The domain of the underlying grid. If not given, the domain will be
+derived from the Grid instance (either provided or constructed).</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new polynomial instance with the specified parameters of the
+complete multi-index set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC">MultivariatePolynomialSingleABC</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -994,29 +940,39 @@ the public method <code class="docutils literal notranslate"><span class="pre">i
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_poly">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polynomial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.from_poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_poly" title="Link to this definition">#</a></dt>
-<dd><p>constructs a new polynomial instance based on the properties of an input polynomial</p>
-<p>useful for copying polynomials of other types</p>
+<dd><p>Create a new polynomial instance based on an existing polynomial.</p>
+<p>This factory method constructs a new polynomial by copying
+the structure (multi-index set, grid) from an existing polynomial,
+optionally with new coefficients.
+Useful for converting between polynomial types or creating polynomials
+with the same structure but different coefficients.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>polynomial</strong> (<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>) – input polynomial instance defining the properties to be reused</p></li>
-<li><p><strong>new_coeffs</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em> | </em><em>None</em>) – the coefficients the new polynomials should have. using <em class="xref py py-obj">polynomial.coeffs</em> if <em class="xref py py-obj">None</em></p></li>
+<li><p><strong>polynomial</strong> (<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>) – Input polynomial instance defining the properties to be reused
+(multi-index set and grid).</p></li>
+<li><p><strong>new_coeffs</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – The coefficients the new polynomial should have. If <code class="docutils literal notranslate"><span class="pre">None</span></code>,
+uses a copy of <code class="docutils literal notranslate"><span class="pre">polynomial.coeffs</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>new polynomial instance with equal properties</p>
+<dd class="field-even"><p>A new polynomial instance with the same structure as the input
+polynomial.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC">MultivariatePolynomialSingleABC</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The coefficients can also be assigned later.</p>
+<ul class="simple">
+<li><p>The coefficients can also be assigned later if the polynomial is
+created uninitialized.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_grid">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">internal_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.from_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_grid" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.from_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_grid" title="Link to this definition">#</a></dt>
 <dd><p>Create an instance of polynomial with a <code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code> instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1028,8 +984,6 @@ a two-dimensional array with each column corresponds to the
 coefficients of a single polynomial on the same grid.
 This parameter is optional, if not specified the polynomial
 is considered “uninitialized”.</p></li>
-<li><p><strong>internal_domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – The internal domain of the polynomial(s).</p></li>
-<li><p><strong>user_domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – The user domain of the polynomial(s).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1074,6 +1028,75 @@ here provides a common single point of failure.</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.grid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">grid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid"><span class="pre">Grid</span></a></em><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.grid" title="Link to this definition">#</a></dt>
+<dd><p>The underlying grid of the polynomial(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The underlying grid of the polynomial(s). Interpolating polynomials
+live on a Grid.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.domain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">domain</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><span class="pre">Domain</span></a></em><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.domain" title="Link to this definition">#</a></dt>
+<dd><p>The domain associated with the Grid of the polynomial(s).</p>
+<p>The domain represents the rectangular bounds of the Grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The domain of the interpolation grid.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain">Domain</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.spatial_dimension">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spatial_dimension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.spatial_dimension" title="Link to this definition">#</a></dt>
+<dd><p>The spatial dimension of the polynomial(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The spatial dimension of the polynomial(s). This dimension may
+be less than the spatial dimension of the underlying grid.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The value is propagated from the underlying <code class="docutils literal notranslate"><span class="pre">multi_index</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.unisolvent_nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unisolvent_nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.unisolvent_nodes" title="Link to this definition">#</a></dt>
+<dd><p>Unisolvent nodes on which the interpolating polynomial lives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A two-dimensional array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">m)</span></code> where
+<code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of the multi-index set exponents and
+<code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The value is propagated from the underlying <code class="docutils literal notranslate"><span class="pre">grid</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.num_active_monomials">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_active_monomials</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.num_active_monomials" title="Link to this definition">#</a></dt>
 <dd><p>The number of active monomials of the polynomial(s).</p>
@@ -1099,7 +1122,8 @@ in the grid.</p>
 <ul class="simple">
 <li><p>both are of the same concrete class, <em>and</em></p></li>
 <li><p>the underlying multi-index sets are equal, <em>and</em></p></li>
-<li><p>the underlying grid instances are equal, <em>and</em></p></li>
+<li><p>the underlying grid instances are equal (including the underlying
+domains and multi-index sets), <em>and</em></p></li>
 <li><p>the coefficients of the polynomials are equal.</p></li>
 </ul>
 <dl class="field-list simple">
@@ -1181,7 +1205,7 @@ underlying multi-index set; only the coefficients are altered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>other</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a><em>, </em><em>SCALAR</em><em>]</em>) – The right operand, either an instance of polynomial (of the same
-concrete class as the right operand) or a real scalar number.</p>
+concrete class as the left operand) or a real scalar number.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The result of the addition, an instance of summed polynomial.</p>
@@ -1461,7 +1485,7 @@ polynomial.</p>
 <dd><p>Return the number of polynomials in the instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The number of polynomial in the instance. A single instance of
+<dd class="field-odd"><p>The number of polynomials in the instance. A single instance of
 polynomial may contain multiple polynomials with different
 coefficient values but sharing the same underlying multi-index set
 and grid.</p>
@@ -1472,38 +1496,36 @@ and grid.</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.spatial_dimension">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spatial_dimension</span></span><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.spatial_dimension" title="Link to this definition">#</a></dt>
-<dd><p>Spatial dimension.</p>
-<p>The dimension of space where the polynomial(s) live on.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncate_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate the polynomial on a set of query points.</p>
+<p>The function is called when an instance of a polynomial is called with
+a set of query points, i.e., <span class="math notranslate nohighlight">\(p(\mathbf{X})\)</span> where
+<span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is a matrix of values with <span class="math notranslate nohighlight">\(k\)</span> rows
+and each row is of length <span class="math notranslate nohighlight">\(m\)</span> (i.e., a point in
+<span class="math notranslate nohighlight">\(m\)</span>-dimensional space).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dimension of domain space.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>array_like</em>) – Query points to evaluate. Can be a scalar, list, or numpy array.
+The points will be standardized to a two-dimensional array of
+shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code> where <code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of query points and
+<code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension of the polynomial.</p></li>
+<li><p><strong>truncate_cols</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the last columns of <code class="docutils literal notranslate"><span class="pre">xx</span></code> are truncated to match
+the spatial dimension of the polynomial; otherwise all provided
+columns are attempted to be evaluated. The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword-only arguments that change the behavior of
+the underlying evaluation (see the concrete implementation).</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The values of the polynomial evaluated at query points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>This is propagated from the <code class="docutils literal notranslate"><span class="pre">multi_index.spatial_dimension</span></code>.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.unisolvent_nodes">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unisolvent_nodes</span></span><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.unisolvent_nodes" title="Link to this definition">#</a></dt>
-<dd><p>Unisolvent nodes the polynomial(s) is(are) defined on.</p>
-<p>For definitions of unisolvent nodes see the mathematical introduction.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Array of unisolvent nodes.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This is propagated from from <code class="docutils literal notranslate"><span class="pre">self.grid.unisolvent_nodes</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1565,42 +1587,18 @@ and grid.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.expand_dim">
-<span class="sig-name descname"><span class="pre">expand_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_internal_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_user_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.expand_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.expand_dim" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">expand_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_dimension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.expand_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.expand_dim" title="Link to this definition">#</a></dt>
 <dd><p>Expand the spatial dimension of the polynomial instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>target_dimension</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a><em>]</em>) – The new spatial dimension. It must be larger than or equal to
-the current dimension of the polynomial. Alternatively, another
-instance of polynomial that has a higher dimension, a consistent
-underlying <code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code> instance is consistent, and a matching domain
-can also be specified as a target dimension.</p></li>
-<li><p><strong>extra_internal_domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – The additional internal domains for the expanded polynomial.
-This parameter is optional; if not specified, the values are either
-taken from the domain of the higher-dimensional polynomial or
-from the domain of the other dimensions.</p></li>
-<li><p><strong>extra_user_domain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – The additional user domains for the expanded polynomial.
-This parameter is optional; if not specified, the values are either
-taken from the domain of the higher-dimensional polynomial or
-from the domain of the other dimensions.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>target_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The new spatial dimension. It must be larger than or equal to the
+current spatial dimension of the polynomial.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A new instance of polynomial whose spatial dimension has been
-expanded to the target.</p>
+<dd class="field-even"><p>The new instance of polynomial with expanded dimension.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC">MultivariatePolynomialSingleABC</a></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the target dimension is an <em class="xref py py-obj">int</em>, the exception is raised
-    when the user or internal domains cannot be extrapolated to
-    a higher dimension. If the target dimension is an instance of
-    <a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC</span></code></a>, the exception is raised when
-    the user or internal domains do no match.
-    In both cases, an exception may also be raised by attempting
-    to expand the dimension of the underlying <code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiIndexSet</span></code>
-    instances.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1608,13 +1606,13 @@ expanded to the target.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.partial_diff">
 <span class="sig-name descname"><span class="pre">partial_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.partial_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.partial_diff" title="Link to this definition">#</a></dt>
-<dd><p>Return the partial derivative poly. at the given dim. and order.</p>
+<dd><p>Differentiate the polynomial with respect to a given dimension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Spatial dimension with respect to which the differentiation
 is taken. The dimension starts at 0 (i.e., the first dimension).</p></li>
-<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Order of partial derivative.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Order of partial derivative; the default is 1.</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword-only arguments that change the behavior of
 the underlying differentiation (see the respective concrete
 implementations).</p></li>
@@ -1631,16 +1629,9 @@ and with respect to the specified dimension.</p>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>This method calls the concrete implementation of the abstract
-method <code class="docutils literal notranslate"><span class="pre">_partial_diff()</span></code> after input validation.</p></li>
+<li><p>This method is a syntactic sugar to <em class="xref py py-obj">diff()</em> to differentiate
+with respect to a particular dimension.</p></li>
 </ul>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._partial_diff" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._partial_diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_partial_diff</span></code></a></dt><dd><p>The underlying static method to differentiate the polynomial instance of a specified order of derivative and with respect to a specified dimension.</p>
-</dd>
-</dl>
-</div>
 </dd></dl>
 
 <dl class="py method">
@@ -1671,6 +1662,8 @@ along each dimension.</p>
 <ul class="simple">
 <li><p>This method calls the concrete implementation of the abstract
 method <code class="docutils literal notranslate"><span class="pre">_diff()</span></code> after input validation.</p></li>
+<li><p>For zero-order derivative (identity operation), returns a copy
+of the polynomial.</p></li>
 </ul>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -1688,11 +1681,11 @@ method <code class="docutils literal notranslate"><span class="pre">_diff()</spa
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bounds</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The bounds of the integral, an <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code> array where <code class="docutils literal notranslate"><span class="pre">m</span></code>
-is the number of spatial dimensions. Each row corresponds to
-the bounds in a given dimension.
-If not given, then the canonical bounds <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> will
-be used instead.</p></li>
+<li><p><strong>bounds</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – The integral bounds or the limits of integration, an array of
+shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code> where <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of spatial dimensions.
+Each row corresponds to the limits <code class="docutils literal notranslate"><span class="pre">[lower,</span> <span class="pre">upper]</span></code>
+for a given dimension. If not given, the integral is computed over
+the entire domain (i.e., <code class="docutils literal notranslate"><span class="pre">self.domain.bounds</span></code>).</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword-only arguments that change the behavior of
 the underlying integration (see the respective concrete
 implementations).</p></li>
@@ -1700,165 +1693,30 @@ implementations).</p></li>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The integral value of the polynomial over the given bounds.
-If only one polynomial is available, the return value is of
-a <a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> type.</p>
+If only one polynomial is available, a single value of
+<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> type is returned. For multiple polynomials, an
+array of values is returned.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Union[<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the bounds either of inconsistent shape or not in
-    the <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> domain.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the bounds are of inconsistent shape.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>This method calls the concrete implementation of the abstract
-method <code class="docutils literal notranslate"><span class="pre">_integrate_over()</span></code> after input validation.</p></li>
+<li><p>Bounds are specified in the user domain. Internally, they are
+transformed to the internal domain.</p></li>
+<li><p>The concrete implementation of the abstract method
+<code class="docutils literal notranslate"><span class="pre">_integrate_over()</span></code> assumes the domain is internal.</p></li>
+<li><p>Integration outside the domain bounds is allowed but involves
+extrapolation.</p></li>
 </ul>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
 <dt><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._integrate_over" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._integrate_over"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_integrate_over</span></code></a></dt><dd><p>The underlying static method to integrate the polynomial instance over the given bounds.</p>
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_dimension">
-<span class="sig-name descname"><span class="pre">has_matching_dimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.has_matching_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_dimension" title="Link to this definition">#</a></dt>
-<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the polynomials have matching dimensions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>) – The second instance of polynomial to compare.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the two spatial dimensions match, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_domain">
-<span class="sig-name descname"><span class="pre">has_matching_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC.has_matching_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_domain" title="Link to this definition">#</a></dt>
-<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the polynomials have matching domains.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>) – The second instance of polynomial to compare.</p></li>
-<li><p><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The tolerance used to check for matching domains.
-Default is 1e-16.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the two domains match, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)">bool</a></p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>The method checks both the internal and user domains.</p></li>
-<li><p>If the dimensions of the polynomials do not match, the comparison
-is carried out up to the smallest matching dimension.</p></li>
-</ul>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._match_dims">
-<span class="sig-name descname"><span class="pre">_match_dims</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC._match_dims"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._match_dims" title="Link to this definition">#</a></dt>
-<dd><p>Match the dimension of two polynomials.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>) – An instance polynomial whose dimension is to match with the current
-polynomial instance.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The two instances of polynomials whose dimensions have been
-matched.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC">MultivariatePolynomialSingleABC</a>, <a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC">MultivariatePolynomialSingleABC</a>]</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the dimension of one of the polynomial instance can’t be
-    matched due to, for instance, incompatible domain.</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>If both polynomials have matching dimension and domains, then
-the function return the two polynomials as they are.</p></li>
-</ul>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._verify_operands">
-<span class="sig-name descname"><span class="pre">_verify_operands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC._verify_operands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._verify_operands" title="Link to this definition">#</a></dt>
-<dd><p>Verify the operands are valid before moving on.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>)</p></li>
-<li><p><strong>operation</strong> (<a class="reference external" href="https://docs.python.org/dev/library/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Tuple" title="(in Python v3.15)"><em>Tuple</em></a>[<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>, <a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__call__" title="Link to this definition">#</a></dt>
-<dd><p>Evaluate the polynomial on a set of query points.</p>
-<p>The function is called when an instance of a polynomial is called with
-a set of query points, i.e., <span class="math notranslate nohighlight">\(p(\mathbf{X})\)</span> where
-<span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is a matrix of values with <span class="math notranslate nohighlight">\(k\)</span> rows
-and each row is of length <span class="math notranslate nohighlight">\(m\)</span> (i.e., a point in
-<span class="math notranslate nohighlight">\(m\)</span>-dimensional space).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – The set of query points to evaluate as a two-dimensional array
-of shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code> where <code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of query points and
-<code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension of the polynomial.</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword-only arguments that change the behavior of
-the underlying evaluation (see the concrete implementation).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>The values of the polynomial evaluated at query points.</p>
-<ul class="simple">
-<li><p>If there is only a single polynomial (i.e., a single set of
-coefficients), then a one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">k</span></code>
-is returned.</p></li>
-<li><p>If there are multiple polynomials (i.e., multiple sets
-of coefficients), then a two-dimensional array of shape
-<code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">np)</span></code> is returned where <code class="docutils literal notranslate"><span class="pre">np</span></code> is the number of
-coefficient sets.</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>The function calls the concrete implementation of the static method
-<code class="docutils literal notranslate"><span class="pre">_eval()</span></code>.</p></li>
-</ul>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._eval" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_eval</span></code></a></dt><dd><p>The underlying static method to evaluate the polynomial(s) instance on a set of query points.</p>
 </dd>
 </dl>
 </div>
@@ -1922,6 +1780,81 @@ by the concrete implementation.</p></li>
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._verify_operands">
+<span class="sig-name descname"><span class="pre">_verify_operands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/core/ABC/multivariate_polynomial_abstract.html#MultivariatePolynomialSingleABC._verify_operands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._verify_operands" title="Link to this definition">#</a></dt>
+<dd><p>Verify the operands are valid before moving on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Tuple" title="(in Python v3.15)"><em>Tuple</em></a>[<a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>, <a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><em>MultivariatePolynomialSingleABC</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.eval_on_internal">
+<span class="sig-name descname"><span class="pre">eval_on_internal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncate_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.eval_on_internal" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate polynomial at points in the internal domain.</p>
+<p>This method evaluates the polynomial at points assumed to already be
+in the internal domain used by the polynomial’s algorithms. It skips
+coordinate transformation to avoid unnecessary floating-point error
+accumulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Query points in the internal domain. It should be a two-dimensional
+array of shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code> where <code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of query points
+and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension.</p></li>
+<li><p><strong>truncate_cols</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the last columns of <code class="docutils literal notranslate"><span class="pre">xx</span></code> are truncated to match
+the spatial dimension of the polynomial; otherwise all provided
+columns are attempted to be evaluated. The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword-only arguments passed to the underlying
+evaluation method (see concrete implementation).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>The values of the polynomial evaluated at query points.</p>
+<ul class="simple">
+<li><p>If there is only a single polynomial (i.e., a single set of
+coefficients), then a one-dimensional array of length <code class="docutils literal notranslate"><span class="pre">k</span></code>
+is returned.</p></li>
+<li><p>If there are multiple polynomials (i.e., multiple sets
+of coefficients), then a two-dimensional array of shape
+<code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">np)</span></code> is returned where <code class="docutils literal notranslate"><span class="pre">np</span></code> is the number of
+coefficient sets.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Use this method when: (1) Points are already in the internal
+domain (e.g., unisolvent nodes) (2) Avoiding unnecessary coordinate
+transformations that incur floating-point errors.</p></li>
+<li><p>Coordinate transformations are not free numerically. While they
+are affine, round-trip transformations over many interation may
+accumulate floating-point errors.</p></li>
+</ul>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The function calls the concrete implementation of the static method
+<code class="docutils literal notranslate"><span class="pre">_eval()</span></code>.</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._eval" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_eval</span></code></a></dt><dd><p>The underlying static method to evaluate the polynomial(s) instance on a set of query points.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -1979,16 +1912,11 @@ by the concrete implementation.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialABC.spatial_dimension</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.unisolvent_nodes"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialABC.unisolvent_nodes</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC._eval"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialABC._eval()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.__call__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialABC.__call__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.eval_on_internal"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialABC.eval_on_internal()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialABC.__weakref__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialABC.__weakref__</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.multi_index"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.multi_index</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.internal_domain"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.internal_domain</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.user_domain"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.user_domain</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._gen_grid_default"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC._gen_grid_default()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._partial_diff"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC._partial_diff()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._diff"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC._diff()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._integrate_over"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC._integrate_over()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__init__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__init__()</span></code></a></li>
@@ -1996,6 +1924,10 @@ by the concrete implementation.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_poly"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.from_poly()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.from_grid"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.from_grid()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.coeffs"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.coeffs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.grid"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.grid</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.domain"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.domain</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.spatial_dimension</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.unisolvent_nodes"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.unisolvent_nodes</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.num_active_monomials"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.num_active_monomials</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__eq__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__eq__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__neg__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__neg__()</span></code></a></li>
@@ -2012,8 +1944,7 @@ by the concrete implementation.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__copy__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__copy__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__deepcopy__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__len__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__len__()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.spatial_dimension</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.unisolvent_nodes"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.unisolvent_nodes</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__call__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__call__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._new_instance_if_necessary"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC._new_instance_if_necessary()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.make_complete"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.make_complete()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.add_points"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.add_points()</span></code></a></li>
@@ -2021,14 +1952,11 @@ by the concrete implementation.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.partial_diff"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.partial_diff()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.diff"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.diff()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.integrate_over"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.integrate_over()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_dimension"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.has_matching_dimension()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.has_matching_domain"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.has_matching_domain()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._match_dims"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC._match_dims()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._verify_operands"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC._verify_operands()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__call__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__call__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__hash__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__hash__</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.__weakref__"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.__weakref__</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._eval"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC._eval()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC._verify_operands"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC._verify_operands()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC.eval_on_internal"><code class="docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC.eval_on_internal()</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -59,7 +59,7 @@
     <link rel="prev" title="API Reference" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -393,6 +393,7 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Interpolation</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="core/index.html">Core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="core/multi_index.html">Multi-Index Set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/domain.html">Domain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/grid.html">Grid</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="core/ABC/index.html">Abstract Base Classes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="core/ABC/abc-polynomial.html">Multivariate Polynomial</a></li>
@@ -524,9 +525,9 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-minterpy.interpolation">
-<span id="minterpy-interpolation"></span><h1>minterpy.interpolation<a class="headerlink" href="#module-minterpy.interpolation" title="Link to this heading">#</a></h1>
-<p>A top-level module with interfaces to conveniently create interpolants.</p>
+  <section id="minterpy-interpolation">
+<h1>minterpy.interpolation<a class="headerlink" href="#minterpy-interpolation" title="Link to this heading">#</a></h1>
+<p id="module-minterpy.interpolation">A top-level module with interfaces to conveniently create interpolants.</p>
 <p>The main purpose of Minterpy is to interpolate given functions provided as
 Python Callables.
 This top-level module provides a convenient function named <a class="reference internal" href="#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpolate</span></code></a>,
@@ -554,56 +555,285 @@ for the interpolation of any functions.</p>
 </tbody>
 </table>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.interpolation.</span></span><span class="sig-name descname"><span class="pre">Interpolator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolator" title="Link to this definition">#</a></dt>
-<dd><p>The construction class for interpolation.</p>
-<p>Data type which contains all relevant parts for interpolation and caches them.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="minterpy.interpolation.interpolate">
+<span class="sig-prename descclassname"><span class="pre">minterpy.interpolation.</span></span><span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">DEFAULT_LP_DEG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#interpolate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.interpolate" title="Link to this definition">#</a></dt>
+<dd><p>Interpolate a function using a complete multi-index set polynomial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+<li><p><strong>func</strong> (<em>Callable</em>) – The function to interpolate. It must accept as the first argument
+a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">k</span></code>
+is the number of evaluation points and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial
+dimension. The function returns a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>
+with shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">)</span></code> for scalar outputs and <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">d)</span></code>
+for vector outputs, where <code class="docutils literal notranslate"><span class="pre">d</span></code>  is the output dimension.</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The dimension of the interpolator.</p></li>
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The degree of the interpolating polynomial.</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The degree <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define
+the (multivariate) polynomial degree.</p></li>
+<li><p><strong>bounds</strong> (<em>array_like</em><em>, </em><em>optional</em>) – The bounds of the domain space, an array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension. Each row corresponds to the
+lower and upper bounds of the domain in the corresponding dimension.
+If not provided, the bounds are assumed to be <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The interpolant of <code class="docutils literal notranslate"><span class="pre">func</span></code> with respect to the lexicographically
+complete multi-index set <span class="math notranslate nohighlight">\(\mathcal{A}_{m, n, p}\)</span> where <span class="math notranslate nohighlight">\(m\)</span>
+is <code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code>, <span class="math notranslate nohighlight">\(n\)</span> is <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code>, and <span class="math notranslate nohighlight">\(p\)</span>
+is <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.interpolation.Interpolant" title="minterpy.interpolation.Interpolant">Interpolant</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.interpolation.</span></span><span class="sig-name descname"><span class="pre">Interpolant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant" title="Link to this definition">#</a></dt>
+<dd><p>A class representing the result of an interpolation of a given function.</p>
+<p>An instance of this class is a callable that interpolates a given function.
+It serves as an intermediate layer between function approximation
+and the corresponding interpolating polynomial representation; it can be
+used without any in-depth knowledge of the underlying polynomial
+representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>Callable</em>) – The function to interpolate. It must accept as the first argument
+a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">k</span></code>
+is the number of evaluation points and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial
+dimension. The function returns a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>
+with shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">)</span></code> for scalar outputs and <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">d)</span></code>
+for vector outputs, where <code class="docutils literal notranslate"><span class="pre">d</span></code>  is the output dimension.</p></li>
+<li><p><strong>interpolator</strong> (<a class="reference internal" href="#minterpy.interpolation.Interpolator" title="minterpy.interpolation.Interpolator"><em>Interpolator</em></a>) – The underlying setting for the interpolation.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Properties</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolant.lp_degree" title="minterpy.interpolation.Interpolant.lp_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp_degree</span></code></a></p></td>
+<td><p><span class="math notranslate nohighlight">\(p\)</span> of <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define the multi-index set.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolant.multi_index" title="minterpy.interpolation.Interpolant.multi_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multi_index</span></code></a></p></td>
+<td><p>The multi-index set defining the interpolating polynomial.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolant.poly_degree" title="minterpy.interpolation.Interpolant.poly_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">poly_degree</span></code></a></p></td>
+<td><p>The degree of the interpolating polynomial.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolant.spatial_dimension" title="minterpy.interpolation.Interpolant.spatial_dimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spatial_dimension</span></code></a></p></td>
+<td><p>The dimension of the interpolator.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolant.from_degree" title="minterpy.interpolation.Interpolant.from_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_degree</span></code></a>(func, spatial_dimension, ...[, ...])</p></td>
+<td><p>Create an interpolant with respect to a complete multi-index set.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolant.to_canonical" title="minterpy.interpolation.Interpolant.to_canonical"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_canonical</span></code></a>()</p></td>
+<td><p>Return the interpolant as a polynomial in the canonical basis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolant.to_chebyshev" title="minterpy.interpolation.Interpolant.to_chebyshev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_chebyshev</span></code></a>()</p></td>
+<td><p>Return the interpolant as a polynomial in the Chebyshev basis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolant.to_lagrange" title="minterpy.interpolation.Interpolant.to_lagrange"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_lagrange</span></code></a>()</p></td>
+<td><p>Return the interpolant as a polynomial in the Lagrange basis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolant.to_newton" title="minterpy.interpolation.Interpolant.to_newton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_newton</span></code></a>()</p></td>
+<td><p>Return the interpolant as a polynomial in the Newton basis.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.from_degree">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.from_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.from_degree" title="Link to this definition">#</a></dt>
+<dd><p>Create an interpolant with respect to a complete multi-index set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>Callable</em>) – The function to interpolate. It must accept as the first argument
+a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">k</span></code>
+is the number of evaluation points and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial
+dimension. The function returns a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>
+with shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">)</span></code> for scalar outputs and <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">d)</span></code>
+for vector outputs, where <code class="docutils literal notranslate"><span class="pre">d</span></code>  is the output dimension.</p></li>
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The dimension of the interpolator.</p></li>
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The degree of the interpolating polynomial.</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The degree <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define
+the (multivariate) polynomial degree.</p></li>
+<li><p><strong>bounds</strong> (<em>array_like</em><em>, </em><em>optional</em>) – The bounds of the domain space, an array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension. Each row corresponds to the
+lower and upper bounds of the domain in the corresponding dimension.
+If not provided, the bounds are assumed to be <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of interpolant of <code class="docutils literal notranslate"><span class="pre">func</span></code> using an interpolating
+polynomial with respect to complete multi-index set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minterpy.interpolation.Interpolant" title="minterpy.interpolation.Interpolant">Interpolant</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code> (<span class="math notranslate nohighlight">\(m\)</span>), <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code> (<span class="math notranslate nohighlight">\(n\)</span>),
+<code class="docutils literal notranslate"><span class="pre">lp_degree</span></code> (<span class="math notranslate nohighlight">\(p\)</span>) are used to construct the lexicographically
+complete multi-index set <span class="math notranslate nohighlight">\(\mathcal{A}_{m, n, p}\)</span>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.spatial_dimension">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spatial_dimension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.interpolation.Interpolant.spatial_dimension" title="Link to this definition">#</a></dt>
+<dd><p>The dimension of the interpolator.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.poly_degree">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poly_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.interpolation.Interpolant.poly_degree" title="Link to this definition">#</a></dt>
+<dd><p>The degree of the interpolating polynomial.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.lp_degree">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lp_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></em><a class="headerlink" href="#minterpy.interpolation.Interpolant.lp_degree" title="Link to this definition">#</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p\)</span> of <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define the multi-index set.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.multi_index">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multi_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet"><span class="pre">MultiIndexSet</span></a></em><a class="headerlink" href="#minterpy.interpolation.Interpolant.multi_index" title="Link to this definition">#</a></dt>
+<dd><p>The multi-index set defining the interpolating polynomial.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.to_newton">
+<span class="sig-name descname"><span class="pre">to_newton</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.to_newton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.to_newton" title="Link to this definition">#</a></dt>
+<dd><p>Return the interpolant as a polynomial in the Newton basis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The interpolating polynomial represented in the Newton basis.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial" title="minterpy.polynomials.newton_polynomial.NewtonPolynomial">NewtonPolynomial</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.to_lagrange">
+<span class="sig-name descname"><span class="pre">to_lagrange</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.to_lagrange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.to_lagrange" title="Link to this definition">#</a></dt>
+<dd><p>Return the interpolant as a polynomial in the Lagrange basis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The interpolating polynomial represented in the Lagrange basis.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="polynomials/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial" title="minterpy.polynomials.lagrange_polynomial.LagrangePolynomial">LagrangePolynomial</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.to_canonical">
+<span class="sig-name descname"><span class="pre">to_canonical</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.to_canonical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.to_canonical" title="Link to this definition">#</a></dt>
+<dd><p>Return the interpolant as a polynomial in the canonical basis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The interpolating polynomial represented in the canonical
+(monomial) basis.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="polynomials/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial" title="minterpy.polynomials.canonical_polynomial.CanonicalPolynomial">CanonicalPolynomial</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.to_chebyshev">
+<span class="sig-name descname"><span class="pre">to_chebyshev</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.to_chebyshev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.to_chebyshev" title="Link to this definition">#</a></dt>
+<dd><p>Return the interpolant as a polynomial in the Chebyshev basis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The interpolating polynomial represented in the Chebyshev basis
+(of the first kind).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="polynomials/chebyshev.html#minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial" title="minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial">ChebyshevPolynomial</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate the interpolant on a given array of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>array_like</em>) – Query points to evaluate. Can be a scalar, list, or numpy array.
+The points will be standardized to a two-dimensional array of
+shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code> where <code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of query points and
+<code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension of the polynomial.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword-only arguments that change the behavior of
+the underlying evaluation (see the concrete implementation of the
+interpolating polynomial).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The values of the polynomial evaluated at query points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.interpolation.</span></span><span class="sig-name descname"><span class="pre">Interpolator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">attr_dict['_bounds'].default</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolator" title="Link to this definition">#</a></dt>
+<dd><p>The class for constructing polynomial interpolant.</p>
+<p>The class contains all the relevant parts for constructing a polynomial
+interpolant in the Newton basis of a given callable.
+The instance of this class is a callable; passing a function to it will
+return an interpolating polynomial.</p>
+<p>With an instance of this class, one can construct interpolants of the
+same underlying polynomial for different functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The dimension of the interpolator.</p></li>
+<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The degree of the interpolating polynomial.</p></li>
+<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The degree <span class="math notranslate nohighlight">\(p\)</span> of the <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define
+the (multivariate) polynomial degree.</p></li>
+<li><p><strong>bounds</strong> (<em>array_like</em><em>, </em><em>optional</em>) – The bounds of the domain space, an array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">2)</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial dimension. Each row corresponds to the
+lower and upper bounds of the domain in the corresponding dimension.
+If not provided, the bounds are assumed to be <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.spatial_dimension">
-<span class="sig-name descname"><span class="pre">spatial_dimension</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolator.spatial_dimension" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dimension of the domain space.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.poly_degree">
-<span class="sig-name descname"><span class="pre">poly_degree</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolator.poly_degree" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>degree of the interpolation polynomials</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.lp_degree">
-<span class="sig-name descname"><span class="pre">lp_degree</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolator.lp_degree" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>degree of the <span class="math notranslate nohighlight">\(l_p\)</span> norm used to determine the <em class="xref py py-obj">poly_degree</em>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.multi_index">
 <span class="sig-name descname"><span class="pre">multi_index</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolator.multi_index" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>The multi-index set used to define the interpolating polynomial,
+a lexicographically complete multi-index set, i.e.,
+<span class="math notranslate nohighlight">\(\mathcal{A}_{m, n, p}\)</span>, where <span class="math notranslate nohighlight">\(m\)</span> is
+<code class="docutils literal notranslate"><span class="pre">spatial_dimension</span></code>, <span class="math notranslate nohighlight">\(n\)</span> is <code class="docutils literal notranslate"><span class="pre">poly_degree</span></code>,
+and <span class="math notranslate nohighlight">\(p\)</span> is the <code class="docutils literal notranslate"><span class="pre">lp_degree</span></code>.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>lexicographically complete multi index set build from <em class="xref py py-obj">(spatial_dimension, poly_degree, lp_degree)</em>.</p>
+<dd class="field-odd"><p><a class="reference internal" href="core/multi_index.html#minterpy.core.multi_index.MultiIndexSet" title="minterpy.core.multi_index.MultiIndexSet">MultiIndexSet</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -611,159 +841,116 @@ for the interpolation of any functions.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.grid">
 <span class="sig-name descname"><span class="pre">grid</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolator.grid" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code> instance build from <em class="xref py py-obj">multi_index</em>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.interpolation.</span></span><span class="sig-name descname"><span class="pre">Interpolant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant" title="Link to this definition">#</a></dt>
-<dd><p>Data type representing the result of an interpolation.</p>
-<p>Instances of this class can be used as functions, which interpolate a given function. Users who do not want to learn anything about neither polynomial interpolation nor bases in multivariate polynomial bases may use the instances of this class just as an interpolative representant of their function, which they can evaluate. (Other properties are conceivable too)</p>
+<dd><p>The underlying interpolation grid with the domain defined
+by <code class="docutils literal notranslate"><span class="pre">bounds</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fct</strong> (<a class="reference external" href="https://docs.python.org/dev/library/typing.html#typing.Callable" title="(in Python v3.15)"><em>Callable</em></a>)</p></li>
-<li><p><strong>interpolator</strong> (<a class="reference internal" href="#minterpy.interpolation.Interpolator" title="minterpy.interpolation.Interpolator"><em>Interpolator</em></a>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.fct">
-<span class="sig-name descname"><span class="pre">fct</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolant.fct" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If <em class="xref py py-obj">arr</em> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">arr.shape</span> <span class="pre">==</span> <span class="pre">(N,spatial_dimension)</span></code>, the signature needs to be <code class="docutils literal notranslate"><span class="pre">fct(arr)</span> <span class="pre">-&gt;</span> <span class="pre">res</span></code>, where <code class="docutils literal notranslate"><span class="pre">res</span></code> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>.</p>
+<dd class="field-odd"><p><a class="reference internal" href="core/grid.html#minterpy.core.grid.Grid" title="minterpy.core.grid.Grid">Grid</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.interpolator">
-<span class="sig-name descname"><span class="pre">interpolator</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolant.interpolator" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Instance of <a class="reference internal" href="#minterpy.interpolation.Interpolator" title="minterpy.interpolation.Interpolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interpolator</span></code></a>, which represents the interpolation scheme to be used.</p>
-</dd>
-</dl>
+<p class="rubric">Properties</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolator.domain" title="minterpy.interpolation.Interpolator.domain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">domain</span></code></a></p></td>
+<td><p>The domain of the interpolating polynomial.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolator.lp_degree" title="minterpy.interpolation.Interpolator.lp_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp_degree</span></code></a></p></td>
+<td><p><span class="math notranslate nohighlight">\(p\)</span> of <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define the multi-index set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolator.poly_degree" title="minterpy.interpolation.Interpolator.poly_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">poly_degree</span></code></a></p></td>
+<td><p>The degree of the interpolating polynomial (and multi-index set).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolator.spatial_dimension" title="minterpy.interpolation.Interpolator.spatial_dimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spatial_dimension</span></code></a></p></td>
+<td><p>The dimension of the interpolator.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.interpolation.Interpolator.interpolate_values" title="minterpy.interpolation.Interpolator.interpolate_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpolate_values</span></code></a>(func_values)</p></td>
+<td><p>Interpolate a given array of values at the unisolvent nodes.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.spatial_dimension">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spatial_dimension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.interpolation.Interpolator.spatial_dimension" title="Link to this definition">#</a></dt>
+<dd><p>The dimension of the interpolator.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.poly_degree">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poly_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></em><a class="headerlink" href="#minterpy.interpolation.Interpolator.poly_degree" title="Link to this definition">#</a></dt>
+<dd><p>The degree of the interpolating polynomial (and multi-index set).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.lp_degree">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lp_degree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/dev/library/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></em><a class="headerlink" href="#minterpy.interpolation.Interpolator.lp_degree" title="Link to this definition">#</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p\)</span> of <span class="math notranslate nohighlight">\(l_p\)</span>-norm used to define the multi-index set.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.domain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">domain</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="core/domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><span class="pre">Domain</span></a></em><a class="headerlink" href="#minterpy.interpolation.Interpolator.domain" title="Link to this definition">#</a></dt>
+<dd><p>The domain of the interpolating polynomial.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.from_degree">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.from_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.from_degree" title="Link to this definition">#</a></dt>
-<dd><p>Custom constructor of an interpolant using dimensionality and degree parameter.</p>
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolator.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolator.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Interpolate a given function and return an interpolating polynomial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fct</strong> (<em>Callable</em>) – Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If <em class="xref py py-obj">arr</em> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">arr.shape</span> <span class="pre">==</span> <span class="pre">(N,spatial_dimension)</span></code>, the signature needs to be <code class="docutils literal notranslate"><span class="pre">fct(arr)</span> <span class="pre">-&gt;</span> <span class="pre">res</span></code>, where <code class="docutils literal notranslate"><span class="pre">res</span></code> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>.</p></li>
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – dimension of the domain space.</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – degree of the interpolation polynomials</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – degree of the <span class="math notranslate nohighlight">\(l_p\)</span> norm used to determine the <a class="reference internal" href="#minterpy.interpolation.Interpolant.poly_degree" title="minterpy.interpolation.Interpolant.poly_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">poly_degree</span></code></a>.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>func</strong> (<em>Callable</em>) – The function to interpolate. It must accept as the first argument
+a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">k</span></code>
+is the number of evaluation points and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the spatial
+dimension. The function returns a <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>
+with shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">)</span></code> for scalar outputs and <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">d)</span></code>
+for vector outputs, where <code class="docutils literal notranslate"><span class="pre">d</span></code>  is the output dimension.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The interpolant of <code class="docutils literal notranslate"><span class="pre">fct</span></code> using the default interpolator build from <code class="docutils literal notranslate"><span class="pre">(spatial_dimension,</span> <span class="pre">poly_degree,</span> <span class="pre">lp_degree)</span></code>.</p>
+<dd class="field-even"><p>An interpolating polynomial of the function <code class="docutils literal notranslate"><span class="pre">func</span></code> in the Newton
+basis. The interpolating polynomial is constructed according
+to the underlying multi-index set and interpolation grid.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#minterpy.interpolation.Interpolant" title="minterpy.interpolation.Interpolant">Interpolant</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial" title="minterpy.polynomials.newton_polynomial.NewtonPolynomial">NewtonPolynomial</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>InterpolationError</strong> – If anything goes wrong with the interpolation.</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.spatial_dimension">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spatial_dimension</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolant.spatial_dimension" title="Link to this definition">#</a></dt>
-<dd><p>Dimension of the domain space the interpolation polynomial lives on.</p>
-<p>This is the propagated attribute from <code class="docutils literal notranslate"><span class="pre">self.interpolator</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.poly_degree">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poly_degree</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolant.poly_degree" title="Link to this definition">#</a></dt>
-<dd><p>Degree of the interpolation polynomial.</p>
-<p>This is the propagated attribute from <code class="docutils literal notranslate"><span class="pre">self.interpolator</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.lp_degree">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lp_degree</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolant.lp_degree" title="Link to this definition">#</a></dt>
-<dd><p>Degree of the <span class="math notranslate nohighlight">\(l_p\)</span> norm.</p>
-<p>This is the propagated attribute from <code class="docutils literal notranslate"><span class="pre">self.interpolator</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.lagrange_coeffs">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lagrange_coeffs</span></span><a class="headerlink" href="#minterpy.interpolation.Interpolant.lagrange_coeffs" title="Link to this definition">#</a></dt>
-<dd><p>Return the Lagrange coefficients of the interpolating polynomial.</p>
-</dd></dl>
-
 <dl class="py method">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.to_newton">
-<span class="sig-name descname"><span class="pre">to_newton</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.to_newton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.to_newton" title="Link to this definition">#</a></dt>
-<dd><p>Return the interpolant as a polynomial in the Newton basis.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.to_lagrange">
-<span class="sig-name descname"><span class="pre">to_lagrange</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.to_lagrange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.to_lagrange" title="Link to this definition">#</a></dt>
-<dd><p>Return the interpolant as a polynomial in the Lagrange basis.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.to_canonical">
-<span class="sig-name descname"><span class="pre">to_canonical</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.to_canonical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.to_canonical" title="Link to this definition">#</a></dt>
-<dd><p>Return the interpolant as a polynomial in the canonical basis.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="minterpy.interpolation.Interpolant.to_chebyshev">
-<span class="sig-name descname"><span class="pre">to_chebyshev</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolant.to_chebyshev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolant.to_chebyshev" title="Link to this definition">#</a></dt>
-<dd><p>Return the interpolant as a polynomial in the Chebyshev basis.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="minterpy.interpolation.interpolate">
-<span class="sig-prename descclassname"><span class="pre">minterpy.interpolation.</span></span><span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">DEFAULT_LP_DEG</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#interpolate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.interpolate" title="Link to this definition">#</a></dt>
-<dd><p>Interpolate a given function.</p>
-<p>Return an interpolant, which represents the given function on the domain <span class="math notranslate nohighlight">\([-1, 1]^d\)</span>, where <span class="math notranslate nohighlight">\(d\)</span> is the dimension of the domain space.</p>
+<dt class="sig sig-object py" id="minterpy.interpolation.Interpolator.interpolate_values">
+<span class="sig-name descname"><span class="pre">interpolate_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/minterpy/interpolation.html#Interpolator.interpolate_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.interpolation.Interpolator.interpolate_values" title="Link to this definition">#</a></dt>
+<dd><p>Interpolate a given array of values at the unisolvent nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fct</strong> (<em>Callable</em>) – Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If <em class="xref py py-obj">arr</em> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">arr.shape</span> <span class="pre">==</span> <span class="pre">(N,spatial_dimension)</span></code>, the signature needs to be <code class="docutils literal notranslate"><span class="pre">fct(arr)</span> <span class="pre">-&gt;</span> <span class="pre">res</span></code>, where <code class="docutils literal notranslate"><span class="pre">res</span></code> is an <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>.</p></li>
-<li><p><strong>spatial_dimension</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – dimension of the domain space.</p></li>
-<li><p><strong>poly_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – degree of the interpolation polynomials</p></li>
-<li><p><strong>lp_degree</strong> (<a class="reference external" href="https://docs.python.org/dev/library/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – degree of the <span class="math notranslate nohighlight">\(l_p\)</span> norm used to determine the <em class="xref py py-obj">poly_degree</em>.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>func_values</strong> (<em>array_like</em>) – The function values at the unisolvent nodes (i.e., the Lagrange
+coefficients of the interpolating polynomial).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The interpolant of <code class="docutils literal notranslate"><span class="pre">fct</span></code> using the default interpolator build from <code class="docutils literal notranslate"><span class="pre">(spatial_dimension,</span> <span class="pre">poly_degree,</span> <span class="pre">lp_degree)</span></code>.</p>
+<dd class="field-even"><p>An interpolating polynomial of the function <code class="docutils literal notranslate"><span class="pre">func</span></code> in the Newton
+basis. The interpolating polynomial is constructed according
+to the underlying multi-index set and interpolation grid.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#minterpy.interpolation.Interpolant" title="minterpy.interpolation.Interpolant">Interpolant</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="polynomials/newton.html#minterpy.polynomials.newton_polynomial.NewtonPolynomial" title="minterpy.polynomials.newton_polynomial.NewtonPolynomial">NewtonPolynomial</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>InterpolationError</strong> – If anything goes wrong with the interpolation.</p>
 </dd>
 </dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -815,29 +1002,31 @@ for the interpolation of any functions.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator"><code class="docutils literal notranslate"><span class="pre">Interpolator</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">Interpolator.spatial_dimension</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.poly_degree"><code class="docutils literal notranslate"><span class="pre">Interpolator.poly_degree</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.lp_degree"><code class="docutils literal notranslate"><span class="pre">Interpolator.lp_degree</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.multi_index"><code class="docutils literal notranslate"><span class="pre">Interpolator.multi_index</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.grid"><code class="docutils literal notranslate"><span class="pre">Interpolator.grid</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.interpolate"><code class="docutils literal notranslate"><span class="pre">interpolate()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant"><code class="docutils literal notranslate"><span class="pre">Interpolant</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.fct"><code class="docutils literal notranslate"><span class="pre">Interpolant.fct</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.interpolator"><code class="docutils literal notranslate"><span class="pre">Interpolant.interpolator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.from_degree"><code class="docutils literal notranslate"><span class="pre">Interpolant.from_degree()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">Interpolant.spatial_dimension</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.poly_degree"><code class="docutils literal notranslate"><span class="pre">Interpolant.poly_degree</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.lp_degree"><code class="docutils literal notranslate"><span class="pre">Interpolant.lp_degree</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.lagrange_coeffs"><code class="docutils literal notranslate"><span class="pre">Interpolant.lagrange_coeffs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.multi_index"><code class="docutils literal notranslate"><span class="pre">Interpolant.multi_index</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.to_newton"><code class="docutils literal notranslate"><span class="pre">Interpolant.to_newton()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.to_lagrange"><code class="docutils literal notranslate"><span class="pre">Interpolant.to_lagrange()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.to_canonical"><code class="docutils literal notranslate"><span class="pre">Interpolant.to_canonical()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.to_chebyshev"><code class="docutils literal notranslate"><span class="pre">Interpolant.to_chebyshev()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolant.__call__"><code class="docutils literal notranslate"><span class="pre">Interpolant.__call__()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.interpolate"><code class="docutils literal notranslate"><span class="pre">interpolate()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator"><code class="docutils literal notranslate"><span class="pre">Interpolator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.multi_index"><code class="docutils literal notranslate"><span class="pre">Interpolator.multi_index</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.grid"><code class="docutils literal notranslate"><span class="pre">Interpolator.grid</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.spatial_dimension"><code class="docutils literal notranslate"><span class="pre">Interpolator.spatial_dimension</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.poly_degree"><code class="docutils literal notranslate"><span class="pre">Interpolator.poly_degree</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.lp_degree"><code class="docutils literal notranslate"><span class="pre">Interpolator.lp_degree</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.domain"><code class="docutils literal notranslate"><span class="pre">Interpolator.domain</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.__call__"><code class="docutils literal notranslate"><span class="pre">Interpolator.__call__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.interpolation.Interpolator.interpolate_values"><code class="docutils literal notranslate"><span class="pre">Interpolator.interpolate_values()</span></code></a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

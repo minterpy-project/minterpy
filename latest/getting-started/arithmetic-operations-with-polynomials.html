@@ -59,7 +59,7 @@
     <link rel="prev" title="Multivariate Polynomial Interpolation" href="md-polynomial-interpolation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -459,25 +459,16 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="basic-arithmetic-operations-with-polynomials">
 <h1>Basic Arithmetic Operations with Polynomials<a class="headerlink" href="#basic-arithmetic-operations-with-polynomials" title="Link to this heading">#</a></h1>
-<p>Once you have constructed a polynomial in Minterpy, you can perform various operations on it, depending on the basis in which the polynomial is represented.
-For instance, as demonstrated in the previous tutorials, you can evaluate a Minterpy polynomial (in the Newton basis) at a set of query points.</p>
-<p>This tutorial will show you how to extend beyond evaluation by performing arithmetic operations with Minterpy polynomials.
-Specifically, you’ll learn that Minterpy polynomials can be:</p>
+<p>Once you’ve constructed a polynomial in Minterpy, you can do more than just evaluate it. This tutorial shows how to perform arithmetic operations with Minterpy polynomials. Specifically, you’ll learn that Minterpy polynomials are <strong>closed</strong> under the following operations:</p>
 <ul class="simple">
-<li><p>Added or subtracted from other polynomials</p></li>
-<li><p>Multiplied by other polynomials or real scalar numbers</p></li>
-<li><p>Raised to a power (as long as it’s a non-negative integer)</p></li>
-</ul>
-<p>These operations result in another Minterpy polynomial in the same basis.
-In other words, Minterpy polynomials are <strong>closed</strong> under the following arithmetic operations:</p>
-<ul class="simple">
-<li><p>Multiplying a polynomial by another polynomial</p></li>
-<li><p>Multiplying a polynomial by a scalar (a real number)</p></li>
 <li><p>Adding or subtracting one polynomial to/from another</p></li>
-<li><p>Adding or subtracting a scalar (a real number) to/from a polynomial</p></li>
+<li><p>Adding or subtracting a real scalar number to/from a polynomial</p></li>
+<li><p>Multiplying a polynomial by another polynomial</p></li>
+<li><p>Multiplying a polynomial by a real scalar number</p></li>
 <li><p>Raising a polynomial to a non-negative integer power</p></li>
 </ul>
-<p>To keep things simple, this tutorial uses one-dimensional polynomials as examples. However, the principles and behaviors we’ll cover apply to Minterpy polynomials of any dimensions.</p>
+<p>In other words, each of these operations produces another Minterpy polynomial in the same basis.</p>
+<p>To keep things simple, the examples in this tutorial use one-dimensional polynomials, but the principles apply to Minterpy polynomials of any dimension.</p>
 <p>Before you start, make sure to import the necessary packages to follow along with this guide.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -532,7 +523,7 @@ f_1(x) = \sin{(5 \pi x)}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.9777218763248356e-07
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.9776693028237275e-07
 </pre></div>
 </div>
 </div>
@@ -571,7 +562,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </div>
 </div>
-<p>Finally, check the infinity norm to decide if the approximation is accurate enough.</p>
+<p>Finally, check the approximation accuracy via the infinity norm:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">yy_test_2</span> <span class="o">=</span> <span class="n">fun_2</span><span class="p">(</span><span class="n">xx_test</span><span class="p">)</span>
@@ -581,7 +572,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.2265188864546417e-12
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.2266854199083355e-12
 </pre></div>
 </div>
 </div>
@@ -594,7 +585,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
@@ -622,16 +613,16 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/b899feddb21f130b3214b4ff6cdd2c96ca5d605c38e27c4956ce17854b5f7481.png" src="../_images/b899feddb21f130b3214b4ff6cdd2c96ca5d605c38e27c4956ce17854b5f7481.png" />
+<img alt="../_images/d06560c0aae8ed078c694639e19d84cd49b68edaab210d9c0c6a34784dcb349b.png" src="../_images/d06560c0aae8ed078c694639e19d84cd49b68edaab210d9c0c6a34784dcb349b.png" />
 </div>
 </div>
-<p>The plots show that there no notable differences between the two true functions and their corresponding interpolating polynomials</p>
+<p>The plots show that there are no notable differences between the two true functions and their corresponding interpolating polynomials</p>
 <hr class="docutils" />
 <p>Now that you have the two interpolating polynomials, you can start doing arithmetic operations with them.</p>
 </section>
 <section id="addition-and-subtraction">
 <h2>Addition and subtraction<a class="headerlink" href="#addition-and-subtraction" title="Link to this heading">#</a></h2>
-<p>Minterpy polynomials may be added or subtracted by a real scalar number; this operation returns another polynomial.</p>
+<p>Minterpy polynomials support addition and subtraction with real scalar numbers; the result is another polynomial in the same basis.</p>
 <p>For instance:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -641,7 +632,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fe71407e080&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fdc3899f880&gt;
 </pre></div>
 </div>
 </div>
@@ -655,7 +646,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fe71407e170&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fdc3899d6f0&gt;
 </pre></div>
 </div>
 </div>
@@ -668,7 +659,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use the same points for plotting</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
@@ -693,7 +684,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/69fb5e971ab4956f39ff3cd4de0276c153baa68cff82559b9f54d02b66625a26.png" src="../_images/69fb5e971ab4956f39ff3cd4de0276c153baa68cff82559b9f54d02b66625a26.png" />
+<img alt="../_images/3d90a6f26bfdccdd53503ee8813383353028779771f5c9f63e75d87e305202ff.png" src="../_images/3d90a6f26bfdccdd53503ee8813383353028779771f5c9f63e75d87e305202ff.png" />
 </div>
 </div>
 <p>Polynomials may also be added or subtracted from each other; the result is once again another polynomial.</p>
@@ -706,7 +697,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fe710f3b2e0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fdc368deb60&gt;
 </pre></div>
 </div>
 </div>
@@ -720,7 +711,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fe710f3bc40&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fdc3670f370&gt;
 </pre></div>
 </div>
 </div>
@@ -733,7 +724,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use the same points for plotting</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
@@ -758,8 +749,12 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/071a4f0f0ab48a8b3c778f3951e2659722baa5158040ed1374e5a3b4ed995cc1.png" src="../_images/071a4f0f0ab48a8b3c778f3951e2659722baa5158040ed1374e5a3b4ed995cc1.png" />
+<img alt="../_images/0cd046f95ccdf9eda5c639a5d4945ace2076b9c50c24eb9f8f41dd527b5a13b3.png" src="../_images/0cd046f95ccdf9eda5c639a5d4945ace2076b9c50c24eb9f8f41dd527b5a13b3.png" />
 </div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Addition and subtraction between two polynomials requires both to be defined on the same domain. If the domains differ, Minterpy raises a <code class="docutils literal notranslate"><span class="pre">DomainMismatchError</span></code>. When no domain is specified, polynomials are defined on the default internal reference domain <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>. This, therefore, is not a concern in the examples above.</p>
 </div>
 </section>
 <section id="multiplication">
@@ -774,12 +769,12 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fe710f01d80&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fdc36602c50&gt;
 </pre></div>
 </div>
 </div>
 </div>
-<p>Scalar multiplication uniformly and vertically stretches the polynomial across its domain as shown in the plot below.</p>
+<p>Scalar multiplication uniformly scales the polynomial across its domain as shown in the plot below.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -800,10 +795,10 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/6cffd0184e06b16904301325c65de2b5056411a43471babaab5df9fe6bb7fd62.png" src="../_images/6cffd0184e06b16904301325c65de2b5056411a43471babaab5df9fe6bb7fd62.png" />
+<img alt="../_images/7cff25cfd6215a493ab3c0d24192b8bd06c97e764e0ef1fd36ef86f3a8811798.png" src="../_images/7cff25cfd6215a493ab3c0d24192b8bd06c97e764e0ef1fd36ef86f3a8811798.png" />
 </div>
 </div>
-<p>Furthermore, a multiplication between Minterpy polynomials is also a valid operation that returns a polynomial.</p>
+<p>Furthermore, a multiplication between Minterpy polynomials is a valid operation that returns a polynomial.</p>
 <p>For instance, <span class="math notranslate nohighlight">\(Q_{\mathrm{prod}} = Q_1 \times Q_2\)</span>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -813,7 +808,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fe710f18be0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fdc389a5cc0&gt;
 </pre></div>
 </div>
 </div>
@@ -826,9 +821,7 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_plot</span><span class="p">,</span> <span class="n">poly_1</span><span class="p">(</span><span class="n">xx_plot</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$Q_1$&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
@@ -846,7 +839,6 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_plot</span><span class="p">,</span> <span class="n">poly_prod</span><span class="p">(</span><span class="n">xx_plot</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$Q_1 </span><span class="se">\\</span><span class="s2">times Q_2$&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.25</span><span class="p">])</span>
 
@@ -856,10 +848,10 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/514c7d96ee2794dad9360552c9538d0fcb38951d9d972207be9648f5c09ad8c5.png" src="../_images/514c7d96ee2794dad9360552c9538d0fcb38951d9d972207be9648f5c09ad8c5.png" />
+<img alt="../_images/53bb89e2306b697d0f209ef4d21a9dee4eb05b2e3df6995708212c668253296d.png" src="../_images/53bb89e2306b697d0f209ef4d21a9dee4eb05b2e3df6995708212c668253296d.png" />
 </div>
 </div>
-<p>As expected the product polynomial is an exponentially decaying sine function.</p>
+<p>The product polynomial is an exponentially decaying sine function. This is a consequence of multiplying a sine by a decaying exponential.</p>
 </section>
 <section id="division">
 <h2>Division<a class="headerlink" href="#division" title="Link to this heading">#</a></h2>
@@ -873,12 +865,12 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fe714302b00&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fdc389c20e0&gt;
 </pre></div>
 </div>
 </div>
 </div>
-<p>Division by a real scalar number uniformly and vertically contracts the polynomial across its domain as shown in the plot below.</p>
+<p>Division by a real scalar number uniformly scales the polynomial across its domain as shown in the plot below.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -899,23 +891,23 @@ f_2(x) = 2.0 \, e^{-2.5 (x + 1)}, x \in [-1, 1].
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/d4b294f59e5a358d5d9e3d95ef82030ba927f93c2cbff1611000efc53a44238e.png" src="../_images/d4b294f59e5a358d5d9e3d95ef82030ba927f93c2cbff1611000efc53a44238e.png" />
+<img alt="../_images/f5e5068da28d807c21529cbcb03d37da198441ef3e989000bc2e98a7643e6be1.png" src="../_images/f5e5068da28d807c21529cbcb03d37da198441ef3e989000bc2e98a7643e6be1.png" />
 </div>
 </div>
-<p>Minterpy, however, does <strong>not support</strong> polynomial-polynomial division (rational function). Minterpy cannot evaluate the resulting function of the expression:</p>
+<p>Minterpy, however, does <strong>not support</strong> polynomial-polynomial division. Specifically the expression</p>
 <div class="math notranslate nohighlight">
 \[
 Q_3 = \frac{Q_1}{Q_2}
 \]</div>
-<p>and return the resulting rational function.</p>
+<p>is a rational function which, in general, cannot be represented as a polynomial.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>That being said, you can still evaluate the evaluation of the expression above at a given set of query points (as long as <span class="math notranslate nohighlight">\(Q_2(x) \neq 0\)</span>).</p>
+<p>That being said, you can still evaluate the expression above at a given set of query points where <span class="math notranslate nohighlight">\(Q_2(x) \neq 0\)</span>.</p>
 </div>
 </section>
 <section id="exponentiation">
 <h2>Exponentiation<a class="headerlink" href="#exponentiation" title="Link to this heading">#</a></h2>
-<p>Finally, Minterpy polynomials may also be exponentiated by a <strong>non-negative integer</strong>. As all the other arithmetic operations above, polynomial exponentiation returns another polynomial.</p>
+<p>Finally, Minterpy polynomials may also be exponentiated by a <strong>non-negative integer</strong>. As with all the other arithmetic operations above, polynomial exponentiation returns another polynomial.</p>
 <p>For instance, <span class="math notranslate nohighlight">\(Q_1^2\)</span>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -925,7 +917,7 @@ Q_3 = \frac{Q_1}{Q_2}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fe71646f8e0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.newton_polynomial.NewtonPolynomial at 0x7fdc388dc460&gt;
 </pre></div>
 </div>
 </div>
@@ -950,10 +942,10 @@ Q_3 = \frac{Q_1}{Q_2}
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/290bbd047c2527c4c5bd3d1b1cd615caa3e9b04ead12fb76f94d9751c09925aa.png" src="../_images/290bbd047c2527c4c5bd3d1b1cd615caa3e9b04ead12fb76f94d9751c09925aa.png" />
+<img alt="../_images/28047beb4186d9c951a7f95cb38baeb95aaa89e56a28e283511bae9e9c988a49.png" src="../_images/28047beb4186d9c951a7f95cb38baeb95aaa89e56a28e283511bae9e9c988a49.png" />
 </div>
 </div>
-<p>Raising a polynomial to a non-negative integer power is equivalent to performing multiple-self multiplications of the polynomial.</p>
+<p>Raising a polynomial to a non-negative integer power is equivalent to repeatedly multiplying the polynomial by itself.</p>
 <p>For instance, <span class="math notranslate nohighlight">\(Q_2^2 = Q_2 \times Q_2\)</span>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -996,9 +988,7 @@ Q_3 = \frac{Q_1}{Q_2}
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xx_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_plot</span><span class="p">,</span> <span class="n">poly_1</span><span class="p">(</span><span class="n">xx_plot</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$Q_1$&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_plot</span><span class="p">,</span> <span class="n">poly_1_exp_0</span><span class="p">(</span><span class="n">xx_plot</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$Q_1^0$&quot;</span><span class="p">)</span>
@@ -1021,18 +1011,18 @@ Q_3 = \frac{Q_1}{Q_2}
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/ccf7e26a4176f3b89d3e8837337ae8f57f7b1aad8723a9b6a76ad8ded4bccd72.png" src="../_images/ccf7e26a4176f3b89d3e8837337ae8f57f7b1aad8723a9b6a76ad8ded4bccd72.png" />
+<img alt="../_images/f1befbd020870957a69c31d956a626027f69a7e6f8ce270478a834e14fc8c29f.png" src="../_images/f1befbd020870957a69c31d956a626027f69a7e6f8ce270478a834e14fc8c29f.png" />
 </div>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Note that Minterpy polynomials do not support exponentiation by another polynomial, a negative number, or a non-integer value. If you attempt to perform such an operation, an exception will be raised.</p>
+<p>Minterpy polynomials do not support exponentiation by another polynomial, a negative number, or a non-integer value. If you attempt to perform such an operation, an exception will be raised.</p>
 </div>
 </section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <p>In this in-depth tutorial, you’ve learned about the basic arithmetic operations involving Minterpy polynomials.
-Minterpy polynomials are <strong>closed</strong> under the following arithmetic operations, meaning that the result of the performing these operations is always another Minterpy polynomial:</p>
+Minterpy polynomials are <strong>closed</strong> under the following arithmetic operations, meaning that the result of performing these operations is always another Minterpy polynomial:</p>
 <ul class="simple">
 <li><p>Polynomial-scalar addition and subtraction</p></li>
 <li><p>Polynomial-polynomial addition and subtraction</p></li>
@@ -1041,12 +1031,13 @@ Minterpy polynomials are <strong>closed</strong> under the following arithmetic 
 <li><p>Polynomial-scalar division</p></li>
 <li><p>Polynomial exponentiation by a non-negative integer</p></li>
 </ul>
-<p>Throughout the tutorial, one-dimensional polynomials were used for illustration, but the principles apply similarly to Minterpy polynomials of higher dimensions.</p>
-<p>Please note that Minterpy currently <strong>does not support</strong>:</p>
+<p>Throughout the tutorial, one-dimensional polynomials were used for illustration, but the same principles apply to Minterpy polynomials of any dimension.</p>
+<p>Minterpy currently <strong>does not support</strong>:</p>
 <ul class="simple">
 <li><p>Polynomial-polynomial division (i.e., forming <em>rational functions</em>)</p></li>
 <li><p>Polynomial exponentiation by another polynomial or by a real scalar (including negative integers and non-integer numbers)</p></li>
 </ul>
+<p>Additionally, polynomial-polynomial operations require both polynomials to share the same domain; otherwise a <code class="docutils literal notranslate"><span class="pre">DomainMismatchError</span></code> is raised.</p>
 <hr class="docutils" />
 <p>In the next tutorial, you will explore additional features of Minterpy, including basic calculus operations such as differentiation and integration.</p>
 </section>

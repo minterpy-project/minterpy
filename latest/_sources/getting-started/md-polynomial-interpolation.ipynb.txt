@@ -25,12 +25,9 @@
     "tags": []
    },
    "source": [
-    "In the {doc}`previous guide </getting-started/1d-polynomial-interpolation>`,\n",
-    "you learned the basics of polynomial interpolation in Minterpy for approximating one-dimensional functions.\n",
-    "As the name \"Minterpy\" suggests, the package also supports constructing multivariate polynomials to approximate multidimensional functions.\n",
+    "In the {doc}`previous guide </getting-started/1d-polynomial-interpolation>`, you learned the basics of polynomial interpolation in Minterpy for approximating one-dimensional functions. As the name \"Minterpy\" suggests, the package also supports constructing multivariate polynomials to approximate multidimensional functions.\n",
     "\n",
-    "In this in-depth tutorial, you will learn how to create an interpolating polynomial that approximates a two-dimensional function.\n",
-    "We use a two-dimensional example for ease of visualization, but the main steps you'll learn are applicable to polynomials of higher dimensions as well."
+    "In this in-depth tutorial, you will learn how to create an interpolating polynomial that approximates a two-dimensional function defined on a custom rectangular domain.  We use a two-dimensional example for ease of visualization, but the main steps you'll learn are applicable to polynomials of higher dimensions as well."
    ]
   },
   {
@@ -82,14 +79,14 @@
     "\n",
     "$$\n",
     "\\begin{align}\n",
-    "\t\\mathcal{M}(\\boldsymbol{x}) = & 0.75 \\exp{\\left( -0.25 \\left( (x_1 - 2)^2 + (x_2 - 2)^2 \\right) \\right) } \\\\\n",
-    "                                  & + 0.75 \\exp{\\left( -1.00 \\left( \\frac{(x_1 + 1)^2}{49} + \\frac{(x_2 + 1)^2}{10} \\right) \\right)} \\\\\n",
-    "\t\t\t\t\t\t\t\t  & + 0.50 \\exp{\\left( -0.25 \\left( (x_1 - 7)^2 + (x_2 - 3)^2 \\right) \\right)} \\\\\n",
-    "\t\t\t\t\t\t\t\t  & - 0.20 \\exp{\\left( -1.00 \\left( (x_1 - 4)^2 + (x_2 - 7)^2 \\right) \\right)} \\\\\n",
+    "\t\\mathcal{M}(\\boldsymbol{x}) = & 0.75 \\exp{\\left( -0.25 \\left( (9 x_1 - 2)^2 + (9 x_2 - 2)^2 \\right) \\right) } \\\\\n",
+    "                                  & + 0.75 \\exp{\\left( -1.00 \\left( \\frac{(9 x_1 + 1)^2}{49} + \\frac{(9 x_2 + 1)^2}{10} \\right) \\right)} \\\\\n",
+    "\t\t\t\t\t\t\t\t  & + 0.50 \\exp{\\left( -0.25 \\left( (9 x_1 - 7)^2 + (9 x_2 - 3)^2 \\right) \\right)} \\\\\n",
+    "\t\t\t\t\t\t\t\t  & - 0.20 \\exp{\\left( -1.00 \\left( (9 x_1 - 4)^2 + (9 x_2 - 7)^2 \\right) \\right)} \\\\\n",
     "\\end{align}\n",
     "$$\n",
     "\n",
-    "where $\\boldsymbol{x} = (x_1, x_2) \\in [-1, 1]^2$."
+    "where $\\boldsymbol{x} = (x_1, x_2) \\in [0, 1]^2$."
    ]
   },
   {
@@ -104,7 +101,7 @@
    },
    "source": [
     "```{note}\n",
-    "This function is known in the literature as the Franke function[^franke]. Here, however, the domain has been redefined to be $[-1, 1]^2$ instead of $[0, 1]^2$.\n",
+    "This function is known in the literature as the Franke function[^franke].\n",
     "\n",
     "[^franke]: Richard Franke, \"A critical comparison of some methods for interpolation of scattered data,\" Naval Postgraduate School, Monterey, Canada, Technical Report No. NPS53-79-003, 1979. URL: https://core.ac.uk/reader/36727660\n",
     "```"
@@ -186,7 +183,7 @@
     "from mpl_toolkits.axes_grid1 import make_axes_locatable\n",
     "\n",
     "# --- Create 2D data\n",
-    "xx_1d = np.linspace(-1.0, 1.0, 1000)[:, np.newaxis]\n",
+    "xx_1d = np.linspace(0, 1.0, 1000)[:, np.newaxis]\n",
     "mesh_2d = np.meshgrid(xx_1d, xx_1d)\n",
     "xx_2d = np.array(mesh_2d).T.reshape(-1, 2)\n",
     "yy_2d = fun(xx_2d)\n",
@@ -242,13 +239,42 @@
     "\n",
     "The steps to create a multidimensional interpolating polynomial in Minterpy from scratch are similar to those used for the {doc}`one-dimensional case <1d-polynomial-interpolation>`. The steps are:\n",
     "\n",
-    "1. Define the multi-index set of the polynomial\n",
-    "2. Construct an interpolation grid\n",
-    "3. Evaluate the function of interest at the grid points (so-called unisolvent nodes)\n",
-    "4. Create a polynomial in the Lagrange basis\n",
-    "5. Transformation from the Lagrange basis to another basis, preferrably the Newton basis, for further manipulation.\n",
+    "1. Define the domain of the polynomial\n",
+    "2. Define the multi-index set of the polynomial\n",
+    "3. Construct an interpolation grid\n",
+    "4. Evaluate the function of interest at the grid points (so-called unisolvent nodes)\n",
+    "5. Create a polynomial in the Lagrange basis\n",
+    "6. Transformation from the Lagrange basis to another basis, preferrably the Newton basis, for further manipulation.\n",
     "\n",
-    "As before, we will go through these steps one at a time, highlighting any differences that arise compared to the one-dimensional case."
+    "As before, we will go through these steps one at a time. One key difference from the one-dimensional case is that our function lives on a custom rectangular domain $[0, 1]^2$ rather than the default $[-1, 1]^2$. We, therefore, begin by informing Minterpy about that domain explicitly."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d0dc60ed-56e9-47a5-a101-433df11208c3",
+   "metadata": {},
+   "source": [
+    "### Define the domain\n",
+    "\n",
+    "In Minterpy, a rectangular domain $\\Omega = [a_1, b_1] \\times \\cdots \\times [a_m, b_m]$ is represented by the {py:class}`Domain <.core.domain.Domain>` class. Each dimension has its own lower and upper bound, allowing for non-uniform domains. Internally, Minterpy works in the internal reference domain $[-1, 1]^m$, but once a `Domain` is defined, all coordinates transformations are handled automatically. For more details, see the {doc}`relevant section </fundamentals/domain>` of the documentation."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "befc91d8-c1da-49cb-82a4-38c67e9810ba",
+   "metadata": {},
+   "source": [
+    "To define a custom domain $[0, 1]^2$, we use the default constructor and pass an array of shape `(m, 2)` (here, `(2, 2)`) where each row specifies the lower and upper bounds of one dimension:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ff469f80-87af-46ee-b703-af1dce4bfbdd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom = mp.Domain(np.array([[0, 1], [0, 1]]))"
    ]
   },
   {
@@ -264,16 +290,20 @@
    "source": [
     "### Define the multi-index set\n",
     "\n",
-    "As demonstrated in the previous tutorial, multi-index sets in Minterpy are represented by the {py:class}`MultiIndexSet <.core.multi_index.MultiIndexSet>` class.\n",
-    "You can use the class method {py:meth}`from_degree() <.MultiIndexSet.from_degree>` to create a complete multi-index set for a given spatial dimension (first argument), polynomial degree and polynomial degree (second argument).\n",
-    "For multivariate polynomials, you also need to specify the $l_p$-degree ($> 0.0$) of the multi-index set (third argument).\n",
+    "As demonstrated in the previous tutorial, multi-index sets in Minterpy are represented by the {py:class}`MultiIndexSet <.core.multi_index.MultiIndexSet>` class. You can use the class method {py:meth}`from_degree() <.MultiIndexSet.from_degree>` to create a complete multi-index set for a given spatial dimension (first argument) and polynomial degree (second argument). For multivariate polynomials, you also need to specify the $l_p$-degree ($> 0.0$) of the multi-index set (third argument).\n",
     "\n",
     "A complete multi-index set with spatial dimension $m$, polynomial degree $n$, and $l_p$-degree $p$ denoted by $A_{m, n, p}$ includes all multi-indices $\\boldsymbol{\\alpha}$ that satisfy the condition $\\lVert \\boldsymbol{\\alpha} \\rVert_p \\leq n$, specifically\n",
     "\n",
     "$$\n",
     "A_{m, n, p} = \\{ \\boldsymbol{\\alpha} \\in \\mathbb{N}^m: \\lVert \\boldsymbol{\\alpha} \\lVert_ p = ( \\alpha_1^p + \\ldots + \\alpha_m^p )^{1/p} \\leq n \\}.\n",
-    "$$\n",
-    "\n",
+    "$$"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "39be1c6e-a0ff-4ceb-a5f5-22c71d94b8fc",
+   "metadata": {},
+   "source": [
     "For instance, the complete multi-index set for $m = 2$, $n = 5$, $p = 2.0$:"
    ]
   },
@@ -412,9 +442,15 @@
    "source": [
     "### Construct an interpolation grid\n",
     "\n",
-    "An interpolating polynomial, one-dimensional or otherwise, lives on an interpolation grid.\n",
-    "\n",
-    "To construct an interpolation grid, pass the previously defined multi-index set to the default constructor of the {py:class}`Grid <.core.grid.Grid>` class:"
+    "An interpolating polynomial, one-dimensional or otherwise, lives on an interpolation grid."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "175f447f-4f17-46e8-920d-5c15608400be",
+   "metadata": {},
+   "source": [
+    "To construct an interpolation grid, pass the previously defined multi-index set and domain to the default constructor of the {py:class}`Grid <.core.grid.Grid>` class:"
    ]
   },
   {
@@ -430,7 +466,15 @@
    },
    "outputs": [],
    "source": [
-    "grd = mp.Grid(mi)"
+    "grd = mp.Grid(mi, domain=dom)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "42498f5f-c255-4438-bc1f-2aa6e014fd0c",
+   "metadata": {},
+   "source": [
+    "The domain tells Minterpy that the function of interest lives on $[0, 1]^2$ rather than the default internal reference domain $[-1, 1]^2$."
    ]
   },
   {
@@ -444,8 +488,7 @@
     "tags": []
    },
    "source": [
-    "The unisolvent nodes associated with the interpolating grid has the same spatial dimension as its defining multi-index set. By default, Minterpy generates unisolvent nodes according to the {ref}`Leja-ordered Chebyshev-Lobatto points <fundamentals/interpolation-at-unisolvent-nodes:Generating points>`.\n",
-    "The unisolvent nodes that correspond to the multi-index set are:"
+    "The unisolvent nodes associated with the interpolating grid has the same spatial dimension as its defining multi-index set. By default, Minterpy generates unisolvent nodes according to the {ref}`Leja-ordered Chebyshev-Lobatto points <fundamentals/interpolation-at-unisolvent-nodes:Generating points>`. Internally, Minterpy works in the internal reference domain $[-1, 1]^2$, so the unisolvent nodes are stored in that domain:"
    ]
   },
   {
@@ -539,7 +582,14 @@
    "source": [
     "### Evaluate the function at the unisolvent nodes\n",
     "\n",
-    "An interpolating polynomial satisfies the condition that the polynomial values at the unisolvent nodes coincide with the value of the given function at the same nodes.\n",
+    "An interpolating polynomial satisfies the condition that the polynomial values at the unisolvent nodes coincide with the value of the given function at the same nodes."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "97a19adb-e55f-4107-a745-41ed2a88ddfa",
+   "metadata": {},
+   "source": [
     "Calling an instance of {py:class}`Grid <.core.grid.Grid>` with a given function evaluates the function at the unisolvent nodes:"
    ]
   },
@@ -572,7 +622,7 @@
    },
    "source": [
     "```{note}\n",
-    "Make sure that the given function accepts a two-dimensional array whose each column corresponds to the values per spatial dimension.\n",
+    "Make sure that the given function accepts a two-dimensional array whose each column corresponds to the values per spatial dimension. The function will receive points already in the user domain $[0, 1]^2$; there is no manual transformation from $[-1, 1]^2$ needed.\n",
     "```"
    ]
   },
@@ -601,7 +651,7 @@
     "L_{\\boldsymbol{\\alpha}}(p_{\\boldsymbol{\\beta}}) = \\delta_{\\boldsymbol{\\alpha}, \\boldsymbol{\\beta}}, p_{\\boldsymbol{\\beta}} \\in P_{A_{m, n, p}},\n",
     "$$\n",
     "\n",
-    "where $\\delta{\\cdot, \\cdot}$ denotes the Kronecker delta.\n",
+    "where $\\delta_{\\cdot, \\cdot}$ denotes the Kronecker delta.\n",
     "\n",
     "To create a polynomial in the Lagrange basis from the given grid and coefficients, use the {py:meth}`from_grid() <.polynomials.lagrange_polynomial.LagrangePolynomial.from_grid>` class method of {py:class}`LagrangePolynomial <.polynomials.lagrange_polynomial.LagrangePolynomial>` class:"
    ]
@@ -620,6 +670,14 @@
    "outputs": [],
    "source": [
     "lag_poly = mp.LagrangePolynomial.from_grid(grd, coeffs)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "502b5930-e8dc-4e35-b7f0-6c3dd28dad08",
+   "metadata": {},
+   "source": [
+    "Note that the resulting polynomial inherits the domain information from the grid."
    ]
   },
   {
@@ -721,7 +779,7 @@
    "source": [
     "### Evaluate the polynomial at a set of query points\n",
     "\n",
-    "Create a set of random query points in $[-1, 1]^2$:"
+    "Create a set of random query points in $[0, 1]^2$:"
    ]
   },
   {
@@ -737,7 +795,7 @@
    },
    "outputs": [],
    "source": [
-    "xx_test = -1 + 2 * np.random.rand(1000, 2)"
+    "xx_test = np.random.rand(1000, 2)"
    ]
   },
   {
@@ -876,11 +934,14 @@
    "outputs": [],
    "source": [
     "# --- Create 2D data\n",
-    "xx_1d = np.linspace(-1.0, 1.0, 250)[:, np.newaxis]\n",
+    "xx_1d = np.linspace(0, 1.0, 250)[:, np.newaxis]\n",
     "mesh_2d = np.meshgrid(xx_1d, xx_1d)\n",
     "xx_2d = np.array(mesh_2d).T.reshape(-1, 2)\n",
     "yy_plot_test = fun(xx_2d)\n",
     "yy_plot_poly = nwt_poly(xx_2d)\n",
+    "\n",
+    "# Transform unisolvent nodes to the user domain\n",
+    "unisolvent_nodes = dom.map_from_internal(grd.unisolvent_nodes)\n",
     "\n",
     "# --- Create two-dimensional plots\n",
     "fig, axs = plt.subplots(\n",
@@ -920,7 +981,7 @@
     "axs[1].set_ylabel(\"$x_2$\", fontsize=14)\n",
     "axs[1].set_title(\"Interpolating polynomial\", fontsize=16)\n",
     "axs[1].tick_params(axis='both', which='major', labelsize=12)\n",
-    "axs[1].scatter(grd.unisolvent_nodes[:, 0], grd.unisolvent_nodes[:, 1], coeffs, color=\"k\");"
+    "axs[1].scatter(unisolvent_nodes[:, 0], unisolvent_nodes[:, 1], coeffs, color=\"k\");"
    ]
   },
   {
@@ -942,9 +1003,17 @@
     "The norm is defined as:\n",
     "\n",
     "$$\n",
-    "\\lVert f - Q \\rVert_\\infty = \\sup_{\\boldsymbol{x} \\in [-1, 1]^2} \\lvert f(\\boldsymbol{x}) - Q(\\boldsymbol{x}) \\rvert\n",
+    "\\lVert f - Q \\rVert_\\infty = \\sup_{\\boldsymbol{x} \\in \\Omega} \\lvert f(\\boldsymbol{x}) - Q(\\boldsymbol{x}) \\rvert,\n",
     "$$\n",
     "\n",
+    "where $\\Omega$ is the domain of the function and for the Franke function it is $[0, 1]^2$."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e3f6fb4c-3fa2-4280-96b8-d91e5b0770eb",
+   "metadata": {},
+   "source": [
     "The infinity norm of $Q$ can be approximated using the $1'000$ test points created above:"
    ]
   },
@@ -1013,7 +1082,7 @@
     "yy_poly = np.empty((len(xx_test), len(poly_degrees), len(lp_degrees)))\n",
     "for i, n in enumerate(poly_degrees):\n",
     "    for j, p in enumerate(lp_degrees):\n",
-    "        fx_interp = mp.interpolate(fun, spatial_dimension=2, poly_degree=n, lp_degree=p)\n",
+    "        fx_interp = mp.interpolate(fun, spatial_dimension=2, poly_degree=n, lp_degree=p, bounds=[[0, 1], [0, 1]])\n",
     "        yy_poly[:, i, j] = fx_interp(xx_test)"
    ]
   },
@@ -1123,7 +1192,7 @@
     "from mpl_toolkits.axes_grid1 import make_axes_locatable\n",
     "\n",
     "# --- Create 2D data\n",
-    "xx_1d = np.linspace(-1.0, 1.0, 250)[:, np.newaxis]\n",
+    "xx_1d = np.linspace(0, 1.0, 250)[:, np.newaxis]\n",
     "mesh_2d = np.meshgrid(xx_1d, xx_1d)\n",
     "xx_2d = np.array(mesh_2d).T.reshape(-1, 2)\n",
     "yy_fun = fun(xx_2d)\n",
@@ -1220,12 +1289,13 @@
    "source": [
     "## Summary\n",
     "\n",
-    "In this tutorial, you learned how to create a two-dimensional (2D) interpolating polynomial from scratch to approximate a given function then evaluate it at a set of query points in Minterpy.\n",
+    "In this tutorial, you learned how to create a two-dimensional (2D) interpolating polynomial from scratch to approximate a given function defined on a custom rectangular domain, then evaluate it at a set of query points in Minterpy.\n",
     "\n",
     "The steps are:\n",
     "\n",
+    "1. Define the domain\n",
     "1. Define a multi-index set\n",
-    "2. Construct an interpolation grid\n",
+    "2. Construct an interpolation grid with domain information\n",
     "3. Evaluate the given function on the grid points (i.e., the unisolvent nodes)\n",
     "4. Construct an interpolating polynomial in the Lagrange basis\n",
     "5. Transform the polynomial into the equivalent Newton basis\n",
@@ -1235,6 +1305,8 @@
     "- You need to specify the $l_p$-degree $p$ to fully define the multi-index set.\n",
     "- Your function of interest should take a 2D array as input, where each row represents a point in multidimensional space and each column corresponds to a value in each dimension.\n",
     "- When evaluating an interpolating polynomial, make sure your input has the same 2D array structure.\n",
+    "\n",
+    "If your function lives on a domain other than $[-1, 1]^m$, define a {py:class}`Domain <.core.domain.Domain>` object and pass it to the {py:class}`Grid <.core.grid.Grid>` constructor or use the `bounds` parameter of {py:func}`interpolate() <.interpolation.interpolate>` function. Minterpy handles all coordinate transformation transparently.\n",
     "\n",
     "While the example here is two-dimensional, the same principles apply to polynomials in higher dimensions.\n",
     "\n",
@@ -1264,7 +1336,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.9.19"
+   "version": "3.11.14"
   }
  },
  "nbformat": 4,

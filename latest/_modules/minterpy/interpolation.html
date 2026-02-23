@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -456,232 +456,448 @@
 <span class="sd">+-------------------+---------------------------------------------------------+</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">attrs</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">attr</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span><span class="p">,</span> <span class="n">MultiIndexSet</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.dds</span><span class="w"> </span><span class="kn">import</span> <span class="n">dds</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.polynomials</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewtonPolynomial</span><span class="p">,</span> <span class="n">LagrangePolynomial</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.transformations</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewtonToCanonical</span><span class="p">,</span> <span class="n">NewtonToChebyshev</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_LP_DEG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span><span class="p">,</span> <span class="n">MultiIndexSet</span><span class="p">,</span> <span class="n">Domain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.dds</span><span class="w"> </span><span class="kn">import</span> <span class="n">dds</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.polynomials</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">LagrangePolynomial</span><span class="p">,</span>
+    <span class="n">CanonicalPolynomial</span><span class="p">,</span>
+    <span class="n">ChebyshevPolynomial</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.transformations</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewtonToCanonical</span><span class="p">,</span> <span class="n">NewtonToChebyshev</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_LP_DEG</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Interpolator&quot;</span><span class="p">,</span> <span class="s2">&quot;Interpolant&quot;</span><span class="p">,</span> <span class="s2">&quot;interpolate&quot;</span><span class="p">]</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">InterpolationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised if the interpolation went wrong.&quot;&quot;&quot;</span>
-
     <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="Interpolator">
 <a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolator">[docs]</a>
-<span class="nd">@attr</span><span class="o">.</span><span class="n">s</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nd">@attrs</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Interpolator</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The construction class for interpolation.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The class for constructing polynomial interpolant.</span>
 
-<span class="sd">    Data type which contains all relevant parts for interpolation and caches them.</span>
+<span class="sd">    The class contains all the relevant parts for constructing a polynomial</span>
+<span class="sd">    interpolant in the Newton basis of a given callable.</span>
+<span class="sd">    The instance of this class is a callable; passing a function to it will</span>
+<span class="sd">    return an interpolating polynomial.</span>
+
+<span class="sd">    With an instance of this class, one can construct interpolants of the</span>
+<span class="sd">    same underlying polynomial for different functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spatial_dimension : int</span>
+<span class="sd">        The dimension of the interpolator.</span>
+<span class="sd">    poly_degree : int</span>
+<span class="sd">        The degree of the interpolating polynomial.</span>
+<span class="sd">    lp_degree : float</span>
+<span class="sd">        The degree :math:`p` of the :math:`l_p`-norm used to define</span>
+<span class="sd">        the (multivariate) polynomial degree.</span>
+<span class="sd">    bounds : array_like, optional</span>
+<span class="sd">        The bounds of the domain space, an array of shape ``(m, 2)``,</span>
+<span class="sd">        where ``m`` is the spatial dimension. Each row corresponds to the</span>
+<span class="sd">        lower and upper bounds of the domain in the corresponding dimension.</span>
+<span class="sd">        If not provided, the bounds are assumed to be :math:`[-1, 1]^m`.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    spatial_dimension : dimension of the domain space.</span>
-<span class="sd">    poly_degree : degree of the interpolation polynomials</span>
-<span class="sd">    lp_degree : degree of the :math:`l_p` norm used to determine the `poly_degree`.</span>
-<span class="sd">    multi_index : lexicographically complete multi index set build from `(spatial_dimension, poly_degree, lp_degree)`.</span>
-<span class="sd">    grid : `Grid` instance build from `multi_index`.</span>
-
+<span class="sd">    multi_index : MultiIndexSet</span>
+<span class="sd">        The multi-index set used to define the interpolating polynomial,</span>
+<span class="sd">        a lexicographically complete multi-index set, i.e.,</span>
+<span class="sd">        :math:`\mathcal{A}_{m, n, p}`, where :math:`m` is</span>
+<span class="sd">        ``spatial_dimension``, :math:`n` is ``poly_degree``,</span>
+<span class="sd">        and :math:`p` is the ``lp_degree``.</span>
+<span class="sd">    grid : Grid</span>
+<span class="sd">        The underlying interpolation grid with the domain defined</span>
+<span class="sd">        by ``bounds``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Constructor parameters</span>
+    <span class="n">_spatial_dimension</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">_poly_degree</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">_lp_degree</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">_bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">]</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">()</span>
-    <span class="n">poly_degree</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">()</span>
-    <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">()</span>
-
-    <span class="n">multi_index</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">grid</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># --- Core properties (computed based on constructor parameters)</span>
+    <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="n">Grid</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="nd">@multi_index</span><span class="o">.</span><span class="n">default</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">__multi_index_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiIndexSet</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_multi_index_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiIndexSet</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">MultiIndexSet</span><span class="o">.</span><span class="n">from_degree</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly_degree</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lp_degree</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_spatial_dimension</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_poly_degree</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lp_degree</span>
         <span class="p">)</span>
 
     <span class="nd">@grid</span><span class="o">.</span><span class="n">default</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">__grid_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_grid_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="n">Domain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bounds</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">Grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fct</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NewtonPolynomial</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Interpolate a given function.</span>
+    <span class="c1"># --- Derived properties</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spatial_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The dimension of the interpolator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span>
 
-<span class="sd">        Builds a `NewtonPolynomial` which interpolates the given `fct`, where the precomuted setting of the current instance is used.</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">poly_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The degree of the interpolating polynomial (and multi-index set).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">poly_degree</span>
 
-<span class="sd">        :param fct: Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If `arr` is an :class:`np.ndarray` with shape ``arr.shape == (N,spatial_dimension)``, the signature needs to be ``fct(arr) -&gt; res``, where ``res`` is an :class:`np.ndarray` with shape ``(N,)``.</span>
-<span class="sd">        :type fct: Callable</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lp_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:math:`p` of :math:`l_p`-norm used to define the multi-index set.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">lp_degree</span>
 
-<span class="sd">        :return: Interpolation polynomial in Newton form, which interpolates the function ``fct``, where the used divided difference scheme is build from ``self.multi_index`` and ``self.grid``.</span>
-<span class="sd">        :rtype: NewtonPolynomial</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">domain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Domain</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The domain of the interpolating polynomial.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">domain</span>
 
-<span class="sd">        :raises InterpolationError: Raised if anything goes wrong with the interpolation.</span>
+    <span class="c1"># --- Dunder methods</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Interpolator(spatial_dimension=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;poly_degree=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">poly_degree</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;lp_degree=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lp_degree</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Interpolator.__call__">
+<a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolator.__call__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NewtonPolynomial</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Interpolate a given function and return an interpolating polynomial.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func : Callable</span>
+<span class="sd">            The function to interpolate. It must accept as the first argument</span>
+<span class="sd">            a :class:`numpy:numpy.ndarray` with shape ``(k, m)``, where ``k``</span>
+<span class="sd">            is the number of evaluation points and ``m`` is the spatial</span>
+<span class="sd">            dimension. The function returns a :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            with shape ``(k, )`` for scalar outputs and ``(k, d)``</span>
+<span class="sd">            for vector outputs, where ``d``  is the output dimension.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NewtonPolynomial</span>
+<span class="sd">            An interpolating polynomial of the function ``func`` in the Newton</span>
+<span class="sd">            basis. The interpolating polynomial is constructed according</span>
+<span class="sd">            to the underlying multi-index set and interpolation grid.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InterpolationError</span>
+<span class="sd">            If anything goes wrong with the interpolation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">fct_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">fct</span><span class="p">)</span>
-            <span class="c1"># NOTE: Don&#39;t use np.squeeze as DDS results may be of shape (1,1)</span>
-            <span class="n">interpol_coeffs</span> <span class="o">=</span> <span class="n">dds</span><span class="p">(</span><span class="n">fct_values</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">tree</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">func_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InterpolationError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-        <span class="k">return</span> <span class="n">NewtonPolynomial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">interpol_coeffs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_values</span><span class="p">(</span><span class="n">func_values</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Interpolator.interpolate_values">
+<a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolator.interpolate_values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">interpolate_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func_values</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NewtonPolynomial</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Interpolate a given array of values at the unisolvent nodes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func_values : array_like</span>
+<span class="sd">            The function values at the unisolvent nodes (i.e., the Lagrange</span>
+<span class="sd">            coefficients of the interpolating polynomial).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NewtonPolynomial</span>
+<span class="sd">            An interpolating polynomial of the function ``func`` in the Newton</span>
+<span class="sd">            basis. The interpolating polynomial is constructed according</span>
+<span class="sd">            to the underlying multi-index set and interpolation grid.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InterpolationError</span>
+<span class="sd">            If anything goes wrong with the interpolation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">coeffs</span> <span class="o">=</span> <span class="n">dds</span><span class="p">(</span><span class="n">func_values</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">tree</span><span class="p">)</span>
+            <span class="c1"># DDS returns shape (N, d) where N=#points, d=output_dim</span>
+            <span class="c1"># For scalar functions (d=1), convert to 1D array of shape (N,)</span>
+            <span class="k">if</span> <span class="n">coeffs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">coeffs</span> <span class="o">=</span> <span class="n">coeffs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># Most explicit and safe</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InterpolationError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+        <span class="k">return</span> <span class="n">NewtonPolynomial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span></div>
+</div>
 
 
 
 <div class="viewcode-block" id="Interpolant">
 <a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolant">[docs]</a>
-<span class="nd">@attr</span><span class="o">.</span><span class="n">s</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nd">@attrs</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Interpolant</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data type representing the result of an interpolation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class representing the result of an interpolation of a given function.</span>
 
-<span class="sd">    Instances of this class can be used as functions, which interpolate a given function. Users who do not want to learn anything about neither polynomial interpolation nor bases in multivariate polynomial bases may use the instances of this class just as an interpolative representant of their function, which they can evaluate. (Other properties are conceivable too)</span>
+<span class="sd">    An instance of this class is a callable that interpolates a given function.</span>
+<span class="sd">    It serves as an intermediate layer between function approximation</span>
+<span class="sd">    and the corresponding interpolating polynomial representation; it can be</span>
+<span class="sd">    used without any in-depth knowledge of the underlying polynomial</span>
+<span class="sd">    representation.</span>
 
-<span class="sd">    Attributes</span>
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    fct : Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If `arr` is an :class:`np.ndarray` with shape ``arr.shape == (N,spatial_dimension)``, the signature needs to be ``fct(arr) -&gt; res``, where ``res`` is an :class:`np.ndarray` with shape ``(N,)``.</span>
-<span class="sd">    interpolator : Instance of :class:`Interpolator`, which represents the interpolation scheme to be used.</span>
+<span class="sd">    func : Callable</span>
+<span class="sd">        The function to interpolate. It must accept as the first argument</span>
+<span class="sd">        a :class:`numpy:numpy.ndarray` with shape ``(k, m)``, where ``k``</span>
+<span class="sd">        is the number of evaluation points and ``m`` is the spatial</span>
+<span class="sd">        dimension. The function returns a :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        with shape ``(k, )`` for scalar outputs and ``(k, d)``</span>
+<span class="sd">        for vector outputs, where ``d``  is the output dimension.</span>
+<span class="sd">    interpolator : Interpolator</span>
+<span class="sd">        The underlying setting for the interpolation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Constructor parameters</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">interpolator</span><span class="p">:</span> <span class="n">Interpolator</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="n">fct</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">interpolator</span><span class="p">:</span> <span class="n">Interpolator</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">__interpolation_poly</span><span class="p">:</span> <span class="n">NewtonPolynomial</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># --- Private attribute</span>
+    <span class="n">_func_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">_interpolation_poly</span><span class="p">:</span> <span class="n">NewtonPolynomial</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="nd">@__interpolation_poly</span><span class="o">.</span><span class="n">default</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">__interpolation_poly_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fct</span><span class="p">)</span>
+    <span class="nd">@_func_values</span><span class="o">.</span><span class="n">default</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_func_values_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
 
+    <span class="nd">@_interpolation_poly</span><span class="o">.</span><span class="n">default</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_interpolation_poly_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">interpolate_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_func_values</span><span class="p">)</span>
+
+    <span class="c1"># --- Factory method</span>
 <div class="viewcode-block" id="Interpolant.from_degree">
 <a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolant.from_degree">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_degree</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">poly_degree</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom constructor of an interpolant using dimensionality and degree parameter.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_degree</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">poly_degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Interpolant&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Create an interpolant with respect to a complete multi-index set.</span>
 
-<span class="sd">        :param fct: Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If `arr` is an :class:`np.ndarray` with shape ``arr.shape == (N,spatial_dimension)``, the signature needs to be ``fct(arr) -&gt; res``, where ``res`` is an :class:`np.ndarray` with shape ``(N,)``.</span>
-<span class="sd">        :type fct: Callable</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func : Callable</span>
+<span class="sd">            The function to interpolate. It must accept as the first argument</span>
+<span class="sd">            a :class:`numpy:numpy.ndarray` with shape ``(k, m)``, where ``k``</span>
+<span class="sd">            is the number of evaluation points and ``m`` is the spatial</span>
+<span class="sd">            dimension. The function returns a :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            with shape ``(k, )`` for scalar outputs and ``(k, d)``</span>
+<span class="sd">            for vector outputs, where ``d``  is the output dimension.</span>
+<span class="sd">        spatial_dimension : int</span>
+<span class="sd">            The dimension of the interpolator.</span>
+<span class="sd">        poly_degree : int</span>
+<span class="sd">            The degree of the interpolating polynomial.</span>
+<span class="sd">        lp_degree : float</span>
+<span class="sd">            The degree :math:`p` of the :math:`l_p`-norm used to define</span>
+<span class="sd">            the (multivariate) polynomial degree.</span>
+<span class="sd">        bounds : array_like, optional</span>
+<span class="sd">            The bounds of the domain space, an array of shape ``(m, 2)``,</span>
+<span class="sd">            where ``m`` is the spatial dimension. Each row corresponds to the</span>
+<span class="sd">            lower and upper bounds of the domain in the corresponding dimension.</span>
+<span class="sd">            If not provided, the bounds are assumed to be :math:`[-1, 1]^m`.</span>
 
-<span class="sd">        :param spatial_dimension: dimension of the domain space.</span>
-<span class="sd">        :type spatial_dimension: int</span>
-<span class="sd">        :param poly_degree: degree of the interpolation polynomials</span>
-<span class="sd">        :type poly_degree: int</span>
-<span class="sd">        :param lp_degree: degree of the :math:`l_p` norm used to determine the `poly_degree`.</span>
-<span class="sd">        :type lp_degree: int</span>
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        Interpolant</span>
+<span class="sd">            An instance of interpolant of ``func`` using an interpolating</span>
+<span class="sd">            polynomial with respect to complete multi-index set.</span>
 
-<span class="sd">        :return: The interpolant of ``fct`` using the default interpolator build from ``(spatial_dimension, poly_degree, lp_degree)``.</span>
-<span class="sd">        :rtype: Interpolant</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - ``spatial_dimension`` (:math:`m`), ``poly_degree`` (:math:`n`),</span>
+<span class="sd">          ``lp_degree`` (:math:`p`) are used to construct the lexicographically</span>
+<span class="sd">          complete multi-index set :math:`\mathcal{A}_{m, n, p}`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">fct</span><span class="p">,</span> <span class="n">Interpolator</span><span class="p">(</span><span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">poly_degree</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">func</span><span class="p">,</span>
+            <span class="n">Interpolator</span><span class="p">(</span><span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">poly_degree</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">,</span> <span class="n">bounds</span><span class="p">),</span>
+        <span class="p">)</span></div>
 
 
+    <span class="c1"># --- Properties</span>
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">spatial_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dimension of the domain space the interpolation polynomial lives on.</span>
-
-<span class="sd">        This is the propagated attribute from ``self.interpolator``.</span>
-
-<span class="sd">        :rtype: int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spatial_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The dimension of the interpolator.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">spatial_dimension</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">poly_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Degree of the interpolation polynomial.</span>
-
-<span class="sd">        This is the propagated attribute from ``self.interpolator``.</span>
-
-<span class="sd">        :rtype: int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">poly_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The degree of the interpolating polynomial.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">poly_degree</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">lp_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Degree of the :math:`l_p` norm.</span>
-
-<span class="sd">        This is the propagated attribute from ``self.interpolator``.</span>
-
-<span class="sd">        :rtype: int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lp_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:math:`p` of :math:`l_p`-norm used to define the multi-index set.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">lp_degree</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">lagrange_coeffs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the Lagrange coefficients of the interpolating polynomial.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fct</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multi_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiIndexSet</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The multi-index set defining the interpolating polynomial.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">multi_index</span>
 
+    <span class="c1"># --- Public methods</span>
 <div class="viewcode-block" id="Interpolant.to_newton">
 <a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolant.to_newton">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_newton</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the interpolant as a polynomial in the Newton basis.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__interpolation_poly</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_newton</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NewtonPolynomial</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the interpolant as a polynomial in the Newton basis.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NewtonPolynomial</span>
+<span class="sd">            The interpolating polynomial represented in the Newton basis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolation_poly</span></div>
 
 
 <div class="viewcode-block" id="Interpolant.to_lagrange">
 <a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolant.to_lagrange">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_lagrange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the interpolant as a polynomial in the Lagrange basis.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_lagrange</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LagrangePolynomial</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the interpolant as a polynomial in the Lagrange basis.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        LagrangePolynomial</span>
+<span class="sd">            The interpolating polynomial represented in the Lagrange basis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">LagrangePolynomial</span><span class="o">.</span><span class="n">from_grid</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">lagrange_coeffs</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_func_values</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Interpolant.to_canonical">
 <a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolant.to_canonical">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_canonical</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the interpolant as a polynomial in the canonical basis.&quot;&quot;&quot;</span>
-        <span class="n">nwt_poly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__interpolation_poly</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_canonical</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CanonicalPolynomial</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the interpolant as a polynomial in the canonical basis.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        CanonicalPolynomial</span>
+<span class="sd">            The interpolating polynomial represented in the canonical</span>
+<span class="sd">            (monomial) basis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nwt_poly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolation_poly</span>
 
         <span class="k">return</span> <span class="n">NewtonToCanonical</span><span class="p">(</span><span class="n">nwt_poly</span><span class="p">)()</span></div>
 
 
 <div class="viewcode-block" id="Interpolant.to_chebyshev">
 <a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolant.to_chebyshev">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_chebyshev</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the interpolant as a polynomial in the Chebyshev basis.&quot;&quot;&quot;</span>
-        <span class="n">nwt_poly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__interpolation_poly</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_chebyshev</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChebyshevPolynomial</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the interpolant as a polynomial in the Chebyshev basis.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ChebyshevPolynomial</span>
+<span class="sd">            The interpolating polynomial represented in the Chebyshev basis</span>
+<span class="sd">            (of the first kind).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nwt_poly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolation_poly</span>
 
         <span class="k">return</span> <span class="n">NewtonToChebyshev</span><span class="p">(</span><span class="n">nwt_poly</span><span class="p">)()</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pts</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaulate the interpolant on a given array of points.</span>
+    <span class="c1"># --- Dunder methods</span>
+<div class="viewcode-block" id="Interpolant.__call__">
+<a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.Interpolant.__call__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xx</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the interpolant on a given array of points.</span>
 
-<span class="sd">        :param pts: Array of points, where the shape needs to be ``pts.shape == (N,spatial_dimension)``,</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xx : array_like</span>
+<span class="sd">            Query points to evaluate. Can be a scalar, list, or numpy array.</span>
+<span class="sd">            The points will be standardized to a two-dimensional array of</span>
+<span class="sd">            shape ``(k, m)`` where ``k`` is the number of query points and</span>
+<span class="sd">            ``m`` is the spatial dimension of the polynomial.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Additional keyword-only arguments that change the behavior of</span>
+<span class="sd">            the underlying evaluation (see the concrete implementation of the</span>
+<span class="sd">            interpolating polynomial).</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`numpy:numpy.ndarray`</span>
+<span class="sd">            The values of the polynomial evaluated at query points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__interpolation_poly</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolation_poly</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span></div>
+</div>
 
 
 
 <div class="viewcode-block" id="interpolate">
 <a class="viewcode-back" href="../../api/interpolation.html#minterpy.interpolation.interpolate">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">interpolate</span><span class="p">(</span><span class="n">fct</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">poly_degree</span><span class="p">,</span> <span class="n">lp_degree</span><span class="o">=</span><span class="n">DEFAULT_LP_DEG</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate a given function.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">interpolate</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">spatial_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">poly_degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_LP_DEG</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Interpolant</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Interpolate a function using a complete multi-index set polynomial.</span>
 
-<span class="sd">    Return an interpolant, which represents the given function on the domain :math:`[-1, 1]^d`, where :math:`d` is the dimension of the domain space.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : Callable</span>
+<span class="sd">        The function to interpolate. It must accept as the first argument</span>
+<span class="sd">        a :class:`numpy:numpy.ndarray` with shape ``(k, m)``, where ``k``</span>
+<span class="sd">        is the number of evaluation points and ``m`` is the spatial</span>
+<span class="sd">        dimension. The function returns a :class:`numpy:numpy.ndarray`</span>
+<span class="sd">        with shape ``(k, )`` for scalar outputs and ``(k, d)``</span>
+<span class="sd">        for vector outputs, where ``d``  is the output dimension.</span>
+<span class="sd">    spatial_dimension : int</span>
+<span class="sd">        The dimension of the interpolator.</span>
+<span class="sd">    poly_degree : int</span>
+<span class="sd">        The degree of the interpolating polynomial.</span>
+<span class="sd">    lp_degree : float, optional</span>
+<span class="sd">        The degree :math:`p` of the :math:`l_p`-norm used to define</span>
+<span class="sd">        the (multivariate) polynomial degree.</span>
+<span class="sd">    bounds : array_like, optional</span>
+<span class="sd">        The bounds of the domain space, an array of shape ``(m, 2)``,</span>
+<span class="sd">        where ``m`` is the spatial dimension. Each row corresponds to the</span>
+<span class="sd">        lower and upper bounds of the domain in the corresponding dimension.</span>
+<span class="sd">        If not provided, the bounds are assumed to be :math:`[-1, 1]^m`.</span>
 
-
-
-<span class="sd">    :param fct: Function to be interpolated. Needs to be (numpy) universal function which shall be interpolated. If `arr` is an :class:`np.ndarray` with shape ``arr.shape == (N,spatial_dimension)``, the signature needs to be ``fct(arr) -&gt; res``, where ``res`` is an :class:`np.ndarray` with shape ``(N,)``.</span>
-<span class="sd">    :type fct: Callable</span>
-
-<span class="sd">    :param spatial_dimension: dimension of the domain space.</span>
-<span class="sd">    :type spatial_dimension: int</span>
-<span class="sd">    :param poly_degree: degree of the interpolation polynomials</span>
-<span class="sd">    :type poly_degree: int</span>
-<span class="sd">    :param lp_degree: degree of the :math:`l_p` norm used to determine the `poly_degree`.</span>
-<span class="sd">    :type lp_degree: int</span>
-
-<span class="sd">    :return: The interpolant of ``fct`` using the default interpolator build from ``(spatial_dimension, poly_degree, lp_degree)``.</span>
-<span class="sd">    :rtype: Interpolant</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Interpolant</span>
+<span class="sd">        The interpolant of ``func`` with respect to the lexicographically</span>
+<span class="sd">        complete multi-index set :math:`\mathcal{A}_{m, n, p}` where :math:`m`</span>
+<span class="sd">        is ``spatial_dimension``, :math:`n` is ``poly_degree``, and :math:`p`</span>
+<span class="sd">        is ``lp_degree``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">Interpolant</span><span class="o">.</span><span class="n">from_degree</span><span class="p">(</span><span class="n">fct</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">poly_degree</span><span class="p">,</span> <span class="n">lp_degree</span><span class="p">)</span></div>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">poly_degree</span><span class="p">,</span> <span class="n">lp_degree</span>
+
+    <span class="k">return</span> <span class="n">Interpolant</span><span class="o">.</span><span class="n">from_degree</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span></div>
 
 </pre></div>
 

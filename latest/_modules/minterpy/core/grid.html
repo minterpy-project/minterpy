@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev52+g20733a5e7" />
+  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
   </head>
   
   
@@ -452,6 +452,36 @@
 <span class="sd">More detailed background information can be found in</span>
 <span class="sd">:doc:`/fundamentals/interpolation-at-unisolvent-nodes`.</span>
 
+<span class="sd">Generating Points Convention</span>
+<span class="sd">-----------------------------</span>
+
+<span class="sd">The generating points are stored as a two-dimensional array of shape</span>
+<span class="sd">``(n + 1, m)``:</span>
+
+<span class="sd">- **Columns** represent spatial dimensions: each column contains the</span>
+<span class="sd">  one-dimensional interpolation nodes for that specific dimension</span>
+<span class="sd">- **Rows** represent polynomial degrees: row ``i`` contains nodes for</span>
+<span class="sd">  polynomial degree ``i`` (from degree 0 to degree ``n``)</span>
+
+<span class="sd">**Important**: Currently, generating points must be defined in the normalized</span>
+<span class="sd">domain :math:`[-1, 1]^m`. When a custom user domain is specified,</span>
+<span class="sd">the Grid handles transformation automatically during function evaluation.</span>
+
+<span class="sd">Example structure for a 2D grid with maximum degree 3::</span>
+
+<span class="sd">    generating_points = [</span>
+<span class="sd">        [x0_dim1, x0_dim2],  # Degree 0 nodes</span>
+<span class="sd">        [x1_dim1, x1_dim2],  # Degree 1 nodes</span>
+<span class="sd">        [x2_dim1, x2_dim2],  # Degree 2 nodes</span>
+<span class="sd">        [x3_dim1, x3_dim2],  # Degree 3 nodes</span>
+<span class="sd">    ]</span>
+<span class="sd">    # All values must be in [-1, 1]</span>
+
+<span class="sd">The generating function, when provided, produces this array structure.</span>
+<span class="sd">Different generating function (e.g., Chebyshev-Lobatto, equidistant, Leja)</span>
+<span class="sd">creates different node distributions within :math:`[-1, 1]`, each with distinct</span>
+<span class="sd">approximation properties.</span>
+
 <span class="sd">How-To Guides</span>
 <span class="sd">=============</span>
 
@@ -463,13 +493,14 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span><span class="p">,</span> <span class="n">deepcopy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.global_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARRAY</span><span class="p">,</span> <span class="n">INT_DTYPE</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.gen_points</span><span class="w"> </span><span class="kn">import</span> <span class="n">GENERATING_FUNCTIONS</span><span class="p">,</span> <span class="n">gen_points_from_values</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.domain</span><span class="w"> </span><span class="kn">import</span> <span class="n">Domain</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.multi_index</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiIndexSet</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.tree</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiIndexTree</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_unique</span>
@@ -477,7 +508,6 @@
     <span class="n">check_type</span><span class="p">,</span>
     <span class="n">check_values</span><span class="p">,</span>
     <span class="n">check_dimensionality</span><span class="p">,</span>
-    <span class="n">check_domain_fit</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Grid&quot;</span><span class="p">]</span>
@@ -487,14 +517,6 @@
 
 <span class="c1"># Type alias</span>
 <span class="n">GEN_FUNCTION</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_gen_unisolvent_nodes</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">generating_points</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    .. todo::</span>
-<span class="sd">        - document this function but ship it to utils first.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">generating_points</span><span class="p">,</span> <span class="n">multi_index</span><span class="o">.</span><span class="n">exponents</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 
 <span class="c1"># TODO implement comparison operations based on multi index comparison operations and the generating values used</span>
@@ -530,6 +552,10 @@
 <span class="sd">        are created from the default generating function. If specified,</span>
 <span class="sd">        then the points must be consistent with any non-``None`` generating</span>
 <span class="sd">        function.</span>
+<span class="sd">    domain : Domain, optional</span>
+<span class="sd">        The domain of the interpolation grid. This parameter is optional.</span>
+<span class="sd">        If not specified, a normalized domain in the hypercube of</span>
+<span class="sd">        :math:`[-1, 1]^m` is created.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -538,6 +564,11 @@
 <span class="sd">      of the multi-index set of polynomial exponents and the spatial dimension</span>
 <span class="sd">      (``m``). Furthermore, it must return an array of shape ``(n + 1, m)``</span>
 <span class="sd">      whose values are unique per column.</span>
+<span class="sd">    - Generating points array has shape ``(n + 1, m)`` where columns</span>
+<span class="sd">      represent spatial dimensions and rows represent polynomial degrees.</span>
+<span class="sd">      All values must be in the normalized domain :math:`[-1, 1]^m`.</span>
+<span class="sd">      Different generating functions create different node distributions within</span>
+<span class="sd">      this normalized space.</span>
 <span class="sd">    - The multi-index set to construct a :class:`Grid` instance may not be</span>
 <span class="sd">      downward-closed. However, building a :class:`.MultiIndexTree` used</span>
 <span class="sd">      in the transformation between polynomials in the Newton and Lagrange</span>
@@ -551,12 +582,19 @@
         <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
         <span class="n">generating_function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">generating_points</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 
         <span class="c1"># --- Arguments processing</span>
 
         <span class="c1"># Process and assign the multi-index set argument</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span> <span class="o">=</span> <span class="n">_process_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
+
+        <span class="c1"># Process and assign the domain</span>
+        <span class="k">if</span> <span class="n">domain</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="n">Domain</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_domain</span> <span class="o">=</span> <span class="n">_process_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">)</span>
 
         <span class="c1"># If generating_function and points not specified,</span>
         <span class="c1"># use the default generating function</span>
@@ -571,13 +609,15 @@
         <span class="p">)</span>
 
         <span class="c1"># Assign and verify the generating points argument</span>
+        <span class="c1"># Note: Domain is already processed</span>
         <span class="k">if</span> <span class="n">no_gen_points</span><span class="p">:</span>
             <span class="n">generating_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_generating_points</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Create a copy to avoid accidental changes from the outside</span>
             <span class="n">generating_points</span> <span class="o">=</span> <span class="n">generating_points</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span> <span class="o">=</span> <span class="n">generating_points</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_verify_generating_points</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verify_generating_points</span><span class="p">(</span>
+            <span class="n">generating_points</span>
+        <span class="p">)</span>
 
         <span class="c1"># --- Post-assignment verifications</span>
 
@@ -603,6 +643,7 @@
         <span class="n">lp_degree</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">generating_function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">generating_points</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Create an instance of Grid with a complete multi-index set.</span>
 
@@ -645,6 +686,10 @@
 <span class="sd">            the generating points are created from the default generating</span>
 <span class="sd">            function. If specified, then the points must be consistent</span>
 <span class="sd">            with any non-``None`` generating function.</span>
+<span class="sd">        domain : Domain, optional</span>
+<span class="sd">            The domain of the interpolation grid. This parameter is optional.</span>
+<span class="sd">            If not specified, a normalized domain in the hypercube of</span>
+<span class="sd">            :math:`[-1, 1]^m` is created.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -661,7 +706,7 @@
         <span class="p">)</span>
 
         <span class="c1"># Create an instance of Grid</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">mi</span><span class="p">,</span> <span class="n">generating_function</span><span class="p">,</span> <span class="n">generating_points</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">mi</span><span class="p">,</span> <span class="n">generating_function</span><span class="p">,</span> <span class="n">generating_points</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Grid.from_function">
@@ -671,6 +716,7 @@
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
         <span class="n">generating_function</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of Grid with a given generating function.</span>
 
@@ -688,6 +734,10 @@
 <span class="sd">            and ``m`` is the spatial dimension.</span>
 <span class="sd">            Alternatively, a string as a key to dictionary of built-in</span>
 <span class="sd">            generating functions may be specified.</span>
+<span class="sd">        domain : Domain, optional</span>
+<span class="sd">            The domain of the interpolation grid. This parameter is optional.</span>
+<span class="sd">            If not specified, a normalized domain in the hypercube of</span>
+<span class="sd">            :math:`[-1, 1]^m` is created.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -695,7 +745,11 @@
 <span class="sd">            A new instance of the `Grid` class initialized with the given</span>
 <span class="sd">            generating function.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">generating_function</span><span class="o">=</span><span class="n">generating_function</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">multi_index</span><span class="p">,</span>
+            <span class="n">generating_function</span><span class="o">=</span><span class="n">generating_function</span><span class="p">,</span>
+            <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Grid.from_points">
@@ -705,6 +759,7 @@
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
         <span class="n">generating_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of Grid from an array of generating points.</span>
 
@@ -720,6 +775,10 @@
 <span class="sd">            where ``n`` is the maximum polynomial degree in all dimensions</span>
 <span class="sd">            (i.e., the maximum exponent) and ``m`` is the spatial dimension.</span>
 <span class="sd">            The values in each column must be unique.</span>
+<span class="sd">        domain : Domain, optional</span>
+<span class="sd">            The domain of the interpolation grid. This parameter is optional.</span>
+<span class="sd">            If not specified, a normalized domain in the hypercube of</span>
+<span class="sd">            :math:`[-1, 1]^m` is created.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -727,7 +786,11 @@
 <span class="sd">            A new instance of the `Grid` class initialized</span>
 <span class="sd">            with the given multi-index set and generating points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">generating_points</span><span class="o">=</span><span class="n">generating_points</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">multi_index</span><span class="p">,</span>
+            <span class="n">generating_points</span><span class="o">=</span><span class="n">generating_points</span><span class="p">,</span>
+            <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Grid.from_value_set">
@@ -737,6 +800,7 @@
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
         <span class="n">generating_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of Grid from an array of generating values.</span>
 
@@ -752,6 +816,10 @@
 <span class="sd">            a one-dimensional array of floats of length ``(n + 1, )``</span>
 <span class="sd">            where ``n`` is the maximum exponent of the multi-index set.</span>
 <span class="sd">            The values in the array must be unique.</span>
+<span class="sd">        domain : Domain, optional</span>
+<span class="sd">            The domain of the interpolation grid. This parameter is optional.</span>
+<span class="sd">            If not specified, a normalized domain in the hypercube of</span>
+<span class="sd">            :math:`[-1, 1]^m` is created.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -779,7 +847,11 @@
             <span class="n">spatial_dimension</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">generating_points</span><span class="o">=</span><span class="n">generating_points</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">multi_index</span><span class="p">,</span>
+            <span class="n">generating_points</span><span class="o">=</span><span class="n">generating_points</span><span class="p">,</span>
+            <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
     <span class="c1"># --- Properties</span>
@@ -833,6 +905,19 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">domain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Domain</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The domain associated with the Grid.</span>
+
+<span class="sd">        The domain represents the rectangular bounds of the Grid.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Domain</span>
+<span class="sd">            The domain of the interpolation grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_domain</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">max_exponent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The maximum exponent of the interpolation grid.</span>
 
@@ -846,18 +931,26 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">unisolvent_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The array of unisolvent nodes.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The array of unisolvent nodes in the normalized domain.</span>
 
-<span class="sd">        For a definition of unisolvent nodes, see</span>
-<span class="sd">        :doc:`/fundamentals/unisolvence`</span>
-<span class="sd">        in the docs.</span>
+<span class="sd">        The unisolvent nodes are provided in the normalized domain</span>
+<span class="sd">        :math:`[-1, 1]^m`.</span>
+
+<span class="sd">        For a definition of unisolvent nodes,</span>
+<span class="sd">        see :doc:`/fundamentals/unisolvence` in the docs.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        :class:`numpy:numpy.ndarray`</span>
-<span class="sd">            The unisolvent nodes as a two-dimensional array of floats.</span>
-<span class="sd">            The shape of the array is ``(N, m)`` where ``N`` is the number of</span>
-<span class="sd">            elements in the multi-index set and ``m`` is the spatial dimension.</span>
+<span class="sd">            The unisolvent nodes in [-1, 1]^m as a two-dimensional array</span>
+<span class="sd">            of floats. The shape of the array is ``(N, m)``</span>
+<span class="sd">            where ``N`` is the number of elements in the multi-index set</span>
+<span class="sd">            and ``m`` is the spatial dimension.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - When evaluating functions via ``grid(func)``,</span>
+<span class="sd">          the nodes are automatically transformed to the user-defined domain.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unisolvent_nodes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># lazy evaluation</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_unisolvent_nodes</span> <span class="o">=</span> <span class="n">_gen_unisolvent_nodes</span><span class="p">(</span>
@@ -891,18 +984,6 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># lazy evaluation</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="n">MultiIndexTree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">has_generating_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``True`` if the instance has a generating function.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        bool</span>
-<span class="sd">            ``True`` if the instance has a generating function assigned to it,</span>
-<span class="sd">            and ``False`` otherwise.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -960,69 +1041,151 @@
 
 <div class="viewcode-block" id="Grid.expand_dim">
 <a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.expand_dim">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">expand_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dimension</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;Grid&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Expand the dimension of the Grid.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">expand_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;Grid&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Expand the dimension of the Grid to a target dimension or Grid.</span>
+
+<span class="sd">        This method creates a new Grid with a higher spatial dimension by</span>
+<span class="sd">        expanding both the underlying multi-index set and the domain.</span>
+<span class="sd">        The expansion can target either a specific integer dimension</span>
+<span class="sd">        or match the dimension of another (compatible) Grid instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        target_dimension : Union[Grid, int]</span>
-<span class="sd">            The new spatial dimension. It must be larger than or equal</span>
-<span class="sd">            to the current dimension of the Grid. Alternatively,</span>
-<span class="sd">            another instance of Grid whose dimension is higher can also</span>
-<span class="sd">            be specified as a target dimension.</span>
+<span class="sd">        target : Union[Grid, int]</span>
+<span class="sd">            The target for for dimension expansion:</span>
+
+<span class="sd">            - If int: The new spatial dimension (must be &gt;= current dimension).</span>
+<span class="sd">              For non-normalized domains, expansion to an integer is not</span>
+<span class="sd">              allowed.</span>
+<span class="sd">            - If Grid: Another Grid instance whose dimension to match.</span>
+<span class="sd">              The grids must have compatible generating functions or points.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Grid</span>
-<span class="sd">            The Grid with expanded dimension.</span>
+<span class="sd">            A new Grid instance with expanded dimension, containing:</span>
+
+<span class="sd">            - Expanded multi-index set</span>
+<span class="sd">            - Expanded domain</span>
+<span class="sd">            - Compatible generating function or points</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If an instance is expanded to a dimension that cannot be supported</span>
-<span class="sd">            either by the available generating function or generating points.</span>
-<span class="sd">            If the target dimension is a `Grid`, the exception is raised</span>
-<span class="sd">            when there are inconsistencies in either generating function</span>
-<span class="sd">            or points.</span>
+<span class="sd">            If the target dimension is smaller than the current dimension,</span>
+<span class="sd">            if expanding a non-normalized domain to an integer dimension,</span>
+<span class="sd">            if the generating points cannot accommodate the target dimension,</span>
+<span class="sd">            or if the Grid is not compatible with the target Grid.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Expand the dimension to the target Grid instance</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_dimension</span><span class="p">,</span> <span class="n">Grid</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">_expand_dim_to_target_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dimension</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Grid</span><span class="p">):</span>
+           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expand_to_grid</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 
-        <span class="c1"># Expand to the target dimension</span>
-        <span class="k">return</span> <span class="n">_expand_dim_to_target_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dimension</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expand_to_dimension</span><span class="p">(</span><span class="n">target</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid.has_compatible_gen_function">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.has_compatible_gen_function">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_compatible_gen_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if two grids have a compatible generating function.</span>
+
+<span class="sd">        Two grids have a compatible generating function if each has</span>
+<span class="sd">        a generating function and they are an identical function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : Grid</span>
+<span class="sd">            Another Grid instance to check compatibility with.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the generating functions are compatible,</span>
+<span class="sd">            ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_generating_function</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_has_generating_function</span><span class="p">:</span>
+            <span class="c1"># Check if the grid instances have compatible generating functions</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">generating_function</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Grid.has_compatible_gen_points">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.has_compatible_gen_points">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_compatible_gen_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if two grids have compatible generating points.</span>
+
+<span class="sd">        Two grids have compatible generating points if their generating point</span>
+<span class="sd">        arrays match in the common dimensions (columns) and common degrees</span>
+<span class="sd">        (rows). Compatibility is checked by comparing the overlapping subarray.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : Grid</span>
+<span class="sd">            Another Grid instance to check compatibility with.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the generating points are compatible in their common</span>
+<span class="sd">            dimensions and degrees, ``False`` otherwise.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Compatibility is checked only for the intersection of dimensions</span>
+<span class="sd">          and degrees</span>
+<span class="sd">        - For example, a grid with 3D generating points can be compatible with</span>
+<span class="sd">          a 2D grid if their first 2 dimensions match; or a grid with degree 5</span>
+<span class="sd">          can be compatible with degree 3 if the first 4 rows (degrees 0-3)</span>
+<span class="sd">          match</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Find common dimensions and degrees to compare</span>
+        <span class="n">common_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">)</span>
+        <span class="n">common_deg</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Extract overlapping subarrays</span>
+        <span class="n">gen_points_self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span><span class="p">[:</span><span class="n">common_deg</span><span class="p">,</span> <span class="p">:</span><span class="n">common_dim</span><span class="p">]</span>
+        <span class="n">gen_points_other</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">generating_points</span><span class="p">[:</span><span class="n">common_deg</span><span class="p">,</span> <span class="p">:</span><span class="n">common_dim</span><span class="p">]</span>
+
+        <span class="c1"># Check if they match</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">gen_points_self</span><span class="p">,</span> <span class="n">gen_points_other</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Grid.is_compatible">
 <a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.is_compatible">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_compatible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``True`` if the instance is compatible with another.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if two instances of Grid are compatible.</span>
 
-<span class="sd">        Two grids are compatible if they have the same generating function</span>
-<span class="sd">        (if exists) and the generating points up to a common dimension.</span>
+<span class="sd">        Two instances of Grid are compatible if they have:</span>
+
+<span class="sd">        - The same generating function (when both have one), OR</span>
+<span class="sd">        - Compatible generating points (matching values in common dimensions,</span>
+<span class="sd">          i.e., columns and common degrees, i.e., rows)</span>
+
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        other : Grid</span>
-<span class="sd">            The other instance to check its compatibility with the current</span>
-<span class="sd">            instance.</span>
+<span class="sd">            Another Grid instance to check compatibility with.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        bool</span>
-<span class="sd">            ``True`` if the current instance is compatible with the given</span>
-<span class="sd">            instance; ``False`` otherwise.</span>
+<span class="sd">            ``True`` if the generating data is compatible, ``False`` otherwise.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - This method checks ONLY the compatibility of the underlying</span>
+<span class="sd">          generating functions or points of the two instances of Grid.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">_have_gen_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-            <span class="c1"># Check if the Grid instances have compatible generating functions</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">_have_compatible_gen_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-                <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="c1"># Check if the Grid instances have compatible generating points</span>
-        <span class="k">if</span> <span class="n">_have_compatible_gen_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_compatible_gen_function</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">or</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_compatible_gen_points</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Grid.make_complete">
@@ -1079,77 +1242,31 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_instance</span><span class="p">(</span><span class="n">mi_downward_closed</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Grid.merge">
-<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.merge">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge two instances of Grid with a new multi-index set.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        other : Grid</span>
-<span class="sd">            Another instance of `Grid` to merge with the current instance.</span>
-<span class="sd">        multi_index : MultiIndexSet</span>
-<span class="sd">            The multi-index set of the merged instance.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Grid</span>
-<span class="sd">            The merged instance with the given multi-index set.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        ValueError</span>
-<span class="sd">            If the generating functions of the instances are incompatible</span>
-<span class="sd">            with each other (if both are specified) or if the generating points</span>
-<span class="sd">            are incompatible with each other (if an instance is missing</span>
-<span class="sd">            a generating function).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">_have_gen_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-            <span class="c1"># Check if the Grid instances have compatible generating functions</span>
-            <span class="k">if</span> <span class="n">_have_compatible_gen_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-                <span class="c1"># The functions are compatible</span>
-                <span class="n">gen_fun</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">gen_fun</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;The Grid instance has an incompatible generating function&quot;</span>
-                    <span class="s2">&quot; with the other instance&quot;</span>
-                <span class="p">)</span>
-
-        <span class="c1"># Check if the Grid instances have compatible generating points</span>
-        <span class="k">if</span> <span class="n">_have_compatible_gen_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-            <span class="c1"># Get the largest generating points from the two</span>
-            <span class="n">gen_points</span> <span class="o">=</span> <span class="n">_get_larger_gen_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">gen_points</span><span class="p">)</span>
-
-        <span class="c1"># Points are inconsistent</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;The Grid instance has incompatible generating points &quot;</span>
-            <span class="s2">&quot;with the other instance&quot;</span>
-        <span class="p">)</span></div>
-
-
     <span class="c1"># --- Special methods: Copies</span>
     <span class="c1"># copying</span>
 <div class="viewcode-block" id="Grid.__copy__">
 <a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__copy__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates of a shallow copy.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a shallow copy of the instance.</span>
 
-<span class="sd">        This function is called, if one uses the top-level function ``copy()`` on an instance of this class.</span>
+<span class="sd">        This function is called when using the top-level function ``copy()``</span>
+<span class="sd">        on an instance of this class.</span>
 
-<span class="sd">        :return: The copy of the current instance.</span>
-<span class="sd">        :rtype: Grid</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A shallow copy of the current instance.</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
 <span class="sd">        copy.copy</span>
-<span class="sd">            copy operator form the python standard library.</span>
+<span class="sd">            Copy operator from the Python standard library.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span><span class="p">,</span>
             <span class="n">generating_function</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_function</span><span class="p">,</span>
             <span class="n">generating_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="p">,</span>
+            <span class="n">domain</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_domain</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
@@ -1158,53 +1275,73 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mem</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create of a deepcopy.</span>
 
-<span class="sd">        This function is called, if one uses the top-level function</span>
+<span class="sd">        This function is called if one uses the top-level function</span>
 <span class="sd">        ``deepcopy()`` on an instance of this class.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Grid</span>
 <span class="sd">            A deepcopy of the current instance where the underlying</span>
-<span class="sd">            multi-index set and the generating points are deepcopied.</span>
+<span class="sd">            multi-index set, the domain, and the generating points</span>
+<span class="sd">            are deepcopied.</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
 <span class="sd">        copy.deepcopy</span>
 <span class="sd">            copy function from the Python standard library.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Create a new instance with deep-copied multi-index set</span>
-        <span class="n">multi_index</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span><span class="p">)</span>
-        <span class="n">new_self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_instance</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
+        <span class="c1"># Create a new instance with a deep-copied multi-index set and domain</span>
+        <span class="n">multi_index</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span><span class="p">,</span> <span class="n">mem</span><span class="p">)</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_domain</span><span class="p">,</span> <span class="n">mem</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">new_self</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_instance</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span></div>
 
 
     <span class="c1"># --- Dunder method: Callable instance</span>
 <div class="viewcode-block" id="Grid.__call__">
 <a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the given function on the unisolvent nodes of the grid.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate a function on the unisolvent nodes in the given domain.</span>
+
+<span class="sd">        The function is evaluated at the unisolvent nodes transformed from</span>
+<span class="sd">        the canonical domain :math:`[-1, 1]^m` to the user-defined domain.</span>
+<span class="sd">        This allows users to define functions in their natural coordinate</span>
+<span class="sd">        system without manually handling domain transformations.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fun : Callable</span>
-<span class="sd">            The given function to evaluate. The function must accept as its</span>
-<span class="sd">            first argument a two-dimensional array and return as its output</span>
-<span class="sd">            an array of the same length as the input array.</span>
+<span class="sd">            The function to evaluate. Must accept as its first argument a</span>
+<span class="sd">            two-dimensional array of shape ``(N, m)`` and return an array of</span>
+<span class="sd">            length ``N``, where ``N`` is the number of unisolvent nodes</span>
+<span class="sd">            and ``m`` is the spatial dimension.</span>
 <span class="sd">        *args</span>
-<span class="sd">            Additional positional arguments passed to the given function.</span>
+<span class="sd">            Additional positional arguments passed to the function.</span>
 <span class="sd">        **kwargs</span>
-<span class="sd">            Additional keyword arguments passed to the given function.</span>
+<span class="sd">            Additional keyword arguments passed to the function.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        :class:`numpy:numpy.ndarray`</span>
-<span class="sd">            The values of the given function evaluated on the unisolvent nodes</span>
-<span class="sd">            (i.e., the coefficients of the polynomial in the Lagrange basis).</span>
+<span class="sd">            The function values evaluated at the unisolvent nodes in the</span>
+<span class="sd">            user domain. These values correspond to the coefficients of</span>
+<span class="sd">            the polynomial in the Lagrange basis.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - The unisolvent nodes are automatically transformed from</span>
+<span class="sd">          :math:`[-1, 1]^m` to the given domain before evaluation.</span>
+<span class="sd">        - If the domain is normalized (:math:`[-1, 1]^m`),</span>
+<span class="sd">          there no transformation takes place.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># No need for type checking the argument; rely on Python to raise any</span>
-        <span class="c1"># exceptions when a problematic &#39;fun&#39; is called on the nodes.</span>
-        <span class="k">return</span> <span class="n">fun</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unisolvent_nodes</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="c1"># exceptions when problematic &#39;fun&#39; is called on the nodes.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">is_identity</span><span class="p">:</span>
+            <span class="n">xx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unisolvent_nodes</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">xx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">map_from_internal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unisolvent_nodes</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fun</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
     <span class="c1"># --- Dunder methods: Rich comparison</span>
@@ -1217,7 +1354,8 @@
 
 <span class="sd">        - both the underlying multi-index sets are equal, and</span>
 <span class="sd">        - both the generating points are equal, and</span>
-<span class="sd">        - both the generating functions are equal.</span>
+<span class="sd">        - both the generating functions are equal, and</span>
+<span class="sd">        - both the underlying domains are equal.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1242,6 +1380,10 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">generating_function</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
+        <span class="c1"># Domain equality</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
         <span class="c1"># Generating points equality</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">generating_points</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -1257,48 +1399,118 @@
 <div class="viewcode-block" id="Grid.__mul__">
 <a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__mul__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiply two instances of `Grid` via the ``*`` operator.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiply two instances of Grid via the ``*`` operator.</span>
+
+<span class="sd">        Multiplying two instances of Grid creates a product grid with</span>
+<span class="sd">        a multi-index set that is the product of the underlying sets</span>
+<span class="sd">        of the two operands, and a domain that is the union of the two</span>
+<span class="sd">        underlying domains.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        other : `Grid`</span>
-<span class="sd">            The second operand of the grid multiplication.</span>
+<span class="sd">        other : Grid</span>
+<span class="sd">            The second Grid operand for multiplication.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        `Grid`</span>
-<span class="sd">            The product of two grids; the underlying multi-index set is</span>
-<span class="sd">            the product of the multi-index sets of the operands.</span>
+<span class="sd">        Grid</span>
+<span class="sd">            The product grid with:</span>
+
+<span class="sd">            - Product of the two multi-index sets</span>
+<span class="sd">            - Union of the two domains</span>
+<span class="sd">            - Compatible generating function or points</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - This operation provides the infrastructure for polynomial</span>
+<span class="sd">          multiplication: if polynomial ``p1`` is defined on ``grid1``</span>
+<span class="sd">          and ``p2`` on ``grid2``, then their product ``(p1 * p2)``</span>
+<span class="sd">          is naturally defined on ``(grid1 * grid2)``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Multiply the underlying multi-index sets</span>
         <span class="n">mi_product</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">multi_index</span>
+        <span class="n">domain_union</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">mi_product</span><span class="p">)</span></div>
+        <span class="c1">#return self.merge(other, mi_product)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_combine_with</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">mi_product</span><span class="p">,</span> <span class="n">domain_union</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Grid.__or__">
 <a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid.__or__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Combine two instances of `Grid` via the ``|`` operator.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Combine two instances of Grid via the ``|`` operator.</span>
+
+<span class="sd">        Combining two instances of Grid creates a union grid with a multi-index</span>
+<span class="sd">        set that is the union of the underlying sets of the two operands,</span>
+<span class="sd">        and a domain that is the union of the two underlying domains.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        other : `Grid`</span>
-<span class="sd">            The second operand of the grid union.</span>
+<span class="sd">        other : Grid</span>
+<span class="sd">            The second Grid operand for union.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        `Grid`</span>
-<span class="sd">            The union of two grids; the underlying multi-index set is</span>
-<span class="sd">            the union of the multi-index sets of the operands.</span>
+<span class="sd">        Grid</span>
+<span class="sd">            The union grid with:</span>
+
+<span class="sd">            - Union of the two multi-index sets</span>
+<span class="sd">            - Union of the two domains</span>
+<span class="sd">            - Compatible generating function or points</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - This operation provides the infrastructure for polynomial addition:</span>
+<span class="sd">          if polynomial ``p1`` is defined on ``grid1`` and ``p2`` on ``grid2``,</span>
+<span class="sd">          then their sum ``(p1 + p2)`` is naturally defined</span>
+<span class="sd">          on ``(grid1 | grid2)``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Add (union) the underlying multi-index sets</span>
         <span class="n">mi_union</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">multi_index</span>
+        <span class="n">domain_union</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">mi_union</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_combine_with</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">mi_union</span><span class="p">,</span> <span class="n">domain_union</span><span class="p">)</span></div>
 
 
     <span class="c1"># --- Private internal methods: not to be called directly from outside</span>
+<div class="viewcode-block" id="Grid._combine_with">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._combine_with">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_combine_with</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span>
+        <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Combine two compatible grids with specified multi-index and domain.</span>
+
+<span class="sd">        This is a low-level helper used by grid operations, e.g., ``__mul__``,</span>
+<span class="sd">        ``__or__``. The multi-index set and domain are already computed by the</span>
+<span class="sd">        caller; this method picks the compatible generating data and constructs</span>
+<span class="sd">        a new instance of Grid.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : Grid</span>
+<span class="sd">            The other grid to combine with</span>
+<span class="sd">        multi_index : MultiIndexSet</span>
+<span class="sd">            The multi-index for the result</span>
+<span class="sd">        domain : Domain</span>
+<span class="sd">            The domain for the result</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            New grid constructed with the given multi-index and domain</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the generating data</span>
+        <span class="n">gen_fun</span><span class="p">,</span> <span class="n">gen_points</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pick_generating_data</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">gen_fun</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Grid</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">gen_points</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Grid</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">gen_fun</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="Grid._create_generating_points">
 <a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._create_generating_points">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_generating_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1322,40 +1534,165 @@
         <span class="k">return</span> <span class="n">generating_function</span><span class="p">(</span><span class="n">poly_degree</span><span class="p">,</span> <span class="n">spatial_dimension</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="Grid._expand_to_grid">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._expand_to_grid">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_expand_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Expand the dimension of the Grid to match that of a target Grid.</span>
+
+<span class="sd">        This method expands the dimension of the current Grid instance to</span>
+<span class="sd">        match the spatial dimension of the target Grid. Both the underlying</span>
+<span class="sd">        multi-index set and domain are expanded, and the grids must have</span>
+<span class="sd">        compatible generating functions or points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        target : Grid</span>
+<span class="sd">            The target Grid whose dimension to match. Must have compatible</span>
+<span class="sd">            generating functions or points with the current Grid instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A new instance of Grid with:</span>
+
+<span class="sd">            - Dimension matching the target Grid</span>
+<span class="sd">            - Expanded multi-index set</span>
+<span class="sd">            - Expanded domain</span>
+<span class="sd">            - Compatible generating function or points for both grids</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Expand the domain</span>
+        <span class="n">domain_expanded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">expand_dim</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
+
+        <span class="c1"># Expand the multi-index set</span>
+        <span class="n">target_dimension</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">spatial_dimension</span>
+        <span class="n">mi_expanded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">expand_dim</span><span class="p">(</span><span class="n">target_dimension</span><span class="p">)</span>
+
+        <span class="c1"># Combine with the target Grid and validates compatibility</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_combine_with</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">mi_expanded</span><span class="p">,</span> <span class="n">domain_expanded</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid._expand_to_dimension">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._expand_to_dimension">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_expand_to_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Expand the dimension of the Grid to a target dimension.</span>
+
+<span class="sd">        This method expands the dimension of the current Grid instance to</span>
+<span class="sd">        the specified dimension (given as integer).</span>
+<span class="sd">        The domain must be normalized to allow expansion, as the new dimension</span>
+<span class="sd">        is inferred to have the same normalized bounds.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        target : int</span>
+<span class="sd">            The target dimension to expand the Grid to. Must be greater than</span>
+<span class="sd">            or equal to the current dimension.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Grid</span>
+<span class="sd">            A new instance of Grid with:</span>
+
+<span class="sd">            - Dimension equal to the target dimension</span>
+<span class="sd">            - Expanded multi-index set</span>
+<span class="sd">            - Expanded domain</span>
+<span class="sd">            - Same generating function or points as the current instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Expand the domain</span>
+        <span class="n">domain_expanded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">expand_dim</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+        <span class="c1"># Expand the multi-index set</span>
+        <span class="n">mi_expanded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">expand_dim</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+        <span class="c1"># Construct a new instance with the expanded components</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_generating_function</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span>
+                <span class="n">mi_expanded</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span><span class="p">,</span> <span class="n">domain_expanded</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span>
+            <span class="n">mi_expanded</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span><span class="p">,</span>
+            <span class="n">domain_expanded</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_has_generating_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``True`` if the instance has a generating function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the instance has a generating function assigned to it,</span>
+<span class="sd">            and ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
 <div class="viewcode-block" id="Grid._verify_generating_points">
 <a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._verify_generating_points">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_generating_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify if the generating points are valid.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_generating_points</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">generating_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate generating points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        generating_points : np.ndarray</span>
+<span class="sd">            The given generating points to validate, a 2D array of</span>
+<span class="sd">            shape ``(n + 1, m)`` where ``n`` is the maximum degree of the</span>
+<span class="sd">            the grid in any dimension and ``m`` is the maximum spatial</span>
+<span class="sd">            dimension of the grid.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Validated generating points.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If the points are not of the correct dimension, contains</span>
-<span class="sd">            NaN&#39;s or inf&#39;s, do not fit the standard domain, or the values</span>
-<span class="sd">            per column are not unique.</span>
+<span class="sd">            If the points are not of the correct dimension, contain</span>
+<span class="sd">            NaN&#39;s or inf&#39;s, do not match with the dimension of the grid,</span>
+<span class="sd">            the values per column are not unique, or the points are not</span>
+<span class="sd">            within the internal domain.</span>
 <span class="sd">        TypeError</span>
 <span class="sd">            If the points are not given in the correct type.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Generating points may contain more columns (i.e., spatial dimension)</span>
+<span class="sd">          than the grid itself (as defined by the dimension of the multi-index</span>
+<span class="sd">          set). If there&#39;s no generating function, this indicates the maximum</span>
+<span class="sd">          dimension the current grid can be expanded to.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Check array dimension</span>
-        <span class="n">check_dimensionality</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="p">,</span> <span class="n">dimensionality</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="c1"># No NaN&#39;s and inf&#39;s</span>
-        <span class="n">check_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="p">)</span>
-        <span class="c1"># Check domain fit</span>
-        <span class="n">check_domain_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="p">)</span>
-        <span class="c1"># Check dimension against spatial dimension of the set</span>
-        <span class="n">gen_points_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># --- Type and structure checks</span>
+        <span class="n">check_type</span><span class="p">(</span><span class="n">generating_points</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+        <span class="n">check_dimensionality</span><span class="p">(</span><span class="n">generating_points</span><span class="p">,</span> <span class="n">dimensionality</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">check_values</span><span class="p">(</span><span class="n">generating_points</span><span class="p">)</span>  <span class="c1"># No NaN&#39;s and inf&#39;s</span>
+
+        <span class="c1"># --- Dimension check</span>
+        <span class="n">gen_points_dim</span> <span class="o">=</span> <span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">gen_points_dim</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Dimension mismatch between the generating points &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">gen_points_dim</span><span class="si">}</span><span class="s2">) and the multi-index set &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="s2">&quot;Dimension mismatch between generating points &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">gen_points_dim</span><span class="si">}</span><span class="s2">) and the grid (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="s2">)&quot;</span>
             <span class="p">)</span>
-        <span class="c1"># Check the uniqueness of values column-wise</span>
-        <span class="n">are_unique</span> <span class="o">=</span> <span class="nb">all</span><span class="p">([</span><span class="n">is_unique</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="o">.</span><span class="n">T</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">are_unique</span><span class="p">:</span>
+
+        <span class="c1"># --- Uniqueness check (column-wise)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">is_unique</span><span class="p">(</span><span class="n">col</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">generating_points</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;One or more columns of the generating points are not unique&quot;</span>
-            <span class="p">)</span></div>
+            <span class="p">)</span>
+
+        <span class="c1"># --- Internal domain containment check</span>
+        <span class="n">gen_points_</span> <span class="o">=</span> <span class="n">generating_points</span><span class="p">[:,</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">gen_points_</span><span class="p">,</span> <span class="n">internal</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Generating points are not contained in the internal domain&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">generating_points</span></div>
 
 
 <div class="viewcode-block" id="Grid._verify_matching_gen_function_and_points">
@@ -1419,18 +1756,25 @@
 
 <div class="viewcode-block" id="Grid._new_instance">
 <a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._new_instance">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_new_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct new grid instance with a new multi-index set.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_new_instance</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">,</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a new grid instance with a new multi-index set and domain.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        multi_index : MultiIndexSet</span>
 <span class="sd">            The multi-index set of the new instance.</span>
+<span class="sd">        domain : Domain, optional</span>
+<span class="sd">            The domain of the new instance. If not specified, the domain of</span>
+<span class="sd">            the current grid will be used.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Grid</span>
-<span class="sd">            The new instance of `Grid` with the given multi-index set.</span>
+<span class="sd">            A new instance of `Grid` with the given multi-index set.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -1440,21 +1784,88 @@
 <span class="sd">          the generating function or the generating points, an exception</span>
 <span class="sd">          will be raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_generating_function</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">domain</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_generating_function</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span>
                 <span class="n">multi_index</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_generating_function</span><span class="p">,</span>
+                <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span>
             <span class="n">multi_index</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">generating_points</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_generating_points</span><span class="p">,</span>
+            <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Grid._pick_generating_data">
+<a class="viewcode-back" href="../../../api/core/grid.html#minterpy.core.grid.Grid._pick_generating_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pick_generating_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">GEN_FUNCTION</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pick generating data from two compatible grids.</span>
+
+<span class="sd">        This private method validates that the two grids have compatible</span>
+<span class="sd">        generating functions or generating points, then selects the appropriate</span>
+<span class="sd">        generating data to use for constructing a combined grid.</span>
+<span class="sd">        If both grids have compatible generating functions,</span>
+<span class="sd">        the generating function; otherwise, the larger set of generating points</span>
+<span class="sd">        is used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : Grid</span>
+<span class="sd">            Another instance of Grid to pick compatible generating data from.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[Optional[GEN_FUNCTION], Optional[np.ndarray]]</span>
+<span class="sd">            A tuple containing either (Only one element of the tuple will be</span>
+<span class="sd">            non-None):</span>
+
+<span class="sd">            - (generating_function, None) if both grids have compatible</span>
+<span class="sd">              functions</span>
+<span class="sd">            - (None, generating_points) if grids have compatible points.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the grids are not compatible.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - This is a low-level helper method used internally by grid combination</span>
+<span class="sd">          operations (__mul__, __or__, expand_dim). Compatibility is determined</span>
+<span class="sd">          by the is_compatible() method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_compatible_gen_function</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generating_function</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_compatible_gen_points</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="n">gen_points</span> <span class="o">=</span> <span class="n">_get_larger_gen_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gen_points</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Cannot pick generating data from incompatible grids. &quot;</span>
+                <span class="s2">&quot;Grids must have matching generating functions or compatible &quot;</span>
+                <span class="s2">&quot;generating points.&quot;</span>
+            <span class="p">)</span></div>
 </div>
 
 
 
 <span class="c1"># --- Internal helper functions</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_gen_unisolvent_nodes</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">generating_points</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. todo::</span>
+<span class="sd">        - document this function but ship it to utils first.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">generating_points</span><span class="p">,</span> <span class="n">multi_index</span><span class="o">.</span><span class="n">exponents</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_process_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiIndexSet</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process the MultiIndexSet given as an argument to Grid constructor.</span>
 
@@ -1484,6 +1895,45 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;MultiIndexSet must not be empty!&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">multi_index</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Domain</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process the Domain given as an argument to Grid constructor.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    domain : Domain</span>
+<span class="sd">        The domain as input argument to the Grid constructor to be</span>
+<span class="sd">        processed.</span>
+<span class="sd">    multi_index : MultiIndexSet</span>
+<span class="sd">        The multi-index set as input argument to the Grid constructor to be</span>
+<span class="sd">        processed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Domain</span>
+<span class="sd">        The same instance of :class:`Domain` if processing does not</span>
+<span class="sd">        raise any exceptions.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If the domain argument is not an instance of :class:`Domain`.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the domain argument does not have the same spatial dimension as</span>
+<span class="sd">        the multi-index set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">check_type</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">Domain</span><span class="p">)</span>
+
+    <span class="c1"># Spatial dimensions must be consistent</span>
+    <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">spatial_dimension</span> <span class="o">!=</span> <span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Spatial dimension of the domain (</span><span class="si">{</span><span class="n">domain</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="s2">) is &quot;</span>
+            <span class="s2">&quot;inconsistent with that of the multi-index set &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">multi_index</span><span class="o">.</span><span class="n">spatial_dimension</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">domain</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_process_generating_function</span><span class="p">(</span>
@@ -1517,139 +1967,6 @@
     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;The generating function </span><span class="si">{</span><span class="n">generating_function</span><span class="si">}</span><span class="s2"> is not callable&quot;</span>
     <span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_expand_dim_to_target_dim</span><span class="p">(</span>
-    <span class="n">origin_grid</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span>
-    <span class="n">target_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand the dimension of a given Grid to a target dimension.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    origin_grid : Grid</span>
-<span class="sd">        The `Grid` instance whose dimension is to be expanded.</span>
-<span class="sd">    target_dimension : Grid</span>
-<span class="sd">        The target dimension; must be equal to or larger than the current</span>
-<span class="sd">        dimension of the `Grid` instance.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    Grid</span>
-<span class="sd">        The grid with an expanded dimension.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        If the target dimension cannot be accommodated by the available</span>
-<span class="sd">        generating points.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Expand the dimension of the multi-index set</span>
-    <span class="n">mi_expanded</span> <span class="o">=</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">expand_dim</span><span class="p">(</span><span class="n">target_dimension</span><span class="p">)</span>
-
-    <span class="c1"># Check if a generating function is available</span>
-    <span class="k">if</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">has_generating_function</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">origin_grid</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_function</span><span class="p">(</span>
-            <span class="n">mi_expanded</span><span class="p">,</span>
-            <span class="n">origin_grid</span><span class="o">.</span><span class="n">generating_function</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="c1"># Check if the available generating points can accommodate higher dimension</span>
-    <span class="n">gen_points_dim</span> <span class="o">=</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">gen_points_dim</span> <span class="o">&gt;=</span> <span class="n">target_dimension</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">origin_grid</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span>
-            <span class="n">mi_expanded</span><span class="p">,</span>
-            <span class="n">origin_grid</span><span class="o">.</span><span class="n">generating_points</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;The available dimension of the generating points (</span><span class="si">{</span><span class="n">gen_points_dim</span><span class="si">}</span><span class="s2"> &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;can&#39;t accommodate target dimension (</span><span class="si">{</span><span class="n">target_dimension</span><span class="si">}</span><span class="s2">)&quot;</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_expand_dim_to_target_grid</span><span class="p">(</span>
-    <span class="n">origin_grid</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span>
-    <span class="n">target_grid</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grid&quot;</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand the dimension of a given Grid to the dimension of another.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    origin_grid : Grid</span>
-<span class="sd">        The grid whose dimension is to be expanded.</span>
-<span class="sd">    target_grid : Grid</span>
-<span class="sd">        The grid whose dimension is the base for expansion.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    Grid</span>
-<span class="sd">        The grid with an expanded dimension.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        If the generating functions are not compatible (when available) or</span>
-<span class="sd">        if the generating points are not compatible.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Create expanded multi-index set</span>
-    <span class="n">target_dim</span> <span class="o">=</span> <span class="n">target_grid</span><span class="o">.</span><span class="n">spatial_dimension</span>
-    <span class="n">mi_expanded</span> <span class="o">=</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">expand_dim</span><span class="p">(</span><span class="n">target_dim</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">origin_grid</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">target_grid</span><span class="p">,</span> <span class="n">mi_expanded</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_have_gen_functions</span><span class="p">(</span><span class="o">*</span><span class="n">grids</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a sequence of Grid instances all have generating function.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">grd</span><span class="o">.</span><span class="n">has_generating_function</span> <span class="k">for</span> <span class="n">grd</span> <span class="ow">in</span> <span class="n">grids</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_have_compatible_gen_functions</span><span class="p">(</span><span class="n">grid_1</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span> <span class="n">grid_2</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two grids have compatible generating functions.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    grid_1 : Grid</span>
-<span class="sd">        First instance of `Grid` to compare.</span>
-<span class="sd">    grid_2 : Grid</span>
-<span class="sd">        Second instance of `Grid` to compare.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># There is no way in Python to check for equality to what functions do</span>
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">grid_1</span><span class="o">.</span><span class="n">has_generating_function</span>
-        <span class="ow">and</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">has_generating_function</span>
-        <span class="ow">and</span> <span class="n">grid_1</span><span class="o">.</span><span class="n">generating_function</span> <span class="o">==</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">generating_function</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_have_compatible_gen_points</span><span class="p">(</span><span class="n">grid_1</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span> <span class="n">grid_2</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two grids have compatible generating points.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    grid_1 : Grid</span>
-<span class="sd">        First `Grid` instance to compare.</span>
-<span class="sd">    grid_2 : Grid</span>
-<span class="sd">        Second `Grid` instance to compare.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    bool</span>
-<span class="sd">        ``True`` if all generating points in the common spatial dimension</span>
-<span class="sd">        of the two `Grid` instances are equal; ``False`` otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dim_1</span> <span class="o">=</span> <span class="n">grid_1</span><span class="o">.</span><span class="n">spatial_dimension</span>
-    <span class="n">dim_2</span> <span class="o">=</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">spatial_dimension</span>
-    <span class="n">dim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">dim_1</span><span class="p">,</span> <span class="n">dim_2</span><span class="p">])</span>
-
-    <span class="n">row_1</span> <span class="o">=</span> <span class="n">grid_1</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">row_2</span> <span class="o">=</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">generating_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">row_1</span><span class="p">,</span> <span class="n">row_2</span><span class="p">])</span>
-
-    <span class="n">gen_points_1</span> <span class="o">=</span> <span class="n">grid_1</span><span class="o">.</span><span class="n">generating_points</span><span class="p">[:</span><span class="n">row</span><span class="p">,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span>
-    <span class="n">gen_points_2</span> <span class="o">=</span> <span class="n">grid_2</span><span class="o">.</span><span class="n">generating_points</span><span class="p">[:</span><span class="n">row</span><span class="p">,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">gen_points_1</span><span class="p">,</span> <span class="n">gen_points_2</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_larger_gen_points</span><span class="p">(</span><span class="n">grid_1</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">,</span> <span class="n">grid_2</span><span class="p">:</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
