@@ -20,7 +20,7 @@ __all__ = ["is_scalar"]
 def is_scalar(
     obj: Union["MultivariatePolynomialSingleABC", Grid, MultiIndexSet],
 ) -> bool:
-    """Check if a Minterpy object is a scalar.
+    r"""Check if a Minterpy object is a scalar.
 
     This check applies to both polynomial and grid objects.
     A scalar multidimensional polynomial (resp. grid) consists of a single

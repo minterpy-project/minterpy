@@ -14,9 +14,12 @@ Minterpy Documentation
 
 .. image:: /assets/Wordmark-color.png
 
+|
+
 Minterpy is an open-source Python package designed for constructing
-and manipulating multivariate interpolating polynomials with the goal of
-lifting the curse of dimensionality from interpolation tasks.
+and manipulating multivariate interpolating polynomials
+with the goal of addressing the curse of dimensionality
+from interpolation tasks.
 
 .. grid:: auto
    :margin: 0
@@ -103,8 +106,9 @@ lifting the curse of dimensionality from interpolation tasks.
 |
 
 Minterpy is being continuously extended and improved,
-with new functionalities added to address the bottlenecks
-involving interpolations in various computational tasks.
+with new functionalities added to address the computational bottlenecks
+in accuracy, stability, and performance of multidimensional interpolation
+tasks.
 
 |
 

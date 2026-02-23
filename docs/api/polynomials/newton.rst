@@ -34,6 +34,4 @@ newton_polynomial
 
 .. autofunction:: diff_newton
 
-.. autofunction:: partial_diff_newton
-
 .. autofunction:: integrate_over_newton

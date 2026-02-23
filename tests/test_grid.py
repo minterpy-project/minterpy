@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 import pytest
 
@@ -7,8 +8,10 @@ from minterpy.gen_points import (
     gen_chebychev_2nd_order_leja_ordered,
     gen_points_from_values,
 )
+from minterpy.core.domain import Domain
 from minterpy.core.grid import DEFAULT_FUN
 from minterpy.utils.multi_index import get_exponent_matrix
+from minterpy.utils.exceptions import DomainMismatchError
 
 from conftest import create_mi_pair_distinct
 
@@ -24,6 +27,22 @@ def _fun_one_out(xx: np.ndarray, sum: bool = False):
 def _fun_multi_out(xx: np.ndarray):
     """Return the same output as input."""
     return xx  # xx is assumed to be multi-dimensional
+
+
+@pytest.fixture
+def normalized_domain(SpatialDimension) -> Domain:
+    """Normalized domain for testing."""
+    return Domain.identity(SpatialDimension)
+
+@pytest.fixture
+def random_unif_domain(SpatialDimension) -> Domain:
+    """Create a random uniform domain for testing"""
+    # Create a custom domain
+    lb = np.random.randint(0, 10)
+    ub = lb + np.random.randint(1, 10)
+    domain = Domain.uniform(SpatialDimension, lb, ub)
+
+    return domain
 
 
 class TestInit:
@@ -103,6 +122,35 @@ class TestInit:
                 generating_function=_gen_fun,
                 generating_points=gen_points,
             )
+
+    def test_with_default_domain(self, multi_index_mnp, normalized_domain):
+        """Constructing a Grid with a default domain."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Construct a grid with defaults
+        grd = Grid(mi)
+
+        # Assertions
+        assert grd.domain == normalized_domain
+        assert grd.domain.spatial_dimension == grd.spatial_dimension
+
+    def test_with_custom_domain(self, multi_index_mnp, random_unif_domain):
+        """Test constructing a Grid with a custom domain."""
+
+        # Create a Grid instance with the custom domain
+        grd = Grid(multi_index_mnp, domain=random_unif_domain)
+
+        # Assertions
+        assert grd.domain == random_unif_domain
+        assert grd.domain.spatial_dimension == grd.spatial_dimension
+
+    def test_with_invalid_domain(self, multi_index_mnp):
+        """Test constructing a Grid with an invalid domain."""
+
+        dim = multi_index_mnp.spatial_dimension + 1
+        with pytest.raises(ValueError):
+            _ = Grid(multi_index_mnp, domain=Domain.identity(dim))
 
 
 class TestInitGenPoints:
@@ -291,6 +339,31 @@ class TestInitFrom:
         assert grd_1 == grd_2
         assert grd_2 == grd_1
 
+    def test_from_degree_with_domain(
+        self,
+        SpatialDimension,
+        PolyDegree,
+        LpDegree,
+    ):
+        """Test the `from_degree()` method with domain."""
+        # Create a complete multi-index set
+        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        # Create a normalized domain
+        domain = Domain.identity(SpatialDimension)
+
+        # Create a grid
+        grd_1 = Grid(mi, domain=domain)
+        grd_2 = Grid.from_degree(
+            SpatialDimension,
+            PolyDegree,
+            LpDegree,
+            domain=domain,
+        )
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
     def test_from_gen_function(self, multi_index_mnp):
         """Test the `from_function()` method."""
         # Get the complete multi-index set
@@ -315,6 +388,22 @@ class TestInitFrom:
         # Create instances of Grid
         grd_1 = Grid(mi, generating_function=DEFAULT_FUN)
         grd_2 = Grid.from_function(mi, DEFAULT_FUN)
+
+        # Assertion
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_gen_function_with_domain(self, multi_index_mnp):
+        """Test the `from_function()` method with domain."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create a uniform domain
+        domain = Domain.uniform(mi.spatial_dimension, 0, 1)
+
+        # Create instances of Grid
+        grd_1 = Grid(mi, generating_function=DEFAULT_FUN, domain=domain)
+        grd_2 = Grid.from_function(mi, DEFAULT_FUN, domain=domain)
 
         # Assertion
         assert grd_1 == grd_2
@@ -347,6 +436,26 @@ class TestInitFrom:
         # Create instances of Grid
         grd_1 = Grid(mi, generating_points=gen_points)
         grd_2 = Grid.from_points(mi, gen_points)
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
+    def test_from_gen_points_with_domain(self, multi_index_mnp):
+        """Test the `from_points()` method with domain."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an array of generating points
+        gen_function = GENERATING_FUNCTIONS[DEFAULT_FUN]
+        gen_points = gen_function(mi.max_exponent, mi.spatial_dimension)
+
+        # Create a uniform domain
+        domain = Domain.uniform(mi.spatial_dimension, 0, 1)
+
+        # Create instances of Grid
+        grd_1 = Grid(mi, generating_points=gen_points, domain=domain)
+        grd_2 = Grid.from_points(mi, gen_points, domain=domain)
 
         # Assertions
         assert grd_1 == grd_2
@@ -403,6 +512,27 @@ class TestInitFrom:
         assert grd_1 == grd_2
         assert grd_2 == grd_1
 
+    def test_from_value_set_with_domain(self, multi_index_mnp):
+        """Test the `from_value_set()` method with domain."""
+        # Get the complete multi-index set
+        mi = multi_index_mnp
+
+        # Create an array of generating values (the default 1d generating
+        # function) and the corresponding generating points
+        gen_values = gen_chebychev_2nd_order_leja_ordered(mi.max_exponent)
+        gen_points = gen_points_from_values(gen_values, mi.spatial_dimension)
+
+        # Create a uniform domain
+        domain = Domain.uniform(mi.spatial_dimension, 0, 1)
+
+        # Create instances of Grid
+        grd_1 = Grid(mi, generating_points=gen_points, domain=domain)
+        grd_2 = Grid.from_value_set(mi, gen_values, domain=domain)
+
+        # Assertions
+        assert grd_1 == grd_2
+        assert grd_2 == grd_1
+
     def test_from_value_set_invalid_wrong_shape(self, multi_index_mnp):
         """Test invalid call to `from_value_set()` due to wrong shape."""
         # Get the complete multi-index set
@@ -432,6 +562,26 @@ class TestInitFrom:
         with pytest.raises(ValueError):
             Grid.from_value_set(mi, gen_values)
 
+
+class TestDomainProperty:
+    """All tests related to the domain property of the Grid instance."""
+
+    def test_read_only(self, multi_index_mnp):
+        """Test the property is read-only."""
+        # Create a Grid instance
+        grd = Grid(multi_index_mnp)
+
+        # Assertion
+        with pytest.raises(AttributeError):
+            grd.domain = np.arange(10)
+
+    def test_always_exist(self, multi_index_mnp):
+        """Test the property is read-only."""
+        # Create a Grid instance
+        grd = Grid(multi_index_mnp)
+
+        # Assertion
+        assert grd.domain is not None
 
 class TestUnisolventNodes:
     """All tests related to the unisolvent nodes property."""
@@ -491,6 +641,21 @@ class TestCall:
         assert len(lag_coeffs_2) == len(mi)
         assert np.array_equal(lag_coeffs_1, lag_coeffs_2)
 
+    def test_call_custom_domain(self, multi_index_mnp, random_unif_domain):
+        """Test calling on a valid callable with custom domain."""
+        # Create a Grid
+        grd = Grid(multi_index_mnp, domain=random_unif_domain)
+
+        # Call the Grid instance
+        yy_1 = grd(_fun_one_out, sum=True)
+        yy_2 = _fun_one_out(
+            random_unif_domain.map_from_internal(grd.unisolvent_nodes),
+            sum=True,
+        )
+
+        # Assertions
+        assert np.array_equal(yy_1, yy_2)
+
     @pytest.mark.parametrize("invalid_function", [1, 2.0, "3.5"])
     def test_call_invalid_function(self, multi_index_mnp, invalid_function):
         """Test calling on an invalid function."""
@@ -538,6 +703,7 @@ class TestExpandDim:
         assert grd_expanded != grd
         assert grd_expanded.spatial_dimension == new_dim
         assert grd_expanded.multi_index == mi.expand_dim(new_dim)
+        assert grd_expanded.domain == grd.domain.expand_dim(new_dim)
 
     def test_target_dim_same_dim_with_gen_points(self, multi_index_mnp):
         """Test expanding to the same dimension with generating points."""
@@ -574,6 +740,7 @@ class TestExpandDim:
 
         # Assertion
         assert grd_expanded.spatial_dimension == target_dim
+        assert grd_expanded.domain == grd.domain.expand_dim(target_dim)
 
     def test_target_dim_with_gen_points_invalid(self, multi_index_mnp):
         """Test expanding the dimension with invalid generating points."""
@@ -634,6 +801,7 @@ class TestExpandDim:
         expanded_dim = expanded_grid.spatial_dimension
         target_dim = target_grid.spatial_dimension
         assert expanded_dim == target_dim
+        assert expanded_grid.domain == target_grid.domain
 
     def test_target_grid_with_larger_origin_gen_points(self, multi_index_mnp):
         """Test expanding the dimension to the dimension of a target grid
@@ -668,6 +836,7 @@ class TestExpandDim:
         assert np.all(
             expanded_grid.generating_points == origin_grid.generating_points
         )
+        assert expanded_grid.domain == target_grid.domain
 
     def test_target_grid_with_gen_points_invalid(self, multi_index_mnp):
         """Test expanding the dimension to the dimension of a target grid
@@ -717,6 +886,7 @@ class TestExpandDim:
         assert np.all(
             expanded_grid.generating_points == target_grid.generating_points
         )
+        assert expanded_grid.domain == target_grid.domain
 
     def test_target_grid_with_gen_fun_invalid(self, multi_index_mnp):
         """Test expanding the dimension to the dimension of a target grid
@@ -729,7 +899,7 @@ class TestExpandDim:
 
         # Get the ingredients for a Grid
         origin_gen_fun = GENERATING_FUNCTIONS[DEFAULT_FUN]
-        target_gen_fun = lambda x, y: origin_gen_fun(x, y)
+        target_gen_fun = lambda x, y: 0.99 * origin_gen_fun(x, y)
 
         # Create instances of Grid
         origin_grid = Grid.from_function(origin_mi, origin_gen_fun)
@@ -743,14 +913,23 @@ class TestExpandDim:
 class TestEquality:
     """All tests related to equality check of Grid instances."""
 
-    def test_equal(self, SpatialDimension, PolyDegree, LpDegree):
+    def test_equal_multi_index(self, multi_index_mnp):
         """Test equality of two Grid instances."""
-        # Create a common multi-index set
-        mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
+        # Create two Grid instances equal in value
+        grd_1 = Grid(multi_index_mnp)
+        grd_2 = Grid(multi_index_mnp)
+
+        # Assertions
+        assert grd_1 is not grd_2  # Not identical instances
+        assert grd_1 == grd_2  # but equal in value
+        assert grd_2 == grd_1  # symmetric property
+
+    def test_equal_domain(self, multi_index_mnp, random_unif_domain):
+        """Test equality of two Grid instances with custom but equal domain."""
 
         # Create two Grid instances equal in value
-        grd_1 = Grid(mi)
-        grd_2 = Grid(mi)
+        grd_1 = Grid(multi_index_mnp, domain=random_unif_domain)
+        grd_2 = Grid(multi_index_mnp, domain=random_unif_domain)
 
         # Assertions
         assert grd_1 is not grd_2  # Not identical instances
@@ -779,13 +958,31 @@ class TestEquality:
         mi = MultiIndexSet.from_degree(SpatialDimension, PolyDegree, LpDegree)
 
         # Create two Grid instances with different generating points
-        # Chebyshev points
-        grd_1 = Grid(mi)
+        # Chebyshev points (the default)
+        grd_ = Grid(mi)
+        grd_1 = Grid.from_points(mi, grd_.generating_points)
         # Equidistant points
         grd_2 = Grid.from_value_set(
             mi,
             np.linspace(-0.99, 0.99, PolyDegree+1)[:, np.newaxis],
         )
+
+        # Assertions
+        assert grd_1 is not grd_2  # Not identical instances
+        assert grd_1 != grd_2  # Not equal in values
+        assert grd_2 != grd_1  # symmetric property
+
+    def test_unequal_domain(self, multi_index_mnp):
+        """Test inequality of two Grid instances due to different domains.
+        """
+        # Create two different domains
+        dim = multi_index_mnp.spatial_dimension
+        domain_1 = Domain.uniform(dim, 0, 1)
+        domain_2 = Domain.identity(dim)
+
+        # Create two Grid instances
+        grd_1 = Grid(multi_index_mnp, domain=domain_1)
+        grd_2 = Grid(multi_index_mnp, domain=domain_2)
 
         # Assertions
         assert grd_1 is not grd_2  # Not identical instances
@@ -824,6 +1021,7 @@ class TestMultiplication:
         # Assertions
         assert grd_prod.multi_index == mi * mi
         assert len(grd_prod.unisolvent_nodes) == len(mi * mi)
+        assert grd_prod.domain == grd.domain | grd.domain
 
     def test_with_gen_points(self):
         """Test the multiplication of instances having only gen. points."""
@@ -848,6 +1046,7 @@ class TestMultiplication:
         assert grd_prod.multi_index == mi_1 * mi_2
         assert len(grd_prod.unisolvent_nodes) == len(mi_1 * mi_2)
         assert np.all(grd_prod.generating_points == gen_points_2)
+        assert grd_prod.domain == grd_1.domain | grd_2.domain
 
     @pytest.mark.parametrize("invalid_value", [1.0, 2, "123", np.array([1])])
     def test_invalid(self, multi_index_mnp, invalid_value):
@@ -862,6 +1061,20 @@ class TestMultiplication:
         with pytest.raises(AttributeError):
             grd * invalid_value
 
+    def test_invalid_domain(self, multi_index_mnp):
+        """Test taking the product of two instances with different domains."""
+        # Create two different domains
+        dim = multi_index_mnp.spatial_dimension
+        domain_1 = Domain.uniform(dim, 0, 1)
+        domain_2 = Domain.identity(dim)
+
+        # Create two Grid instances
+        grd_1 = Grid(multi_index_mnp, domain=domain_1)
+        grd_2 = Grid(multi_index_mnp, domain=domain_2)
+
+        # Assertion
+        with pytest.raises(DomainMismatchError):
+            _ = grd_1 * grd_2
 
 class TestUnion:
     """All tests related to taking the union of `Grid` instances."""
@@ -903,6 +1116,7 @@ class TestUnion:
         assert grd_prod.multi_index == mi_1 | mi_2
         assert len(grd_prod.unisolvent_nodes) == len(mi_1 | mi_2)
         assert np.all(grd_prod.generating_points == gen_points_2)
+        assert grd_prod.domain == grd_1.domain | grd_2.domain
 
     @pytest.mark.parametrize("invalid_value", [1.0, 2, "123", np.array([1])])
     def test_invalid(self, multi_index_mnp, invalid_value):
@@ -915,8 +1129,22 @@ class TestUnion:
 
         # Assertion
         with pytest.raises(AttributeError):
-            grd | invalid_value
+            _ = grd | invalid_value
 
+    def test_invalid_domain(self, multi_index_mnp):
+        """Test taking the union of two instances with different domains."""
+        # Create two different domains
+        dim = multi_index_mnp.spatial_dimension
+        domain_1 = Domain.uniform(dim, 0, 1)
+        domain_2 = Domain.identity(dim)
+
+        # Create two Grid instances
+        grd_1 = Grid(multi_index_mnp, domain=domain_1)
+        grd_2 = Grid(multi_index_mnp, domain=domain_2)
+
+        # Assertion
+        with pytest.raises(DomainMismatchError):
+            _ = grd_1 | grd_2
 
 class TestAddExponents:
     """All tests related to the method to add a set of exponents."""
@@ -934,6 +1162,7 @@ class TestAddExponents:
         # Assertion
         assert grd == grd_added
         assert grd_added == grd
+        assert grd.domain == grd_added.domain  # Domain is preserved
 
     def test_too_large_exponent(self, multi_index_mnp):
         """Test adding an exponent that cannot be supported by the grid."""
@@ -983,6 +1212,7 @@ class TestAddExponents:
         # Assertion
         assert grd_1_added == grd_2
         assert grd_2 == grd_1_added
+        assert grd_2.domain == grd_1_added.domain  # Domain is preserved
 
 
 class TestMakeComplete:
@@ -1003,6 +1233,7 @@ class TestMakeComplete:
         assert grd_complete == grd
         assert grd == grd_complete
         assert grd is not grd_complete
+        assert grd.domain == grd_complete.domain  # Domain is preserved
 
     def test_incomplete(self, multi_index_incomplete):
         """Test making an incomplete grid complete."""
@@ -1018,6 +1249,7 @@ class TestMakeComplete:
         # Assertions
         assert not grd.is_complete
         assert grd_complete.is_complete
+        assert grd.domain == grd_complete.domain  # Domain is preserved
 
 
 class TestMakeDownwardClosed:
@@ -1038,6 +1270,7 @@ class TestMakeDownwardClosed:
         assert grd_downward_closed == grd
         assert grd == grd_downward_closed
         assert grd is not grd_downward_closed
+        assert grd.domain == grd_downward_closed.domain  # Domain is preserved
 
     def test_non_downward_closed(self, multi_index_non_downward_closed):
         """Test making a non-downward-closed grid downward-closed."""
@@ -1053,6 +1286,7 @@ class TestMakeDownwardClosed:
         # Assertions
         assert not grd.is_downward_closed
         assert grd_downward_closed.is_downward_closed
+        assert grd.domain == grd_downward_closed.domain  # Domain is preserved
 
 
 class TestIsCompatible:
@@ -1120,7 +1354,7 @@ class TestIsCompatible:
             if xx.ndim == 1:
                 xx = xx[:, np.newaxis]
             generating_points = np.tile(xx, (1, spatial_dimension))
-            generating_points[:, ::2] *= -1
+            generating_points[:, ::2] *= -0.9
 
             return generating_points
 
@@ -1131,3 +1365,33 @@ class TestIsCompatible:
         # Assertion
         assert not grd_1.is_compatible(grd_2)
         assert not grd_2.is_compatible(grd_1)  # Commutativity must hold
+
+
+class TestCopy:
+    """All tests related to copy behavior of Grid instances."""
+
+    def test_shallow(self, multi_index_mnp, random_unif_domain):
+        """Test the behavior of shallow copy."""
+        grd = Grid(multi_index_mnp, domain=random_unif_domain)
+
+        grd_copy = copy.copy(grd)
+
+        # Assertions
+        assert grd is not grd_copy
+        assert grd.multi_index is grd_copy.multi_index
+        assert grd.domain is grd_copy.domain
+        assert grd.generating_function is grd_copy.generating_function
+        assert grd.generating_points is not grd_copy.generating_points
+
+    def test_deep(self, multi_index_mnp, random_unif_domain):
+        """Test the behavior of deep copy."""
+        grd = Grid(multi_index_mnp, domain=random_unif_domain)
+
+        grd_copy = copy.deepcopy(grd)
+
+        # Assertions
+        assert grd is not grd_copy
+        assert grd.multi_index is not grd_copy.multi_index
+        assert grd.domain is not grd_copy.domain
+        assert grd.generating_function is grd_copy.generating_function
+        assert grd.generating_points is not grd_copy.generating_points

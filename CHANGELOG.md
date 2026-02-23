@@ -7,6 +7,78 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Documentation for the `Domain` class, its API reference, theoretical
+  background, and examples
+- Domain support in interpolation module: `interpolate()`, `Interpolator`, and 
+  `Interpolant` now accept `bounds` parameter to specify custom rectangular
+  domains directly without manually creating `Domain` objects;
+  the underlying interpolating polynomials are constructed with domain
+  awareness
+- `interpolate_values()` method in `Interpolator` class to interpolate 
+  pre-computed function values at unisolvent nodes, enabling reuse of 
+  function evaluations
+- Domain-aware polynomial differentiation: `diff()` and `partial_diff()` now
+  automatically apply chain rule scaling factors when differentiating
+  polynomials over user-defined domains
+- Domain-aware polynomial integration: `integrate_over()` now automatically
+  applies Jacobian scaling factors when integrating polynomials over
+  user-defined domains
+- Domain-aware polynomial evaluation: `__call__()` now accepts query points
+  in the (user) domain with automatic transformation to the internal domain
+  (currently `[-1, 1]^m`)
+- `eval_on_internal()` method for direct polynomial evaluation
+  in the internal domain, bypassing coordinate transformation
+- `Domain` class for handling transformation between user-defined rectangular
+  domains and internal (reference) domains
+  - Support for coordinate transformations via `map_to_internal()`
+    and `map_from_internal()`
+  - Automatic scaling factor computation for differentiation and integration
+  - Domain validation via `contains()` method
+  - Factory methods: `uniform()` and `normalized()`
+  - The property `is_identity` indicates if the user-defined domain
+    is identical to the internal domain
+- Domain support integrated into `Grid` class
+  - `domain` parameter in Grid constructor (defaults to normalized domain
+    in `[-1, 1]^m`)
+  - Grid operations (`*`, `|`) now validate domain consistency
+- Domain property access in all polynomial classes via `poly.domain`
+  obtained from the corresponding `Grid` instance
+- Internal domain infrastructure in `Domain` class with `internal_bounds`
+  property
+
+### Changed
+
+- Relevant tutorials have been updated to reflect the new domain support
+- Refactored `Interpolator` class to use modern `attrs.define` syntax 
+  instead of legacy `attr.ib` decorators
+- Interpolation tests now cover both default (internal reference)
+  and custom domain cases
+- Zero-order differentiation now returns a copy of the polynomial
+  (identity operation)
+- Centralized polynomial differentiation tests into a dedicated test module
+  (`test_polynomial_differentiation.py`); relevant tests from basis-specific
+  test modules have been removed
+- Refactored `partial_diff()` as syntactic sugar for `diff()`, removing
+  duplicate `_partial_diff()` static methods from the polynomial class 
+  hierarchy
+- Centralized polynomial integration tests into a dedicated test module
+  (`test_polynomial_integration.py`); relevant tests from dedicated test
+  modules (with respect to each basis) have been removed.
+- Grid generating points validation now uses `Domain` class for bound checking
+- Refactored polynomial arithmetic into modular components
+- Optimized `MultiIndexSet` equality check with identity short-circuit
+- Improved Newton polynomial monomial-based multiplication logic
+
+### Removed
+
+- Strict bounds validation in polynomial integration: integration outside
+  domain bounds is now allowed (extrapolation) but should be used with care
+- `internal_domain` and `user_domain` properties from polynomial abstract class
+- `check_domain_fit()` verification function (replaced by `Domain.contains()`)
+- the module `minterpy.utils.polynomials.interface`
+
 ## [Version 0.3.1] - 2025-04-30
 
 This minor release incorporates feedback from the review process of
@@ -233,4 +305,4 @@ that neither everything works as expected,
 nor if further releases will break the current API.
 
 [Unreleased]: https://github.com/minterpy-project/minterpy/compare/main...dev
-[0.3.1]: https://github.com/minterpy-project/minterpy/compare/v0.3.0...v0.3.1
+[Version 0.3.1]: https://github.com/minterpy-project/minterpy/compare/v0.3.0...v0.3.1

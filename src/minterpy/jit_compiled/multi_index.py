@@ -210,7 +210,7 @@ def is_lex_sorted(indices: np.ndarray) -> bool:
 
 @njit(INT(I_2D, I_1D), cache=True)
 def search_lex_sorted(indices: np.ndarray, index: np.ndarray) -> int:
-    """Find the position of a given entry within an array of multi-indices.
+    r"""Find the position of a given entry within an array of multi-indices.
 
     Parameters
     ----------

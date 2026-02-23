@@ -6,34 +6,18 @@ from typing import Any, List, Optional, Sized, Tuple, Type, TypeVar, Union
 
 import numpy as np
 from _warnings import warn
+from numpy.typing import ArrayLike
 
-from minterpy.global_settings import DEBUG, DEFAULT_DOMAIN, FLOAT_DTYPE, INT_DTYPE
-
-
-def verify_domain(domain, spatial_dimension):
-    """Building and verification of domains.
-
-    This function builds a suitable domain as the cartesian product of a one-
-    dimensional domain, or verifies the domain shape, of a multivariate domain is
-    passed. If None is passed, the default domain is build from [-1,1].
-
-    :param domain: Either one-dimensional domain ``(min,max)``, or a stack of domains for each domain with shape ``(spatial_dimension,2)``. If :class:`None` is passed, the ``DEFAULT_DOMAIN`` is repeated for each spatial dimentsion.
-    :type domain: array_like, None
-    :param spatial_dimension: Dimentsion of the domain space.
-    :type spatial_dimension: int
-
-    :return verified_domain: Stack of domains for each dimension with shape ``(spatial_dimension,2)``.
-    :rtype: np.ndarray
-    :raise ValueError: If no domain with the expected shape can be constructed from the input.
-
-    """
-    if domain is None:
-        domain = np.repeat(DEFAULT_DOMAIN[:, np.newaxis], spatial_dimension, axis=1)
-    domain = np.require(domain, dtype=FLOAT_DTYPE)
-    if domain.ndim == 1:
-        domain = np.repeat(domain[:, np.newaxis], spatial_dimension, axis=1)
-    check_shape(domain, shape=(2, spatial_dimension))
-    return domain
+from minterpy.global_settings import (
+    DEBUG,
+    DEFAULT_DOMAIN,
+    FLOAT_DTYPE,
+    INT_DTYPE,
+)
+from minterpy.utils.exceptions import (
+    InvalidDomainBoundsError,
+    InvalidDerivativeOrderError,
+)
 
 
 def check_type(obj: Any, expected_type: Type[Any]):
@@ -244,58 +228,6 @@ def check_values(xx: Union[int, float, np.ndarray], **kwargs):
         raise ValueError(
             "Invalid value(s) (NaN, inf, negative, zero)."
         )
-
-
-DOMAIN_WARN_MSG2 = "the grid points must fit the interpolation domain [-1;1]^m."
-DOMAIN_WARN_MSG = (
-    "this may lead to unexpected behaviour, "
-    "e.g. rank deficiencies in the regression matrices, etc. ."
-)
-
-
-def check_domain_fit(points: np.ndarray):
-    """Checks weather a given array of points is properly formatted and spans the standard domain :math:`[-1,1]^m`.
-
-    .. todo::
-        - maybe remove the warnings.
-        - generalise to custom ``internal_domain``
-
-    :param points: array to be checked. Here ``m`` is the dimenstion of the domain and ``k`` is the number of points.
-    :type points: np.ndarray, shape = (m, k)
-    :raises ValueError: if the grid points do not fit into the domain :math:`[-1;1]^m`.
-    :raises ValueError: if less than one point is passed.
-
-    """
-    # check first if the sample points are valid
-    check_type(points, np.ndarray)
-    check_values(points)
-    # check weather the points lie outside of the domain
-    sample_max = np.max(points, axis=1)
-    if not np.allclose(np.maximum(sample_max, 1.0), 1.0):
-        raise ValueError(DOMAIN_WARN_MSG2 + f"violated max: {sample_max}")
-    sample_min = np.min(points, axis=1)
-    if not np.allclose(np.minimum(sample_min, -1.0), -1.0):
-        raise ValueError(DOMAIN_WARN_MSG2 + f"violated min: {sample_min}")
-    check_dimensionality(points, dimensionality=2)
-    nr_of_points, m = points.shape
-    if nr_of_points == 0:
-        raise ValueError("at least one point must be given")
-    if nr_of_points == 1:
-        return  # one point cannot span the domain
-    if DEBUG:
-        # check weather the points span the hole domain
-        max_grid_val = np.max(sample_max)
-        if not np.isclose(max_grid_val, 1.0):
-            warn(
-                f"the highest encountered value in the given points is {max_grid_val}  (expected 1.0). "
-                + DOMAIN_WARN_MSG
-            )
-        min_grid_val = np.min(sample_min)
-        if not np.isclose(min_grid_val, -1.0):
-            warn(
-                f"the smallest encountered value in the given points is {min_grid_val} (expected -1.0). "
-                + DOMAIN_WARN_MSG
-            )
 
 
 def is_real_scalar(x: Union[int, float, np.integer, np.floating]) -> bool:
@@ -628,90 +560,30 @@ def verify_poly_coeffs(coeffs: np.ndarray, num_monomials: int) -> np.ndarray:
     return coeffs
 
 
-def verify_poly_domain(
-    domain: np.ndarray,
+def standardize_query_points(
+    xx: np.ndarray,
     spatial_dimension: int,
+    truncate_cols: bool = False,
 ) -> np.ndarray:
-    r"""Verify that the given polynomial domain is valid.
-
-    Examples
-    --------
-    >>> verify_poly_domain(np.array([[1], [2]]), 1)  # integer array
-    array([[1.],
-           [2.]])
-    >>> verify_poly_domain(np.array([[1, 2], [2, 3]]), 2)
-    array([[1., 2.],
-           [2., 3.]])
-    >>> verify_poly_domain([3, 2], 1) # doctest: +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-    ...
-    ValueError: The upper bounds must be strictly larger than the lower
-    bounds. Invalid values in the polynomial domain!
-    """
-    try:
-        # The domain must be a NumPy ndarray
-        domain = np.atleast_2d(np.array(domain)).astype(np.float64)
-        if domain.shape[0] == 1:
-            # Column array
-            domain = domain.T
-
-        # The dimension of the array must be two-dimensional
-        check_dimensionality(domain, dimensionality=2)
-
-        # The values must not contain inf
-        check_values(domain, nan=False, inf=True, zero=True, negative=True)
-
-        # The length must be two (lower and upper bounds)
-        if domain.shape[0] != 2:
-            raise ValueError(
-                f"The domain is defined by {domain.shape[0]} numbers "
-                "instead of by 2 (lower and upper bounds)."
-            )
-
-        # The number of columns must be the same as the dimension
-        if domain.shape[1] != spatial_dimension:
-            raise ValueError(
-                f"The dimension of the domain ({domain.shape[1]}) does not "
-                f"match the required dimension ({spatial_dimension})."
-            )
-
-        # The lower bounds must be smaller than the upper bounds
-        if np.any(domain[1, :] - domain[0, :] <= 0):
-            raise ValueError(
-                "The upper bounds must be strictly larger than "
-                "the lower bounds."
-            )
-
-    except TypeError as err:
-        custom_message = "Invalid type for polynomial domain!"
-        err.args = _add_custom_exception_message(err.args, custom_message)
-        raise err
-
-    except ValueError as err:
-        custom_message = "Invalid values in the polynomial domain!"
-        err.args = _add_custom_exception_message(err.args, custom_message)
-        raise err
-
-    return domain
-
-
-def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:
     r"""Verify if the values of the query points for evaluation are valid.
 
     Parameters
     ----------
     xx : :class:`numpy:numpy.ndarray`
         A one- or two-dimensional array of query points at which a polynomial
-        is evaluated. The length of the array is ``N``, i.e., the number
+        is evaluated. The length of the array is ``k``, i.e., the number
         of query points.
     spatial_dimension : int
         The spatial dimension of the polynomial (``m``).
         The shape of the query points array must be consistent with this.
+    truncate_cols : bool, optional
+        If ``True``, truncate columns to match ``spatial_dimension`` after
+        conversion to array. Default is ``False``.
 
     Returns
     -------
     :class:`numpy:numpy.ndarray`
-        A two-dimensional array of ``numpy.float64`` with a length of ``N``
+        A two-dimensional array of ``numpy.float64`` with a length of ``k``
         and a number of columns of ``m``. If the dtype of the array is not of
         `numpy.float64`, the function does a type conversion if possible.
 
@@ -725,29 +597,31 @@ def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:
 
     Examples
     --------
-    >>> verify_query_points(1, 1)  # a scalar integer
+    >>> standardize_query_points(1, 1)  # a scalar integer
     array([[1.]])
-    >>> verify_query_points([3., 4., 5.], 1)  # a list
+    >>> standardize_query_points([3., 4., 5.], 1)  # a list
     array([[3.],
            [4.],
            [5.]])
-    >>> verify_query_points([[3, 4, 5]], 3)  # a list of lists of integers
+    >>> standardize_query_points([[3, 4, 5]], 3)  # a list of lists of integers
     array([[3., 4., 5.]])
-    >>> verify_query_points(np.array([1., 2., 3.]), 1)  # 1 dimension
+    >>> standardize_query_points(np.array([1., 2., 3.]), 1)  # 1 dimension
     array([[1.],
            [2.],
            [3.]])
-    >>> verify_query_points(np.array([[1., 2.], [3., 4.]]), 2)  # 2 dimensions
+    >>> standardize_query_points(np.array([[1., 2.], [3., 4.]]), 2)  # 2 dims
     array([[1., 2.],
            [3., 4.]])
-    >>> verify_query_points(np.array([1, 2, 3]), 1)  # integer
+    >>> standardize_query_points(np.array([1, 2, 3]), 1)  # integer
     array([[1.],
            [2.],
            [3.]])
-    >>> verify_query_points(np.array(["a", "b"]), 1)
+    >>> standardize_query_points(np.array([[1, 2, 3]]), 2, True)  # Truncate
+    array([[1., 2.]])
+    >>> standardize_query_points(np.array(["a", "b"]), 1) # doctest: +ELLIPSIS
     Traceback (most recent call last):
     ...
-    ValueError: could not convert string to float: 'a' Invalid values in query points array!
+    ValueError: could not convert string to float: ...
 
     Notes
     -----
@@ -764,8 +638,10 @@ def verify_query_points(xx: np.ndarray, spatial_dimension: int) -> np.ndarray:
 
         # Check spatial dimension
         if xx.ndim == 1:
+            xx = xx[:spatial_dimension] if truncate_cols else xx
             dim = 1
         else:
+            xx = xx[:, :spatial_dimension] if truncate_cols else xx
             dim = xx.shape[1]
         dim_is_consistent = dim == spatial_dimension
         if not dim_is_consistent:
@@ -858,6 +734,193 @@ def verify_poly_power(power: int) -> int:
         raise err
 
     return power
+
+def verify_domain_bounds(bounds: ArrayLike) -> np.ndarray:
+    r"""Verify that the given bounds for a domain are valid.
+
+    Valid domain bounds must satisfy the following conditions:
+
+    - Convertible to a 2D numeric array
+    - Shape of ``(m, 2)`` where ``m >= 1`` (dimension is positive)
+    - Finite values (no NaN or inf)
+    - Non-empty
+    - Upper bounds strictly greater than lower bounds for all dimensions
+
+    Parameters
+    ----------
+    bounds : array_like
+        Domain bounds as either a 1D array ``[lower, upper]`` for a single
+        dimension, or a 2D array of shape ``(m, 2)`` for ``m`` dimensions.
+        Each row specifies ``[lower, upper]`` for one dimension.
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        Validated domain bounds as a 2D array of shape ``(m, 2)`` with
+        dtype ``FLOAT_DTYPE``.
+
+    Raises
+    ------
+    InvalidDomainBoundsError
+        If the bounds violate any validation condition (see above).
+
+    Examples
+    --------
+    >>> verify_domain_bounds(np.array([-1, 1]))  # 1D array, single dimension
+    array([[-1.,  1.]])
+    >>> verify_domain_bounds(np.array([[1, 2]]))  # Integer array (auto-converted)
+    array([[1., 2.]])
+    >>> verify_domain_bounds(np.array([[1., 2.], [2., 3.]]))  # 2D domain
+    array([[1., 2.],
+           [2., 3.]])
+    >>> verify_domain_bounds([3, 2]) # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    minterpy.utils.exceptions.InvalidDomainBoundsError: Upper bounds must be
+    strictly greater than lower bounds.
+    Invalid dimensions: [0]; Invalid bounds: [[3.0, 2.0]]
+    """
+    # Convert to a two-dimensional NumPy array of FLOAT_DTYPE
+    try:
+        bounds = np.atleast_2d(np.array(bounds, dtype=FLOAT_DTYPE))
+    except (TypeError, ValueError) as err:
+        raise InvalidDomainBoundsError(
+            f"Domain bounds must be array-like of numeric values, "
+            f"got {type(bounds).__name__} instead"
+        ) from err
+
+    # Validate dimensionality
+    if bounds.ndim != 2:
+        raise InvalidDomainBoundsError(
+            f"Domain bounds must be 2D after conversion, "
+            f"got {bounds.ndim}D array instead"
+        )
+
+    # Validate non-empty array
+    if bounds.size == 0:
+        raise InvalidDomainBoundsError("Domain bounds cannot be empty")
+
+    # Validate shape
+    if bounds.shape[1] != 2:
+        raise InvalidDomainBoundsError(
+            f"Bounds must have 2 columns [lower, upper], "
+            f"got {bounds.shape[1]} columns instead"
+        )
+
+    # Validate finite values (no Inf and NaN allowed)
+    if not np.isfinite(bounds).all():
+        raise InvalidDomainBoundsError(
+            "Bounds must be finite (no NaN or inf values)"
+        )
+
+    # Validate lower < upper
+    widths = bounds[:, 1] - bounds[:, 0]
+    if np.any(widths <= 0):
+        invalid_dims = np.where(widths <= 0)[0]
+        raise InvalidDomainBoundsError(
+            f"Upper bounds must be strictly greater than lower bounds. "
+            f"Invalid dimensions: {invalid_dims.tolist()}; "
+            f"Invalid bounds: {bounds[invalid_dims].tolist()}"
+        )
+
+    return bounds
+
+
+def verify_derivative_order(
+    order: ArrayLike,
+    spatial_dimension: int,
+) -> np.ndarray:
+    r"""Verify that the given order of derivatives are valid.
+
+    Valid orders of derivatives must satisfy the following conditions:
+
+    - Convertible to a 1D numeric array
+    - The length must match the spatial dimension (``m``)
+    - Integer values (whole numbers only, round floats like 2.0 are accepted
+      and converted)
+    - Non-negative (all values are >=0, no NaN, no Inf)
+
+    Parameters
+    ----------
+    order : array_like
+        Order of derivative for each dimension. An order must be specified
+        for each spatial dimension. Non-integer values are accepted only
+        if they represent whole numbers.
+    spatial_dimension : int
+        Expected number of dimensions (must be positive).
+
+    Returns
+    -------
+    :class:`numpy:numpy.ndarray`
+        Validated order of derivatives as a 1D array of shape ``(m,)`` with
+        dtype ``INT_DTYPE``.
+
+    Raises
+    ------
+    InvalidDerivativeOrderError
+        If the specification violate any validation condition (see above).
+
+    Examples
+    --------
+    >>> verify_derivative_order(1, 1)  # Scalar, 1D
+    array([1])
+    >>> verify_derivative_order([1, 0, 1], 3)  # List as order, 3D
+    array([1, 0, 1])
+    >>> verify_derivative_order(np.array([1, 0, 2, 0]), 4)  # 4D
+    array([1, 0, 2, 0])
+    >>> verify_derivative_order([3, 2, 0], 2) # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    minterpy.utils.exceptions.InvalidDerivativeOrderError: Order length 3 does
+    not match spatial dimension 2. Order of derivative for each dimension must
+    be specified.
+    >>> verify_derivative_order([3.2, 2.0], 2) # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    minterpy.utils.exceptions.InvalidDerivativeOrderError: Order of derivatives
+    must be whole numbers. Invalid values: [3.2]
+    >>> verify_derivative_order([0, -1], 2) # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    minterpy.utils.exceptions.InvalidDerivativeOrderError: Order of
+    derivatives must be non-negative. Negative values at dimensions: [1];
+    Invalid values: [-1]
+    """
+    # Normalize input to 1D NumPy array
+    order = np.ravel(order)
+
+    # Validate length matches spatial dimension
+    if len(order) != spatial_dimension:
+        raise InvalidDerivativeOrderError(
+            f"Order length {len(order)} does not match spatial dimension "
+            f"{spatial_dimension}. Order of derivative for each dimension "
+            f"must be specified."
+        )
+
+    # Validate integer values (accept round floats)
+    round_mask = np.mod(order, 1) == 0
+    if not np.all(round_mask):
+        non_round_mask = ~round_mask
+        invalid_values = order[non_round_mask]
+        raise InvalidDerivativeOrderError(
+            f"Order of derivatives must be whole numbers. "
+            f"Invalid values: {invalid_values.tolist()}"
+        )
+
+    # Validate non-negative values
+    if np.any(order < 0):
+        negative_dims = np.where(order < 0)[0]
+        invalid_values = order[negative_dims]
+        raise InvalidDerivativeOrderError(
+            f"Order of derivatives must be non-negative. "
+            f"Negative values at dimensions: {negative_dims.tolist()}; "
+            f"Invalid values: {invalid_values.tolist()}"
+        )
+
+    # Convert to integer dtype
+    order = order.astype(INT_DTYPE)
+
+    return order
 
 
 def _add_custom_exception_message(

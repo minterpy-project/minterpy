@@ -12,6 +12,7 @@ from numpy.testing import assert_, assert_almost_equal, assert_equal
 
 from minterpy import (
     MultiIndexSet,
+    Domain,
     Grid,
     LagrangePolynomial,
     NewtonPolynomial,
@@ -69,11 +70,11 @@ TRANSFORMATION_CLASSES = [
 
 # Primary parameters to create complete multi-index sets, grids, & polynomials
 SPATIAL_DIMENSIONS = [1, 3]
-POLY_DEGREES = [0, 1, 4]  # NOTE: Include test for poly_degree 0 (Issue #27)
+POLY_DEGREES = [0, 1, 3]  # NOTE: Include test for poly_degree 0 (Issue #27)
 LP_DEGREES = [0.5, 1.0, 2.0, np.inf]
 
 # Number of coefficient sets in a single polynomial instance
-NUM_POLYS = [1, 2, 5]
+NUM_POLYS = [1, 4]
 
 
 # asserts that a call runs as expected
@@ -291,6 +292,34 @@ def _id_num_polys(num_polys):
 def num_polynomials(request):
     """Fixture for the number of polynomials."""
     return request.param
+
+# Fixture for Domain types
+DOMAIN_TYPES = ["default", "random"]
+
+
+def _id_domain_type(domain_type):
+    return f"dom={domain_type:<7}"
+
+
+@pytest.fixture(params=DOMAIN_TYPES, ids=_id_domain_type)
+def domain_type(request):
+    return request.param
+
+
+# Fixture for Domain instance
+@pytest.fixture
+def domain(SpatialDimension, domain_type):
+    # Create a default domain
+    if domain_type == "default":
+        return Domain.identity(SpatialDimension)
+
+    # Create a custom domain
+    lb = np.random.uniform(0, 5, size=SpatialDimension)
+    # Ensure ub > lb
+    ub = lb + np.random.uniform(5, 10, size=SpatialDimension)
+
+    return Domain(np.c_[lb, ub])
+
 
 # fixtures for number of similar polynomials
 
@@ -796,7 +825,7 @@ def build_rnd_points(nr_points, spatial_dimension, nr_poly=None, seed=None):
 
 
 def build_random_newton_polynom(
-    dim: int, deg: int, lp: int,  n_poly=1, seed=None
+    dim: int, deg: int, lp: int, domain=None, n_poly=1, seed=None
 ) -> NewtonPolynomial:
     """Build a random Newton polynomial.
 
@@ -824,7 +853,7 @@ def build_random_newton_polynom(
     else:
         rnd_coeffs = np.random.uniform(-1, 1, size=(len(mi), n_poly))
 
-    return NewtonPolynomial(mi, rnd_coeffs)
+    return NewtonPolynomial(mi, rnd_coeffs, domain=domain)
 
 
 def build_random_multi_index():

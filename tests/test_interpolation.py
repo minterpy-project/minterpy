@@ -6,173 +6,259 @@ Here the functionality of the respective attribute is not tested.
 
 import numpy as np
 import pytest
-from conftest import (
-    LpDegree,
-    NrPoints,
-    PolyDegree,
-    SpatialDimension,
-    assert_call,
-    assert_grid_equal,
-    assert_interpolant_almost_equal,
-    assert_multi_index_equal,
-    assert_polynomial_almost_equal,
-    build_random_newton_polynom,
-    build_rnd_points,
-)
-from numpy.testing import assert_, assert_almost_equal
+
+from conftest import build_random_newton_polynom
 
 import minterpy as mp
-from minterpy import Interpolant, Interpolator, interpolate
+from minterpy import (
+    Interpolant,
+    Interpolator,
+    interpolate,
+    Domain,
+    Grid,
+    NewtonPolynomial,
+    LagrangePolynomial,
+    ChebyshevPolynomial,
+    CanonicalPolynomial,
+)
 
-# test construction
+#######################
+# Internal functions  #
+#######################
 
-
-def test_init_interpolator(SpatialDimension, PolyDegree, LpDegree):
-    assert_call(Interpolator, SpatialDimension, PolyDegree, LpDegree)
-    interpolator = Interpolator(SpatialDimension, PolyDegree, LpDegree)
-    groundtruth_multi_index = mp.MultiIndexSet.from_degree(
-        SpatialDimension, PolyDegree, LpDegree
-    )
-    groundtruth_grid = mp.Grid(groundtruth_multi_index)
-    assert_multi_index_equal(interpolator.multi_index, groundtruth_multi_index)
-    assert_grid_equal(interpolator.grid, groundtruth_grid)
-
-
-def test_init_interpolant(SpatialDimension, PolyDegree, LpDegree):
-    assert_call(
-        Interpolant,
-        lambda x: x[:, 0],
-        Interpolator(SpatialDimension, PolyDegree, LpDegree),
-    )
-    assert_call(
-        Interpolant.from_degree,
-        lambda x: x[:, 0],
-        SpatialDimension,
-        PolyDegree,
-        LpDegree,
-    )
-    interpolant_default = Interpolant(
-        lambda x: x[:, 0], Interpolator(SpatialDimension, PolyDegree, LpDegree)
-    )
-    interpolant_from_degree = Interpolant.from_degree(
-        lambda x: x[:, 0], SpatialDimension, PolyDegree, LpDegree
-    )
-    assert_interpolant_almost_equal(interpolant_default, interpolant_from_degree)
-
-
-def test_call_interpolate(SpatialDimension, PolyDegree, LpDegree):
-    assert_call(interpolate, lambda x: x[:, 0], SpatialDimension, PolyDegree, LpDegree)
-    interpolant = interpolate(lambda x: x[:, 0], SpatialDimension, PolyDegree, LpDegree)
-    assert_(isinstance(interpolant, Interpolant))
-
-
-# test if the interpolator can interpolate
-def test_interpolator(SpatialDimension, PolyDegree, LpDegree):
-    groundtruth_poly = build_random_newton_polynom(
-        SpatialDimension, PolyDegree, LpDegree
-    )
-    interpolator = Interpolator(SpatialDimension, PolyDegree, LpDegree)
-    res_from_newton_poly = interpolator(groundtruth_poly)
-    res_from_canonical_poly = interpolator(mp.NewtonToCanonical(groundtruth_poly)())
-    assert_polynomial_almost_equal(res_from_newton_poly, groundtruth_poly)
-    assert_polynomial_almost_equal(res_from_canonical_poly, groundtruth_poly)
-
-
-# test if the interpolant interpolates
-def test_interpolant(NrPoints, SpatialDimension, PolyDegree, LpDegree):
-    rnd_points = build_rnd_points(NrPoints, SpatialDimension)
-    groundtruth_poly = build_random_newton_polynom(
-        SpatialDimension, PolyDegree, LpDegree
-    )
-    groundtruth = groundtruth_poly(rnd_points)
-    interpolant = Interpolant.from_degree(
-        groundtruth_poly, SpatialDimension, PolyDegree, LpDegree
-    )
-    res = interpolant(rnd_points)
-    assert_almost_equal(res, groundtruth)
-
-
-# test if the interpolate does what it promisses
-def test_interpolate(NrPoints, SpatialDimension, PolyDegree, LpDegree):
-    rnd_points = build_rnd_points(NrPoints, SpatialDimension)
-    groundtruth_poly = build_random_newton_polynom(
-        SpatialDimension, PolyDegree, LpDegree
-    )
-    groundtruth = groundtruth_poly(rnd_points)
-    interpolant = interpolate(groundtruth_poly, SpatialDimension, PolyDegree, LpDegree)
-    res = interpolant(rnd_points)
-    assert_almost_equal(res, groundtruth)
-
-
-def _fun(xx: np.ndarray) -> np.ndarray:
+def func(xx):
     """Dummy function for testing interpolant."""
-    return np.sum(xx, axis=1)
+    return np.repeat(np.sum(xx, axis=1)[:, np.newaxis], repeats=5, axis=1)
+
+##########
+# Tests  #
+##########
+
+class TestInterpolator:
+    """All tests related to the Interpolator class."""
+
+    def test_init(self, multi_index_mnp, domain):
+        """Test the initialization of an Interpolator instance."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+        grd = mp.Grid(mi, domain=domain)
+
+        # Create an instance of Interpolator
+        interpolator = Interpolator(m, n, p, bounds)
+
+        # Assertions
+        assert interpolator.multi_index == mi
+        assert interpolator.grid == grd
+        assert interpolator.domain == domain
+        assert interpolator.spatial_dimension == m
+        assert interpolator.poly_degree == n
+        assert interpolator.lp_degree == p
+
+    def test_init_default_bound(self, multi_index_mnp):
+        """Test the initialization of an instance with default bounds."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+
+        # Create an instance of Interpolator
+        interpolator = Interpolator(m, n, p)
+
+        # Create a default Domain
+        domain = Domain.identity(m)
+
+        # Assertions
+        assert interpolator.domain == domain
+
+    def test_call(self, multi_index_mnp, domain):
+        """Test the evaluation of an interpolator instance."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+        grd = mp.Grid(mi, domain=domain)
+
+        # Create an instance of Interpolator
+        interpolator = Interpolator(m, n, p, bounds)
+
+        # Interpolate the function
+        interpol_1 = interpolator(func)
+
+        # Create a reference interpolant
+        interpol_2 = NewtonPolynomial(mi, interpol_1.coeffs, grid=grd)
+
+        # Assertion
+        assert interpol_1 == interpol_2
+
+    def test_identity(self, multi_index_mnp, domain):
+        """Test interpolating a Newton polynomial in the Newton basis."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+
+        # Create a groundtruth polynomial
+        groundtruth_poly = build_random_newton_polynom(m, n, p, domain)
+
+        # Create an interpolator and interpolate the groundtruth polynomial
+        interpolator = Interpolator(m, n, p, bounds)
+        interpolant_poly = interpolator(groundtruth_poly)
+
+        # Assertions
+        assert isinstance(interpolant_poly, type(groundtruth_poly))
+        assert interpolant_poly.multi_index == groundtruth_poly.multi_index
+        assert interpolant_poly.grid == groundtruth_poly.grid
+        assert np.allclose(interpolant_poly.coeffs, groundtruth_poly.coeffs)
 
 
-class TestPoly:
-    """All tests related to the accessing the polynomial of an interpolant."""
+class TestInterpolant:
+    """All tests related to the Interpolant class."""
 
-    def test_to_newton(self, SpatialDimension, PolyDegree, LpDegree):
-        """Test obtaining the interpolating polynomial in the Newton basis."""
+    def test_init(self, multi_index_mnp, domain):
+        """Test default construction of an Interpolant instance."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+
+        # Create interpolant instances
+        interpolant = Interpolant.from_degree(func, m, n, p, bounds)
+
+        # Assertions
+        assert interpolant.spatial_dimension == m
+        assert interpolant.poly_degree == n
+        assert interpolant.lp_degree == p
+        assert interpolant.multi_index == mi
+
+    def test_poly(self, multi_index_mnp, domain):
+        """Test construction of the underlying interpolating polynomial."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+
+        # Create an interpolator
+        interpolator = Interpolator(m, n, p, bounds)
+
+        # Create interpolant instances
+        interpolant_1 = Interpolant(func, interpolator)
+        interpolant_2 = Interpolant.from_degree(func, m, n, p, bounds)
+
+        # Assertions
+        assert interpolant_1.to_newton() == interpolator(func)
+        assert interpolant_2.to_newton() == interpolator(func)
+
+    def test_call(self, multi_index_mnp, domain):
+        """Test calling an interpolant instance."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+
+        # Create a reference polynomial
+        reference_poly = build_random_newton_polynom(m, n, p, domain)
+
+        # Interpolate the groundtruth polynomial
+        interpolant = Interpolant.from_degree(reference_poly, m, n, p, bounds)
+
+        # Create a set of random test points
+        lb, ub = domain.lowers, domain.uppers
+        xx_test = lb + (ub - lb) * np.random.rand(100, m)
+
+        # Assertion
+        assert np.allclose(interpolant(xx_test), reference_poly(xx_test))
+
+    def test_to_newton(self, multi_index_mnp, domain):
+        """Test getting the interpolating polynomial in the Newton basis."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+
         # Interpolate a function
-        interpol = interpolate(_fun, SpatialDimension, PolyDegree, LpDegree)
-        poly_1 = interpol.to_newton()
+        interpolant = interpolate(func, m, n, p, bounds)
+        poly_1 = interpolant.to_newton()
 
-        # Create a reference
-        grd = mp.Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
-        lag_coeffs = grd(_fun)
-        # 'interpolate()' use DDS (don't use LagrangeToNewton in the test
-        # as the results won't be identical, very close to, but not identical)
-        nwt_coeffs = mp.dds.dds(lag_coeffs, grd.tree)
-        poly_2 = mp.NewtonPolynomial.from_grid(grd, nwt_coeffs)
+        # Create a reference polynomial
+        poly_2 = NewtonPolynomial(mi, poly_1.coeffs, domain=domain)
 
+        # Assertion
         assert poly_1 == poly_2
 
-    def test_to_lagrange(self, SpatialDimension, PolyDegree, LpDegree):
-        """Test obtaining the interpolating polynomial in the Newton basis."""
+    def test_to_lagrange(self, multi_index_mnp, domain):
+        """Test getting the interpolating polynomial in the Lagrange basis."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+
         # Interpolate a function
-        interpol = interpolate(_fun, SpatialDimension, PolyDegree, LpDegree)
-        poly_1 = interpol.to_lagrange()
+        interpolant = interpolate(func, m, n, p, bounds)
+        poly_1 = interpolant.to_lagrange()
 
-        # Create a reference
-        grd = mp.Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
-        lag_coeffs = grd(_fun)
-        poly_2 = mp.LagrangePolynomial.from_grid(grd, lag_coeffs)
+        # Create a reference polynomial
+        grd = Grid(mi, domain=domain)
+        coeffs = grd(func)
+        poly_2 = LagrangePolynomial(mi, coeffs, grid=grd)
 
+        # Assertion
         assert poly_1 == poly_2
 
-    def test_to_canonical(self, SpatialDimension, PolyDegree, LpDegree):
-        """Test obtaining the interpolating polynomial in the Newton basis."""
+    def test_to_canonical(self, multi_index_mnp, domain):
+        """Test getting the interpolating polynomial in the canonical basis."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+
         # Interpolate a function
-        interpol = interpolate(_fun, SpatialDimension, PolyDegree, LpDegree)
-        poly_1 = interpol.to_canonical()
+        interpolant = interpolate(func, m, n, p, bounds)
+        poly_1 = interpolant.to_canonical()
 
-        # Create a reference
-        grd = mp.Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
-        lag_coeffs = grd(_fun)
-        lag_coeffs = grd(_fun)
-        # 'interpolate()' use DDS (don't use LagrangeToNewton in the test
-        # as the results won't be identical, very close to, but not identical)
-        nwt_coeffs = mp.dds.dds(lag_coeffs, grd.tree)
-        nwt_poly = mp.NewtonPolynomial.from_grid(grd, nwt_coeffs)
-        poly_2 = mp.NewtonToCanonical(nwt_poly)()
+        # Create a reference polynomial
+        coeffs = poly_1.coeffs
+        poly_2 = CanonicalPolynomial(mi, coeffs, domain=domain)
 
+        # Assertion
         assert poly_1 == poly_2
 
-    def test_to_chebyshev(self, SpatialDimension, PolyDegree, LpDegree):
-        """Test obtaining the interpolating polynomial in the Newton basis."""
+    def test_to_chebyshev(self, multi_index_mnp, domain):
+        """Test getting the interpolating polynomial in the Chebyshev basis."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+
         # Interpolate a function
-        interpol = interpolate(_fun, SpatialDimension, PolyDegree, LpDegree)
-        poly_1 = interpol.to_chebyshev()
+        interpolant = interpolate(func, m, n, p, bounds)
+        poly_1 = interpolant.to_chebyshev()
 
-        # Create a reference
-        grd = mp.Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
-        lag_coeffs = grd(_fun)
-        lag_coeffs = grd(_fun)
-        # 'interpolate()' use DDS (don't use LagrangeToNewton in the test
-        # as the results won't be identical, very close to, but not identical)
-        nwt_coeffs = mp.dds.dds(lag_coeffs, grd.tree)
-        nwt_poly = mp.NewtonPolynomial.from_grid(grd, nwt_coeffs)
-        poly_2 = mp.NewtonToChebyshev(nwt_poly)()
+        # Create a reference polynomial
+        coeffs = poly_1.coeffs
+        poly_2 = ChebyshevPolynomial(mi, coeffs, domain=domain)
 
+        # Assertion
         assert poly_1 == poly_2
+
+class TestInterpolate:
+    """All tests related to the interpolate function."""
+
+    def test_call(self, multi_index_mnp, domain):
+        """Test calling the function."""
+        # Fetch the relevant parameters for construction
+        mi = multi_index_mnp
+        m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
+        bounds = domain.bounds
+
+        # Create an interpolant instance
+        interpolant_1 = Interpolant.from_degree(func, m, n, p, bounds)
+        interpolant_2 = interpolate(func, m, n, p, bounds)
+
+        # Create a set of random test points
+        lb, ub = domain.lowers, domain.uppers
+        xx_test = lb + (ub - lb) * np.random.rand(100, m)
+
+        # Assertion (must be identical)
+        assert isinstance(interpolant_2, Interpolant)
+        assert np.allclose(interpolant_1(xx_test), interpolant_2(xx_test))

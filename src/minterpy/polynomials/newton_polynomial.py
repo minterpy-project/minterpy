@@ -44,24 +44,21 @@ from minterpy.core.ABC.multivariate_polynomial_abstract import (
 )
 from minterpy.core import Grid, MultiIndexSet
 from minterpy.dds import dds
-from minterpy.utils.verification import dummy, verify_domain
+from minterpy.utils.verification import dummy
 from minterpy.utils.polynomials.newton import (
     eval_newton_polynomials,
     deriv_newt_eval as eval_diff_numpy,
     integrate_monomials_newton,
 )
+from minterpy.polynomials.arithmetic import (
+    get_compute_coeffs_add,
+    get_compute_coeffs_mul,
+    select_active_monomials,
+)
+from minterpy.polynomials.scalar_add import scalar_add_via_monomials
 from minterpy.jit_compiled.newton.diff import (
     eval_multiple_query as eval_diff_numba,
     eval_multiple_query_par as eval_diff_numba_par,
-)
-from minterpy.utils.polynomials.interface import (
-    compute_coeffs_poly_sum_via_monomials,
-    compute_coeffs_poly_prod_via_monomials,
-    get_grid_and_multi_index_poly_prod,
-    get_grid_and_multi_index_poly_sum,
-    PolyData,
-    scalar_add_via_monomials,
-    select_active_monomials,
 )
 from minterpy.services import is_scalar
 
@@ -113,8 +110,10 @@ def eval_newton(poly: "NewtonPolynomial", xx: np.ndarray) -> np.ndarray:
 def add_newton(
     poly_1: "NewtonPolynomial",
     poly_2: "NewtonPolynomial",
+    multi_index: MultiIndexSet,
+    grid: Grid,
 ) -> "NewtonPolynomial":
-    """Add two instances of polynomials in the Newton basis.
+    r"""Add two instances of polynomials in the Newton basis.
 
     This is the concrete implementation of ``_add()`` method in the
     ``MultivariatePolynomialSingleABC`` abstract class specifically for
@@ -123,75 +122,154 @@ def add_newton(
     Parameters
     ----------
     poly_1 : NewtonPolynomial
-        Left operand of the addition/subtraction expression.
+        Left operand of the addition.
     poly_2 : NewtonPolynomial
-        Right operand of the addition/subtraction expression.
+        Right operand of the addition.
+    multi_index : MultiIndexSet
+        The multi-index set of the resulting polynomial, i.e., the union
+        of the multi-index sets of the operands.
+    grid : Grid
+        The grid of the resulting polynomial, i.e., the union of the grids
+        of the two operands.
 
     Returns
     -------
     NewtonPolynomial
         The sum of two polynomials in the Newton basis as a new instance
-        of polynomial in the Newton basis.
+        of polynomial.
 
     Notes
     -----
-    - This function assumes: both polynomials must be in the Newton basis,
-      they must be initialized (coefficients are not ``None``),
-      have the same dimension and their domains are matching,
-      and the number of polynomials per instance are the same.
-      These conditions are not explicitly checked in this function; the caller
-      is responsible for the verification.
-    """
-    # --- Get the ingredients of the summed polynomial in the Newton basis
-    poly_sum_data = _compute_data_poly_sum(poly_1, poly_2)
+    **Algorithm:**
 
-    # --- Return a new instance
-    return NewtonPolynomial(**poly_sum_data._asdict())
+    The Newton basis is in general not closed under addition because Newton
+    monomials depend on the underlying grid's generating points. When grids
+    differ, the monomials differ, requiring transformation through the Lagrange
+    basis:
+
+    1. Evaluate both Newton polynomials at the union grid's unisolvent nodes
+       to obtain Lagrange coefficients
+    2. Sum the Lagrange coefficients
+    3. Transform back to Newton coefficients on the union grid
+
+    **Special cases (monomials addition used instead):**
+
+    - **Compatible grids**: If both operand grids are compatible with the
+      result grid, their Newton monomials are identical, allowing direct
+      coefficient addition.
+    - **Scalar operand**: If one operand is a constant (multi-index set
+      contains only :math:`(0, \ldots, 0)`), it can be added directly
+      regardless of grid compatibility.
+
+    **Preconditions:**
+
+    - This function assumes the caller has verified: both polynomials are in
+      the Newton basis, both are initialized, their domains match, and they
+      have the same number of polynomial instances.
+    - The provided ``multi_index`` may differ from ``grid.multi_index`` when
+      the polynomial multi-index set is a subset of the grid multi-index set
+      (i.e., separated indices). The coefficients are computed with respect
+      to the provided ``multi_index``.
+    """
+    # Handle the case where no transformation is required
+    if _is_compute_coeffs_poly_add_via_monomials(poly_1, poly_2, grid):
+        compute_coeffs = get_compute_coeffs_add("monomials")
+        coeffs = compute_coeffs(poly_1, poly_2, multi_index)
+    else:
+        # Compute the coefficients via a transformation from Lagrange coeffs.
+        compute_coeffs = get_compute_coeffs_add("lagrange")
+        coeffs_lag = compute_coeffs(poly_1, poly_2, grid)
+        coeffs = _transform_lag2nwt(coeffs_lag, multi_index, grid)
+
+    # Create and return a new instance of polynomial
+    return NewtonPolynomial(multi_index, coeffs, grid)
 
 
 def mul_newton(
     poly_1: "NewtonPolynomial",
     poly_2: "NewtonPolynomial",
+    multi_index: MultiIndexSet,
+    grid: Grid,
 ) -> "NewtonPolynomial":
-    """Multiply instances of polynomials in the Newton basis.
+    r"""Multiply instances of polynomials in the Newton basis.
 
     This is the concrete implementation of ``_mul()`` method in the
     ``MultivariatePolynomialSingleABC`` abstract class specifically for
-    handling polynomials in the Newton basis.
+    polynomials in the Newton basis.
 
     Parameters
     ----------
     poly_1 : NewtonPolynomial
-        Left operand of the multiplication expression.
+        Left operand of the multiplication.
     poly_2 : NewtonPolynomial
-        Right operand of the multiplication expression.
+        Right operand of the multiplication.
+    multi_index : MultiIndexSet
+        The multi-index set of the resulting polynomial, i.e., the product
+        of the multi-index sets of the operands.
+    grid : Grid
+        The grid of the resulting polynomial, i.e., the product of the grids
+        of the two operands.
 
     Returns
     -------
     NewtonPolynomial
         The product of two polynomials in the Newton basis as a new instance
-        of polynomial in the Newton basis.
+        of polynomial.
 
     Notes
     -----
-    - This function assumes: both polynomials must be in the Newton basis,
-      they must be initialized (coefficients are not ``None``),
-      have the same dimension and their domains are matching,
-      and the number of polynomials per instance are the same.
-      These conditions are not explicitly checked in this function; the caller
-      is responsible for the verification.
-    """
-    # --- Get the ingredients of the product polynomial in the Newton basis
-    poly_prod_data = _compute_data_poly_prod(poly_1, poly_2)
+    **Algorithm:**
 
-    # --- Return a new instance
-    return NewtonPolynomial(**poly_prod_data._asdict())
+    The Newton basis is in general not closed under multiplication because
+    the product of Newton monomials does not result in a Newton monomial
+    of a higher degree (unlike canonical basis). The coefficients
+    of a polynomial product requires transformation through the Lagrange basis:
+
+    1. Evaluate both Newton polynomials at the product grid's unisolvent nodes
+       to obtain Lagrange coefficients
+    2. Multiply the Lagrange coefficients
+    3. Transform back to Newton coefficients on the product grid
+
+    **Special cases (monomials addition used instead):**
+
+    - **Scalar polynomial with scalar grid**: If one operand is a constant
+      polynomial (multi-index contains only :math:`(0, \ldots, 0)`)
+      and its grid's multi-index is also scalar,
+      direct coefficient multiplication is used.
+    - **Scalar polynomial with compatible non-scalar grid**: If one operand is
+      a constant polynomial but its grid's multi-index is non-scalar, direct
+      coefficient multiplication is used only if the grid is compatible with
+      the product grid.
+
+    **Preconditions:**
+
+    - This function assumes the caller has verified: both polynomials are in
+      the Newton basis, both are initialized, their domains match, and they
+      have the same number of polynomial instances.
+    - The provided ``multi_index`` may differ from ``grid.multi_index`` when
+      the polynomial multi-index set is a subset of the grid multi-index set
+      (i.e., separated indices). The coefficients are computed with respect
+      to the provided ``multi_index``.
+    """
+    # Handle the case where no transformation is required
+    if _is_compute_coeffs_poly_mul_via_monomials(poly_1, poly_2, grid):
+        compute_coeffs = get_compute_coeffs_mul("monomials")
+        coeffs = compute_coeffs(poly_1, poly_2, multi_index)
+    else:
+        # Compute the coefficients via a transformation from Lagrange coeffs.
+        compute_coeffs = get_compute_coeffs_mul("lagrange")
+        coeffs_lag = compute_coeffs(poly_1, poly_2, grid)
+        coeffs = _transform_lag2nwt(coeffs_lag, multi_index, grid)
+
+    # Create and return a new instance of polynomial
+    return NewtonPolynomial(multi_index, coeffs, grid)
 
 
 # --- Calculus
 def diff_newton(
     poly: "NewtonPolynomial",
     order: np.ndarray,
+    diff_factor: float,
     *,
     backend: str = "numba",
 ) -> "NewtonPolynomial":
@@ -276,75 +354,13 @@ def diff_newton(
 
     # DDS returns a 2D array, reshaping it according to input coefficient array
     nwt_diff_coeffs = dds(lag_diff_coeffs, tree).reshape(poly.coeffs.shape)
+    nwt_diff_coeffs *= diff_factor
 
     return NewtonPolynomial(
         coeffs=nwt_diff_coeffs,
         multi_index=multi_index,
         grid=grid,
     )
-
-
-def partial_diff_newton(
-    poly: "NewtonPolynomial",
-    dim: int,
-    order: int,
-    *,
-    backend: str = "numba",
-) -> "NewtonPolynomial":
-    """Differentiate polynomial(s) in the Newton basis with respect to a given
-    dimension and order of derivative.
-
-    This is a wrapper for the partial differentiation function in
-    the Newton basis.
-
-    Parameters
-    ----------
-    poly : NewtonPolynomial
-        The instance of polynomial in Newton form to differentiate.
-    dim : int
-        Spatial dimension with respect to which the differentiation
-        is taken. The dimension starts at 0 (i.e., the first dimension).
-    order : int
-        Order of partial derivative.
-    backend : str
-        Computational backend to carry out the differentiation.
-        Supported values are:
-
-        - ``"numpy"``: implementation based on NumPy; not performant, only
-          applicable for a very small problem size (small degree,
-          low dimension).
-        - ``"numba"`` (default): implementation based on compiled code with
-          the help of Numba; applicable up to moderate problem size.
-        - ``"numba-par"``: parallelized (CPU) implementation based on compiled
-          code with the help of Numba for relatively large problem sizes.
-
-    Returns
-    -------
-    NewtonPolynomial
-        A new instance of `NewtonPolynomial` that represents the partial
-        derivative of the original polynomial of the given order of derivative
-        with respect to the specified dimension.
-
-    Notes
-    -----
-    - The abstract class is responsible to validate ``dim`` and ``order``; no
-      additional validation regarding those two parameters are required here.
-
-    See Also
-    --------
-    NewtonPolynomial.partial_diff
-        The public method to differentiate the polynomial instance of
-        a specified order of derivative with respect to a given dimension.
-    NewtonPolynomial.diff
-        The public method to differentiate the polynomial instance of
-        the given orders of derivative along each dimension.
-    """
-    # Create a specification for differentiation
-    spatial_dim = poly.multi_index.spatial_dimension
-    deriv_order_along = np.zeros(spatial_dim, dtype=int)
-    deriv_order_along[dim] = order
-
-    return diff_newton(poly, deriv_order_along, backend=backend)
 
 
 def integrate_over_newton(
@@ -371,11 +387,6 @@ def integrate_over_newton(
     return quad_weights @ poly.coeffs
 
 
-# TODO redundant
-generate_internal_domain_newton = verify_domain
-generate_user_domain_newton = verify_domain
-
-
 class NewtonPolynomial(MultivariatePolynomialSingleABC):
     """Concrete implementations of polynomials in the Newton basis.
 
@@ -398,140 +409,12 @@ class NewtonPolynomial(MultivariatePolynomialSingleABC):
     _scalar_add = staticmethod(scalar_add_via_monomials)
 
     # Calculus
-    _partial_diff = staticmethod(partial_diff_newton)
     _diff = staticmethod(diff_newton)
     _integrate_over = staticmethod(integrate_over_newton)
 
-    # Domain generation
-    generate_internal_domain = staticmethod(generate_internal_domain_newton)
-    generate_user_domain = staticmethod(generate_user_domain_newton)
-
 
 # --- Internal utility functions
-def _compute_data_poly_sum(
-    poly_1: NewtonPolynomial,
-    poly_2: NewtonPolynomial,
-) -> PolyData:
-    """Compute the data to create a summed polynomial in the Newton basis.
-
-    This function is responsible to prepare the data to construct a new
-    instance of polynomial in the Newton basis that is the summed of two Newton
-    polynomials, specifically:
-
-    - the underlying grid
-    - the underlying multi-index set
-    - the polynomial coefficients
-    - the internal domain
-    - the user domain
-
-    Parameters
-    ----------
-    poly_1 : NewtonPolynomial
-        Left operand of the addition/subtraction expression.
-    poly_2 : NewtonPolynomial
-        Right operand of the addition/subtraction expression.
-
-    Returns
-    -------
-    PolyData
-        The ingredients to construct a summed polynomial in the Newton basis.
-
-    Notes
-    -----
-    - Both polynomials are assumed to have the same type, the same spatial
-      dimension, and matching domains. These conditions have been made sure
-      upstream.
-    """
-    # --- Get the grid and multi-index set of the summed polynomial
-    grd_sum, mi_sum = get_grid_and_multi_index_poly_sum(poly_1, poly_2)
-
-    # --- Process the coefficients
-    coeffs_sum = _compute_coeffs_poly_sum(poly_1, poly_2, grd_sum, mi_sum)
-
-    # --- Process the domains
-    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
-    # matching domains, it does not matter which one to use
-    internal_domain_sum = poly_1.internal_domain
-    user_domain_sum = poly_1.user_domain
-
-    return PolyData(
-        multi_index=mi_sum,
-        coeffs=coeffs_sum,
-        internal_domain=internal_domain_sum,
-        user_domain=user_domain_sum,
-        grid=grd_sum,
-    )
-
-
-def _compute_coeffs_poly_sum(
-    poly_1: NewtonPolynomial,
-    poly_2: NewtonPolynomial,
-    grid_sum: Grid,
-    multi_index_sum: MultiIndexSet,
-) -> np.ndarray:
-    """Compute the coefficients of a summed polynomial in the Newton basis.
-
-    In general, the coefficients of a summed polynomial in the Newton basis
-    are obtained by going through the Lagrange basis first.
-    Specifically, the Lagrange coefficients are computed by summing up
-    the evaluation results of the Newton polynomial operands on the union
-    Grid. Afterward, these coefficients are transformed to the Newton
-    coefficients.
-
-    This is because the Newton monomials depends on the underlying grid
-    (specifically, its generating points). The monomials of two Newton
-    polynomials are different if the generating points of the two polynomials
-    are different.
-
-    There are two exceptions such that the coefficients may be obtained without
-    going through the Lagrange basis first.
-
-    - if the grids of the two polynomial operands are compatible with the
-      grid of the summed polynomial. In this particular case, the monomials
-      of the two polynomials are the same.
-    - if one of the operands is a constant scalar polynomial, whose only a
-      single element (:math:`(0, \ldots, 0)`) in the multi-index set of the
-      polynomial and the underlying grid (regardless whether this grid
-      is compatible with the grid of the summed polynomial).
-
-    Parameters
-    ----------
-    poly_1 : NewtonPolynomial
-        Left operand of the addition/subtraction expression.
-    poly_2 : NewtonPolynomial
-        Right operand of the addition/subtraction expression.
-    grid_sum : Grid
-        The Grid associated with the summed polynomial.
-    multi_index_sum : MultiIndexSet
-        The multi-index set of the summed polynomial.
-
-    Returns
-    -------
-    :class:`numpy:numpy.ndarray`
-        The coefficients of the summed polynomial in the Newton basis.
-
-    Notes
-    -----
-    - Both polynomials are assumed to have the same spatial dimension and
-      matching domains. These conditions have been made sure upstream.
-    """
-    # --- Handle the case where no transformation is required
-    if _is_compute_coeffs_poly_sum_via_monomials(poly_1, poly_2, grid_sum):
-        return compute_coeffs_poly_sum_via_monomials(
-            poly_1,
-            poly_2,
-            multi_index_sum,
-        )
-
-    return _compute_coeffs_poly_sum_via_lagrange(
-        poly_1,
-        poly_2,
-        grid_sum,
-        multi_index_sum,
-    )
-
-
-def _is_compute_coeffs_poly_sum_via_monomials(
+def _is_compute_coeffs_poly_add_via_monomials(
     poly_1: NewtonPolynomial,
     poly_2: NewtonPolynomial,
     grid_sum: Grid
@@ -557,182 +440,31 @@ def _is_compute_coeffs_poly_sum_via_monomials(
     # If one of the operands is a scalar polynomial
     is_scalar_poly = is_scalar(poly_1) or is_scalar(poly_2)
     # ...or if the grids are compatible
-    is_compatible_grid_1 = poly_1.grid.is_compatible(grid_sum)
-    is_compatible_grid_2 = poly_2.grid.is_compatible(grid_sum)
+    is_compatible_grid_1 = poly_1.grid.has_compatible_gen_points(grid_sum)
+    is_compatible_grid_2 = poly_2.grid.has_compatible_gen_points(grid_sum)
     is_compatible_grids = is_compatible_grid_1 and is_compatible_grid_2
 
     return is_scalar_poly or is_compatible_grids
 
 
-def _compute_coeffs_poly_sum_via_lagrange(
-    poly_1: NewtonPolynomial,
-    poly_2: NewtonPolynomial,
-    grid_sum: Grid,
-    multi_index_sum: MultiIndexSet,
-) -> np.ndarray:
-    """Compute the coefficients of a summed Newton polynomial via Lagrange.
-
-    Parameters
-    ----------
-    poly_1 : NewtonPolynomial
-        Left operand of the addition/subtraction expression.
-    poly_2 : NewtonPolynomial
-        Right operand of the addition/subtraction expression.
-    grid_sum : Grid
-        The Grid associated with the summed polynomial.
-    multi_index_sum : MultiIndexSet
-        The multi-index set of the summed polynomial.
-
-    Returns
-    -------
-    :class:`numpy:numpy.ndarray`
-        The coefficients of the summed polynomial in the Newton basis.
-
-    Notes
-    -----
-    - Both polynomials are assumed to have the same spatial dimension and
-      matching domains. These conditions have been made sure upstream.
-    """
-    # Compute the values of the operands at the unisolvent nodes
-    lag_coeffs_1 = grid_sum(poly_1)
-    lag_coeffs_2 = grid_sum(poly_2)
-    lag_coeffs_sum = lag_coeffs_1 + lag_coeffs_2
-
-    # Transform the Lagrange coefficients into Newton coefficients
-    nwt_coeffs_sum = _transform_lag2nwt(
-        lag_coeffs_sum,
-        grid_sum,
-        poly_1.indices_are_separate or poly_2.indices_are_separate,
-        multi_index_sum,
-    )
-
-    return nwt_coeffs_sum
-
-
-def _compute_data_poly_prod(
-    poly_1: NewtonPolynomial,
-    poly_2: NewtonPolynomial,
-) -> PolyData:
-    """Compute the data to create a product polynomial in the Newton basis.
-
-    This function is responsible to prepare the data to construct a new
-    instance of polynomial in the Newton basis that is the product of
-    two Newton polynomials, specifically:
-
-    - the underlying grid
-    - the underlying multi-index set
-    - the polynomial coefficients
-    - the internal domain
-    - the user domain
-
-    Parameters
-    ----------
-    poly_1 : NewtonPolynomial
-        Left operand of the multiplication expression.
-    poly_2 : NewtonPolynomial
-        Right operand of the multiplication expression.
-
-    Returns
-    -------
-    PolyData
-        The ingredients to construct a product polynomial in the Newton basis.
-
-    Notes
-    -----
-    - Both polynomials are assumed to have the same spatial dimension
-      and matching domains.
-    """
-    # --- Get the grid and multi-index set of the product polynomial
-    grd_prod, mi_prod = get_grid_and_multi_index_poly_prod(poly_1, poly_2)
-
-    # --- Process the coefficients
-    coeffs_prod = _compute_coeffs_poly_prod(poly_1, poly_2, grd_prod, mi_prod)
-
-    # --- Process the domains
-    # NOTE: Because it is assumed that 'poly_1' and 'poly_2' have
-    # matching domains, it does not matter which one to use
-    internal_domain_prod = poly_1.internal_domain
-    user_domain_prod = poly_1.user_domain
-
-    return PolyData(
-        multi_index=mi_prod,
-        coeffs=coeffs_prod,
-        internal_domain=internal_domain_prod,
-        user_domain=user_domain_prod,
-        grid=grd_prod,
-    )
-
-
-def _compute_coeffs_poly_prod(
-    poly_1: NewtonPolynomial,
-    poly_2: NewtonPolynomial,
-    grid_prod: Grid,
-    multi_index_prod: MultiIndexSet,
-) -> np.ndarray:
-    """Compute the coefficients of polynomial product in the Newton basis.
-
-    In general, the coefficients of a product polynomial in the Newton basis
-    are obtained by going through the Lagrange basis first.
-    Specifically, the Lagrange coefficients are computed by multiplying
-    the evaluation results of the Newton polynomial operands on the product
-    Grid. Afterward, these coefficients are transformed to the Newton
-    coefficients.
-
-    This is because the Newton monomials depends on the underlying grid
-    (specifically, its generating points). The monomials of two Newton
-    polynomials are different if the generating points of the two polynomials
-    are different. Moreover, a multiplication of two Newton monomial does not,
-    in general, return the monomial of a higher degree even for compatible
-    monomials (unlike the canonical basis).
-
-    There are two exceptions such that the coefficients may be obtained without
-    going through the Lagrange basis first because the meaning of the monomials
-    are the same.
-
-    - if one of the operands is a constant scalar polynomial, whose only a
-      single element (:math:`(0, \ldots, 0)`) in the multi-index set of both
-      the polynomial and the underlying grid.
-    - if one of the operands is a constant scalar polynomial whose underlying
-      grid is not scalar but still compatible with the product grid.
-
-    Parameters
-    ----------
-    poly_1 : NewtonPolynomial
-        Left operand of the multiplication expression.
-    poly_2 : NewtonPolynomial
-        Right operand of the multiplication expression.
-    grid_prod : Grid
-        The Grid associated with the product polynomial.
-    multi_index_prod : MultiIndexSet
-        The multi-index set of the product polynomial.
-
-    Returns
-    -------
-    :class:`numpy:numpy.ndarray`
-        The coefficients of the product polynomial in the Newton basis.
-    """
-    # --- Handle case where no transformation is required
-    if _is_compute_coeffs_poly_prod_via_monomials(poly_1, poly_2, grid_prod):
-        return compute_coeffs_poly_prod_via_monomials(
-            poly_1,
-            poly_2,
-            multi_index_prod,
-        )
-
-    return _compute_coeffs_poly_prod_via_lagrange(
-        poly_1,
-        poly_2,
-        grid_prod,
-        multi_index_prod,
-    )
-
-
-def _is_compute_coeffs_poly_prod_via_monomials(
+def _is_compute_coeffs_poly_mul_via_monomials(
     poly_1: NewtonPolynomial,
     poly_2: NewtonPolynomial,
     grid_prod: Grid
 ) -> bool:
     """Check if the polynomials may be multiplied via the monomials.
+
+    The multiplication can use the monomial approach when the resulting Newton
+    polynomial lives on the same grid (with the same generating points) as one
+    of the operands. This allows reusing the existing Newton basis without
+    recomputation, which is crucial since changing the degree typically alters
+    the generating points for unnested grids (e.g., Chebyshev-Lobatto).
+
+    Because Newton polynomials are not closed under multiplication (i.e., the
+    product of two Newton basis polynomials is not itself a Newton basis
+    polynomial of higher degree), at least one operand must be a scalar
+    polynomial to ensure that the product can be represented
+    in the same Newton basis as the non-scalar operand.
 
     Parameters
     ----------
@@ -750,70 +482,34 @@ def _is_compute_coeffs_poly_prod_via_monomials(
         one of them has a scalar monomial and both of the underlying grids are
         compatible with the given product grid; ``False`` otherwise.
     """
-    # Check if one of the operands is a scalar polynomial
+    # Check if either operand is a strictly scalar polynomial
     is_scalar_poly = is_scalar(poly_1) or is_scalar(poly_2)
-    # Check if one of the monomials of the operand is a scalar
-    is_scalar_multi_index_1 = is_scalar(poly_1.multi_index)
-    is_scalar_multi_index_2 = is_scalar(poly_2.multi_index)
-    is_scalar_multi_index = is_scalar_multi_index_1 or is_scalar_multi_index_2
-    # Check if the grids are compatible with the given grid
-    is_compatible_grid_1 = poly_1.grid.is_compatible(grid_prod)
-    is_compatible_grid_2 = poly_2.grid.is_compatible(grid_prod)
-    is_compatible_grids = is_compatible_grid_1 and is_compatible_grid_2
 
-    return is_scalar_poly or (is_scalar_multi_index and is_compatible_grids)
+    # Check grid compatibility based on scalar multi_index
+    poly_1_scalar_idx = is_scalar(poly_1.multi_index)
+    poly_2_scalar_idx = is_scalar(poly_2.multi_index)
 
+    if poly_1_scalar_idx and poly_2_scalar_idx:
+        # Both have scalar multi_index: always compatible
+        grid_compatible = True
+    elif poly_1_scalar_idx:
+        # Only poly_1 has scalar multi_index: check poly_2's grid
+        grid_compatible = poly_2.grid.has_compatible_gen_points(grid_prod)
+    elif poly_2_scalar_idx:
+        # Only poly_2 has scalar multi_index: check poly_1's grid
+        grid_compatible = poly_1.grid.has_compatible_gen_points(grid_prod)
+    else:
+        # Neither has scalar multi_index: not compatible
+        grid_compatible = False
 
-def _compute_coeffs_poly_prod_via_lagrange(
-    poly_1: NewtonPolynomial,
-    poly_2: NewtonPolynomial,
-    grid_prod: Grid,
-    multi_index_prod: MultiIndexSet,
-) -> np.ndarray:
-    """Compute the coefficients of a product Newton polynomial via Lagrange.
-
-    Parameters
-    ----------
-    poly_1 : NewtonPolynomial
-        Left operand of the multiplication expression.
-    poly_2 : NewtonPolynomial
-        Right operand of the multiplication expression.
-    grid_product : Grid
-        The Grid associated with the product polynomial.
-    multi_index_product : MultiIndexSet
-        The multi-index set of the product polynomial.
-
-    Returns
-    -------
-    :class:`numpy:numpy.ndarray`
-        The coefficients of the product polynomial in the Newton basis.
-
-    Notes
-    -----
-    - Both polynomials are assumed to have the same spatial dimension and
-      matching domains. These conditions have been made sure upstream.
-    """
-    # Compute the values of the operands at the unisolvent nodes
-    lag_coeffs_1 = grid_prod(poly_1)
-    lag_coeffs_2 = grid_prod(poly_2)
-    lag_coeffs_prod = lag_coeffs_1 * lag_coeffs_2
-
-    # Transform the Lagrange coefficients into Newton coefficients
-    nwt_coeffs_prod = _transform_lag2nwt(
-        lag_coeffs_prod,
-        grid_prod,
-        poly_1.indices_are_separate or poly_2.indices_are_separate,
-        multi_index_prod,
-    )
-
-    return nwt_coeffs_prod
+    # Compatible if either operand is scalar OR grids are compatible
+    return is_scalar_poly or grid_compatible
 
 
 def _transform_lag2nwt(
-    lag_coeffs: np.ndarray,
-    grid: Grid,
-    indices_are_separate: bool,
+    coeffs_lag: np.ndarray,
     multi_index: MultiIndexSet,
+    grid: Grid,
 ) -> np.ndarray:
     """Transform the (active) Lagrange coefficients to the Newton coefficients.
 
@@ -823,9 +519,6 @@ def _transform_lag2nwt(
         The coefficients of the polynomial in the Lagrange basis.
     grid : Grid
         The underlying interpolation grid of the polynomial.
-    indices_are_separate : bool
-        A flag that indicates whether the multi-index set of the grid
-        and the given multi-index set are not the same.
     multi_index : MultiIndexSet
         The multi-index set of the polynomial
 
@@ -842,13 +535,13 @@ def _transform_lag2nwt(
       by better organization and/or using interface functions.
     """
     # Transform the Lagrange coefficients into Newton coefficients
-    nwt_coeffs = dds(lag_coeffs, grid.tree)
+    coeffs_nwt = dds(coeffs_lag, grid.tree)
 
     # Deal with separate indices, select only w.r.t the active monomials
-    if indices_are_separate:
-        nwt_coeffs = select_active_monomials(nwt_coeffs, grid, multi_index)
+    if multi_index != grid.multi_index:
+        coeffs_nwt = select_active_monomials(coeffs_nwt, grid, multi_index)
 
-    return nwt_coeffs
+    return coeffs_nwt
 
 
 def _compute_quad_weights(

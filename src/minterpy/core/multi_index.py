@@ -1,4 +1,4 @@
-"""
+r"""
 This module contains the implementation of the `MultiIndexSet` class.
 
 The `MultiIndexSet` class represents the multi-index sets of exponents that
@@ -149,7 +149,7 @@ class MultiIndexSet:
         poly_degree: int,
         lp_degree: float = DEFAULT_LP_DEG,
     ) -> "MultiIndexSet":
-        """Create an instance from given spatial dim., poly., and lp-degrees.
+        r"""Create an instance from given spatial dim., poly., and lp-degrees.
 
         Parameters
         ----------
@@ -1029,7 +1029,11 @@ class MultiIndexSet:
             ``True`` if the two instances are equal in value, ``False``
             otherwise.
         """
-        # Check for consistent type
+        # Identity check
+        if self is other:
+            return True
+
+        # Check for a consistent type
         if not isinstance(other, MultiIndexSet):
             return False
 
