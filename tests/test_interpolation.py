@@ -42,8 +42,11 @@ class TestInterpolator:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
         grd = mp.Grid(mi, domain=domain)
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Create an instance of Interpolator
         interpolator = Interpolator(m, n, p, bounds)
@@ -51,7 +54,8 @@ class TestInterpolator:
         # Assertions
         assert interpolator.multi_index == mi
         assert interpolator.grid == grd
-        assert interpolator.domain == domain
+        if domain is not None:
+            assert interpolator.domain == domain
         assert interpolator.spatial_dimension == m
         assert interpolator.poly_degree == n
         assert interpolator.lp_degree == p
@@ -76,8 +80,11 @@ class TestInterpolator:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
         grd = mp.Grid(mi, domain=domain)
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Create an instance of Interpolator
         interpolator = Interpolator(m, n, p, bounds)
@@ -96,10 +103,13 @@ class TestInterpolator:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
 
         # Create a groundtruth polynomial
         groundtruth_poly = build_random_newton_polynom(m, n, p, domain)
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Create an interpolator and interpolate the groundtruth polynomial
         interpolator = Interpolator(m, n, p, bounds)
@@ -120,7 +130,10 @@ class TestInterpolant:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Create interpolant instances
         interpolant = Interpolant.from_degree(func, m, n, p, bounds)
@@ -136,7 +149,10 @@ class TestInterpolant:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Create an interpolator
         interpolator = Interpolator(m, n, p, bounds)
@@ -154,7 +170,10 @@ class TestInterpolant:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Create a reference polynomial
         reference_poly = build_random_newton_polynom(m, n, p, domain)
@@ -163,7 +182,7 @@ class TestInterpolant:
         interpolant = Interpolant.from_degree(reference_poly, m, n, p, bounds)
 
         # Create a set of random test points
-        lb, ub = domain.lowers, domain.uppers
+        lb, ub = reference_poly.domain.lowers, reference_poly.domain.uppers
         xx_test = lb + (ub - lb) * np.random.rand(100, m)
 
         # Assertion
@@ -174,7 +193,10 @@ class TestInterpolant:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Interpolate a function
         interpolant = interpolate(func, m, n, p, bounds)
@@ -191,7 +213,10 @@ class TestInterpolant:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Interpolate a function
         interpolant = interpolate(func, m, n, p, bounds)
@@ -210,7 +235,10 @@ class TestInterpolant:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Interpolate a function
         interpolant = interpolate(func, m, n, p, bounds)
@@ -228,7 +256,10 @@ class TestInterpolant:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Interpolate a function
         interpolant = interpolate(func, m, n, p, bounds)
@@ -241,6 +272,7 @@ class TestInterpolant:
         # Assertion
         assert poly_1 == poly_2
 
+
 class TestInterpolate:
     """All tests related to the interpolate function."""
 
@@ -249,14 +281,18 @@ class TestInterpolate:
         # Fetch the relevant parameters for construction
         mi = multi_index_mnp
         m, n, p = mi.spatial_dimension, mi.poly_degree, mi.lp_degree
-        bounds = domain.bounds
+        if domain is None:
+            bounds = None
+        else:
+            bounds = domain.bounds
 
         # Create an interpolant instance
         interpolant_1 = Interpolant.from_degree(func, m, n, p, bounds)
         interpolant_2 = interpolate(func, m, n, p, bounds)
 
         # Create a set of random test points
-        lb, ub = domain.lowers, domain.uppers
+        interpolator = interpolant_1.interpolator
+        lb, ub = interpolator.domain.lowers, interpolator.domain.uppers
         xx_test = lb + (ub - lb) * np.random.rand(100, m)
 
         # Assertion (must be identical)

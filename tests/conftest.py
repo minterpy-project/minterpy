@@ -294,11 +294,11 @@ def num_polynomials(request):
     return request.param
 
 # Fixture for Domain types
-DOMAIN_TYPES = ["default", "random"]
+DOMAIN_TYPES = [None, "default", "random"]
 
 
 def _id_domain_type(domain_type):
-    return f"dom={domain_type:<7}"
+    return f"dom={str(domain_type):<7}"
 
 
 @pytest.fixture(params=DOMAIN_TYPES, ids=_id_domain_type)
@@ -309,6 +309,9 @@ def domain_type(request):
 # Fixture for Domain instance
 @pytest.fixture
 def domain(SpatialDimension, domain_type):
+    if domain_type is None:
+        return None
+
     # Create a default domain
     if domain_type == "default":
         return Domain.identity(SpatialDimension)
@@ -907,6 +910,7 @@ def multi_index_incomplete(SpatialDimension, PolyDegree, LpDegree):
 
 
 @pytest.fixture
-def grid_mnp(SpatialDimension, PolyDegree, LpDegree):
+def grid_mnp(SpatialDimension, PolyDegree, LpDegree, domain):
     """Create a Grid with a complete multi-index set."""
-    return Grid.from_degree(SpatialDimension, PolyDegree, LpDegree)
+    m, n, p = SpatialDimension, PolyDegree, LpDegree
+    return Grid.from_degree(m, n, p, domain=domain)
