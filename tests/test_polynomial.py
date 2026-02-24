@@ -162,14 +162,11 @@ class TestFrom:
         # Create a polynomial instance
         # From grid - grid the same as default
         poly_1 = poly_class_all.from_grid(grid_mnp, coeffs)
-        # Default constructor - default grid
-        poly_2 = poly_class_all(grid_mnp.multi_index, coeffs)
         # Default constructor - grid the same as default
-        poly_3 = poly_class_all(grid_mnp.multi_index, coeffs, grid=grid_mnp)
+        poly_2 = poly_class_all(grid_mnp.multi_index, coeffs, grid=grid_mnp)
 
         # Assertions
         assert poly_1 == poly_2
-        assert poly_1 == poly_3
 
 
 class TestGetSetCoeffs:

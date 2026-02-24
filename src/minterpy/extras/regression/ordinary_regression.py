@@ -1,7 +1,7 @@
 """
 This module contains the concrete implementation of ordinary regression.
 
-A polynomial regression model is used when the given dataset do not lie
+A polynomial regression model is used when the given dataset does not lie
 on the unisolvent nodes of an interpolating polynomial.
 In such cases, the function values at the unisolvent nodes are obtained via
 least-squares.
@@ -11,6 +11,7 @@ import scipy
 from typing import Optional, Type, Union, Tuple, Callable
 
 from minterpy.core.ABC import MultivariatePolynomialSingleABC
+from minterpy.core.domain import Domain
 from minterpy.core.multi_index import MultiIndexSet
 from minterpy.core.grid import Grid
 from minterpy.polynomials import (
@@ -20,6 +21,7 @@ from minterpy.polynomials import (
     ChebyshevPolynomial,
 )
 from minterpy.transformations import LagrangeToNewton
+from minterpy.utils.exceptions import DomainMismatchError
 from minterpy.utils.polynomials.chebyshev import (
     evaluate_monomials as evaluate_monomials_chebyshev,
 )
@@ -33,11 +35,17 @@ from .regression_abc import RegressionABC
 __all__ = ["OrdinaryRegression"]
 
 
-class OrdinaryRegression(RegressionABC):
-    """Implementation of an ordinary (weighted/unweighted) poly. regression.
+SUPPORTED_BASES = (
+    LagrangePolynomial,
+    NewtonPolynomial,
+    CanonicalPolynomial,
+    ChebyshevPolynomial,
+)
 
-    ``OrdinaryRegression`` fits a polynomial model specified by a multi-index
-    set on a given dataset.
+class OrdinaryRegression(RegressionABC):
+    r"""Implementation of an ordinary (un/-weighted) polynomial regression.
+
+    ``OrdinaryRegression`` fits a polynomial model on a given dataset.
 
     Parameters
     ----------
@@ -50,6 +58,9 @@ class OrdinaryRegression(RegressionABC):
         This parameter is optional if a multi-index set is specified;
         in that case, the grid is constructed from the specified
         multi-index set.
+    domain : :py:class:`.Domain`, optional
+        The domain on which the polynomial is defined. If not given, then
+        the default internal domain :math:`[-1, 1]^m` is used.
     origin_poly : Type[:py:class:`.MultivariatePolynomialSingleABC`], optional
         The polynomial basis on which the regression is carried out.
         This parameter is optional and, by default, is set to the
@@ -60,34 +71,16 @@ class OrdinaryRegression(RegressionABC):
         self,
         multi_index: Optional[MultiIndexSet] = None,
         grid: Optional[Grid] = None,
-        origin_poly: Type[MultivariatePolynomialSingleABC] = LagrangePolynomial,
+        domain: Optional[Domain] = None,
+        origin_poly: Optional[Type[MultivariatePolynomialSingleABC]] = None,
     ):
-        if multi_index is None and grid is None:
-            raise ValueError(
-                "Either a multi-index set or a grid must be specified!"
-            )
+        # Parse multi-index set, grid, and domain
+        mi, grd = _verify_inputs(multi_index, grid, domain)
+        self._multi_index, self._grid = mi, grd
 
-        # Initialize and verify the grid
-        if grid is None:
-            # Create a grid from a verified multi-index set
-            _verify_multi_index(multi_index)
-            self._grid = Grid(multi_index)
-        else:
-            _verify_grid(grid)
-            self._grid = grid
-
-        # Verify multi-index set
-        if multi_index is None:
-            self._multi_index = grid.multi_index
-        else:
-            if len(multi_index) == 0:
-                raise ValueError("MultiIndexSet must not be empty!")
-            # Verify the multi-index set and its relation with the grid
-            _verify_multi_index(multi_index)
-            _verify_grid(self.grid, multi_index)
-            self._multi_index = multi_index
-
-        # Initialize the origin polynomial basis
+        # Initialize the origin polynomial basis with no coefficients
+        if origin_poly is None:
+            origin_poly = LagrangePolynomial
         self._origin_poly = origin_poly(
             multi_index=self._multi_index, grid=self._grid
         )
@@ -196,6 +189,11 @@ class OrdinaryRegression(RegressionABC):
         return self._grid
 
     @property
+    def domain(self) -> Domain:
+        """Domain of the polynomial."""
+        return self._grid.domain
+
+    @property
     def origin_poly(
         self
     ) -> MultivariatePolynomialSingleABC:
@@ -231,6 +229,7 @@ class OrdinaryRegression(RegressionABC):
             Evaluation points, an array of shape :math:`N_e \times M`, where
             :math:`N_e` and :math:`M` correspond to the number of evaluation
             points and the number of spatial dimensions, respectively.
+            The points lie in the user-defined domain.
 
         Returns
         -------
@@ -280,7 +279,8 @@ class OrdinaryRegression(RegressionABC):
         Parameters
         ----------
         xx : :class:`numpy:numpy.ndarray`
-            Input matrix, also known as the training inputs.
+            Input matrix, also known as the training inputs. The points lie
+            in the user-defined domain.
         yy : :class:`numpy:numpy.ndarray`
             Response vector, observed or evaluated at ``xx``.
         weights : :class:`numpy:numpy.ndarray`, optional
@@ -384,7 +384,7 @@ class OrdinaryRegression(RegressionABC):
             Query points, a two-dimensional array of shape
             :math:`N_q \times M`, where :math:`N_q` and :math:`M` correspond to
             the number of query points and the number of spatial dimensions,
-            respectively.
+            respectively. The points lie in the user-defined domain.
 
         Returns
         -------
@@ -444,11 +444,17 @@ def compute_regression_matrix(
           can call its own "eval_monomials_on" method to construct
           the regression matrix on the training points.
     """
+    # Check supported polynomial bases
+    if not isinstance(basis_poly, SUPPORTED_BASES):
+        raise TypeError(f"Basis {type(basis_poly)} is not supported!")
+
+    # Transform inputs to internal domain for monomials computation
+    xx_t = basis_poly.domain.map_to_internal(xx)
+
     exponents = basis_poly.multi_index.exponents
     generating_points = basis_poly.grid.generating_points
 
-    regression_matrix = None
-    # Evaluate the basis at the trainining points
+    # Evaluate the basis at the training points
     # TODO: should have a method basis_poly.eval_monomials(xx),
     #       below are temporary solutions.
     if isinstance(basis_poly, LagrangePolynomial):
@@ -460,27 +466,28 @@ def compute_regression_matrix(
 
         # Evaluate the Newton polynomials representing the Lagrange monomials
         # on the input points
-        regression_matrix = eval_newton_polynomials(
-            xx, newton_coeffs, exponents, generating_points
+        return eval_newton_polynomials(
+            xx_t,
+            newton_coeffs,
+            exponents,
+            generating_points,
         )
 
-    elif isinstance(basis_poly, NewtonPolynomial):
-        regression_matrix = eval_newton_monomials(
-            xx, exponents, generating_points
+    if isinstance(basis_poly, NewtonPolynomial):
+        return eval_newton_monomials(
+            xx_t,
+            exponents,
+            generating_points,
         )
 
-    elif isinstance(basis_poly, CanonicalPolynomial):
-        regression_matrix = np.prod(
-            np.power(xx[:, None, :], exponents[None, :, :]), axis=-1
+    if isinstance(basis_poly, CanonicalPolynomial):
+        return np.prod(
+            np.power(xx_t[:, None, :], exponents[None, :, :]),
+            axis=-1,
         )
 
-    elif isinstance(basis_poly, ChebyshevPolynomial):
-        regression_matrix = evaluate_monomials_chebyshev(xx, exponents)
-
-    else:
-        raise TypeError(f"Polynomial {type(basis_poly)} is not supported!")
-
-    return regression_matrix
+    # ChebyshevPolynomial (the only remaining supported type)
+    return evaluate_monomials_chebyshev(xx_t, exponents)
 
 
 def solve_least_squares(
@@ -623,7 +630,7 @@ def compute_loocv_error(
         # NOTE: Under-determined system, unreliable results
         loo_cv_error = np.inf
 
-    return loo_cv_error, loo_cv_error / np.var(yy)
+    return float(loo_cv_error), float(loo_cv_error / np.var(yy))
 
 
 def compute_regfit_linf_error(
@@ -682,31 +689,63 @@ def compute_regfit_l2_error(
         and relative (normalized) terms. The normalization is with respect to
         the function values sample variance.
     """
-    l2_error = float(np.mean((yy - regression_matrix @ coeffs) ** 2))
+    l2_error = np.mean((yy - regression_matrix @ coeffs) ** 2)
 
-    return l2_error, l2_error / np.var(yy)
+    return float(l2_error), float(l2_error / np.var(yy))
 
 
-def _verify_multi_index(multi_index: MultiIndexSet):
-    """Verify the instance of MultiIndexSet passed to the constructor."""
-    if not isinstance(multi_index, MultiIndexSet):
+def _verify_inputs(
+    multi_index: Optional[MultiIndexSet],
+    grid: Optional[Grid],
+    domain: Optional[Domain],
+) -> Tuple[MultiIndexSet, Grid]:
+    """Verify the input arguments passed to the constructor."""
+    # --- Verify minimum input
+    if multi_index is None and grid is None:
+        raise ValueError(
+            "Either the multi-index set or the grid must be specified!"
+        )
+
+    # --- Type checking
+    if multi_index is not None and not isinstance(multi_index, MultiIndexSet):
         raise TypeError(
             f"Unexpected type {type(multi_index)} "
             "of the input multi-index set!"
         )
 
-
-def _verify_grid(grid: Grid, multi_index: Optional[MultiIndexSet] = None):
-    """Verify the instance of Grid passed to the constructor"""
-    if not isinstance(grid, Grid):
+    if grid is not None and not isinstance(grid, Grid):
         raise TypeError(f"Unexpected type {type(grid)} of the input grid!")
 
-    if multi_index is not None:
+    if domain is not None and not isinstance(domain, Domain):
+        raise TypeError(f"Unexpected type {type(domain)} of the domain!")
+
+    # --- Verify domain consistency
+    if domain is not None and grid is not None and domain != grid.domain:
+        raise DomainMismatchError(
+            "The domain of the grid must be the same as the domain "
+            "specified in the constructor!"
+        )
+
+    # --- Process the multi-index set
+    if multi_index is None:
+        # Get the multi-index from the grid
+        multi_index = grid.multi_index
+    else:
+        if len(multi_index) == 0:
+            raise ValueError("The multi-index set must not be empty!")
+
+    # --- Process the grid
+    if grid is None:
+        # Create a grid from the multi-index set
+        grid = Grid(multi_index, domain=domain)
+    else:
         if not grid.multi_index.is_superset(multi_index):
             raise ValueError(
                 "The multi-indices of a polynomial must be a subset of "
                 "the multi-indices of the grid in use!"
             )
+
+    return multi_index, grid
 
 
 def _solve_lstsq(
