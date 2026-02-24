@@ -59,7 +59,7 @@
     <link rel="prev" title="regression" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
+  <meta name="docsearch:version" content="0.3.1.dev107+g696230ecd" />
   </head>
   
   
@@ -534,17 +534,16 @@
   <section id="module-minterpy.extras.regression.ordinary_regression">
 <span id="ordinary-regression"></span><h1>ordinary_regression<a class="headerlink" href="#module-minterpy.extras.regression.ordinary_regression" title="Link to this heading">#</a></h1>
 <p>This module contains the concrete implementation of ordinary regression.</p>
-<p>A polynomial regression model is used when the given dataset do not lie
+<p>A polynomial regression model is used when the given dataset does not lie
 on the unisolvent nodes of an interpolating polynomial.
 In such cases, the function values at the unisolvent nodes are obtained via
 least-squares.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="minterpy.extras.regression.ordinary_regression.OrdinaryRegression">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.extras.regression.ordinary_regression.</span></span><span class="sig-name descname"><span class="pre">OrdinaryRegression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_poly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">LagrangePolynomial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/extras/regression/ordinary_regression.html#OrdinaryRegression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minterpy.extras.regression.ordinary_regression.</span></span><span class="sig-name descname"><span class="pre">OrdinaryRegression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_poly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/minterpy/extras/regression/ordinary_regression.html#OrdinaryRegression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="regression_abc.html#minterpy.extras.regression.regression_abc.RegressionABC" title="minterpy.extras.regression.regression_abc.RegressionABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegressionABC</span></code></a></p>
-<p>Implementation of an ordinary (weighted/unweighted) poly. regression.</p>
-<p><code class="docutils literal notranslate"><span class="pre">OrdinaryRegression</span></code> fits a polynomial model specified by a multi-index
-set on a given dataset.</p>
+<p>Implementation of an ordinary (un/-weighted) polynomial regression.</p>
+<p><code class="docutils literal notranslate"><span class="pre">OrdinaryRegression</span></code> fits a polynomial model on a given dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -555,6 +554,8 @@ the multi-index set is set to the one attached to the grid.</p></li>
 This parameter is optional if a multi-index set is specified;
 in that case, the grid is constructed from the specified
 multi-index set.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="../../core/domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a>, optional) – The domain on which the polynomial is defined. If not given, then
+the default internal domain <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> is used.</p></li>
 <li><p><strong>origin_poly</strong> (Type[<a class="reference internal" href="../../core/ABC/abc-polynomial.html#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariatePolynomialSingleABC</span></code></a>], optional) – The polynomial basis on which the regression is carried out.
 This parameter is optional and, by default, is set to the
 <a class="reference internal" href="../../polynomials/lagrange.html#minterpy.polynomials.lagrange_polynomial.LagrangePolynomial" title="minterpy.polynomials.lagrange_polynomial.LagrangePolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">LagrangePolynomial</span></code></a>.</p></li>
@@ -567,25 +568,28 @@ This parameter is optional and, by default, is set to the
 <tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.coeffs" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.coeffs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coeffs</span></code></a></p></td>
 <td><p>The fitted coefficients with respect to the origin poly.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.eval_poly" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.eval_poly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval_poly</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.domain" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.domain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">domain</span></code></a></p></td>
+<td><p>Domain of the polynomial.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.eval_poly" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.eval_poly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval_poly</span></code></a></p></td>
 <td><p>Polynomial basis use for the prediction.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.grid" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.grid" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid</span></code></a></p></td>
 <td><p>Grid on which the polynomial lives.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.loocv_error" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.loocv_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loocv_error</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.loocv_error" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.loocv_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loocv_error</span></code></a></p></td>
 <td><p>Leave-one-out CV error of the fitted polynomial (abs.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.multi_index" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.multi_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multi_index</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.multi_index" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.multi_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multi_index</span></code></a></p></td>
 <td><p>Multi-index set that defines the polynomial.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.origin_poly" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.origin_poly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">origin_poly</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.origin_poly" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.origin_poly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">origin_poly</span></code></a></p></td>
 <td><p>Polynomial basis on which the regression is carried out.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_l2_error" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_l2_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">regfit_l2_error</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_l2_error" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_l2_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">regfit_l2_error</span></code></a></p></td>
 <td><p><span class="math notranslate nohighlight">\(L_2\)</span> regression fit error (in abs.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_linf_error" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_linf_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">regfit_linf_error</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_linf_error" title="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_linf_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">regfit_linf_error</span></code></a></p></td>
 <td><p><span class="math notranslate nohighlight">\(L_{\infty}\)</span> regression fit error (in abs.</p></td>
 </tr>
 </tbody>
@@ -686,6 +690,12 @@ of the response data (<span class="math notranslate nohighlight">\(\boldsymbol{y
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.domain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">domain</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../core/domain.html#minterpy.core.domain.Domain" title="minterpy.core.domain.Domain"><span class="pre">Domain</span></a></em><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.domain" title="Link to this definition">#</a></dt>
+<dd><p>Domain of the polynomial.</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="minterpy.extras.regression.ordinary_regression.OrdinaryRegression.origin_poly">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">origin_poly</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../core/ABC/abc-polynomial.html#minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC" title="minterpy.core.ABC.multivariate_polynomial_abstract.MultivariatePolynomialSingleABC"><span class="pre">MultivariatePolynomialSingleABC</span></a></em><a class="headerlink" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.origin_poly" title="Link to this definition">#</a></dt>
 <dd><p>Polynomial basis on which the regression is carried out.</p>
@@ -718,7 +728,8 @@ created and used for prediction.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Evaluation points, an array of shape <span class="math notranslate nohighlight">\(N_e \times M\)</span>, where
 <span class="math notranslate nohighlight">\(N_e\)</span> and <span class="math notranslate nohighlight">\(M\)</span> correspond to the number of evaluation
-points and the number of spatial dimensions, respectively.</p>
+points and the number of spatial dimensions, respectively.
+The points lie in the user-defined domain.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Regression matrix in the chosen polynomial basis,
@@ -758,7 +769,8 @@ from the following relation:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Input matrix, also known as the training inputs.</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Input matrix, also known as the training inputs. The points lie
+in the user-defined domain.</p></li>
 <li><p><strong>yy</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Response vector, observed or evaluated at <code class="docutils literal notranslate"><span class="pre">xx</span></code>.</p></li>
 <li><p><strong>weights</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, optional) – Individual weights for each input points.
 The default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
@@ -807,7 +819,7 @@ of the solver for the list of supported keyword arguments.</p></li>
 <dd class="field-odd"><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Query points, a two-dimensional array of shape
 <span class="math notranslate nohighlight">\(N_q \times M\)</span>, where <span class="math notranslate nohighlight">\(N_q\)</span> and <span class="math notranslate nohighlight">\(M\)</span> correspond to
 the number of query points and the number of spatial dimensions,
-respectively.</p>
+respectively. The points lie in the user-defined domain.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Predicted response at the query points, a one-dimensional
@@ -892,6 +904,7 @@ set of points without accessing the <code class="docutils literal notranslate"><
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_linf_error"><code class="docutils literal notranslate"><span class="pre">OrdinaryRegression.regfit_linf_error</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.regfit_l2_error"><code class="docutils literal notranslate"><span class="pre">OrdinaryRegression.regfit_l2_error</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.grid"><code class="docutils literal notranslate"><span class="pre">OrdinaryRegression.grid</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.domain"><code class="docutils literal notranslate"><span class="pre">OrdinaryRegression.domain</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.origin_poly"><code class="docutils literal notranslate"><span class="pre">OrdinaryRegression.origin_poly</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.coeffs"><code class="docutils literal notranslate"><span class="pre">OrdinaryRegression.coeffs</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minterpy.extras.regression.ordinary_regression.OrdinaryRegression.eval_poly"><code class="docutils literal notranslate"><span class="pre">OrdinaryRegression.eval_poly</span></code></a></li>

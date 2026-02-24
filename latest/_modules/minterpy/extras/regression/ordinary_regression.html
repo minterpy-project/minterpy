@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev103+g80839aa5d" />
+  <meta name="docsearch:version" content="0.3.1.dev107+g696230ecd" />
   </head>
   
   
@@ -436,7 +436,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains the concrete implementation of ordinary regression.</span>
 
-<span class="sd">A polynomial regression model is used when the given dataset do not lie</span>
+<span class="sd">A polynomial regression model is used when the given dataset does not lie</span>
 <span class="sd">on the unisolvent nodes of an interpolating polynomial.</span>
 <span class="sd">In such cases, the function values at the unisolvent nodes are obtained via</span>
 <span class="sd">least-squares.</span>
@@ -446,6 +446,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Callable</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.ABC</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultivariatePolynomialSingleABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.domain</span><span class="w"> </span><span class="kn">import</span> <span class="n">Domain</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.multi_index</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiIndexSet</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.core.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.polynomials</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -455,6 +456,7 @@
     <span class="n">ChebyshevPolynomial</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.transformations</span><span class="w"> </span><span class="kn">import</span> <span class="n">LagrangeToNewton</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainMismatchError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minterpy.utils.polynomials.chebyshev</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">evaluate_monomials</span> <span class="k">as</span> <span class="n">evaluate_monomials_chebyshev</span><span class="p">,</span>
 <span class="p">)</span>
@@ -468,13 +470,19 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;OrdinaryRegression&quot;</span><span class="p">]</span>
 
 
+<span class="n">SUPPORTED_BASES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">LagrangePolynomial</span><span class="p">,</span>
+    <span class="n">NewtonPolynomial</span><span class="p">,</span>
+    <span class="n">CanonicalPolynomial</span><span class="p">,</span>
+    <span class="n">ChebyshevPolynomial</span><span class="p">,</span>
+<span class="p">)</span>
+
 <div class="viewcode-block" id="OrdinaryRegression">
 <a class="viewcode-back" href="../../../../api/extras/regression/ordinary_regression.html#minterpy.extras.regression.ordinary_regression.OrdinaryRegression">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OrdinaryRegression</span><span class="p">(</span><span class="n">RegressionABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of an ordinary (weighted/unweighted) poly. regression.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of an ordinary (un/-weighted) polynomial regression.</span>
 
-<span class="sd">    ``OrdinaryRegression`` fits a polynomial model specified by a multi-index</span>
-<span class="sd">    set on a given dataset.</span>
+<span class="sd">    ``OrdinaryRegression`` fits a polynomial model on a given dataset.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -487,6 +495,9 @@
 <span class="sd">        This parameter is optional if a multi-index set is specified;</span>
 <span class="sd">        in that case, the grid is constructed from the specified</span>
 <span class="sd">        multi-index set.</span>
+<span class="sd">    domain : :py:class:`.Domain`, optional</span>
+<span class="sd">        The domain on which the polynomial is defined. If not given, then</span>
+<span class="sd">        the default internal domain :math:`[-1, 1]^m` is used.</span>
 <span class="sd">    origin_poly : Type[:py:class:`.MultivariatePolynomialSingleABC`], optional</span>
 <span class="sd">        The polynomial basis on which the regression is carried out.</span>
 <span class="sd">        This parameter is optional and, by default, is set to the</span>
@@ -497,34 +508,16 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">multi_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiIndexSet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">grid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Grid</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">origin_poly</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">MultivariatePolynomialSingleABC</span><span class="p">]</span> <span class="o">=</span> <span class="n">LagrangePolynomial</span><span class="p">,</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">origin_poly</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">MultivariatePolynomialSingleABC</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Either a multi-index set or a grid must be specified!&quot;</span>
-            <span class="p">)</span>
+        <span class="c1"># Parse multi-index set, grid, and domain</span>
+        <span class="n">mi</span><span class="p">,</span> <span class="n">grd</span> <span class="o">=</span> <span class="n">_verify_inputs</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span> <span class="o">=</span> <span class="n">mi</span><span class="p">,</span> <span class="n">grd</span>
 
-        <span class="c1"># Initialize and verify the grid</span>
-        <span class="k">if</span> <span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Create a grid from a verified multi-index set</span>
-            <span class="n">_verify_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">_verify_grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span> <span class="o">=</span> <span class="n">grid</span>
-
-        <span class="c1"># Verify multi-index set</span>
-        <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">multi_index</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;MultiIndexSet must not be empty!&quot;</span><span class="p">)</span>
-            <span class="c1"># Verify the multi-index set and its relation with the grid</span>
-            <span class="n">_verify_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span>
-            <span class="n">_verify_grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span> <span class="o">=</span> <span class="n">multi_index</span>
-
-        <span class="c1"># Initialize the origin polynomial basis</span>
+        <span class="c1"># Initialize the origin polynomial basis with no coefficients</span>
+        <span class="k">if</span> <span class="n">origin_poly</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">origin_poly</span> <span class="o">=</span> <span class="n">LagrangePolynomial</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_origin_poly</span> <span class="o">=</span> <span class="n">origin_poly</span><span class="p">(</span>
             <span class="n">multi_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_multi_index</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span>
         <span class="p">)</span>
@@ -633,6 +626,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">domain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Domain</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Domain of the polynomial.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="o">.</span><span class="n">domain</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">origin_poly</span><span class="p">(</span>
         <span class="bp">self</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultivariatePolynomialSingleABC</span><span class="p">:</span>
@@ -670,6 +668,7 @@
 <span class="sd">            Evaluation points, an array of shape :math:`N_e \times M`, where</span>
 <span class="sd">            :math:`N_e` and :math:`M` correspond to the number of evaluation</span>
 <span class="sd">            points and the number of spatial dimensions, respectively.</span>
+<span class="sd">            The points lie in the user-defined domain.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -722,7 +721,8 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        xx : :class:`numpy:numpy.ndarray`</span>
-<span class="sd">            Input matrix, also known as the training inputs.</span>
+<span class="sd">            Input matrix, also known as the training inputs. The points lie</span>
+<span class="sd">            in the user-defined domain.</span>
 <span class="sd">        yy : :class:`numpy:numpy.ndarray`</span>
 <span class="sd">            Response vector, observed or evaluated at ``xx``.</span>
 <span class="sd">        weights : :class:`numpy:numpy.ndarray`, optional</span>
@@ -829,7 +829,7 @@
 <span class="sd">            Query points, a two-dimensional array of shape</span>
 <span class="sd">            :math:`N_q \times M`, where :math:`N_q` and :math:`M` correspond to</span>
 <span class="sd">            the number of query points and the number of spatial dimensions,</span>
-<span class="sd">            respectively.</span>
+<span class="sd">            respectively. The points lie in the user-defined domain.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -894,11 +894,17 @@
 <span class="sd">          can call its own &quot;eval_monomials_on&quot; method to construct</span>
 <span class="sd">          the regression matrix on the training points.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check supported polynomial bases</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">SUPPORTED_BASES</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Basis </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported!&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Transform inputs to internal domain for monomials computation</span>
+    <span class="n">xx_t</span> <span class="o">=</span> <span class="n">basis_poly</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">map_to_internal</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+
     <span class="n">exponents</span> <span class="o">=</span> <span class="n">basis_poly</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">exponents</span>
     <span class="n">generating_points</span> <span class="o">=</span> <span class="n">basis_poly</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">generating_points</span>
 
-    <span class="n">regression_matrix</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1"># Evaluate the basis at the trainining points</span>
+    <span class="c1"># Evaluate the basis at the training points</span>
     <span class="c1"># TODO: should have a method basis_poly.eval_monomials(xx),</span>
     <span class="c1">#       below are temporary solutions.</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">LagrangePolynomial</span><span class="p">):</span>
@@ -910,27 +916,28 @@
 
         <span class="c1"># Evaluate the Newton polynomials representing the Lagrange monomials</span>
         <span class="c1"># on the input points</span>
-        <span class="n">regression_matrix</span> <span class="o">=</span> <span class="n">eval_newton_polynomials</span><span class="p">(</span>
-            <span class="n">xx</span><span class="p">,</span> <span class="n">newton_coeffs</span><span class="p">,</span> <span class="n">exponents</span><span class="p">,</span> <span class="n">generating_points</span>
+        <span class="k">return</span> <span class="n">eval_newton_polynomials</span><span class="p">(</span>
+            <span class="n">xx_t</span><span class="p">,</span>
+            <span class="n">newton_coeffs</span><span class="p">,</span>
+            <span class="n">exponents</span><span class="p">,</span>
+            <span class="n">generating_points</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">NewtonPolynomial</span><span class="p">):</span>
-        <span class="n">regression_matrix</span> <span class="o">=</span> <span class="n">eval_newton_monomials</span><span class="p">(</span>
-            <span class="n">xx</span><span class="p">,</span> <span class="n">exponents</span><span class="p">,</span> <span class="n">generating_points</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">NewtonPolynomial</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">eval_newton_monomials</span><span class="p">(</span>
+            <span class="n">xx_t</span><span class="p">,</span>
+            <span class="n">exponents</span><span class="p">,</span>
+            <span class="n">generating_points</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">CanonicalPolynomial</span><span class="p">):</span>
-        <span class="n">regression_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">xx</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">exponents</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">CanonicalPolynomial</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">xx_t</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">exponents</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]),</span>
+            <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">,</span> <span class="n">ChebyshevPolynomial</span><span class="p">):</span>
-        <span class="n">regression_matrix</span> <span class="o">=</span> <span class="n">evaluate_monomials_chebyshev</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">exponents</span><span class="p">)</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polynomial </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">basis_poly</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported!&quot;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">regression_matrix</span>
+    <span class="c1"># ChebyshevPolynomial (the only remaining supported type)</span>
+    <span class="k">return</span> <span class="n">evaluate_monomials_chebyshev</span><span class="p">(</span><span class="n">xx_t</span><span class="p">,</span> <span class="n">exponents</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">solve_least_squares</span><span class="p">(</span>
@@ -1073,7 +1080,7 @@
         <span class="c1"># NOTE: Under-determined system, unreliable results</span>
         <span class="n">loo_cv_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
-    <span class="k">return</span> <span class="n">loo_cv_error</span><span class="p">,</span> <span class="n">loo_cv_error</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">loo_cv_error</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">loo_cv_error</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_regfit_linf_error</span><span class="p">(</span>
@@ -1132,31 +1139,63 @@
 <span class="sd">        and relative (normalized) terms. The normalization is with respect to</span>
 <span class="sd">        the function values sample variance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">l2_error</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">yy</span> <span class="o">-</span> <span class="n">regression_matrix</span> <span class="o">@</span> <span class="n">coeffs</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">l2_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">yy</span> <span class="o">-</span> <span class="n">regression_matrix</span> <span class="o">@</span> <span class="n">coeffs</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">l2_error</span><span class="p">,</span> <span class="n">l2_error</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">l2_error</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">l2_error</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_verify_multi_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">:</span> <span class="n">MultiIndexSet</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify the instance of MultiIndexSet passed to the constructor.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">MultiIndexSet</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_verify_inputs</span><span class="p">(</span>
+    <span class="n">multi_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiIndexSet</span><span class="p">],</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Grid</span><span class="p">],</span>
+    <span class="n">domain</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Domain</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">MultiIndexSet</span><span class="p">,</span> <span class="n">Grid</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify the input arguments passed to the constructor.&quot;&quot;&quot;</span>
+    <span class="c1"># --- Verify minimum input</span>
+    <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Either the multi-index set or the grid must be specified!&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># --- Type checking</span>
+    <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">MultiIndexSet</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Unexpected type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
             <span class="s2">&quot;of the input multi-index set!&quot;</span>
         <span class="p">)</span>
 
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_verify_grid</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">Grid</span><span class="p">,</span> <span class="n">multi_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MultiIndexSet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify the instance of Grid passed to the constructor&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">Grid</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">Grid</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span><span class="si">}</span><span class="s2"> of the input grid!&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">domain</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">Domain</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span><span class="si">}</span><span class="s2"> of the domain!&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --- Verify domain consistency</span>
+    <span class="k">if</span> <span class="n">domain</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">domain</span> <span class="o">!=</span> <span class="n">grid</span><span class="o">.</span><span class="n">domain</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">DomainMismatchError</span><span class="p">(</span>
+            <span class="s2">&quot;The domain of the grid must be the same as the domain &quot;</span>
+            <span class="s2">&quot;specified in the constructor!&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># --- Process the multi-index set</span>
+    <span class="k">if</span> <span class="n">multi_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Get the multi-index from the grid</span>
+        <span class="n">multi_index</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">multi_index</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The multi-index set must not be empty!&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --- Process the grid</span>
+    <span class="k">if</span> <span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Create a grid from the multi-index set</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">multi_index</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">grid</span><span class="o">.</span><span class="n">multi_index</span><span class="o">.</span><span class="n">is_superset</span><span class="p">(</span><span class="n">multi_index</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;The multi-indices of a polynomial must be a subset of &quot;</span>
                 <span class="s2">&quot;the multi-indices of the grid in use!&quot;</span>
             <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">multi_index</span><span class="p">,</span> <span class="n">grid</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_solve_lstsq</span><span class="p">(</span>
