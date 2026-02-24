@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev107+ge9031754b" />
+  <meta name="docsearch:version" content="0.3.1.dev107+gc11761afc" />
   </head>
   
   
@@ -480,7 +480,7 @@
 <div class="viewcode-block" id="OrdinaryRegression">
 <a class="viewcode-back" href="../../../../api/extras/regression/ordinary_regression.html#minterpy.extras.regression.ordinary_regression.OrdinaryRegression">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OrdinaryRegression</span><span class="p">(</span><span class="n">RegressionABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of an ordinary (un/-weighted) polynomial regression.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of an ordinary (un/-weighted) polynomial regression.</span>
 
 <span class="sd">    ``OrdinaryRegression`` fits a polynomial model on a given dataset.</span>
 
@@ -495,6 +495,9 @@
 <span class="sd">        This parameter is optional if a multi-index set is specified;</span>
 <span class="sd">        in that case, the grid is constructed from the specified</span>
 <span class="sd">        multi-index set.</span>
+<span class="sd">    domain : :py:class:`.Domain`, optional</span>
+<span class="sd">        The domain on which the polynomial is defined. If not given, then</span>
+<span class="sd">        the default internal domain :math:`[-1, 1]^m` is used.</span>
 <span class="sd">    origin_poly : Type[:py:class:`.MultivariatePolynomialSingleABC`], optional</span>
 <span class="sd">        The polynomial basis on which the regression is carried out.</span>
 <span class="sd">        This parameter is optional and, by default, is set to the</span>
@@ -665,6 +668,7 @@
 <span class="sd">            Evaluation points, an array of shape :math:`N_e \times M`, where</span>
 <span class="sd">            :math:`N_e` and :math:`M` correspond to the number of evaluation</span>
 <span class="sd">            points and the number of spatial dimensions, respectively.</span>
+<span class="sd">            The points lie in the user-defined domain.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -717,7 +721,8 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        xx : :class:`numpy:numpy.ndarray`</span>
-<span class="sd">            Input matrix, also known as the training inputs.</span>
+<span class="sd">            Input matrix, also known as the training inputs. The points lie</span>
+<span class="sd">            in the user-defined domain.</span>
 <span class="sd">        yy : :class:`numpy:numpy.ndarray`</span>
 <span class="sd">            Response vector, observed or evaluated at ``xx``.</span>
 <span class="sd">        weights : :class:`numpy:numpy.ndarray`, optional</span>
@@ -824,7 +829,7 @@
 <span class="sd">            Query points, a two-dimensional array of shape</span>
 <span class="sd">            :math:`N_q \times M`, where :math:`N_q` and :math:`M` correspond to</span>
 <span class="sd">            the number of query points and the number of spatial dimensions,</span>
-<span class="sd">            respectively.</span>
+<span class="sd">            respectively. The points lie in the user-defined domain.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
