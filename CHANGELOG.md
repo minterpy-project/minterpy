@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Domain support in `OrdinaryRegression`: `fit()` and `predict()`
+  now expect input points in the user-defined domain
 - Documentation for the `Domain` class, its API reference, theoretical
   background, and examples
 - Domain support in interpolation module: `interpolate()`, `Interpolator`, and 
@@ -50,6 +52,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Revised "polynomial regression" tutorial to demonstrate 
+  user-defined domain support
+- (Breaking) `OrdinaryRegression` constructor parameter ordering: `origin_poly`
+  is now the last parameter, after `domain`
 - Relevant tutorials have been updated to reflect the new domain support
 - Refactored `Interpolator` class to use modern `attrs.define` syntax 
   instead of legacy `attr.ib` decorators

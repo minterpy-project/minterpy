@@ -43,7 +43,7 @@ SUPPORTED_BASES = (
 )
 
 class OrdinaryRegression(RegressionABC):
-    """Implementation of an ordinary (un/-weighted) polynomial regression.
+    r"""Implementation of an ordinary (un/-weighted) polynomial regression.
 
     ``OrdinaryRegression`` fits a polynomial model on a given dataset.
 
@@ -58,6 +58,9 @@ class OrdinaryRegression(RegressionABC):
         This parameter is optional if a multi-index set is specified;
         in that case, the grid is constructed from the specified
         multi-index set.
+    domain : :py:class:`.Domain`, optional
+        The domain on which the polynomial is defined. If not given, then
+        the default internal domain :math:`[-1, 1]^m` is used.
     origin_poly : Type[:py:class:`.MultivariatePolynomialSingleABC`], optional
         The polynomial basis on which the regression is carried out.
         This parameter is optional and, by default, is set to the
@@ -226,6 +229,7 @@ class OrdinaryRegression(RegressionABC):
             Evaluation points, an array of shape :math:`N_e \times M`, where
             :math:`N_e` and :math:`M` correspond to the number of evaluation
             points and the number of spatial dimensions, respectively.
+            The points lie in the user-defined domain.
 
         Returns
         -------
@@ -275,7 +279,8 @@ class OrdinaryRegression(RegressionABC):
         Parameters
         ----------
         xx : :class:`numpy:numpy.ndarray`
-            Input matrix, also known as the training inputs.
+            Input matrix, also known as the training inputs. The points lie
+            in the user-defined domain.
         yy : :class:`numpy:numpy.ndarray`
             Response vector, observed or evaluated at ``xx``.
         weights : :class:`numpy:numpy.ndarray`, optional
@@ -379,7 +384,7 @@ class OrdinaryRegression(RegressionABC):
             Query points, a two-dimensional array of shape
             :math:`N_q \times M`, where :math:`N_q` and :math:`M` correspond to
             the number of query points and the number of spatial dimensions,
-            respectively.
+            respectively. The points lie in the user-defined domain.
 
         Returns
         -------
