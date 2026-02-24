@@ -1,0 +1,443 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "5223970d3d19e2f7",
+   "metadata": {},
+   "source": [
+    "# Evaluate a Function on a Grid"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d32b739de18f3508",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import minterpy as mp\n",
+    "import numpy as np"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "aeee3be84ec26284",
+   "metadata": {},
+   "source": [
+    "Calling an instance of `Grid` with a function or a `Callable` evaluates the given function on the unisolvent nodes transformed to the grid's domain and returns the corresponding function values. In the context of polynomial interpolation, these function values are the coefficients of a polynomial in the Lagrange basis. If no domain is specified, the default domain $[-1, 1]^m$ is used and no transformation takes place.\n",
+    "\n",
+    "This guide demonstrates how to call an instance of `Grid` on a function."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9882a42c341e5e4e",
+   "metadata": {},
+   "source": [
+    "## Example: Function with one-dimensional output\n",
+    "\n",
+    "Consider the following problem:\n",
+    "\n",
+    "Compute the formula\n",
+    "\n",
+    "$$\n",
+    "f(\\boldsymbol{x}) = \\sum_{i = 1}^{3} x_i^2, \\boldsymbol{x} \\in [-1, 1]^3 \n",
+    "$$\n",
+    "\n",
+    "on the interpolation grid that corresponds to a complete multi-index set of\n",
+    "polynomial degree $3$ with respect to the $l_p$-degree $2.0$. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2b8c0abb1154afb9",
+   "metadata": {},
+   "source": [
+    "### Function to evaluate\n",
+    "\n",
+    "A valid function or callable that can be called with a `Grid` instance\n",
+    "must satisfy the following:\n",
+    "\n",
+    "- it must accept as the first argument a two-dimensional array where\n",
+    "  each row corresponds to different evaluation points and each column\n",
+    "  corresponds to different spatial dimension.\n",
+    "- it must return an array with the same length as the input.\n",
+    "\n",
+    "The function or callable may accept additional arguments either positional\n",
+    "or keyword.\n",
+    "\n",
+    "The function as required above can be defined as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2f23b787c2fe8c22",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def fun_one_dim(xx: np.ndarray) -> np.ndarray:\n",
+    "    \"\"\"Compute the sum of squares.\"\"\"\n",
+    "    return np.sum(xx**2, axis=1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b7887f75656036e1",
+   "metadata": {},
+   "source": [
+    "### Grid\n",
+    "\n",
+    "The interpolation grid that corresponds to the complete multi-index set\n",
+    "can be created using `from_degree()` factory method:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5423c818eaed954e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "spatial_dimension = 3\n",
+    "poly_degree = 2\n",
+    "lp_degree = 2.0\n",
+    "grd = mp.Grid.from_degree(spatial_dimension, poly_degree, lp_degree)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d003c89440503b74",
+   "metadata": {},
+   "source": [
+    "### Function values on the grid\n",
+    "\n",
+    "By calling the `Grid` instance on the function defined above, we evaluate the function on the unisolvent nodes transformed to the domain of the grid:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6ad1d0d7058539a7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fun_values = grd(fun_one_dim)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "21bb8e646d1ae1a4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fun_values"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3c67fa94-b2df-4979-9113-12c3a0e6a644",
+   "metadata": {},
+   "source": [
+    "Because the domain of the grid is the default domain $[-1, 1]^m$, there is no transformation involved and the above values are the same as evaluating the function directly on the unisolvent nodes of the grid:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2fd4310b-82f4-4563-8330-ef549f6c64ae",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fun_one_dim(grd.unisolvent_nodes)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "71a6221aba37affd",
+   "metadata": {},
+   "source": [
+    "## Example: Function with multi-dimensional output\n",
+    "\n",
+    "Consider the following problem:\n",
+    "\n",
+    "Compute the formula\n",
+    "\n",
+    "$$\n",
+    "\\boldsymbol{f}(\\boldsymbol{x}) = (f_1(\\boldsymbol{x}), f_2(\\boldsymbol{x}) ), \\; \\boldsymbol{x} \\in [-1, 1]^3 \n",
+    "$$\n",
+    "\n",
+    "where\n",
+    "\n",
+    "$$\n",
+    "\\begin{aligned}\n",
+    "f_1(\\boldsymbol{x}) & = \\sum_{i = 1}^{3} x_i^2,\\\\\n",
+    "f_2(\\boldsymbol{x}) & = \\prod_{i = 1}^{3} x_i^2,\n",
+    "\\end{aligned}\n",
+    "$$\n",
+    "\n",
+    "on the same interpolation grid as before.\n",
+    "\n",
+    "Notice that the function now returns two outputs per input value."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9f8917e774d22024",
+   "metadata": {},
+   "source": [
+    "The function or callable passed to the `Grid` instance may also return \n",
+    "multiple outputs. The function must be defined such that it returns an array \n",
+    "whose each column corresponds to the different output.\n",
+    "\n",
+    "\n",
+    "The required function can therefore be defined as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1f220138fc59421",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def fun_two_dim(xx: np.ndarray) -> np.ndarray:\n",
+    "    \"\"\"Return the sum and product of squared.\"\"\"\n",
+    "    yy = np.empty((len(xx), 2))\n",
+    "    \n",
+    "    yy[:, 0] = np.sum(xx**2, axis=1)\n",
+    "    yy[:, 1] = np.prod(xx**2, axis=1)\n",
+    "    \n",
+    "    return yy"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "32b066c1caa57773",
+   "metadata": {},
+   "source": [
+    "The previous instance of `Grid` can be directly used to obtain the values\n",
+    "of the multiple-output function:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "204a1fde2ba35f34",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grd(fun_two_dim)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "25d39b5f53446e96",
+   "metadata": {},
+   "source": [
+    "As expected, calling the `Grid` instance with the function returns a two-dimensional\n",
+    "array whose each column corresponds to a different output and each row corresponds to a different unisolvent node."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "37f16c72892dec46",
+   "metadata": {},
+   "source": [
+    "## Example: Function with additional arguments"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "953e870db5b16a3d",
+   "metadata": {},
+   "source": [
+    "While the function passed to a `Grid` instance must take as its first\n",
+    "argument a two-dimensional array, additional arguments may also be passed\n",
+    "to the function by passing positional and keyword arguments to the call.\n",
+    "\n",
+    "For instance, suppose the function to be evaluated is defined as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "76a29ffab6728dc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def fun_with_args(xx: np.ndarray, p: float) -> np.ndarray:\n",
+    "    \"\"\"Return the row-wise lp-norm.\"\"\"\n",
+    "    return np.sum(np.abs(xx**p), axis=1)**(1/p)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c79e415a72686bd3",
+   "metadata": {},
+   "source": [
+    "To change the behavior of the function call via one of its argument\n",
+    "when the function is evaluated on the grid, pass the additional arguments\n",
+    "to the call to the `Grid` instance."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3814d67a935e699d",
+   "metadata": {},
+   "source": [
+    "For instance, with the additional argument to `fun_with_args()` as a positional argument:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5ebaf4167d2f639a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grd(fun_with_args, 1.0)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "308c1f2cbeaaf680",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grd(fun_with_args, 2.0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b81880175b82b934",
+   "metadata": {},
+   "source": [
+    "...and as a keyword argument:\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e8705dfacb4345a2",
+   "metadata": {},
+   "source": [
+    "grd(fun_with_args, p=3.0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "50a320ed-df42-4515-9a59-1ddbd49a85c0",
+   "metadata": {},
+   "source": [
+    "## Example: Function on a custom rectangular domain\n",
+    "\n",
+    "Consider now the same function defined on a custom rectangular domain:\n",
+    "\n",
+    "$$\n",
+    "f(\\boldsymbol{x}) = \\sum_{i = 1}^3 x_i^2, \\; \\boldsymbol{x} = [0, 1] \\times [1, 2] \\times [-1, 1].\n",
+    "$$"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2d4c9ce1-8d9d-48e6-a06e-65359b855267",
+   "metadata": {},
+   "source": [
+    "The function definition remains unchanged but now a custom domain must be defined:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a1d222b5-b5a7-4178-b889-88def92a8ae0",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom = mp.Domain(\n",
+    "    np.array([\n",
+    "        [0, 1],\n",
+    "        [1, 2],\n",
+    "        [-1, 1],\n",
+    "    ])\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1369adcf-615e-4d0d-99b4-c6b9d6dfa04e",
+   "metadata": {},
+   "source": [
+    "and passed to the grid:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8cbd7aa9-9028-49b8-a779-f8f20361e58d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grd_custom_domain = mp.Grid.from_degree(spatial_dimension, poly_degree, lp_degree, domain=dom)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e7931862-3dd1-4668-8ac2-e9504b689b61",
+   "metadata": {},
+   "source": [
+    "By calling the `Grid` instance on the function defined above, we evaluate the function on the unisolvent nodes of the grid transformed to the domain of the function:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d584886e-1554-4982-918e-47282491e62e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grd_custom_domain(fun_one_dim)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "57f01ecc-adcc-4294-a2fa-bc9cd0208759",
+   "metadata": {},
+   "source": [
+    "These values are the same as:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0637abb4-563c-412c-93db-107196d4a9c6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fun_one_dim(dom.map_from_internal(grd_custom_domain.unisolvent_nodes))"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.14"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

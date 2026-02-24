@@ -1,0 +1,216 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "d6a11f9a-d895-4cc7-befa-bac340b8915d",
+   "metadata": {},
+   "source": [
+    "# Compute Differentiation Scaling Factor"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b86f737a-bdc7-432e-ab3f-939491391220",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import minterpy as mp\n",
+    "import numpy as np"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b81abe18-3ed4-4925-a09e-bdd95e4b0880",
+   "metadata": {},
+   "source": [
+    "Differentiating a polynomial in Minterpy involves two main steps:\n",
+    "\n",
+    "- Differentiating the internal polynomial representation with respect to the variables of the internal reference domain (currently $[-1, 1]^m$), given the specified orders of differentiation\n",
+    "- Scaling the result by the differentiation factor, which accounts for the change of variables from $\\Omega$ to $[-1, 1]^m$ via the chain rule\n",
+    "\n",
+    "While Minterpy handles this scaling automatically, this guide demonstrates how the differentiation scaling factor can be computed directly from a `Domain` instance."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c376d436-9c3d-46c6-bb5a-a026e9749ca2",
+   "metadata": {},
+   "source": [
+    "## Example: Four-dimensional rectangular domain\n",
+    "\n",
+    "Create a four-dimensional rectangular domain that corresponds to:\n",
+    "\n",
+    "$$\n",
+    "\\Omega = [0.0, 5.0] \\times [10.0, 15.0] \\times [5.0, 10.0] \\times [3.0, 7.0]\n",
+    "$$\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ea68fa6c-daf4-41af-ae87-de8f71dc76da",
+   "metadata": {},
+   "source": [
+    "## Domain instance\n",
+    "\n",
+    "The rectangular domain is defined four pair of bounds, each of which forms and interval for a dimension. We can specify them in a single two-dimensional array of two rows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e1254453-8c4e-439d-8fd7-b5378e20b1f1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "bounds = np.array([\n",
+    "    [0.0, 5.0],\n",
+    "    [10.0, 15.0],\n",
+    "    [5.0, 10.0],\n",
+    "    [3.0, 7.0],\n",
+    "])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c5c0a4a8-9fa3-4c62-b38a-609533d0f116",
+   "metadata": {},
+   "source": [
+    "An instance of `Domain` given an array of bounds can be constructed using the default constructor:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "192b538b-a494-4dd0-a0a9-d6dc18e5cd64",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom = mp.Domain(bounds)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2d227c41-5618-4148-bb93-dc048cbcf713",
+   "metadata": {},
+   "source": [
+    "We can verify that the domain is indeed four dimensional:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e7ebf254-c0cf-4078-a293-0a4908248608",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(dom.spatial_dimension)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e0b9a2d0-f581-4c58-8d6d-6c5c9a9b1a09",
+   "metadata": {},
+   "source": [
+    "and with the appropriate bounds:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "571abc8a-6e75-4434-83e1-e9fc76445dd7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(dom.bounds)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a71550a8-9958-4926-a524-a4097cd62b89",
+   "metadata": {},
+   "source": [
+    "## Differentiation factor\n",
+    "\n",
+    "The differentiation factor can be computed via the `diff_factor()` method, which takes the order of derivatives as an argument. Applying the chain rule to the affine separable transformation, the differentiation scaling factor is:\n",
+    "\n",
+    "$$\n",
+    "c = \\prod_{i=1}^m \\left(\\frac{1 - (-1)}{b_i - a_i}\\right)^{k_i} = \\left(\\frac{2}{b_i - a_i}\\right)^{k_i},\n",
+    "$$\n",
+    "\n",
+    "where $k_i$ is the order of derivative for dimension $i$.\n",
+    "\n",
+    "For instance, the factor for the mixed partial derivative of $f$ with respect to $x_1$ and $x_4$ is obtained via:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d9d27795-eb63-48aa-ba0a-54338d3e86cd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "deriv_order = np.array([1, 0, 0, 1])  # Differentiation w.r.t x_1 and x_4"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9b624b19-3be8-49a8-ad25-121ade7edd69",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(dom.diff_factor(deriv_order))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ba1ce94d-dbb1-428c-9128-687d579bbf68",
+   "metadata": {},
+   "source": [
+    "As another example, the factor for the mixed partial derivative $\\frac{\\partial^3 f}{\\partial x_2^2 \\partial x_3}$ is obtained via:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c6535361-42a1-491e-b839-3e037e1d077b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "deriv_order = np.array([0, 2, 1, 0])  # Differentiation w.r.t x_1 and x_4"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7df24e84-c10b-4ee5-a034-c771d90b7558",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(dom.diff_factor(deriv_order))"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.19"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
