@@ -1,0 +1,300 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "d6a11f9a-d895-4cc7-befa-bac340b8915d",
+   "metadata": {},
+   "source": [
+    "# Create a Grid using the Default Constructor"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b86f737a-bdc7-432e-ab3f-939491391220",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import minterpy as mp\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b81abe18-3ed4-4925-a09e-bdd95e4b0880",
+   "metadata": {},
+   "source": [
+    "Minterpy interpolating polynomials (i.e., in the Lagrange or Newton basis)\n",
+    "lives on a grid that holds the so-called _unisolvent nodes_.\n",
+    "An interpolating multi-dimensional polynomial of a given multi-index set of\n",
+    "exponents is uniquely\n",
+    "determined on the corresponding unisolvent nodes.\n",
+    "\n",
+    "An instance of `Grid` can be constructed via different constructors:\n",
+    "\n",
+    "- {py:class}`.Grid`: the default constructor (this page)\n",
+    "- {py:meth}`.Grid.from_points`: create an instance with an array of generating points (see the {doc}`example <grid-create-from-points>`)\n",
+    "- {py:meth}`.Grid.from_function`: create an instance with a generating function (see the {doc}`example <grid-create-from-function>`)\n",
+    "- {py:meth}`.Grid.from_degree`: create an instance with a complete multi-index set (see the {doc}`example <grid-create-from-degree>`)\n",
+    "- {py:meth}`.Grid.from_value_set`: create an instance based on an array of generating values (see the {doc}`example <grid-create-from-value-set>`)\n",
+    "\n",
+    "This guides provides an example on how to construct a Grid instance using\n",
+    "the default constructor.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3c9e532ec1ddc624",
+   "metadata": {},
+   "source": [
+    "## About the default constructor\n",
+    "\n",
+    "The default constructor returns an instance of `Grid` based on a given multi-index set,\n",
+    "generating function, and generating points. Specifically, it accepts the following\n",
+    "arguments:\n",
+    "\n",
+    "- `multi_index`: an instance of `MultiIndexSet` that defines the multi-index\n",
+    "  set of exponents which in turn defines the polynomials that the grid can support.\n",
+    "- `generating_function`: either a `Callable` or a string that selects a built-in function.\n",
+    "  This argument is optional; if not specified, the Leja-ordered Chebyshev-Lobatto\n",
+    "  generating function is selected by default. If a `Callable` is specified,\n",
+    "  it must satisfy several conditions as explained\n",
+    "  in the {doc}`corresponding example <grid-create-from-function>`.\n",
+    "- `generating_points`: a two-dimensional array of floats that stores \n",
+    "  the interpolation points per dimension (in each column of the array).\n",
+    "  This argument is optional; if not specified, the value is set to `None` by\n",
+    "  default and will be created on the fly from the generating function.\n",
+    "  If specified, the array must satisfy several conditions as explained\n",
+    "  in the {doc}`corresponding example <grid-create-from-points>`.\n",
+    "- `domain`: the user-defined domain of the interpolation grid. This argument is optional; if not specified, the domain defaults to the internal reference domain $[-1, 1]^m$. Regardless of the specified domain, however, generating points must lie in $[-1, 1]^m$ and any generating function must return values in $[-1, 1]^m$.\n",
+    "\n",
+    "The default constructor provides the most general way to create an instance\n",
+    "of `Grid`. However, when a specific argument is required and known in advance,\n",
+    "it may be better to use one of the other constructors to be more explicit.\n",
+    "\n",
+    "```{note}\n",
+    "When both the `generating_function` and `generating_points` are specified,\n",
+    "they must be consistent with respect to the given multi-index set.\n",
+    "In practice, if `generating_function` is already specified, it is not necessary\n",
+    "to also explicitly specify `generating_points` as it becomes redundant.\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9ccf5d4b565e2097",
+   "metadata": {},
+   "source": [
+    "## Example: Two-dimensional interpolation grid\n",
+    "\n",
+    "Create an interpolation grid that corresponds to:\n",
+    "\n",
+    "- a two-dimensional multi-index set $A = \\{ (0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (0, 3) \\}$\n",
+    "  with respect to $l_p$-degree of $2.0$, and\n",
+    "- equidistant generating points."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "96ccbd6ed8d3a784",
+   "metadata": {},
+   "source": [
+    "### Multi-index set\n",
+    "\n",
+    "First, create an instance of `MultiIndexSet` following the above specification:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "563408b592b9c311",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "exponents = np.array([\n",
+    "    [0, 0],\n",
+    "    [1, 0],\n",
+    "    [2, 0],\n",
+    "    [3, 0],\n",
+    "    [4, 0],\n",
+    "    [0, 1],\n",
+    "    [1, 1],\n",
+    "    [2, 1],\n",
+    "    [0, 2],\n",
+    "    [1, 2],\n",
+    "    [0, 3],\n",
+    "])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "518d515c92788210",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "mi = mp.MultiIndexSet(exponents, lp_degree=2.0)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b5a31941b0530e50",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(mi)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "42b7bceef885c51a",
+   "metadata": {},
+   "source": [
+    "### Generating function\n",
+    "\n",
+    "The generating function for equidistant points can be defined as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b85829f53026e76e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def equidistant_gen_function(\n",
+    "    poly_degree: int,\n",
+    "    spatial_dimension: int,\n",
+    ") -> np.ndarray:\n",
+    "    \"\"\"Create an array of equidistant generating points.\"\"\"\n",
+    "    xx = np.linspace(-1, 1, poly_degree + 1)[:, np.newaxis]\n",
+    "    \n",
+    "    return np.tile(xx, spatial_dimension)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "34b375bb534333f0",
+   "metadata": {},
+   "source": [
+    "### Grid instance\n",
+    "\n",
+    "An instance of `Grid` given a multi-index set and an array of generating points\n",
+    "can  be constructed via `from_points()` method as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d3fa6d6c6402c1d5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grd = mp.Grid(mi, generating_function=equidistant_gen_function)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f904358004f535e9",
+   "metadata": {},
+   "source": [
+    "The grid has the following unisolvent nodes:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "af07f4a74b40945e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(grd.unisolvent_nodes)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "98df02f7174b43f4",
+   "metadata": {},
+   "source": [
+    "The two-dimensional interpolation grid is plotted below:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "eca700e1dd5b29b8",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plt.scatter(grd.unisolvent_nodes[:, 0], grd.unisolvent_nodes[:, 1])\n",
+    "plt.xlabel(\"$x_1$\", fontsize=16)\n",
+    "plt.ylabel(\"$x_2$\", fontsize=16);"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "eee53bb5641dd731",
+   "metadata": {},
+   "source": [
+    "The interpolation grid can be compared with the grid having the same multi-index set\n",
+    "but with the Leja-ordered Chebyshev-Lobatto as the generating function (i.e., the default):"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e4d531fd251eed7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grd_def = mp.Grid(mi)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1e75e47a9d979339",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plt.scatter(grd_def.unisolvent_nodes[:, 0], grd_def.unisolvent_nodes[:, 1])\n",
+    "plt.xlabel(\"$x_1$\", fontsize=16)\n",
+    "plt.ylabel(\"$x_2$\", fontsize=16);"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d0f1cdf6-ac4b-457a-badd-b5e02c5588b2",
+   "metadata": {},
+   "source": [
+    "```{note}\n",
+    "Regardless of the specified domain, the unisolvent nodes are stored in the internal reference domain $[-1, 1]^m$. When the domain is not $[-1, 1]^m$, Minterpy automatically transforms the nodes to the specified domain before passing them to the function, for example, when calling\n",
+    "`grid(func)`.\n",
+    "```"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.14"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

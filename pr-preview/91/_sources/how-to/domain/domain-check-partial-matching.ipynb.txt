@@ -1,0 +1,328 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "d6a11f9a-d895-4cc7-befa-bac340b8915d",
+   "metadata": {},
+   "source": [
+    "# Check for Partial Matching between Domain Instances"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b86f737a-bdc7-432e-ab3f-939491391220",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import minterpy as mp\n",
+    "import numpy as np"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b81abe18-3ed4-4925-a09e-bdd95e4b0880",
+   "metadata": {},
+   "source": [
+    "Two instances of `Domain` may be checked for partial matching via the `partial_matching()` method as demonstrated in this guide.\n",
+    "\n",
+    "Two instances of `Domain` are partially matching if both their user-defined bounds and their internal bounds, up to the common spatial dimension, are approximately equal as determined by `numpy.allclose()`:\n",
+    "\n",
+    "- **User bounds**: The rectangular bounds of the domain as specified by the user during instance construction, e.g., $[0, 5] \\times [1, 2]$.\n",
+    "- **Internal bounds**: The bounds of the reference domain used internally by Minterpy. Currently they are always set to $[-1, 1]^m$.\n",
+    "\n",
+    "Two instances of `Domain` are partially matching if the bounds, both internal and user, up to a common dimension are approximately closed as defined by the NumPy function `allclose()`."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ecb0b18c-1563-4c30-b866-29787db27d3b",
+   "metadata": {},
+   "source": [
+    "## Example: Two equal domains"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "cb1a6a05-8264-4ea5-b97d-7108c24c5a2f",
+   "metadata": {},
+   "source": [
+    "As a baseline, two equal instances of `Domain` are by definition partially matching.\n",
+    "\n",
+    "- $\\Omega_1 = [1, 2] \\times [1, 2]$\n",
+    "- $\\Omega_2 = [1, 2] \\times [1, 2]$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c6fa236a-6ca6-44ca-97f3-4d793253f0a1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_1 = mp.Domain(np.array([[1, 2], [1, 2]]))\n",
+    "dom_2 = mp.Domain(np.array([[1, 2], [1, 2]]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0ac2c12d-67c5-4343-9c2f-c79432872a15",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_1 == dom_2  # True"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "854e7917-2497-4293-b464-80cd1d013f4d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_1.partial_matching(dom_2)  # True"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "792d9afd-818a-46a0-8c03-c798300d949c",
+   "metadata": {},
+   "source": [
+    "## Example: Two partially matching domains"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bfa1433d-e6f8-4fff-bbf9-921a2fb6689c",
+   "metadata": {},
+   "source": [
+    "The two instances below are not equal in values but partially matching:\n",
+    "\n",
+    "- $\\Omega_3 = [1, 2] \\times [3, 4] \\times [5, 6]$\n",
+    "- $\\Omega_4 = [1, 2] \\times [3, 4]$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e7bcff62-0c12-4034-8dc6-3f677405f2b8",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_3 = mp.Domain(np.array([[1, 2], [3, 4], [5, 6]]))\n",
+    "dom_4 = mp.Domain(np.array([[1, 2], [3, 4]]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6e5c8f2f-766a-4023-a897-778c4dc41b5f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_3 == dom_4  # False"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "06d77fa7-d1eb-4cbf-bef5-bce70eb97b82",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_3.partial_matching(dom_4)  # True"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9b875e32-7df5-4b0c-9dbf-033ce8864f84",
+   "metadata": {},
+   "source": [
+    "This is because up to the common dimension, i.e., $m = 2$ all the bounds of the two domains are equal or close to each other."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5ecc24ab-14ed-4be8-a2de-ed6495849cf9",
+   "metadata": {},
+   "source": [
+    "Note that `partial_matching()` is symmetric; the result is the same regardless of which instance the method is called on, because the common dimension is determined by the minimum of the two spatial dimensions."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c7f34cc6-ad91-434f-9ded-1f48a8752c8a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_4.partial_matching(dom_3)  # True"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ec089f6f-05e8-494f-8abb-99e014b8f654",
+   "metadata": {},
+   "source": [
+    "## Example: Domains with no partial matching"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7f23b6eb-5b98-4f93-8272-e4231d26fd8d",
+   "metadata": {},
+   "source": [
+    "The two instances below are not equal in values and has no partial matching:\n",
+    "\n",
+    "- $\\Omega_5 = [1, 2]$\n",
+    "- $\\Omega_6 = [5, 6] \\times [1, 2]$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e5b62552-0485-4233-ab35-5e30dd907c2c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_5 = mp.Domain(np.array([[1, 2]]))\n",
+    "dom_6 = mp.Domain(np.array([[5, 6], [1, 2]]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a6cf8a76-d92c-477a-bdf0-44807860300c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_5 == dom_6  # False"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f3d7c16a-7cc8-4976-b038-c27d97772f74",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_5.partial_matching(dom_6)  # False"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6c97c7ef-22f7-44f6-80f7-edd416212669",
+   "metadata": {},
+   "source": [
+    "Since the common dimension is $m = 1$ and the bounds of the first and second domains up to $m=1$ do not match, the two domains are note partially matching."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4ab67d0d-d8c1-47a1-b512-57526c2bb79e",
+   "metadata": {},
+   "source": [
+    "## Tolerance control\n",
+    "\n",
+    "The comparison uses approximate equality via `numpy.allclose()`. The default tolerances can be overridden via the `rtol` and `atol` parameters."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2eec19b4-3132-4d97-b0ef-016e64ca9fda",
+   "metadata": {},
+   "source": [
+    "For example, the two domains below differ by a tiny floating-point amount in the first dimension."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "fa0656f7-a0f0-4fea-86de-04db12635bc2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_a = mp.Domain(np.array([[1, 2], [3, 4]]))\n",
+    "dom_b = mp.Domain(np.array([[1 + 1e-10, 2], [3, 4]]))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "cf6a4822-1d95-4d82-8f11-165aa868fd03",
+   "metadata": {},
+   "source": [
+    "With default tolerances, they are considered partially matching:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9961b1f2-e894-4623-a18f-4d574d74d519",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_a.partial_matching(dom_b)  # True"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0ecd10a1-aa08-4d1f-8cda-67257884d6c5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_b.partial_matching(dom_a)  # True"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4e78d056-4891-43ab-af59-bd77f5f5291d",
+   "metadata": {},
+   "source": [
+    "With a very tight tolerance, they are not:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "74e3a208-eef1-489d-8981-48ee0dd147f9",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_a.partial_matching(dom_b, rtol=0)  # False"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "afa7db11-ffef-4ecc-a51e-19a73f4a5bb2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom_b.partial_matching(dom_a, rtol=0)  # False"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.14"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
