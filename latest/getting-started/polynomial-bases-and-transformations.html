@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/styles.css?v=a88e7498" />
   
@@ -59,7 +59,7 @@
     <link rel="prev" title="Basic Calculus Operations with Polynomials" href="calculus-operations-with-polynomials.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.3.1.dev109+g049f4cb3a" />
+  <meta name="docsearch:version" content="0.3.1.dev111+g4388bf005" />
   </head>
   
   
@@ -483,7 +483,22 @@ This means that regardless of the basis, polynomials can be manipulated and beha
 </div>
 <section id="polynomials-in-minterpy">
 <h2>Polynomials in Minterpy<a class="headerlink" href="#polynomials-in-minterpy" title="Link to this heading">#</a></h2>
-<p>Polynomials in Minterpy are multivariate polynomials defined on <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> where <span class="math notranslate nohighlight">\(m\)</span> is the spatial dimension:</p>
+<p>Polynomials in Minterpy are multivariate polynomials defined on a user domain <span class="math notranslate nohighlight">\(\Omega\)</span>, given by:</p>
+<div class="math notranslate nohighlight">
+\[
+Q_f(\boldsymbol{x}) = Q \circ \mathcal{T} (\boldsymbol{x}),
+\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Q_f\)</span> is the multivariate polynomial defined on a rectangular domain <span class="math notranslate nohighlight">\(\Omega = [a_1, b_1] \times \cdots \times [a_m, b_m]\)</span> where <span class="math notranslate nohighlight">\(m\)</span> is the spatial dimension; the subscript <span class="math notranslate nohighlight">\(f\)</span> indicates that the polynomial is typically used to approximate a function <span class="math notranslate nohighlight">\(f\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Q\)</span> is the internal polynomial representation defined on <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> (the so-called internal domain)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{T}\)</span> is the affine separable transformation <span class="math notranslate nohighlight">\(\mathcal{T}: \Omega \rightarrow [-1, 1]^m\)</span></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When no user domain is specified, Minterpy defaults to <span class="math notranslate nohighlight">\(\Omega = [-1, 1]^m\)</span>. In this case, <span class="math notranslate nohighlight">\(\mathcal{T}\)</span> is the identity such that <span class="math notranslate nohighlight">\(Q_f = Q\)</span>.</p>
+</div>
+<p>As the domain transformation applies uniformly regardless of the basis choice, in this tutorial we concern ourselves with <span class="math notranslate nohighlight">\(Q\)</span>, the internal polynomial and its representations in various bases. It is defined as follows:</p>
 <div class="math notranslate nohighlight">
 \[
 Q(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in A} c_{\cdot, \boldsymbol{\alpha}} \Psi_{\cdot, \boldsymbol{\alpha}} (\boldsymbol{x}),
@@ -536,7 +551,7 @@ Specifically, the coefficient corresponding to the multi-index element <span cla
 \[
 c_{\mathrm{lag}, \boldsymbol{\alpha}} = f(\boldsymbol{p}_{\boldsymbol{\alpha}}), \;\; \boldsymbol{p}_{\boldsymbol{\alpha}} \in P_{A}, \;\; \boldsymbol{\alpha} \in A,
 \]</div>
-<p>In other words, the coefficients are simply the values of the function at the unisolvent nodes.</p>
+<p>In other words, the coefficients are simply the values of the function at the unisolvent nodes. As such, the Lagrange coefficients are the same whether the polynomials are defined on <span class="math notranslate nohighlight">\([-1, 1]^m\)</span> or <span class="math notranslate nohighlight">\(\Omega\)</span>; the function values do not change under affine transformation of the unisolvent nodes.</p>
 <p>To do more with the polynomials, such as evaluation or manipulation, you need to transform them to another basis. This process will be covered in a later section of this tutorial.</p>
 </section>
 <section id="newton-basis">
@@ -546,7 +561,7 @@ c_{\mathrm{lag}, \boldsymbol{\alpha}} = f(\boldsymbol{p}_{\boldsymbol{\alpha}}),
 \[
 \Psi_{\mathrm{nwt}, \boldsymbol{\alpha}} (\boldsymbol{x}) = \prod_{j = 1}^m \prod_{i = 0}^{\alpha_j - 1} (x_j - p_{i, j}),
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(p_{i, j}\)</span>’s are the interpolation points along dimension <span class="math notranslate nohighlight">\(j\)</span> (i.e., the so-called <a class="reference internal" href="../fundamentals/interpolation-at-unisolvent-nodes.html#generating-points"><span class="std std-ref">generating points / nodes</span></a> which in multiple dimensions are not the same as the unisolvent nodes).</p>
+<p>where <span class="math notranslate nohighlight">\(p_{i, j}\)</span>’s are the interpolation points along dimension <span class="math notranslate nohighlight">\(j\)</span> (i.e., the so-called <a class="reference internal" href="../fundamentals/interpolation-at-unisolvent-nodes.html#generating-points"><span class="std std-ref">generating points / nodes</span></a> which in multiple dimensions are not the same as the unisolvent nodes). Because <span class="math notranslate nohighlight">\(Q\)</span> is defined on <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>, the corresponding generating points of the Newton polynomials must also be defined on <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>As you can see in the above definition, the Newton basis polynomials depend on the generating points of an interpolation grid. Such points are an integral part of the definition of the basis.</p>
@@ -772,7 +787,8 @@ A = \{ (0, 0) , (1, 0), (2, 0), (0, 1), (1, 1) \}.
 </tbody>
 </table>
 </div>
-<p>For demonstrantion, see a couple of examples below.</p>
+<p>The transformation of <span class="math notranslate nohighlight">\(Q_f\)</span> from one basis into another only alters the underlying representation of <span class="math notranslate nohighlight">\(Q\)</span>, i.e., its basis and coefficients. The user domain <span class="math notranslate nohighlight">\(\Omega\)</span> is preserved under these transformations.</p>
+<p>For demonstration, see a couple of examples below.</p>
 </section>
 <section id="example-one-dimensional-polynomial">
 <h2>Example: One-dimensional polynomial<a class="headerlink" href="#example-one-dimensional-polynomial" title="Link to this heading">#</a></h2>
@@ -781,7 +797,7 @@ A = \{ (0, 0) , (1, 0), (2, 0), (0, 1), (1, 1) \}.
 \[
 Q(x) = 5 + 2.5 x - 2.0 x^2 - 5.0 x^3 + 1.0 x^4, x \in [-1, 1].
 \]</div>
-<p>This polynomial is readily expressed in the canonical basis.</p>
+<p>This polynomial is readily expressed in the canonical basis. And since the polynomial is already defined on <span class="math notranslate nohighlight">\([-1, 1]\)</span>, <span class="math notranslate nohighlight">\(Q_f = Q\)</span>.</p>
 <p>First, create the multi-index set of the polynomial:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -807,7 +823,7 @@ Q(x) = 5 + 2.5 x - 2.0 x^2 - 5.0 x^3 + 1.0 x^4, x \in [-1, 1].
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.canonical_polynomial.CanonicalPolynomial at 0x7f4a705ba050&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;minterpy.polynomials.canonical_polynomial.CanonicalPolynomial at 0x7f933c2c4f10&gt;
 </pre></div>
 </div>
 </div>
@@ -1196,7 +1212,7 @@ Q(x) = 4.375 - 1.25 T_1 (x) - 0.5 T_2 (x) - 1.25 T_3 (x) + 0.125 T_4(x).
 <p>Consider now the two-dimensional function:</p>
 <div class="math notranslate nohighlight">
 \[
-f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 \in [-1, 1].
+f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, \;\; x_1, x_2 \in [0, 1].
 \]</div>
 <p>The function is defined in Python as follows:</p>
 <div class="cell docutils container">
@@ -1217,7 +1233,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
 
 <span class="c1"># --- Create 2D data</span>
-<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="n">xx_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 <span class="n">mesh_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xx_1d</span><span class="p">,</span> <span class="n">xx_1d</span><span class="p">)</span>
 <span class="n">xx_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_2d</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">yy_2d</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">xx_2d</span><span class="p">)</span>
@@ -1261,10 +1277,10 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/5873db31b2c60902163129d21f9c11404da79db1c86b7a4568c2035b95964a3d.png" src="../_images/5873db31b2c60902163129d21f9c11404da79db1c86b7a4568c2035b95964a3d.png" />
+<img alt="../_images/406526019ddea1d8c0bbe85d126f9d70e285aa6f62e94896464dd3f42d958c4d.png" src="../_images/406526019ddea1d8c0bbe85d126f9d70e285aa6f62e94896464dd3f42d958c4d.png" />
 </div>
 </div>
-<p>Since the function involves a square root and therefore is not a polynomial, constructing a polynomial approximation is much more intuitive in the Lagrange basis. In contrast, it’s not immediately clear what the coefficient values should be in other bases, making the Lagrange basis a more natural choce for this type of approximation.</p>
+<p>Since the function involves a square root and therefore is not a polynomial, constructing a polynomial approximation is much more intuitive in the Lagrange basis. In contrast, it’s not immediately clear what the coefficient values should be in other bases, making the Lagrange basis a more natural choice for this type of approximation.</p>
 <p>First, create a two-dimensional multi-index with the following choices of <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(p\)</span>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1291,11 +1307,19 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </div>
 </div>
+<p>Because the domain of the function is not <span class="math notranslate nohighlight">\([-1, 1]^m\)</span>, we define a uniform user domain as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dom</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Domain</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p>Then, create an interpolation grid and evaluate the function at the unisolvent nodes:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Interpolation grid</span>
-<span class="n">grd_2d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Grid</span><span class="p">(</span><span class="n">mi_2d</span><span class="p">)</span>
+<span class="n">grd_2d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Grid</span><span class="p">(</span><span class="n">mi_2d</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">dom</span><span class="p">)</span>
 <span class="c1"># Coefficients of the Lagrange polynomial</span>
 <span class="n">lag_coeffs_2d</span> <span class="o">=</span> <span class="n">grd_2d</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
 </pre></div>
@@ -1325,7 +1349,6 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 <span class="n">lag_monomials_newt_basis_2d</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">NewtonPolynomial</span><span class="p">(</span>
     <span class="n">lag_poly_2d</span><span class="o">.</span><span class="n">multi_index</span><span class="p">,</span>
     <span class="n">mp</span><span class="o">.</span><span class="n">LagrangeToNewton</span><span class="p">(</span><span class="n">lag_poly_2d</span><span class="p">)</span><span class="o">.</span><span class="n">transformation_operator</span><span class="o">.</span><span class="n">array_repr_full</span><span class="p">,</span>
-    <span class="n">grid</span><span class="o">=</span><span class="n">lag_poly_2d</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">lag_monomials_2d</span> <span class="o">=</span> <span class="n">lag_monomials_newt_basis_2d</span><span class="p">(</span><span class="n">xx_2d</span><span class="p">)</span>
 
@@ -1585,9 +1608,9 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 4.74341649e+00,  1.07861961e-01, -1.06947330e-01,  2.47397340e-03,
-        1.03165489e-01, -2.34823578e-03,  2.29202359e-03, -1.04530584e-01,
-        2.44535969e-03,  2.16730120e-03])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 4.94974747e+00,  0.00000000e+00, -2.52056804e-02, -1.33226763e-15,
+        0.00000000e+00,  0.00000000e+00, -7.80625564e-17, -2.52056804e-02,
+        0.00000000e+00,  8.88178420e-16])
 </pre></div>
 </div>
 </div>
@@ -1867,9 +1890,9 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 4.95285284e+00,  1.00594392e-01, -1.05892293e-01,  2.47397340e-03,
-        1.01054400e-01, -2.34823578e-03,  2.29202359e-03, -1.05892293e-01,
-        2.44535969e-03,  2.16730120e-03])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 5.00015883e+00,  8.88178420e-16, -2.52056804e-02, -1.77635684e-15,
+       -1.77635684e-15,  0.00000000e+00, -4.99231827e-17, -2.52056804e-02,
+        0.00000000e+00,  1.77635684e-15])
 </pre></div>
 </div>
 </div>
@@ -2151,9 +2174,9 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 4.84696055e+00,  1.03672552e-01, -5.29461463e-02,  6.18493351e-04,
-        1.03825888e-01, -2.34823578e-03,  1.14601180e-03, -5.29461463e-02,
-        1.22267985e-03,  5.41825299e-04])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 4.97495315e+00,  2.22044605e-16, -1.26028402e-02, -4.97299519e-17,
+       -4.44089210e-16,  0.00000000e+00,  1.25601893e-16, -1.26028402e-02,
+        0.00000000e+00,  0.00000000e+00])
 </pre></div>
 </div>
 </div>
@@ -2420,7 +2443,7 @@ f(x_1, x_2) = \left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \right)^{0.5}, x_1, x_2 
 <p>The <a class="reference internal" href="function-approximations.html"><span class="doc">Quickstart Guide</span></a> introduced
 you with the <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a> function to
 conveniently create an interpolant out of a function for a given spatial
-dimension, polynomial degree, and <span class="math notranslate nohighlight">\(l_p\)</span>-degree.
+dimension, polynomial degree, <span class="math notranslate nohighlight">\(l_p\)</span>-degree, and the bounds of the user domain.
 As noted in the previous tutorials, while <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.interpolate" title="minterpy.interpolation.interpolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpolate()</span></code></a>
 does not produce an instance of Minterpy polynomials
 (and instead, an instance of <a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.Interpolant" title="minterpy.interpolation.Interpolant"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interpolant</span></code></a>)
@@ -2443,11 +2466,12 @@ table below.</p>
 <td class="text-center"><p><a class="reference internal" href="../api/polynomials/canonical.html#minterpy.polynomials.canonical_polynomial.CanonicalPolynomial" title="minterpy.polynomials.canonical_polynomial.CanonicalPolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">CanonicalPolynomial</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p><a class="reference internal" href="../api/interpolation.html#minterpy.interpolation.Interpolant.to_chebyshev" title="minterpy.interpolation.Interpolant.to_chebyshev"><code class="xref py py-meth docutils literal notranslate"><span class="pre">to_chebyshev()</span></code></a></p></td>
-<td class="text-center"><p><a class="reference internal" href="../api/polynomials/chebyshev.html#minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial" title="minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">CanonicalPolynomial</span></code></a></p></td>
+<td class="text-center"><p><a class="reference internal" href="../api/polynomials/chebyshev.html#minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial" title="minterpy.polynomials.chebyshev_polynomial.ChebyshevPolynomial"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChebyshevPolynomial</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>Retrieving the polynomial using any of the methods above returns the same <span class="math notranslate nohighlight">\(Q_f\)</span> with different representation of <span class="math notranslate nohighlight">\(Q\)</span>.</p>
 </section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
@@ -2636,7 +2660,7 @@ table below.</p>
 
   <p class="copyright">
     
-      © Copyright 2022, Minterpy Development Team.
+      © Copyright 2026, Minterpy Development Team.
       <br/>
     
   </p>

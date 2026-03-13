@@ -113,10 +113,10 @@ turns the integral over :math:`\Omega` into an integral over :math:`[-1, 1]^m`,
 
    \int_\Omega Q_f(\boldsymbol{x}) \, d\boldsymbol{x} =
    \int_{[-1, 1]^m} Q(\boldsymbol{x}_t)
-   \lvert \frac{\partial \boldsymbol{x}}{\partial \boldsymbol{x}_t} \rvert
+   \left| \frac{\partial \boldsymbol{x}}{\partial \boldsymbol{x}_t} \right|
    \, d\boldsymbol{x}_t.
 
-where :math:`\lvert \frac{\partial \boldsymbol{x}}{\partial \boldsymbol{x}_T} \rvert`
+where :math:`\left| \frac{\partial \boldsymbol{x}}{\partial \boldsymbol{x}_T} \right|`
 is the Jacobian determinant of the inverse transformation :math:`\mathcal{T}^{-1}`.
 
 Due to the separable structure of :math:`\mathcal{T}`,
@@ -124,8 +124,9 @@ the Jacobian matrix is diagonal,
 and its determinant reduces to the product of the diagonal entries,
 
 .. math::
+.. math::
 
-   \lvert \frac{\partial \boldsymbol{x}}{\partial \boldsymbol{x}_t} \rvert =
+   \left| \frac{\partial \boldsymbol{x}}{\partial \boldsymbol{x}_t} \right| =
    \prod_{i = 1}^m \frac{\partial x_i}{\partial x_{t, i}} =
    \prod_{i = 1}^m \frac{b_i - a_i}{2}.
 
@@ -176,7 +177,7 @@ that the chain rule factors apply independently per dimension, giving
 Summary
 =======
 
-The object that approximates $f$ on the rectangular user domain :math:`\Omega`
+The object that approximates :math:`f` on the rectangular user domain :math:`\Omega`
 is :math:`Q_f = Q \circ \mathcal{T}`. It is what the user evaluates,
 integrates, and differentiates in their own coordinates.
 In Minterpy, :math:`Q` is specifically a multivariate polynomial defined

@@ -73,14 +73,29 @@
    "source": [
     "## Polynomials in Minterpy\n",
     "\n",
-    "Polynomials in Minterpy are multivariate polynomials defined on $[-1, 1]^m$ where $m$ is the spatial dimension:\n",
+    "Polynomials in Minterpy are multivariate polynomials defined on a user domain $\\Omega$, given by:\n",
+    "\n",
+    "$$\n",
+    "Q_f(\\boldsymbol{x}) = Q \\circ \\mathcal{T} (\\boldsymbol{x}),\n",
+    "$$\n",
+    "\n",
+    "where:\n",
+    "\n",
+    "- $Q_f$ is the multivariate polynomial defined on a rectangular domain $\\Omega = [a_1, b_1] \\times \\cdots \\times [a_m, b_m]$ where $m$ is the spatial dimension; the subscript $f$ indicates that the polynomial is typically used to approximate a function $f$\n",
+    "- $Q$ is the internal polynomial representation defined on $[-1, 1]^m$ (the so-called internal domain)\n",
+    "- $\\mathcal{T}$ is the affine separable transformation $\\mathcal{T}: \\Omega \\rightarrow [-1, 1]^m$\n",
+    "\n",
+    "```{note}\n",
+    "When no user domain is specified, Minterpy defaults to $\\Omega = [-1, 1]^m$. In this case, $\\mathcal{T}$ is the identity such that $Q_f = Q$.\n",
+    "```\n",
+    "\n",
+    "As the domain transformation applies uniformly regardless of the basis choice, in this tutorial we concern ourselves with $Q$, the internal polynomial and its representations in various bases. It is defined as follows:\n",
     "\n",
     "$$\n",
     "Q(\\boldsymbol{x}) = \\sum_{\\boldsymbol{\\alpha} \\in A} c_{\\cdot, \\boldsymbol{\\alpha}} \\Psi_{\\cdot, \\boldsymbol{\\alpha}} (\\boldsymbol{x}),\n",
     "$$\n",
     "\n",
     "where:\n",
-    "\n",
     "- $A$ is the multi-index set of the exponents, i.e., $\\boldsymbol{\\alpha} \\in A \\subseteq \\mathbb{N}^m$ which generalizes the notion of polynomial degree to multiple dimensions.\n",
     "- $\\Psi_{\\cdot, \\boldsymbol{\\alpha}}$ is the multidimensional basis polynomial associated with the multi-index element $\\boldsymbol{\\alpha}$, the placeholder $\\cdot$ indicates that the basis polynomials depend on the chosen basis.\n",
     "- $c_{\\cdot, \\boldsymbol{\\alpha}}$ is the coefficient that corresponds to the multidimensional basis polynomial $\\Psi_{\\cdot, \\boldsymbol{\\alpha}}$.\n",
@@ -92,7 +107,7 @@
     "|          Lagrange           |  {py:class}`LagrangePolynomial <.polynomials.lagrange_polynomial.LagrangePolynomial>`   |\n",
     "|           Newton            |     {py:class}`NewtonPolynomial <.polynomials.newton_polynomial.NewtonPolynomial>`      |\n",
     "|          Canonical          | {py:class}`CanonicalPolynomial <.polynomials.canonical_polynomial.CanonicalPolynomial>` |\n",
-    "| Chebyshev (of the 1st kind) | {py:class}`ChebyshevPolynomial <.polynomials.chebyshev_polynomial.ChebyshevPolynomial>` |\n"
+    "| Chebyshev (of the 1st kind) | {py:class}`ChebyshevPolynomial <.polynomials.chebyshev_polynomial.ChebyshevPolynomial>` |"
    ]
   },
   {
@@ -128,7 +143,7 @@
     "c_{\\mathrm{lag}, \\boldsymbol{\\alpha}} = f(\\boldsymbol{p}_{\\boldsymbol{\\alpha}}), \\;\\; \\boldsymbol{p}_{\\boldsymbol{\\alpha}} \\in P_{A}, \\;\\; \\boldsymbol{\\alpha} \\in A,\n",
     "$$\n",
     "\n",
-    "In other words, the coefficients are simply the values of the function at the unisolvent nodes.\n",
+    "In other words, the coefficients are simply the values of the function at the unisolvent nodes. As such, the Lagrange coefficients are the same whether the polynomials are defined on $[-1, 1]^m$ or $\\Omega$; the function values do not change under affine transformation of the unisolvent nodes.\n",
     "\n",
     "To do more with the polynomials, such as evaluation or manipulation, you need to transform them to another basis. This process will be covered in a later section of this tutorial."
    ]
@@ -152,7 +167,7 @@
     "\\Psi_{\\mathrm{nwt}, \\boldsymbol{\\alpha}} (\\boldsymbol{x}) = \\prod_{j = 1}^m \\prod_{i = 0}^{\\alpha_j - 1} (x_j - p_{i, j}),\n",
     "$$\n",
     "\n",
-    "where $p_{i, j}$'s are the interpolation points along dimension $j$ (i.e., the so-called {ref}`generating points / nodes <fundamentals/interpolation-at-unisolvent-nodes:Generating points>` which in multiple dimensions are not the same as the unisolvent nodes).\n",
+    "where $p_{i, j}$'s are the interpolation points along dimension $j$ (i.e., the so-called {ref}`generating points / nodes <fundamentals/interpolation-at-unisolvent-nodes:Generating points>` which in multiple dimensions are not the same as the unisolvent nodes). Because $Q$ is defined on $[-1, 1]^m$, the corresponding generating points of the Newton polynomials must also be defined on $[-1, 1]^m$.\n",
     "\n",
     "```{note}\n",
     "As you can see in the above definition, the Newton basis polynomials depend on the generating points of an interpolation grid. Such points are an integral part of the definition of the basis.\n",
@@ -309,7 +324,9 @@
     "| Newton | {py:class}`ChebyshevToNewton <.transformations.chebyshev.ChebyshevToNewton>` |\n",
     "| Canonical | {py:class}`ChebyshevToCanonical <.transformations.chebyshev.ChebyshevToCanonical>` |\n",
     "\n",
-    "For demonstrantion, see a couple of examples below."
+    "The transformation of $Q_f$ from one basis into another only alters the underlying representation of $Q$, i.e., its basis and coefficients. The user domain $\\Omega$ is preserved under these transformations.\n",
+    "\n",
+    "For demonstration, see a couple of examples below."
    ]
   },
   {
@@ -331,7 +348,7 @@
     "Q(x) = 5 + 2.5 x - 2.0 x^2 - 5.0 x^3 + 1.0 x^4, x \\in [-1, 1].\n",
     "$$\n",
     "\n",
-    "This polynomial is readily expressed in the canonical basis."
+    "This polynomial is readily expressed in the canonical basis. And since the polynomial is already defined on $[-1, 1]$, $Q_f = Q$."
    ]
   },
   {
@@ -1089,7 +1106,7 @@
     "Consider now the two-dimensional function:\n",
     "\n",
     "$$\n",
-    "f(x_1, x_2) = \\left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \\right)^{0.5}, x_1, x_2 \\in [-1, 1].\n",
+    "f(x_1, x_2) = \\left( 25 - (x_1 - 0.5)^2 - (x_2 - 0.5)^2 \\right)^{0.5}, \\;\\; x_1, x_2 \\in [0, 1].\n",
     "$$"
    ]
   },
@@ -1142,7 +1159,7 @@
     "from mpl_toolkits.axes_grid1 import make_axes_locatable\n",
     "\n",
     "# --- Create 2D data\n",
-    "xx_1d = np.linspace(-1.0, 1.0, 1000)[:, np.newaxis]\n",
+    "xx_1d = np.linspace(0, 1.0, 1000)[:, np.newaxis]\n",
     "mesh_2d = np.meshgrid(xx_1d, xx_1d)\n",
     "xx_2d = np.array(mesh_2d).T.reshape(-1, 2)\n",
     "yy_2d = fun(xx_2d)\n",
@@ -1194,7 +1211,7 @@
     "tags": []
    },
    "source": [
-    "Since the function involves a square root and therefore is not a polynomial, constructing a polynomial approximation is much more intuitive in the Lagrange basis. In contrast, it's not immediately clear what the coefficient values should be in other bases, making the Lagrange basis a more natural choce for this type of approximation."
+    "Since the function involves a square root and therefore is not a polynomial, constructing a polynomial approximation is much more intuitive in the Lagrange basis. In contrast, it's not immediately clear what the coefficient values should be in other bases, making the Lagrange basis a more natural choice for this type of approximation."
    ]
   },
   {
@@ -1230,6 +1247,24 @@
   },
   {
    "cell_type": "markdown",
+   "id": "f8571216-8fce-413a-b2f2-3495837d9a29",
+   "metadata": {},
+   "source": [
+    "Because the domain of the function is not $[-1, 1]^m$, we define a uniform user domain as follows:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ab123fdd-110b-46c4-acb4-75fcbb70a757",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dom = mp.Domain.uniform(2, 0, 1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
    "id": "4488bb4b-c324-46a8-b881-9f973ef7d61e",
    "metadata": {
     "editable": true,
@@ -1256,7 +1291,7 @@
    "outputs": [],
    "source": [
     "# Interpolation grid\n",
-    "grd_2d = mp.Grid(mi_2d)\n",
+    "grd_2d = mp.Grid(mi_2d, domain=dom)\n",
     "# Coefficients of the Lagrange polynomial\n",
     "lag_coeffs_2d = grd_2d(fun)"
    ]
@@ -1327,7 +1362,6 @@
     "lag_monomials_newt_basis_2d = mp.NewtonPolynomial(\n",
     "    lag_poly_2d.multi_index,\n",
     "    mp.LagrangeToNewton(lag_poly_2d).transformation_operator.array_repr_full,\n",
-    "    grid=lag_poly_2d.grid,\n",
     ")\n",
     "lag_monomials_2d = lag_monomials_newt_basis_2d(xx_2d)\n",
     "\n",
@@ -2605,7 +2639,7 @@
     "The {doc}`Quickstart Guide </getting-started/function-approximations>` introduced\n",
     "you with the {py:func}`interpolate() <.interpolation.interpolate>` function to\n",
     "conveniently create an interpolant out of a function for a given spatial\n",
-    "dimension, polynomial degree, and $l_p$-degree.\n",
+    "dimension, polynomial degree, $l_p$-degree, and the bounds of the user domain.\n",
     "As noted in the previous tutorials, while {py:func}`interpolate() <.interpolation.interpolate>`\n",
     "does not produce an instance of Minterpy polynomials\n",
     "(and instead, an instance of {py:class}`Interpolant <.interpolation.Interpolant>`)\n",
@@ -2617,7 +2651,9 @@
     "|    {py:meth}`to_newton() <.interpolation.Interpolant.to_newton>`    |     {py:class}`NewtonPolynomial <.polynomials.newton_polynomial.NewtonPolynomial>`      |\n",
     "|  {py:meth}`to_lagrange() <.interpolation.Interpolant.to_lagrange>`  |  {py:class}`LagrangePolynomial <.polynomials.lagrange_polynomial.LagrangePolynomial>`   |\n",
     "| {py:meth}`to_canonical() <.interpolation.Interpolant.to_canonical>` | {py:class}`CanonicalPolynomial <.polynomials.canonical_polynomial.CanonicalPolynomial>` |\n",
-    "| {py:meth}`to_chebyshev() <.interpolation.Interpolant.to_chebyshev>` | {py:class}`CanonicalPolynomial <.polynomials.chebyshev_polynomial.ChebyshevPolynomial>` |"
+    "| {py:meth}`to_chebyshev() <.interpolation.Interpolant.to_chebyshev>` | {py:class}`ChebyshevPolynomial <.polynomials.chebyshev_polynomial.ChebyshevPolynomial>` |\n",
+    "\n",
+    "Retrieving the polynomial using any of the methods above returns the same $Q_f$ with different representation of $Q$."
    ]
   },
   {
@@ -2682,7 +2718,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.9.19"
+   "version": "3.14.3"
   }
  },
  "nbformat": 4,
