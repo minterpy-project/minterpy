@@ -233,7 +233,7 @@ def test_search_lex_sorted(SpatialDimension, PolyDegree, LpDegree):
     indices = get_exponent_matrix(SpatialDimension, PolyDegree, LpDegree)
 
     # --- An index is contained in the set
-    idx_ref = int(np.random.randint(0, len(indices), 1))  # must be int
+    idx_ref = int(np.random.randint(0, len(indices)))  # must be int
     index_ref = indices[idx_ref]
     idx = search_lex_sorted(indices, index_ref)
     # Assertion
@@ -254,7 +254,7 @@ def test_is_index_contained(SpatialDimension, PolyDegree, LpDegree):
     indices = get_exponent_matrix(SpatialDimension, PolyDegree, LpDegree)
 
     # --- An index is contained in the set
-    idx_ref = int(np.random.randint(0, len(indices), 1))  # must be int
+    idx_ref = int(np.random.randint(0, len(indices)))  # must be int
     index_ref = indices[idx_ref]
     # Assertion
     assert is_index_contained(indices, index_ref)
@@ -592,7 +592,7 @@ def test_is_index_contained(SpatialDimension, PolyDegree, LpDegree):
     indices = get_exponent_matrix(SpatialDimension, PolyDegree, LpDegree)
 
     # --- An index is contained in the set
-    idx_rnd = int(np.random.randint(0, len(indices), 1))  # must be int
+    idx_rnd = int(np.random.randint(0, len(indices)))  # must be int
     index_rnd = indices[idx_rnd]
     # Assertion
     assert is_index_contained(indices, index_rnd)
@@ -712,7 +712,7 @@ def test_gen_backward_neighbors(SpatialDimension, PolyDegree, LpDegree):
     indices = get_exponent_matrix(SpatialDimension, PolyDegree, LpDegree)
 
     # Select an index randomly
-    idx = int(np.random.randint(0, len(indices), 1))
+    idx = int(np.random.randint(0, len(indices)))
     index = indices[idx]
 
     # Non-lazy evaluation of getting the backward neighbors
