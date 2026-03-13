@@ -19,7 +19,7 @@ from sphinx.util.inspect import safe_getattr
 # -- Project information -----------------------------------------------------
 
 project = "minterpy"
-copyright = "2022, Minterpy Development Team"
+copyright = "2026, Minterpy Development Team"
 author = "Minterpy Development Team"
 
 version = get_distribution(project).version

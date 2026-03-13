@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     and `map_from_internal()`
   - Automatic scaling factor computation for differentiation and integration
   - Domain validation via `contains()` method
-  - Factory methods: `uniform()` and `normalized()`
+  - Factory methods: `uniform()` and `identity()`
   - The property `is_identity` indicates if the user-defined domain
     is identical to the internal domain
 - Domain support integrated into `Grid` class
@@ -52,8 +52,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Revised "polynomial regression" tutorial to demonstrate 
-  user-defined domain support
+- Revised "change of basis" tutorial to emphasize the difference between
+  Minterpy polynomials and the underlying basis polynomials
+- Revised "polynomial regression" tutorial to demonstrate user-defined
+  domain support
 - (Breaking) `OrdinaryRegression` constructor parameter ordering: `origin_poly`
   is now the last parameter, after `domain`
 - Relevant tutorials have been updated to reflect the new domain support
